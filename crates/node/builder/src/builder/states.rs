@@ -9,14 +9,14 @@ use crate::{
     components::{NodeComponents, NodeComponentsBuilder},
     hooks::NodeHooks,
     launch::LaunchNode,
-    rpc::{RethRpcAddOns, RethRpcServerHandles, RpcContext},
+    rpc::{EvmRpcAddOns, EvmRpcServerHandles, RpcContext},
     AddOns, ComponentsFor, FullNode,
 };
 
-use reth_exex::ExExContext;
-use reth_node_api::{FullNodeComponents, FullNodeTypes, NodeAddOns, NodeTypes};
-use reth_node_core::node_config::NodeConfig;
-use reth_tasks::TaskExecutor;
+use hanzo_evm_exex::ExExContext;
+use hanzo_evm_node_api::{FullNodeComponents, FullNodeTypes, NodeAddOns, NodeTypes};
+use hanzo_evm_node_core::node_config::NodeConfig;
+use hanzo_evm_tasks::TaskExecutor;
 use std::{fmt, fmt::Debug, future::Future};
 
 /// A node builder that also has the configured types.
@@ -99,8 +99,8 @@ impl<T: FullNodeTypes, C: NodeComponents<T>> FullNodeComponents for NodeAdapter<
         self.components.pool()
     }
 
-    fn evm_config(&self) -> &Self::Evm {
-        self.components.evm_config()
+    fn hanzo_evm_config(&self) -> &Self::Evm {
+        self.components.hanzo_evm_config()
     }
 
     fn consensus(&self) -> &Self::Consensus {
@@ -113,8 +113,8 @@ impl<T: FullNodeTypes, C: NodeComponents<T>> FullNodeComponents for NodeAdapter<
 
     fn payload_builder_handle(
         &self,
-    ) -> &reth_payload_builder::PayloadBuilderHandle<
-        <Self::Types as reth_node_api::NodeTypes>::Payload,
+    ) -> &hanzo_evm_payload_builder::PayloadBuilderHandle<
+        <Self::Types as hanzo_evm_node_api::NodeTypes>::Payload,
     > {
         self.components.payload_builder_handle()
     }
@@ -269,7 +269,7 @@ impl<T, CB, AO> NodeBuilderWithComponents<T, CB, AO>
 where
     T: FullNodeTypes,
     CB: NodeComponentsBuilder<T>,
-    AO: RethRpcAddOns<NodeAdapter<T, CB::Components>>,
+    AO: EvmRpcAddOns<NodeAdapter<T, CB::Components>>,
 {
     /// Launches the node with the given launcher.
     pub fn launch_with<L>(self, launcher: L) -> L::Future
@@ -284,7 +284,7 @@ where
     where
         F: FnOnce(
                 RpcContext<'_, NodeAdapter<T, CB::Components>, AO::EthApi>,
-                RethRpcServerHandles,
+                EvmRpcServerHandles,
             ) -> eyre::Result<()>
             + Send
             + 'static,
@@ -313,19 +313,19 @@ where
 mod test {
     use super::*;
     use crate::components::Components;
-    use reth_consensus::noop::NoopConsensus;
-    use reth_db_api::mock::DatabaseMock;
-    use reth_ethereum_engine_primitives::EthEngineTypes;
-    use reth_evm::noop::NoopEvmConfig;
-    use reth_evm_ethereum::MockEvmConfig;
-    use reth_network::EthNetworkPrimitives;
-    use reth_network_api::noop::NoopNetwork;
-    use reth_node_api::FullNodeTypesAdapter;
-    use reth_node_ethereum::EthereumNode;
-    use reth_payload_builder::PayloadBuilderHandle;
-    use reth_provider::noop::NoopProvider;
-    use reth_tasks::TaskManager;
-    use reth_transaction_pool::noop::NoopTransactionPool;
+    use hanzo_evm_consensus::noop::NoopConsensus;
+    use hanzo_evm_db_api::mock::DatabaseMock;
+    use hanzo_evm_ethereum_engine_primitives::EthEngineTypes;
+    use hanzo_evm_execution::noop::NoopEvmConfig;
+    use hanzo_evm_eth_execution::MockEvmConfig;
+    use hanzo_evm_network::EthNetworkPrimitives;
+    use hanzo_evm_network_api::noop::NoopNetwork;
+    use hanzo_evm_node_api::FullNodeTypesAdapter;
+    use hanzo_evm_node_ethereum::EthereumNode;
+    use hanzo_evm_payload_builder::PayloadBuilderHandle;
+    use hanzo_evm_provider::noop::NoopProvider;
+    use hanzo_evm_tasks::TaskManager;
+    use hanzo_evm_transaction_pool::noop::NoopTransactionPool;
 
     #[test]
     fn test_noop_components() {
@@ -337,7 +337,7 @@ mod test {
             _,
         > {
             transaction_pool: NoopTransactionPool::default(),
-            evm_config: NoopEvmConfig::default(),
+            hanzo_evm_config: NoopEvmConfig::default(),
             consensus: NoopConsensus::default(),
             network: NoopNetwork::default(),
             payload_builder_handle: PayloadBuilderHandle::<EthEngineTypes>::noop(),

@@ -1,5 +1,5 @@
 [package]
-name = "reth-static-file"
+name = "hanzo-evm-static-file"
 version.workspace = true
 edition.workspace = true
 rust-version.workspace = true
@@ -12,16 +12,16 @@ description = "Static file producer implementation"
 workspace = true
 
 [dependencies]
-# reth
-reth-codecs.workspace = true
-reth-db-api.workspace = true
-reth-provider.workspace = true
-reth-storage-errors.workspace = true
-reth-tokio-util.workspace = true
-reth-prune-types.workspace = true
-reth-primitives-traits.workspace = true
-reth-static-file-types.workspace = true
-reth-stages-types.workspace = true
+# evm
+hanzo-evm-codecs.workspace = true
+hanzo-evm-db-api.workspace = true
+hanzo-evm-provider.workspace = true
+hanzo-evm-storage-errors.workspace = true
+hanzo-evm-tokio-util.workspace = true
+hanzo-evm-prune-types.workspace = true
+hanzo-evm-primitives-traits.workspace = true
+hanzo-evm-static-file-types.workspace = true
+hanzo-evm-stages-types.workspace = true
 
 alloy-primitives.workspace = true
 
@@ -31,11 +31,11 @@ rayon.workspace = true
 parking_lot = { workspace = true, features = ["send_guard", "arc_lock"] }
 
 [dev-dependencies]
-reth-stages = { workspace = true, features = ["test-utils"] }
-reth-testing-utils.workspace = true
+hanzo-evm-stages = { workspace = true, features = ["test-utils"] }
+hanzo-evm-testing-utils.workspace = true
 
 assert_matches.workspace = true
 tempfile.workspace = true
 
 [features]
-edge = ["reth-stages/edge"]
+edge = ["hanzo-evm-stages/edge"]

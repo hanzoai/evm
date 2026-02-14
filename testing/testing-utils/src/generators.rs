@@ -11,8 +11,8 @@ use alloy_eips::{
 use alloy_primitives::{Address, BlockNumber, Bytes, TxKind, B256, B64, U256};
 pub use rand::Rng;
 use rand::{distr::uniform::SampleRange, rngs::StdRng, SeedableRng};
-use reth_ethereum_primitives::{Block, BlockBody, Receipt, Transaction, TransactionSigned};
-use reth_primitives_traits::{
+use hanzo_evm_ethereum_primitives::{Block, BlockBody, Receipt, Transaction, TransactionSigned};
+use hanzo_evm_primitives_traits::{
     crypto::secp256k1::sign_message, proofs, Account, Block as _, Log, SealedBlock, SealedHeader,
     StorageEntry,
 };
@@ -487,7 +487,7 @@ mod tests {
     use alloy_consensus::TxEip1559;
     use alloy_eips::eip2930::AccessList;
     use alloy_primitives::{hex, Signature};
-    use reth_primitives_traits::{
+    use hanzo_evm_primitives_traits::{
         crypto::secp256k1::{public_key_to_address, sign_message},
         SignerRecoverable,
     };

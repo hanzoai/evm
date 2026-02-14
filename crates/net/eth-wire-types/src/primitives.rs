@@ -4,8 +4,8 @@ use crate::NewBlockPayload;
 use alloy_consensus::{RlpDecodableReceipt, RlpEncodableReceipt, TxReceipt};
 use alloy_rlp::{Decodable, Encodable};
 use core::fmt::Debug;
-use reth_ethereum_primitives::{EthPrimitives, PooledTransactionVariant};
-use reth_primitives_traits::{
+use hanzo_evm_ethereum_primitives::{EthPrimitives, PooledTransactionVariant};
+use hanzo_evm_primitives_traits::{
     Block, BlockBody, BlockHeader, BlockTy, NodePrimitives, SignedTransaction,
 };
 

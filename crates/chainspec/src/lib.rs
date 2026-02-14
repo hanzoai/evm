@@ -1,9 +1,9 @@
 //! The spec of an Ethereum network
 
 #![doc(
-    html_logo_url = "https://raw.githubusercontent.com/paradigmxyz/reth/main/assets/reth-docs.png",
+    html_logo_url = "https://raw.githubusercontent.com/hanzoai/evm/main/assets/evm-docs.png",
     html_favicon_url = "https://avatars0.githubusercontent.com/u/97369466?s=256",
-    issue_tracker_base_url = "https://github.com/paradigmxyz/reth/issues/"
+    issue_tracker_base_url = "https://github.com/hanzoai/evm/issues/"
 )]
 #![cfg_attr(not(test), warn(unused_crate_dependencies))]
 #![cfg_attr(docsrs, feature(doc_cfg))]
@@ -23,7 +23,7 @@ mod spec;
 
 pub use alloy_chains::{Chain, ChainKind, NamedChain};
 /// Re-export for convenience
-pub use reth_ethereum_forks::*;
+pub use hanzo_evm_ethereum_forks::*;
 
 pub use alloy_evm::EvmLimitParams;
 pub use api::EthChainSpec;
@@ -36,7 +36,7 @@ pub use spec::{
     DepositContract, ForkBaseFeeParams, DEV, HOLESKY, HOODI, MAINNET, SEPOLIA,
 };
 
-use reth_primitives_traits::sync::OnceLock;
+use hanzo_evm_primitives_traits::sync::OnceLock;
 
 /// Simple utility to create a thread-safe sync cell with a value set.
 pub fn once_cell_set<T>(value: T) -> OnceLock<T> {

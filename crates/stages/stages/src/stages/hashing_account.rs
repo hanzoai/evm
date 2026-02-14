@@ -1,20 +1,20 @@
 use alloy_primitives::{keccak256, B256};
 use itertools::Itertools;
-use reth_config::config::{EtlConfig, HashingConfig};
-use reth_db_api::{
+use hanzo_evm_config::config::{EtlConfig, HashingConfig};
+use hanzo_evm_db_api::{
     cursor::{DbCursorRO, DbCursorRW},
     tables,
     transaction::{DbTx, DbTxMut},
     RawKey, RawTable, RawValue,
 };
-use reth_etl::Collector;
-use reth_primitives_traits::Account;
-use reth_provider::{AccountExtReader, DBProvider, HashingWriter, StatsReader};
-use reth_stages_api::{
+use hanzo_evm_etl::Collector;
+use hanzo_evm_primitives_traits::Account;
+use hanzo_evm_provider::{AccountExtReader, DBProvider, HashingWriter, StatsReader};
+use hanzo_evm_stages_api::{
     AccountHashingCheckpoint, EntitiesCheckpoint, ExecInput, ExecOutput, Stage, StageCheckpoint,
     StageError, StageId, UnwindInput, UnwindOutput,
 };
-use reth_storage_errors::provider::ProviderResult;
+use hanzo_evm_storage_errors::provider::ProviderResult;
 use std::{
     fmt::Debug,
     ops::{Range, RangeInclusive},
@@ -59,20 +59,20 @@ impl AccountHashingStage {
     ///
     /// Proceeds to go to the `BlockTransitionIndex` end, go back `transitions` and change the
     /// account state in the `AccountChangeSets` table.
-    pub fn seed<Tx: DbTx + DbTxMut + 'static, N: reth_provider::providers::ProviderNodeTypes>(
-        provider: &reth_provider::DatabaseProvider<Tx, N>,
+    pub fn seed<Tx: DbTx + DbTxMut + 'static, N: hanzo_evm_provider::providers::ProviderNodeTypes>(
+        provider: &hanzo_evm_provider::DatabaseProvider<Tx, N>,
         opts: SeedOpts,
     ) -> Result<Vec<(alloy_primitives::Address, Account)>, StageError>
     where
-        N::Primitives: reth_primitives_traits::NodePrimitives<
-            Block = reth_ethereum_primitives::Block,
-            BlockHeader = reth_primitives_traits::Header,
+        N::Primitives: hanzo_evm_primitives_traits::NodePrimitives<
+            Block = hanzo_evm_ethereum_primitives::Block,
+            BlockHeader = hanzo_evm_primitives_traits::Header,
         >,
     {
         use alloy_primitives::U256;
-        use reth_db_api::models::AccountBeforeTx;
-        use reth_provider::{BlockWriter, StaticFileProviderFactory, StaticFileWriter};
-        use reth_testing_utils::{
+        use hanzo_evm_db_api::models::AccountBeforeTx;
+        use hanzo_evm_provider::{BlockWriter, StaticFileProviderFactory, StaticFileWriter};
+        use hanzo_evm_testing_utils::{
             generators,
             generators::{random_block_range, random_eoa_accounts, BlockRangeParams},
         };
@@ -90,7 +90,7 @@ impl AccountHashingStage {
         }
         provider
             .static_file_provider()
-            .latest_writer(reth_static_file_types::StaticFileSegment::Headers)
+            .latest_writer(hanzo_evm_static_file_types::StaticFileSegment::Headers)
             .unwrap()
             .commit()
             .unwrap();
@@ -304,9 +304,9 @@ mod tests {
     };
     use alloy_primitives::U256;
     use assert_matches::assert_matches;
-    use reth_primitives_traits::Account;
-    use reth_provider::providers::StaticFileWriter;
-    use reth_stages_api::StageUnitCheckpoint;
+    use hanzo_evm_primitives_traits::Account;
+    use hanzo_evm_provider::providers::StaticFileWriter;
+    use hanzo_evm_stages_api::StageUnitCheckpoint;
     use test_utils::*;
 
     stage_test_suite_ext!(AccountHashingTestRunner, account_hashing);
@@ -355,7 +355,7 @@ mod tests {
         use super::*;
         use crate::test_utils::TestStageDB;
         use alloy_primitives::Address;
-        use reth_provider::DatabaseProviderFactory;
+        use hanzo_evm_provider::DatabaseProviderFactory;
 
         pub(crate) struct AccountHashingTestRunner {
             pub(crate) db: TestStageDB,

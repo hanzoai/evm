@@ -1,5 +1,5 @@
 [package]
-name = "reth-ress-protocol"
+name = "hanzo-evm-ress-protocol"
 version.workspace = true
 edition.workspace = true
 rust-version.workspace = true
@@ -11,12 +11,12 @@ repository.workspace = true
 workspace = true
 
 [dependencies]
-# reth
-reth-eth-wire.workspace = true
-reth-network-api.workspace = true
-reth-network.workspace = true
-reth-storage-errors.workspace = true
-reth-ethereum-primitives.workspace = true
+# evm
+hanzo-evm-eth-wire.workspace = true
+hanzo-evm-network-api.workspace = true
+hanzo-evm-network.workspace = true
+hanzo-evm-storage-errors.workspace = true
+hanzo-evm-ethereum-primitives.workspace = true
 
 # alloy
 alloy-primitives.workspace = true
@@ -33,13 +33,13 @@ tracing.workspace = true
 arbitrary = { workspace = true, features = ["derive"], optional = true }
 
 [dev-dependencies]
-reth-eth-wire = { workspace = true, features = ["arbitrary"] }
-reth-network = { workspace = true, features = ["test-utils"] }
-reth-provider = { workspace = true, features = ["test-utils"] }
-reth-tracing.workspace = true
+hanzo-evm-eth-wire = { workspace = true, features = ["arbitrary"] }
+hanzo-evm-network = { workspace = true, features = ["test-utils"] }
+hanzo-evm-provider = { workspace = true, features = ["test-utils"] }
+hanzo-evm-tracing.workspace = true
 
 # enable `test-utils` feature on this crate
-reth-ress-protocol = { path = ".", features = ["test-utils"] }
+hanzo-evm-ress-protocol = { path = ".", features = ["test-utils"] }
 
 tokio.workspace = true
 strum.workspace = true
@@ -50,16 +50,16 @@ proptest-arbitrary-interop.workspace = true
 
 [features]
 test-utils = [
-    "reth-network/test-utils",
-    "reth-ress-protocol/test-utils",
-    "reth-ethereum-primitives/test-utils",
-    "reth-provider/test-utils",
+    "hanzo-evm-network/test-utils",
+    "hanzo-evm-ress-protocol/test-utils",
+    "hanzo-evm-ethereum-primitives/test-utils",
+    "hanzo-evm-provider/test-utils",
 ]
 arbitrary = [
     "dep:arbitrary",
-    "reth-eth-wire/arbitrary",
+    "hanzo-evm-eth-wire/arbitrary",
     "alloy-primitives/arbitrary",
-    "reth-ress-protocol/arbitrary",
-    "reth-ethereum-primitives/arbitrary",
+    "hanzo-evm-ress-protocol/arbitrary",
+    "hanzo-evm-ethereum-primitives/arbitrary",
     "alloy-consensus/arbitrary",
 ]

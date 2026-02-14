@@ -4,7 +4,7 @@ use clap::{
     builder::{RangedU64ValueParser, TypedValueParser},
     Arg, Args, Command,
 };
-use reth_cli_util::{
+use hanzo_evm_cli_util::{
     parse_duration_from_secs, parse_duration_from_secs_or_ms,
     parsers::format_duration_as_secs_or_ms,
 };
@@ -208,7 +208,7 @@ mod tests {
     #[test]
     fn test_args_with_valid_max_tasks() {
         let args =
-            CommandParser::<PayloadBuilderArgs>::parse_from(["reth", "--builder.max-tasks", "1"])
+            CommandParser::<PayloadBuilderArgs>::parse_from(["evm", "--builder.max-tasks", "1"])
                 .args;
         assert_eq!(args.max_payload_tasks, 1)
     }
@@ -216,7 +216,7 @@ mod tests {
     #[test]
     fn test_args_with_invalid_max_tasks() {
         assert!(CommandParser::<PayloadBuilderArgs>::try_parse_from([
-            "reth",
+            "evm",
             "--builder.max-tasks",
             "0"
         ])
@@ -227,7 +227,7 @@ mod tests {
     fn test_default_extra_data() {
         let extra_data = default_extra_data();
         let args = CommandParser::<PayloadBuilderArgs>::parse_from([
-            "reth",
+            "evm",
             "--builder.extradata",
             extra_data.as_str(),
         ])
@@ -239,7 +239,7 @@ mod tests {
     fn test_invalid_extra_data() {
         let extra_data = "x".repeat(MAXIMUM_EXTRA_DATA_SIZE + 1);
         let args = CommandParser::<PayloadBuilderArgs>::try_parse_from([
-            "reth",
+            "evm",
             "--builder.extradata",
             extra_data.as_str(),
         ]);
@@ -249,14 +249,14 @@ mod tests {
     #[test]
     fn payload_builder_args_default_sanity_check() {
         let default_args = PayloadBuilderArgs::default();
-        let args = CommandParser::<PayloadBuilderArgs>::parse_from(["reth"]).args;
+        let args = CommandParser::<PayloadBuilderArgs>::parse_from(["evm"]).args;
         assert_eq!(args, default_args);
     }
 
     #[test]
     fn test_args_with_s_interval() {
         let args =
-            CommandParser::<PayloadBuilderArgs>::parse_from(["reth", "--builder.interval", "50"])
+            CommandParser::<PayloadBuilderArgs>::parse_from(["evm", "--builder.interval", "50"])
                 .args;
         assert_eq!(args.interval, Duration::from_secs(50));
     }
@@ -264,7 +264,7 @@ mod tests {
     #[test]
     fn test_args_with_ms_interval() {
         let args =
-            CommandParser::<PayloadBuilderArgs>::parse_from(["reth", "--builder.interval", "50ms"])
+            CommandParser::<PayloadBuilderArgs>::parse_from(["evm", "--builder.interval", "50ms"])
                 .args;
         assert_eq!(args.interval, Duration::from_millis(50));
     }

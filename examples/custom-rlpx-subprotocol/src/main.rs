@@ -6,7 +6,7 @@
 //! cargo run -p example-custom-rlpx-subprotocol -- node
 //! ```
 //!
-//! This launches a regular reth node with a custom rlpx subprotocol.
+//! This launches a regular evm node with a custom rlpx subprotocol.
 
 #![warn(unused_crate_dependencies)]
 
@@ -14,7 +14,7 @@ mod subprotocol;
 
 use std::net::{Ipv4Addr, SocketAddr, SocketAddrV4};
 
-use reth_ethereum::{
+use hanzo_evm_ethereum::{
     network::{
         api::{test_utils::PeersHandleProvider, NetworkInfo},
         config::rng_secret_key,
@@ -34,7 +34,7 @@ use tokio::sync::{mpsc, oneshot};
 use tracing::info;
 
 fn main() -> eyre::Result<()> {
-    reth_ethereum::cli::Cli::parse_args().run(|builder, _args| async move {
+    hanzo_evm_ethereum::cli::Cli::parse_args().run(|builder, _args| async move {
         // launch the node
         let NodeHandle { node, node_exit_future } =
             builder.node(EthereumNode::default()).launch().await?;

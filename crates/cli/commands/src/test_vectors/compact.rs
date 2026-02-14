@@ -6,7 +6,7 @@ use proptest::{
     prelude::{ProptestConfig, RngCore},
     test_runner::{TestRng, TestRunner},
 };
-use reth_codecs::alloy::{
+use hanzo_evm_codecs::alloy::{
     authorization_list::Authorization,
     genesis_account::GenesisAccount,
     header::{Header, HeaderExt},
@@ -16,24 +16,24 @@ use reth_codecs::alloy::{
     },
     withdrawal::Withdrawal,
 };
-use reth_db::{
+use hanzo_evm_db::{
     models::{
         AccountBeforeTx, StaticFileBlockWithdrawals, StoredBlockBodyIndices, StoredBlockOmmers,
         StoredBlockWithdrawals,
     },
     ClientVersion,
 };
-use reth_ethereum_primitives::{Receipt, Transaction, TransactionSigned, TxType};
-use reth_fs_util as fs;
-use reth_primitives_traits::{Account, Log, LogData, StorageEntry};
-use reth_prune_types::{PruneCheckpoint, PruneMode};
-use reth_stages_types::{
+use hanzo_evm_ethereum_primitives::{Receipt, Transaction, TransactionSigned, TxType};
+use hanzo_evm_fs_util as fs;
+use hanzo_evm_primitives_traits::{Account, Log, LogData, StorageEntry};
+use hanzo_evm_prune_types::{PruneCheckpoint, PruneMode};
+use hanzo_evm_stages_types::{
     AccountHashingCheckpoint, CheckpointBlockRange, EntitiesCheckpoint, ExecutionCheckpoint,
     HeadersCheckpoint, IndexHistoryCheckpoint, StageCheckpoint, StageUnitCheckpoint,
     StorageHashingCheckpoint,
 };
-use reth_trie::{hash_builder::HashBuilderValue, TrieMask};
-use reth_trie_common::{hash_builder::HashBuilderState, StoredNibbles, StoredNibblesSubKey};
+use hanzo_evm_trie::{hash_builder::HashBuilderValue, TrieMask};
+use hanzo_evm_trie_common::{hash_builder::HashBuilderState, StoredNibbles, StoredNibblesSubKey};
 use std::{fs::File, io::BufReader};
 
 pub const VECTORS_FOLDER: &str = "testdata/micro/compact";
@@ -71,13 +71,13 @@ macro_rules! compact_types {
 }
 
 // The type that **actually** implements `Compact` should go here. If it's an alloy type, import the
-// auxiliary type from reth_codecs::alloy instead.
+// auxiliary type from hanzo_evm_codecs::alloy instead.
 compact_types!(
     regular: [
-        // reth-primitives
+        // evm-primitives
         Account,
         Receipt,
-        // reth_codecs::alloy
+        // hanzo_evm_codecs::alloy
         Authorization,
         GenesisAccount,
         Header,
@@ -94,10 +94,10 @@ compact_types!(
         Log,
         // BranchNodeCompact, // todo requires arbitrary
         TrieMask,
-        // reth_prune_types
+        // hanzo_evm_prune_types
         PruneCheckpoint,
         PruneMode,
-        // reth_stages_types
+        // hanzo_evm_stages_types
         AccountHashingCheckpoint,
         StorageHashingCheckpoint,
         ExecutionCheckpoint,
@@ -107,7 +107,7 @@ compact_types!(
         CheckpointBlockRange,
         StageCheckpoint,
         StageUnitCheckpoint,
-        // reth_db_api
+        // hanzo_evm_db_api
         StoredBlockOmmers,
         StoredBlockBodyIndices,
         StoredBlockWithdrawals,
@@ -180,7 +180,7 @@ pub fn read_vectors_with(read: &[fn() -> eyre::Result<()>]) -> Result<()> {
             eprintln!("{error:?}");
         }
         return Err(eyre::eyre!(
-            "If there are missing types, make sure to run `reth test-vectors compact --write` first.\n
+            "If there are missing types, make sure to run `evm test-vectors compact --write` first.\n
              If it happened during CI, ignore IF it's a new proposed type that `main` branch does not have."
         ));
     }
@@ -191,7 +191,7 @@ pub fn read_vectors_with(read: &[fn() -> eyre::Result<()>]) -> Result<()> {
 /// Generates test vectors for a specific type `T`.
 pub fn generate_vector<T>(runner: &mut TestRunner) -> Result<()>
 where
-    T: for<'a> Arbitrary<'a> + reth_codecs::Compact,
+    T: for<'a> Arbitrary<'a> + hanzo_evm_codecs::Compact,
 {
     let type_name = type_name::<T>();
     print!("{}", &type_name);
@@ -244,7 +244,7 @@ where
 /// using `T::from_compact`.
 pub fn read_vector<T>() -> Result<()>
 where
-    T: reth_codecs::Compact,
+    T: hanzo_evm_codecs::Compact,
 {
     let type_name = type_name::<T>();
     print!("{}", &type_name);
@@ -280,7 +280,7 @@ where
 
 /// Returns the type name for the given type.
 pub fn type_name<T>() -> String {
-    // With alloy type transition <https://github.com/paradigmxyz/reth/pull/15768> the types are renamed, we map them here to the original name so that test vector files remain consistent
+    // With alloy type transition <https://github.com/hanzoai/evm/pull/15768> the types are renamed, we map them here to the original name so that test vector files remain consistent
     let name = std::any::type_name::<T>();
     match name {
         "alloy_consensus::transaction::envelope::EthereumTypedTransaction<alloy_consensus::transaction::eip4844::TxEip4844>" => "Transaction".to_string(),

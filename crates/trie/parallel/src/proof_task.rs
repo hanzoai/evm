@@ -42,11 +42,11 @@ use alloy_primitives::{
 };
 use alloy_rlp::{BufMut, Encodable};
 use crossbeam_channel::{unbounded, Receiver as CrossbeamReceiver, Sender as CrossbeamSender};
-use reth_execution_errors::{SparseTrieError, SparseTrieErrorKind, StateProofError};
-use reth_primitives_traits::dashmap::{self, DashMap};
-use reth_provider::{DatabaseProviderROFactory, ProviderError, ProviderResult};
-use reth_storage_errors::db::DatabaseError;
-use reth_trie::{
+use hanzo_evm_execution_errors::{SparseTrieError, SparseTrieErrorKind, StateProofError};
+use hanzo_evm_primitives_traits::dashmap::{self, DashMap};
+use hanzo_evm_provider::{DatabaseProviderROFactory, ProviderError, ProviderResult};
+use hanzo_evm_storage_errors::db::DatabaseError;
+use hanzo_evm_trie::{
     hashed_cursor::{HashedCursorFactory, HashedCursorMetricsCache, InstrumentedHashedCursor},
     node_iter::{TrieElement, TrieNodeIter},
     prefix_set::TriePrefixSets,
@@ -57,13 +57,13 @@ use reth_trie::{
     DecodedMultiProof, DecodedMultiProofV2, DecodedStorageMultiProof, HashBuilder, HashedPostState,
     MultiProofTargets, Nibbles, ProofTrieNode, TRIE_ACCOUNT_RLP_MAX_SIZE,
 };
-use reth_trie_common::{
+use hanzo_evm_trie_common::{
     added_removed_keys::MultiAddedRemovedKeys,
     prefix_set::{PrefixSet, PrefixSetMut},
     proof::{DecodedProofNodes, ProofRetainer},
     BranchNodeMasks, BranchNodeMasksMap,
 };
-use reth_trie_sparse::provider::{RevealedNode, TrieNodeProvider, TrieNodeProviderFactory};
+use hanzo_evm_trie_sparse::provider::{RevealedNode, TrieNodeProvider, TrieNodeProviderFactory};
 use std::{
     cell::RefCell,
     rc::Rc,
@@ -1645,7 +1645,7 @@ where
                         let wait_start = Instant::now();
                         let proof_msg = receiver.recv().map_err(|_| {
                             ParallelStateRootError::StorageRoot(
-                                reth_execution_errors::StorageRootError::Database(
+                                hanzo_evm_execution_errors::StorageRootError::Database(
                                     DatabaseError::Other(format!(
                                         "Storage proof channel closed for {hashed_address}"
                                     )),
@@ -1700,7 +1700,7 @@ where
                                         )
                                         .map_err(|e| {
                                             ParallelStateRootError::StorageRoot(
-                                                reth_execution_errors::StorageRootError::Database(
+                                                hanzo_evm_execution_errors::StorageRootError::Database(
                                                     DatabaseError::Other(e.to_string()),
                                                 ),
                                             )
@@ -2020,7 +2020,7 @@ enum AccountWorkerJob {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use reth_provider::test_utils::create_test_provider_factory;
+    use hanzo_evm_provider::test_utils::create_test_provider_factory;
     use tokio::{runtime::Builder, task};
 
     fn test_ctx<Factory>(factory: Factory) -> ProofTaskCtx<Factory> {
@@ -2034,8 +2034,8 @@ mod tests {
         runtime.block_on(async {
             let handle = tokio::runtime::Handle::current();
             let provider_factory = create_test_provider_factory();
-            let changeset_cache = reth_trie_db::ChangesetCache::new();
-            let factory = reth_provider::providers::OverlayStateProviderFactory::new(
+            let changeset_cache = hanzo_evm_trie_db::ChangesetCache::new();
+            let factory = hanzo_evm_provider::providers::OverlayStateProviderFactory::new(
                 provider_factory,
                 changeset_cache,
             );

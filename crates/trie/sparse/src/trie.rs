@@ -17,8 +17,8 @@ use alloy_primitives::{
     B256,
 };
 use alloy_rlp::Decodable;
-use reth_execution_errors::{SparseTrieErrorKind, SparseTrieResult};
-use reth_trie_common::{
+use hanzo_evm_execution_errors::{SparseTrieErrorKind, SparseTrieResult};
+use hanzo_evm_trie_common::{
     prefix_set::{PrefixSet, PrefixSetMut},
     BranchNodeCompact, BranchNodeMasks, BranchNodeMasksMap, BranchNodeRef, ExtensionNodeRef,
     LeafNodeRef, Nibbles, ProofTrieNode, RlpNode, TrieMask, TrieNode, EMPTY_ROOT_HASH,
@@ -72,7 +72,7 @@ impl<T: SparseTrieTrait + Default> RevealableSparseTrie<T> {
     /// # Examples
     ///
     /// ```
-    /// use reth_trie_sparse::{
+    /// use hanzo_evm_trie_sparse::{
     ///     provider::DefaultTrieNodeProvider, RevealableSparseTrie, SerialSparseTrie,
     /// };
     ///
@@ -123,7 +123,7 @@ impl<T: SparseTrieTrait> RevealableSparseTrie<T> {
     /// # Examples
     ///
     /// ```
-    /// use reth_trie_sparse::{
+    /// use hanzo_evm_trie_sparse::{
     ///     provider::DefaultTrieNodeProvider, RevealableSparseTrie, SerialSparseTrie,
     /// };
     ///
@@ -2093,8 +2093,8 @@ mod find_leaf_tests {
     use crate::provider::DefaultTrieNodeProvider;
     use alloy_rlp::Encodable;
     use assert_matches::assert_matches;
-    use reth_primitives_traits::Account;
-    use reth_trie_common::LeafNode;
+    use hanzo_evm_primitives_traits::Account;
+    use hanzo_evm_trie_common::LeafNode;
 
     // Helper to create some test values
     fn encode_value(nonce: u64) -> Vec<u8> {
@@ -2349,7 +2349,7 @@ mod find_leaf_tests {
 
         // 2. Construct the root BranchNode using the RLP of its children
         // The stack order depends on the bit indices (1 and 5)
-        let root_branch_node = reth_trie_common::BranchNode::new(
+        let root_branch_node = hanzo_evm_trie_common::BranchNode::new(
             vec![rlp_node_child1, rlp_node_child5], // Child 1 first, then Child 5
             TrieMask::new(0b100010),                // Mask with bits 1 and 5 set
         );
@@ -2398,21 +2398,21 @@ mod tests {
     use prop::sample::SizeRange;
     use proptest::prelude::*;
     use proptest_arbitrary_interop::arb;
-    use reth_primitives_traits::Account;
-    use reth_provider::{test_utils::create_test_provider_factory, TrieWriter};
-    use reth_trie::{
+    use hanzo_evm_primitives_traits::Account;
+    use hanzo_evm_provider::{test_utils::create_test_provider_factory, TrieWriter};
+    use hanzo_evm_trie::{
         hashed_cursor::{noop::NoopHashedCursor, HashedPostStateCursor},
         node_iter::{TrieElement, TrieNodeIter},
         trie_cursor::{noop::NoopAccountTrieCursor, TrieCursor, TrieCursorFactory},
         walker::TrieWalker,
         BranchNode, ExtensionNode, HashedPostState, LeafNode,
     };
-    use reth_trie_common::{
+    use hanzo_evm_trie_common::{
         proof::{ProofNodes, ProofRetainer},
         updates::TrieUpdates,
         HashBuilder,
     };
-    use reth_trie_db::DatabaseTrieCursorFactory;
+    use hanzo_evm_trie_db::DatabaseTrieCursorFactory;
     use std::collections::{BTreeMap, BTreeSet};
 
     /// Pad nibbles to the length of a B256 hash with zeros on the left.
@@ -2585,7 +2585,7 @@ mod tests {
 
     #[test]
     fn sparse_trie_empty_update_multiple_lower_nibbles() {
-        reth_tracing::init_test_tracing();
+        hanzo_evm_tracing::init_test_tracing();
 
         let paths = (0..=16).map(|b| Nibbles::unpack(B256::with_last_byte(b))).collect::<Vec<_>>();
         let value = || Account::default();
@@ -2746,7 +2746,7 @@ mod tests {
 
     #[test]
     fn sparse_trie_remove_leaf() {
-        reth_tracing::init_test_tracing();
+        hanzo_evm_tracing::init_test_tracing();
 
         let provider = DefaultTrieNodeProvider;
         let mut sparse = SerialSparseTrie::default();

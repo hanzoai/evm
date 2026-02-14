@@ -7,20 +7,20 @@ use crate::{
     NetworkHandle, NetworkManager,
 };
 use alloy_eips::BlockNumHash;
-use reth_chainspec::{ChainSpecProvider, EthChainSpec, Hardforks};
-use reth_discv4::{Discv4Config, Discv4ConfigBuilder, NatResolver, DEFAULT_DISCOVERY_ADDRESS};
-use reth_discv5::NetworkStackId;
-use reth_dns_discovery::DnsDiscoveryConfig;
-use reth_eth_wire::{
+use hanzo_evm_chainspec::{ChainSpecProvider, EthChainSpec, Hardforks};
+use hanzo_evm_discv4::{Discv4Config, Discv4ConfigBuilder, NatResolver, DEFAULT_DISCOVERY_ADDRESS};
+use hanzo_evm_discv5::NetworkStackId;
+use hanzo_evm_dns_discovery::DnsDiscoveryConfig;
+use hanzo_evm_eth_wire::{
     handshake::{EthHandshake, EthRlpxHandshake},
     EthNetworkPrimitives, HelloMessage, HelloMessageWithProtocols, NetworkPrimitives,
     UnifiedStatus,
 };
-use reth_ethereum_forks::{ForkFilter, Head};
-use reth_network_peers::{mainnet_nodes, pk2id, sepolia_nodes, PeerId, TrustedPeer};
-use reth_network_types::{PeersConfig, SessionsConfig};
-use reth_storage_api::{noop::NoopProvider, BlockNumReader, BlockReader, HeaderProvider};
-use reth_tasks::{TaskSpawner, TokioTaskExecutor};
+use hanzo_evm_ethereum_forks::{ForkFilter, Head};
+use hanzo_evm_network_peers::{mainnet_nodes, pk2id, sepolia_nodes, PeerId, TrustedPeer};
+use hanzo_evm_network_types::{PeersConfig, SessionsConfig};
+use hanzo_evm_storage_api::{noop::NoopProvider, BlockNumReader, BlockReader, HeaderProvider};
+use hanzo_evm_tasks::{TaskSpawner, TokioTaskExecutor};
 use secp256k1::SECP256K1;
 use std::{collections::HashSet, net::SocketAddr, sync::Arc};
 
@@ -55,7 +55,7 @@ pub struct NetworkConfig<C, N: NetworkPrimitives = EthNetworkPrimitives> {
     /// How to set up discovery.
     pub discovery_v4_config: Option<Discv4Config>,
     /// How to set up discovery version 5.
-    pub discovery_v5_config: Option<reth_discv5::Config>,
+    pub discovery_v5_config: Option<hanzo_evm_discv5::Config>,
     /// Address to listen for incoming connections
     pub listener_addr: SocketAddr,
     /// How to instantiate peer manager.
@@ -192,7 +192,7 @@ pub struct NetworkConfigBuilder<N: NetworkPrimitives = EthNetworkPrimitives> {
     /// How to set up discovery version 4.
     discovery_v4_builder: Option<Discv4ConfigBuilder>,
     /// How to set up discovery version 5.
-    discovery_v5_builder: Option<reth_discv5::ConfigBuilder>,
+    discovery_v5_builder: Option<hanzo_evm_discv5::ConfigBuilder>,
     /// All boot nodes to start network discovery with.
     boot_nodes: HashSet<TrustedPeer>,
     /// Address to use for discovery
@@ -321,8 +321,8 @@ impl<N: NetworkPrimitives> NetworkConfigBuilder<N> {
     /// Sets the `HelloMessage` to send when connecting to peers.
     ///
     /// ```
-    /// # use reth_eth_wire::HelloMessage;
-    /// # use reth_network::NetworkConfigBuilder;
+    /// # use hanzo_evm_eth_wire::HelloMessage;
+    /// # use hanzo_evm_network::NetworkConfigBuilder;
     /// # fn builder(builder: NetworkConfigBuilder) {
     /// let peer_id = builder.get_peer_id();
     /// builder.hello_message(HelloMessage::builder(peer_id).build());
@@ -371,7 +371,7 @@ impl<N: NetworkPrimitives> NetworkConfigBuilder<N> {
     /// [`NetworkConfigBuilder::discovery_addr`].
     ///
     /// By default, both are on the same port:
-    /// [`DEFAULT_DISCOVERY_PORT`](reth_discv4::DEFAULT_DISCOVERY_PORT)
+    /// [`DEFAULT_DISCOVERY_PORT`](hanzo_evm_discv4::DEFAULT_DISCOVERY_PORT)
     pub const fn set_addrs(self, addr: SocketAddr) -> Self {
         self.listener_addr(addr).discovery_addr(addr)
     }
@@ -386,7 +386,7 @@ impl<N: NetworkPrimitives> NetworkConfigBuilder<N> {
 
     /// Sets the port of the address the network will listen on.
     ///
-    /// By default, this is [`DEFAULT_DISCOVERY_PORT`](reth_discv4::DEFAULT_DISCOVERY_PORT)
+    /// By default, this is [`DEFAULT_DISCOVERY_PORT`](hanzo_evm_discv4::DEFAULT_DISCOVERY_PORT)
     pub fn listener_port(mut self, port: u16) -> Self {
         self.listener_addr.get_or_insert(DEFAULT_DISCOVERY_ADDRESS).set_port(port);
         self
@@ -400,7 +400,7 @@ impl<N: NetworkPrimitives> NetworkConfigBuilder<N> {
 
     /// Sets the port of the address the discovery network will listen on.
     ///
-    /// By default, this is [`DEFAULT_DISCOVERY_PORT`](reth_discv4::DEFAULT_DISCOVERY_PORT)
+    /// By default, this is [`DEFAULT_DISCOVERY_PORT`](hanzo_evm_discv4::DEFAULT_DISCOVERY_PORT)
     pub fn discovery_port(mut self, port: u16) -> Self {
         self.discovery_addr.get_or_insert(DEFAULT_DISCOVERY_ADDRESS).set_port(port);
         self
@@ -445,7 +445,7 @@ impl<N: NetworkPrimitives> NetworkConfigBuilder<N> {
     }
 
     /// Sets the discv5 config to use.
-    pub fn discovery_v5(mut self, builder: reth_discv5::ConfigBuilder) -> Self {
+    pub fn discovery_v5(mut self, builder: hanzo_evm_discv5::ConfigBuilder) -> Self {
         self.discovery_v5_builder = Some(builder);
         self
     }
@@ -735,12 +735,12 @@ mod tests {
     use alloy_eips::eip2124::ForkHash;
     use alloy_genesis::Genesis;
     use alloy_primitives::U256;
-    use reth_chainspec::{
+    use hanzo_evm_chainspec::{
         Chain, ChainSpecBuilder, EthereumHardfork, ForkCondition, ForkId, MAINNET,
     };
-    use reth_discv5::build_local_enr;
-    use reth_dns_discovery::tree::LinkEntry;
-    use reth_storage_api::noop::NoopProvider;
+    use hanzo_evm_discv5::build_local_enr;
+    use hanzo_evm_dns_discovery::tree::LinkEntry;
+    use hanzo_evm_storage_api::noop::NoopProvider;
     use std::{net::Ipv4Addr, sync::Arc};
 
     fn builder() -> NetworkConfigBuilder {
@@ -823,7 +823,7 @@ mod tests {
         let fork_key = b"odyssey";
         let config = builder()
             .discovery_v5(
-                reth_discv5::Config::builder((Ipv4Addr::LOCALHOST, 30303).into())
+                hanzo_evm_discv5::Config::builder((Ipv4Addr::LOCALHOST, 30303).into())
                     .fork(fork_key, fork_id),
             )
             .build_with_noop_provider(Arc::new(chain_spec));

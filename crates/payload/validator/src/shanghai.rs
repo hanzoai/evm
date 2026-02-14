@@ -1,7 +1,7 @@
 //! Shanghai rules for new payloads.
 
 use alloy_rpc_types_engine::PayloadError;
-use reth_primitives_traits::BlockBody;
+use hanzo_evm_primitives_traits::BlockBody;
 
 /// Checks that block body contains withdrawals if Shanghai is active and vv.
 #[inline]

@@ -5,13 +5,13 @@ use alloy_primitives::{
 };
 use criterion::{criterion_group, criterion_main, BatchSize, BenchmarkId, Criterion};
 use proptest::{prelude::*, strategy::ValueTree, test_runner::TestRunner};
-use reth_trie::{
+use hanzo_evm_trie::{
     hashed_cursor::{mock::MockHashedCursorFactory, HashedCursorFactory},
     proof::StorageProof,
     proof_v2::StorageProofCalculator,
     trie_cursor::{mock::MockTrieCursorFactory, TrieCursorFactory},
 };
-use reth_trie_common::{HashedPostState, HashedStorage};
+use hanzo_evm_trie_common::{HashedPostState, HashedStorage};
 
 /// Generate test data for benchmarking.
 ///
@@ -84,7 +84,7 @@ fn generate_test_data(
 fn create_cursor_factories(
     post_state: &HashedPostState,
 ) -> (MockTrieCursorFactory, MockHashedCursorFactory) {
-    use reth_trie::{updates::StorageTrieUpdates, StateRoot};
+    use hanzo_evm_trie::{updates::StorageTrieUpdates, StateRoot};
 
     // Create empty trie cursor factory to serve as the initial state for StateRoot
     // Ensure that there's a storage trie dataset for every storage account
@@ -96,7 +96,7 @@ fn create_cursor_factories(
         .collect();
 
     let empty_trie_cursor_factory =
-        MockTrieCursorFactory::from_trie_updates(reth_trie_common::updates::TrieUpdates {
+        MockTrieCursorFactory::from_trie_updates(hanzo_evm_trie_common::updates::TrieUpdates {
             storage_tries: storage_tries.clone(),
             ..Default::default()
         });

@@ -13,7 +13,7 @@ pub struct Command {
 }
 
 #[derive(Subcommand, Debug)]
-/// `reth test-vectors` subcommands
+/// `evm test-vectors` subcommands
 pub enum Subcommands {
     /// Generates test vectors for specified tables. If no table is specified, generate for all.
     Tables {

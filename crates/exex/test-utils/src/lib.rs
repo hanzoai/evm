@@ -1,9 +1,9 @@
 //! Test helpers for `reth-exex`
 
 #![doc(
-    html_logo_url = "https://raw.githubusercontent.com/paradigmxyz/reth/main/assets/reth-docs.png",
+    html_logo_url = "https://raw.githubusercontent.com/hanzoai/evm/main/assets/evm-docs.png",
     html_favicon_url = "https://avatars0.githubusercontent.com/u/97369466?s=256",
-    issue_tracker_base_url = "https://github.com/paradigmxyz/reth/issues/"
+    issue_tracker_base_url = "https://github.com/hanzoai/evm/issues/"
 )]
 #![cfg_attr(docsrs, feature(doc_cfg))]
 #![cfg_attr(not(test), warn(unused_crate_dependencies))]
@@ -17,46 +17,46 @@ use std::{
 
 use alloy_eips::BlockNumHash;
 use futures_util::FutureExt;
-use reth_chainspec::{ChainSpec, MAINNET};
-use reth_consensus::test_utils::TestConsensus;
-use reth_db::{
+use hanzo_evm_chainspec::{ChainSpec, MAINNET};
+use hanzo_evm_consensus::test_utils::TestConsensus;
+use hanzo_evm_db::{
     test_utils::{
         create_test_rocksdb_dir, create_test_rw_db, create_test_static_files_dir, TempDatabase,
     },
     DatabaseEnv,
 };
-use reth_db_common::init::init_genesis;
-use reth_ethereum_primitives::{EthPrimitives, TransactionSigned};
-use reth_evm_ethereum::MockEvmConfig;
-use reth_execution_types::Chain;
-use reth_exex::{ExExContext, ExExEvent, ExExNotification, ExExNotifications, Wal};
-use reth_network::{config::rng_secret_key, NetworkConfigBuilder, NetworkManager};
-use reth_node_api::{
+use hanzo_evm_db_common::init::init_genesis;
+use hanzo_evm_ethereum_primitives::{EthPrimitives, TransactionSigned};
+use hanzo_evm_eth_execution::MockEvmConfig;
+use hanzo_evm_execution_types::Chain;
+use hanzo_evm_exex::{ExExContext, ExExEvent, ExExNotification, ExExNotifications, Wal};
+use hanzo_evm_network::{config::rng_secret_key, NetworkConfigBuilder, NetworkManager};
+use hanzo_evm_node_api::{
     FullNodeTypes, FullNodeTypesAdapter, NodePrimitives, NodeTypes, NodeTypesWithDBAdapter,
 };
-use reth_node_builder::{
+use hanzo_evm_node_builder::{
     components::{
         BasicPayloadServiceBuilder, Components, ComponentsBuilder, ConsensusBuilder,
         ExecutorBuilder, PoolBuilder,
     },
-    BuilderContext, Node, NodeAdapter, RethFullAdapter,
+    BuilderContext, Node, NodeAdapter, EvmFullAdapter,
 };
-use reth_node_core::node_config::NodeConfig;
-use reth_node_ethereum::{
+use hanzo_evm_node_core::node_config::NodeConfig;
+use hanzo_evm_node_ethereum::{
     node::{
         EthereumAddOns, EthereumEngineValidatorBuilder, EthereumEthApiBuilder,
         EthereumNetworkBuilder, EthereumPayloadBuilder,
     },
     EthEngineTypes,
 };
-use reth_payload_builder::noop::NoopPayloadBuilderService;
-use reth_primitives_traits::{Block as _, RecoveredBlock};
-use reth_provider::{
+use hanzo_evm_payload_builder::noop::NoopPayloadBuilderService;
+use hanzo_evm_primitives_traits::{Block as _, RecoveredBlock};
+use hanzo_evm_provider::{
     providers::{BlockchainProvider, RocksDBProvider, StaticFileProvider},
     BlockReader, EthStorage, ProviderFactory,
 };
-use reth_tasks::TaskManager;
-use reth_transaction_pool::test_utils::{testing_pool, TestPool};
+use hanzo_evm_tasks::TaskManager;
+use hanzo_evm_transaction_pool::test_utils::{testing_pool, TestPool};
 use tempfile::TempDir;
 use thiserror::Error;
 use tokio::sync::mpsc::{Sender, UnboundedReceiver};
@@ -75,7 +75,7 @@ where
     async fn build_pool(
         self,
         _ctx: &BuilderContext<Node>,
-        _evm_config: Evm,
+        _hanzo_evm_config: Evm,
     ) -> eyre::Result<Self::Pool> {
         Ok(testing_pool())
     }
@@ -93,8 +93,8 @@ where
     type EVM = MockEvmConfig;
 
     async fn build_evm(self, _ctx: &BuilderContext<Node>) -> eyre::Result<Self::EVM> {
-        let evm_config = MockEvmConfig::default();
-        Ok(evm_config)
+        let hanzo_evm_config = MockEvmConfig::default();
+        Ok(hanzo_evm_config)
     }
 }
 
@@ -160,7 +160,7 @@ where
 pub type TmpDB = Arc<TempDatabase<DatabaseEnv>>;
 /// The [`NodeAdapter`] for the [`TestExExContext`]. Contains type necessary to
 /// boot the testing environment
-pub type Adapter = NodeAdapter<RethFullAdapter<TmpDB, TestNode>>;
+pub type Adapter = NodeAdapter<EvmFullAdapter<TmpDB, TestNode>>;
 /// An [`ExExContext`] using the [`Adapter`] type.
 pub type TestExExContext = ExExContext<Adapter>;
 
@@ -168,7 +168,7 @@ pub type TestExExContext = ExExContext<Adapter>;
 #[derive(Debug)]
 pub struct TestExExHandle {
     /// Genesis block that was inserted into the storage
-    pub genesis: RecoveredBlock<reth_ethereum_primitives::Block>,
+    pub genesis: RecoveredBlock<hanzo_evm_ethereum_primitives::Block>,
     /// Provider Factory for accessing the emphemeral storage of the host node
     pub provider_factory: ProviderFactory<NodeTypesWithDBAdapter<TestNode, TmpDB>>,
     /// Channel for receiving events from the Execution Extension
@@ -241,7 +241,7 @@ pub async fn test_exex_context_with_chain_spec(
     chain_spec: Arc<ChainSpec>,
 ) -> eyre::Result<(ExExContext<Adapter>, TestExExHandle)> {
     let transaction_pool = testing_pool();
-    let evm_config = MockEvmConfig::default();
+    let hanzo_evm_config = MockEvmConfig::default();
     let consensus = Arc::new(TestConsensus::default());
 
     let (static_dir, _) = create_test_static_files_dir();
@@ -274,7 +274,7 @@ pub async fn test_exex_context_with_chain_spec(
     let components = NodeAdapter::<FullNodeTypesAdapter<_, _, _>, _> {
         components: Components {
             transaction_pool,
-            evm_config,
+            hanzo_evm_config,
             consensus,
             network,
             payload_builder_handle,
@@ -299,7 +299,7 @@ pub async fn test_exex_context_with_chain_spec(
     let notifications = ExExNotifications::new(
         head,
         components.provider.clone(),
-        components.components.evm_config.clone(),
+        components.components.hanzo_evm_config.clone(),
         notifications_rx,
         wal.handle(),
     );
@@ -307,7 +307,7 @@ pub async fn test_exex_context_with_chain_spec(
     let ctx = ExExContext {
         head,
         config: NodeConfig::test(),
-        reth_config: reth_config::Config::default(),
+        hanzo_evm_config: hanzo_evm_config::Config::default(),
         events: events_tx,
         notifications,
         components,

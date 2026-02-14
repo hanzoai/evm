@@ -5,9 +5,9 @@ use alloy_eips::eip2718::Decodable2718;
 use alloy_primitives::{eip191_hash_message, map::AddressMap, Address, Signature, B256};
 use alloy_signer::SignerSync;
 use alloy_signer_local::{coins_bip39::English, MnemonicBuilder, PrivateKeySigner};
-use reth_rpc_convert::SignableTxRequest;
-use reth_rpc_eth_api::helpers::{signer::Result, EthSigner};
-use reth_rpc_eth_types::SignError;
+use hanzo_evm_rpc_convert::SignableTxRequest;
+use hanzo_evm_rpc_eth_api::helpers::{signer::Result, EthSigner};
+use hanzo_evm_rpc_eth_types::SignError;
 
 /// Holds developer keys
 #[derive(Debug, Clone)]
@@ -113,7 +113,7 @@ mod tests {
     use alloy_consensus::Transaction;
     use alloy_primitives::{Bytes, U256};
     use alloy_rpc_types_eth::{TransactionInput, TransactionRequest};
-    use reth_ethereum_primitives::TransactionSigned;
+    use hanzo_evm_ethereum_primitives::TransactionSigned;
     use revm_primitives::TxKind;
 
     fn build_signer() -> DevSigner {
@@ -194,7 +194,7 @@ mod tests {
         let data: TypedData = serde_json::from_str(eip_712_example).unwrap();
         let signer = build_signer();
         let from = *signer.addresses.first().unwrap();
-        let sig = EthSigner::<reth_ethereum_primitives::TransactionSigned>::sign_typed_data(
+        let sig = EthSigner::<hanzo_evm_ethereum_primitives::TransactionSigned>::sign_typed_data(
             &signer, from, &data,
         )
         .unwrap();
@@ -220,7 +220,7 @@ mod tests {
         let signer = build_signer();
         let from = *signer.addresses.first().unwrap();
         let sig =
-            EthSigner::<reth_ethereum_primitives::TransactionSigned>::sign(&signer, from, message)
+            EthSigner::<hanzo_evm_ethereum_primitives::TransactionSigned>::sign(&signer, from, message)
                 .await
                 .unwrap();
         let expected = Signature::new(

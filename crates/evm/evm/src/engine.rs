@@ -1,7 +1,7 @@
 use crate::{execute::ExecutableTxFor, ConfigureEvm, EvmEnvFor, ExecutionCtxFor, TxEnvFor};
 use alloy_evm::{block::ExecutableTxParts, RecoveredTx};
 use rayon::prelude::*;
-use reth_primitives_traits::TxTy;
+use hanzo_evm_primitives_traits::TxTy;
 
 /// [`ConfigureEvm`] extension providing methods for executing payloads.
 pub trait ConfigureEngineEvm<ExecutionData>: ConfigureEvm {

@@ -1,4 +1,4 @@
-## reth-node-builder
+## evm-node-builder
 
 A declarative way to configure a reth ethereum node.
 

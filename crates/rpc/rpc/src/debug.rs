@@ -15,28 +15,28 @@ use async_trait::async_trait;
 use futures::Stream;
 use jsonrpsee::core::RpcResult;
 use parking_lot::RwLock;
-use reth_chainspec::{ChainSpecProvider, EthChainSpec, EthereumHardforks};
-use reth_engine_primitives::ConsensusEngineEvent;
-use reth_errors::RethError;
-use reth_evm::{execute::Executor, ConfigureEvm, EvmEnvFor};
-use reth_primitives_traits::{
+use hanzo_evm_chainspec::{ChainSpecProvider, EthChainSpec, EthereumHardforks};
+use hanzo_evm_engine_primitives::ConsensusEngineEvent;
+use hanzo_evm_errors::EvmError;
+use hanzo_evm_execution::{execute::Executor, ConfigureEvm, EvmEnvFor};
+use hanzo_evm_primitives_traits::{
     Block as BlockTrait, BlockBody, BlockTy, ReceiptWithBloom, RecoveredBlock,
 };
-use reth_revm::{db::State, witness::ExecutionWitnessRecord};
-use reth_rpc_api::DebugApiServer;
-use reth_rpc_convert::RpcTxReq;
-use reth_rpc_eth_api::{
+use hanzo_evm_revm::{db::State, witness::ExecutionWitnessRecord};
+use hanzo_evm_rpc_api::DebugApiServer;
+use hanzo_evm_rpc_convert::RpcTxReq;
+use hanzo_evm_rpc_eth_api::{
     helpers::{EthTransactions, TraceExt},
     FromEthApiError, RpcConvert, RpcNodeCore,
 };
-use reth_rpc_eth_types::EthApiError;
-use reth_rpc_server_types::{result::internal_rpc_err, ToRpcResult};
-use reth_storage_api::{
+use hanzo_evm_rpc_eth_types::EthApiError;
+use hanzo_evm_rpc_server_types::{result::internal_rpc_err, ToRpcResult};
+use hanzo_evm_storage_api::{
     BlockIdReader, BlockReaderIdExt, HeaderProvider, ProviderBlock, ReceiptProviderIdExt,
     StateProofProvider, StateProviderFactory, StateRootProvider, TransactionVariant,
 };
-use reth_tasks::{pool::BlockingTaskGuard, TaskSpawner};
-use reth_trie_common::{updates::TrieUpdates, HashedPostState};
+use hanzo_evm_tasks::{pool::BlockingTaskGuard, TaskSpawner};
+use hanzo_evm_trie_common::{updates::TrieUpdates, HashedPostState};
 use revm::DatabaseCommit;
 use revm_inspectors::tracing::{DebugInspector, TransactionContext};
 use serde::{Deserialize, Serialize};
@@ -123,7 +123,7 @@ where
                 let mut inspector = DebugInspector::new(opts).map_err(Eth::Error::from_eth_err)?;
                 while let Some((index, tx)) = transactions.next() {
                     let tx_hash = *tx.tx_hash();
-                    let tx_env = eth_api.evm_config().tx_env(tx);
+                    let tx_env = eth_api.hanzo_evm_config().tx_env(tx);
 
                     let res = eth_api.inspect(
                         &mut db,
@@ -175,9 +175,9 @@ where
 
         let evm_env = self
             .eth_api()
-            .evm_config()
+            .hanzo_evm_config()
             .evm_env(block.header())
-            .map_err(RethError::other)
+            .map_err(EvmError::other)
             .map_err(Eth::Error::from_eth_err)?;
 
         // Depending on EIP-2 we need to recover the transactions differently
@@ -250,7 +250,7 @@ where
                     *tx.tx_hash(),
                 )?;
 
-                let tx_env = eth_api.evm_config().tx_env(&tx);
+                let tx_env = eth_api.hanzo_evm_config().tx_env(&tx);
 
                 let mut inspector = DebugInspector::new(opts).map_err(Eth::Error::from_eth_err)?;
                 let res =
@@ -282,7 +282,7 @@ where
     /// If not provided, then uses the post-state (default behavior).
     ///
     /// Differences compare to `eth_call`:
-    ///  - `debug_traceCall` executes with __enabled__ basefee check, `eth_call` does not: <https://github.com/paradigmxyz/reth/issues/6240>
+    ///  - `debug_traceCall` executes with __enabled__ basefee check, `eth_call` does not: <https://github.com/hanzoai/evm/issues/6240>
     pub async fn debug_trace_call(
         &self,
         call: RpcTxReq<Eth::NetworkTypes>,
@@ -364,7 +364,7 @@ where
 
                 // 2. replay the required number of transactions
                 for tx in block.transactions_recovered().take(tx_index) {
-                    let tx_env = eth_api.evm_config().tx_env(tx);
+                    let tx_env = eth_api.hanzo_evm_config().tx_env(tx);
                     let res = eth_api.transact(&mut db, evm_env.clone(), tx_env)?;
                     db.commit(res.state);
                 }
@@ -440,7 +440,7 @@ where
 
                     // Execute all transactions until index
                     for tx in transactions {
-                        let tx_env = eth_api.evm_config().tx_env(tx);
+                        let tx_env = eth_api.hanzo_evm_config().tx_env(tx);
                         let res = eth_api.transact(&mut db, evm_env.clone(), tx_env)?;
                         db.commit(res.state);
                     }
@@ -538,7 +538,7 @@ where
         let (mut exec_witness, lowest_block_number) = self
             .eth_api()
             .spawn_with_state_at_block(block.parent_hash(), move |eth_api, mut db| {
-                let block_executor = eth_api.evm_config().executor(&mut db);
+                let block_executor = eth_api.hanzo_evm_config().executor(&mut db);
 
                 let mut witness_record = ExecutionWitnessRecord::default();
 

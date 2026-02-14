@@ -1,7 +1,7 @@
 use alloy_primitives::{Address, B256, U256};
 use alloy_rlp::encode_fixed_size;
-use reth_primitives_traits::Account;
-use reth_trie_common::triehash::KeccakHasher;
+use hanzo_evm_primitives_traits::Account;
+use hanzo_evm_trie_common::triehash::KeccakHasher;
 
 /// Re-export of [triehash].
 pub use triehash;

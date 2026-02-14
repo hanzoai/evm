@@ -4,7 +4,7 @@ use jsonrpsee::{
     types::Request,
     MethodResponse, RpcModule,
 };
-use reth_metrics::{
+use hanzo_evm_metrics::{
     metrics::{Counter, Histogram},
     Metrics,
 };

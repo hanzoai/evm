@@ -1,20 +1,20 @@
 [package]
-name = "reth-rpc-api-testing-util"
+name = "hanzo-evm-rpc-api-testing-util"
 version.workspace = true
 edition.workspace = true
 rust-version.workspace = true
 license.workspace = true
 homepage.workspace = true
 repository.workspace = true
-description = "Reth RPC testing helpers"
+description = "Hanzo EVM RPC testing helpers"
 
 [lints]
 workspace = true
 
 [dependencies]
-# reth
-reth-ethereum-primitives.workspace = true
-reth-rpc-api = { workspace = true, features = ["client"] }
+# evm
+hanzo-evm-ethereum-primitives.workspace = true
+hanzo-evm-rpc-api = { workspace = true, features = ["client"] }
 
 # ethereum
 alloy-primitives.workspace = true
@@ -34,5 +34,5 @@ similar-asserts.workspace = true
 
 [dev-dependencies]
 tokio = { workspace = true, features = ["rt-multi-thread", "macros", "rt"] }
-reth-rpc-eth-api.workspace = true
+hanzo-evm-rpc-eth-api.workspace = true
 jsonrpsee-http-client.workspace = true

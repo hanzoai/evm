@@ -2,7 +2,7 @@
 
 use serde::{Deserialize, Serialize};
 
-use reth_rpc_server_types::constants::cache::{
+use hanzo_evm_rpc_server_types::constants::cache::{
     DEFAULT_BLOCK_CACHE_MAX_LEN, DEFAULT_CONCURRENT_DB_REQUESTS, DEFAULT_HEADER_CACHE_MAX_LEN,
     DEFAULT_MAX_CACHED_TX_HASHES, DEFAULT_RECEIPT_CACHE_MAX_LEN,
 };

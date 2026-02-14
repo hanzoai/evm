@@ -6,13 +6,13 @@ use crate::common::CliNodeTypes;
 use alloy_eips::BlockHashOrNumber;
 use backon::{ConstantBuilder, Retryable};
 use clap::{Parser, Subcommand};
-use reth_chainspec::{EthChainSpec, EthereumHardforks, Hardforks};
-use reth_cli::chainspec::ChainSpecParser;
-use reth_cli_util::hash_or_num_value_parser;
-use reth_config::Config;
-use reth_network::{BlockDownloaderProvider, NetworkConfigBuilder};
-use reth_network_p2p::bodies::client::BodiesClient;
-use reth_node_core::{
+use hanzo_evm_chainspec::{EthChainSpec, EthereumHardforks, Hardforks};
+use hanzo_evm_cli::chainspec::ChainSpecParser;
+use hanzo_evm_cli_util::hash_or_num_value_parser;
+use hanzo_evm_config::Config;
+use hanzo_evm_network::{BlockDownloaderProvider, NetworkConfigBuilder};
+use hanzo_evm_network_p2p::bodies::client::BodiesClient;
+use hanzo_evm_node_core::{
     args::{DatadirArgs, NetworkArgs},
     utils::get_single_header,
 };
@@ -21,7 +21,7 @@ pub mod bootnode;
 pub mod enode;
 pub mod rlpx;
 
-/// `reth p2p` command
+/// `evm p2p` command
 #[derive(Debug, Parser)]
 pub struct Command<C: ChainSpecParser> {
     #[command(subcommand)]
@@ -39,9 +39,9 @@ impl<C: ChainSpecParser<ChainSpec: EthChainSpec + Hardforks + EthereumHardforks>
 
                 let header = (move || get_single_header(fetch_client.clone(), id))
                     .retry(backoff)
-                    .notify(|err, _| tracing::warn!(target: "reth::cli", error = %err, "Error requesting header. Retrying..."))
+                    .notify(|err, _| tracing::warn!(target: "evm::cli", error = %err, "Error requesting header. Retrying..."))
                     .await?;
-                tracing::info!(target: "reth::cli", ?header, "Successfully downloaded header");
+                tracing::info!(target: "evm::cli", ?header, "Successfully downloaded header");
             }
 
             Subcommands::Body { args, id } => {
@@ -52,13 +52,13 @@ impl<C: ChainSpecParser<ChainSpec: EthChainSpec + Hardforks + EthereumHardforks>
                 let hash = match id {
                     BlockHashOrNumber::Hash(hash) => hash,
                     BlockHashOrNumber::Number(number) => {
-                        tracing::info!(target: "reth::cli", "Block number provided. Downloading header first...");
+                        tracing::info!(target: "evm::cli", "Block number provided. Downloading header first...");
                         let client = fetch_client.clone();
                         let header = (move || {
                             get_single_header(client.clone(), BlockHashOrNumber::Number(number))
                         })
                         .retry(backoff)
-                        .notify(|err, _| tracing::warn!(target: "reth::cli", error = %err, "Error requesting header. Retrying..."))
+                        .notify(|err, _| tracing::warn!(target: "evm::cli", error = %err, "Error requesting header. Retrying..."))
                         .await?;
                         header.hash()
                     }
@@ -68,7 +68,7 @@ impl<C: ChainSpecParser<ChainSpec: EthChainSpec + Hardforks + EthereumHardforks>
                     client.get_block_bodies(vec![hash])
                 })
                 .retry(backoff)
-                .notify(|err, _| tracing::warn!(target: "reth::cli", error = %err, "Error requesting block. Retrying..."))
+                .notify(|err, _| tracing::warn!(target: "evm::cli", error = %err, "Error requesting block. Retrying..."))
                 .await?
                 .split();
                 if result.len() != 1 {
@@ -78,7 +78,7 @@ impl<C: ChainSpecParser<ChainSpec: EthChainSpec + Hardforks + EthereumHardforks>
                     )
                 }
                 let body = result.into_iter().next().unwrap();
-                tracing::info!(target: "reth::cli", ?body, "Successfully downloaded body")
+                tracing::info!(target: "evm::cli", ?body, "Successfully downloaded body")
             }
             Subcommands::Rlpx(command) => {
                 command.execute().await?;
@@ -108,7 +108,7 @@ impl<C: ChainSpecParser> Command<C> {
     }
 }
 
-/// `reth p2p` subcommands
+/// `evm p2p` subcommands
 #[derive(Subcommand, Debug)]
 pub enum Subcommands<C: ChainSpecParser> {
     /// Download block header
@@ -168,7 +168,7 @@ impl<C: ChainSpecParser> DownloadArgs<C> {
     /// Creates and spawns the network and returns the handle.
     pub async fn launch_network<N>(
         &self,
-    ) -> eyre::Result<reth_network::NetworkHandle<N::NetworkPrimitives>>
+    ) -> eyre::Result<hanzo_evm_network::NetworkHandle<N::NetworkPrimitives>>
     where
         C::ChainSpec: EthChainSpec + Hardforks + EthereumHardforks + Send + Sync + 'static,
         N: CliNodeTypes<ChainSpec = C::ChainSpec>,
@@ -219,29 +219,29 @@ impl<C: ChainSpecParser> DownloadArgs<C> {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use reth_ethereum_cli::chainspec::EthereumChainSpecParser;
+    use hanzo_evm_ethereum_cli::chainspec::EthereumChainSpecParser;
 
     #[test]
     fn parse_header_cmd() {
         let _args: Command<EthereumChainSpecParser> =
-            Command::parse_from(["reth", "header", "--chain", "mainnet", "1000"]);
+            Command::parse_from(["evm", "header", "--chain", "mainnet", "1000"]);
     }
 
     #[test]
     fn parse_body_cmd() {
         let _args: Command<EthereumChainSpecParser> =
-            Command::parse_from(["reth", "body", "--chain", "mainnet", "1000"]);
+            Command::parse_from(["evm", "body", "--chain", "mainnet", "1000"]);
     }
 
     #[test]
     fn parse_enode_cmd() {
         let _args: Command<EthereumChainSpecParser> =
-            Command::parse_from(["reth", "enode", "/tmp/secret"]);
+            Command::parse_from(["evm", "enode", "/tmp/secret"]);
     }
 
     #[test]
     fn parse_enode_cmd_with_ip() {
         let _args: Command<EthereumChainSpecParser> =
-            Command::parse_from(["reth", "enode", "/tmp/secret", "--ip", "192.168.1.1"]);
+            Command::parse_from(["evm", "enode", "/tmp/secret", "--ip", "192.168.1.1"]);
     }
 }

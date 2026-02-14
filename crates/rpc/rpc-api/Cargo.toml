@@ -1,23 +1,23 @@
 [package]
-name = "reth-rpc-api"
+name = "hanzo-evm-rpc-api"
 version.workspace = true
 edition.workspace = true
 rust-version.workspace = true
 license.workspace = true
 homepage.workspace = true
 repository.workspace = true
-description = "Reth RPC interfaces"
+description = "Hanzo EVM RPC interfaces"
 
 [lints]
 workspace = true
 
 [dependencies]
-# reth
-reth-rpc-eth-api.workspace = true
-reth-engine-primitives.workspace = true
-reth-network-peers.workspace = true
-reth-trie-common.workspace = true
-reth-chain-state.workspace = true
+# evm
+hanzo-evm-rpc-eth-api.workspace = true
+hanzo-evm-engine-primitives.workspace = true
+hanzo-evm-network-peers.workspace = true
+hanzo-evm-trie-common.workspace = true
+hanzo-evm-chain-state.workspace = true
 
 # ethereum
 alloy-eip7928 = { workspace = true, features = ["serde"] }
@@ -45,7 +45,7 @@ serde_json.workspace = true
 client = [
     "jsonrpsee/client",
     "jsonrpsee/async-client",
-    "reth-rpc-eth-api/client",
+    "hanzo-evm-rpc-eth-api/client",
 ]
 
 [dev-dependencies]

@@ -3,7 +3,7 @@
 
 use discv5::enr::{CombinedPublicKey, EnrPublicKey, NodeId};
 use enr::Enr;
-use reth_network_peers::{id2pk, pk2id, PeerId};
+use hanzo_evm_network_peers::{id2pk, pk2id, PeerId};
 use secp256k1::{PublicKey, SecretKey};
 
 /// Extracts a [`CombinedPublicKey::Secp256k1`] from a [`discv5::Enr`] and converts it to a
@@ -58,8 +58,8 @@ mod tests {
     use super::*;
     use alloy_rlp::Encodable;
     use discv5::enr::{CombinedKey, EnrKey};
-    use reth_chainspec::{EthereumHardfork, MAINNET};
-    use reth_network_peers::NodeRecord;
+    use hanzo_evm_chainspec::{EthereumHardfork, MAINNET};
+    use hanzo_evm_network_peers::NodeRecord;
 
     #[test]
     fn discv5_discv4_id_conversion() {

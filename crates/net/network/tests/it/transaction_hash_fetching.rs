@@ -1,11 +1,11 @@
 use alloy_primitives::U256;
-use reth_network::{
+use hanzo_evm_network::{
     test_utils::Testnet,
     transactions::{TransactionPropagationMode::Max, TransactionsManagerConfig},
 };
-use reth_provider::test_utils::{ExtendedAccount, MockEthProvider};
-use reth_tracing::init_test_tracing;
-use reth_transaction_pool::{test_utils::TransactionGenerator, PoolTransaction, TransactionPool};
+use hanzo_evm_provider::test_utils::{ExtendedAccount, MockEthProvider};
+use hanzo_evm_tracing::init_test_tracing;
+use hanzo_evm_transaction_pool::{test_utils::TransactionGenerator, PoolTransaction, TransactionPool};
 use tokio::time::Duration;
 
 #[tokio::test(flavor = "multi_thread")]

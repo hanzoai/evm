@@ -7,7 +7,7 @@ use crate::{
     tree::{DnsEntry, LinkEntry, TreeRootEntry},
 };
 use enr::EnrKeyUnambiguous;
-use reth_tokio_util::ratelimit::{Rate, RateLimit};
+use hanzo_evm_tokio_util::ratelimit::{Rate, RateLimit};
 use std::{
     collections::VecDeque,
     future::Future,

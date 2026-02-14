@@ -1,26 +1,26 @@
 use alloy_primitives::{Address, BlockNumber, TxNumber};
-use reth_config::config::SenderRecoveryConfig;
-use reth_consensus::ConsensusError;
-use reth_db::static_file::TransactionMask;
-use reth_db_api::{
+use hanzo_evm_config::config::SenderRecoveryConfig;
+use hanzo_evm_consensus::ConsensusError;
+use hanzo_evm_db::static_file::TransactionMask;
+use hanzo_evm_db_api::{
     cursor::DbCursorRW,
     table::Value,
     tables,
     transaction::{DbTx, DbTxMut},
     RawValue,
 };
-use reth_primitives_traits::{GotExpected, NodePrimitives, SignedTransaction};
-use reth_provider::{
+use hanzo_evm_primitives_traits::{GotExpected, NodePrimitives, SignedTransaction};
+use hanzo_evm_provider::{
     BlockReader, DBProvider, EitherWriter, HeaderProvider, ProviderError, PruneCheckpointReader,
     PruneCheckpointWriter, StaticFileProviderFactory, StatsReader, StorageSettingsCache,
     TransactionsProvider,
 };
-use reth_prune_types::{PruneCheckpoint, PruneMode, PrunePurpose, PruneSegment};
-use reth_stages_api::{
+use hanzo_evm_prune_types::{PruneCheckpoint, PruneMode, PrunePurpose, PruneSegment};
+use hanzo_evm_stages_api::{
     BlockErrorKind, EntitiesCheckpoint, ExecInput, ExecOutput, Stage, StageCheckpoint, StageError,
     StageId, UnwindInput, UnwindOutput,
 };
-use reth_static_file_types::StaticFileSegment;
+use hanzo_evm_static_file_types::StaticFileSegment;
 use std::{fmt::Debug, ops::Range, sync::mpsc, time::Instant};
 use thiserror::Error;
 use tracing::*;
@@ -38,7 +38,7 @@ type RecoveryResultSender = mpsc::Sender<Result<(u64, Address), Box<SenderRecove
 
 /// The sender recovery stage iterates over existing transactions,
 /// recovers the transaction signer and stores them
-/// in [`TransactionSenders`][reth_db_api::tables::TransactionSenders] table.
+/// in [`TransactionSenders`][hanzo_evm_db_api::tables::TransactionSenders] table.
 #[derive(Clone, Debug)]
 pub struct SenderRecoveryStage {
     /// The size of inserted items after which the control
@@ -79,9 +79,9 @@ where
     }
 
     /// Retrieve the range of transactions to iterate over by querying
-    /// [`BlockBodyIndices`][reth_db_api::tables::BlockBodyIndices],
+    /// [`BlockBodyIndices`][hanzo_evm_db_api::tables::BlockBodyIndices],
     /// collect transactions within that range, recover signer for each transaction and store
-    /// entries in the [`TransactionSenders`][reth_db_api::tables::TransactionSenders] table or
+    /// entries in the [`TransactionSenders`][hanzo_evm_db_api::tables::TransactionSenders] table or
     /// static files depending on configuration.
     fn execute(
         &mut self,
@@ -339,7 +339,7 @@ where
     //
     // However, using `std::thread::spawn` allows us to utilize the timeout grace
     // period to complete some work without throwing errors during the shutdown.
-    reth_tasks::spawn_os_thread("sender-recovery", move || {
+    hanzo_evm_tasks::spawn_os_thread("sender-recovery", move || {
         while let Ok(chunks) = tx_receiver.recv() {
             for (chunk_range, recovered_senders_tx) in chunks {
                 // Read the raw value, and let the rayon worker to decompress & decode.
@@ -463,17 +463,17 @@ mod tests {
     };
     use alloy_primitives::{BlockNumber, B256};
     use assert_matches::assert_matches;
-    use reth_db_api::{cursor::DbCursorRO, models::StorageSettings};
-    use reth_ethereum_primitives::{Block, TransactionSigned};
-    use reth_primitives_traits::{SealedBlock, SignerRecoverable};
-    use reth_provider::{
+    use hanzo_evm_db_api::{cursor::DbCursorRO, models::StorageSettings};
+    use hanzo_evm_ethereum_primitives::{Block, TransactionSigned};
+    use hanzo_evm_primitives_traits::{SealedBlock, SignerRecoverable};
+    use hanzo_evm_provider::{
         providers::StaticFileWriter, BlockBodyIndicesProvider, DatabaseProviderFactory,
         PruneCheckpointWriter, StaticFileProviderFactory, TransactionsProvider,
     };
-    use reth_prune_types::{PruneCheckpoint, PruneMode};
-    use reth_stages_api::StageUnitCheckpoint;
-    use reth_static_file_types::StaticFileSegment;
-    use reth_testing_utils::generators::{
+    use hanzo_evm_prune_types::{PruneCheckpoint, PruneMode};
+    use hanzo_evm_stages_api::StageUnitCheckpoint;
+    use hanzo_evm_static_file_types::StaticFileSegment;
+    use hanzo_evm_testing_utils::generators::{
         self, random_block, random_block_range, BlockParams, BlockRangeParams,
     };
 

@@ -1,8 +1,8 @@
 use crate::{formatter::LogFormat, LayerInfo};
 #[cfg(feature = "otlp-logs")]
-use reth_tracing_otlp::{log_layer, OtlpLogsConfig};
+use hanzo_evm_tracing_otlp::{log_layer, OtlpLogsConfig};
 #[cfg(feature = "otlp")]
-use reth_tracing_otlp::{span_layer, OtlpConfig};
+use hanzo_evm_tracing_otlp::{span_layer, OtlpConfig};
 use rolling_file::{RollingConditionBasic, RollingFileAppender};
 use std::{
     fmt,

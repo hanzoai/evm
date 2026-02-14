@@ -1,5 +1,5 @@
 [package]
-name = "reth-era-downloader"
+name = "hanzo-evm-era-downloader"
 description = "An asynchronous stream interface for downloading ERA1 files"
 version.workspace = true
 edition.workspace = true
@@ -13,9 +13,9 @@ exclude.workspace = true
 # alloy
 alloy-primitives.workspace = true
 
-# reth
-reth-fs-util.workspace = true
-reth-era.workspace = true
+# evm
+hanzo-evm-fs-util.workspace = true
+hanzo-evm-era.workspace = true
 
 # http
 bytes.workspace = true

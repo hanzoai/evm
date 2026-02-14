@@ -86,7 +86,7 @@ pub struct TriePrefixSets {
 /// # Examples
 ///
 /// ```
-/// use reth_trie_common::{prefix_set::PrefixSetMut, Nibbles};
+/// use hanzo_evm_trie_common::{prefix_set::PrefixSetMut, Nibbles};
 ///
 /// let mut prefix_set_mut = PrefixSetMut::default();
 /// prefix_set_mut.insert(Nibbles::from_nibbles_unchecked(&[0xa, 0xb]));
@@ -199,7 +199,7 @@ impl PrefixSet {
     ///
     /// This optimization was inspired by Silkworm's implementation and significantly improves
     /// incremental state root calculation performance
-    /// ([see PR #2417](https://github.com/paradigmxyz/reth/pull/2417)).
+    /// ([see PR #2417](https://github.com/hanzoai/evm/pull/2417)).
     #[inline]
     pub fn contains(&mut self, prefix: &Nibbles) -> bool {
         if self.all {

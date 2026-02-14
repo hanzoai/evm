@@ -8,12 +8,12 @@ use crate::{
 };
 use futures::StreamExt;
 
-use reth_eth_wire::{errors::EthStreamError, DisconnectReason};
-use reth_ethereum_forks::ForkId;
-use reth_net_banlist::BanList;
-use reth_network_api::test_utils::{PeerCommand, PeersHandle};
-use reth_network_peers::{NodeRecord, PeerId};
-use reth_network_types::{
+use hanzo_evm_eth_wire::{errors::EthStreamError, DisconnectReason};
+use hanzo_evm_ethereum_forks::ForkId;
+use hanzo_evm_net_banlist::BanList;
+use hanzo_evm_network_api::test_utils::{PeerCommand, PeersHandle};
+use hanzo_evm_network_peers::{NodeRecord, PeerId};
+use hanzo_evm_network_types::{
     is_connection_failed_reputation,
     peers::{
         config::PeerBackoffDurations,
@@ -91,7 +91,7 @@ pub struct PeersManager {
     /// How long to temporarily ban ip on an incoming connection attempt.
     incoming_ip_throttle_duration: Duration,
     /// IP address filter for restricting network connections to specific IP ranges.
-    ip_filter: reth_net_banlist::IpFilter,
+    ip_filter: hanzo_evm_net_banlist::IpFilter,
 }
 
 impl PeersManager {
@@ -855,7 +855,7 @@ impl PeersManager {
     }
 
     /// Connect to the given peer. NOTE: if the maximum number of outbound sessions is reached,
-    /// this won't do anything. See `reth_network::SessionManager::dial_outbound`.
+    /// this won't do anything. See `hanzo_evm_network::SessionManager::dial_outbound`.
     #[cfg_attr(not(test), expect(dead_code))]
     pub(crate) fn add_and_connect(
         &mut self,
@@ -1263,14 +1263,14 @@ impl Display for InboundConnectionError {
 #[cfg(test)]
 mod tests {
     use alloy_primitives::B512;
-    use reth_eth_wire::{
+    use hanzo_evm_eth_wire::{
         errors::{EthHandshakeError, EthStreamError, P2PHandshakeError, P2PStreamError},
         DisconnectReason,
     };
-    use reth_net_banlist::BanList;
-    use reth_network_api::Direction;
-    use reth_network_peers::{PeerId, TrustedPeer};
-    use reth_network_types::{
+    use hanzo_evm_net_banlist::BanList;
+    use hanzo_evm_network_api::Direction;
+    use hanzo_evm_network_peers::{PeerId, TrustedPeer};
+    use hanzo_evm_network_types::{
         peers::reputation::DEFAULT_REPUTATION, BackoffKind, Peer, ReputationChangeKind,
     };
     use std::{
@@ -3007,9 +3007,9 @@ mod tests {
             peers.on_active_session_dropped(
                 &socket_addr,
                 &peer,
-                &EthStreamError::InvalidMessage(reth_eth_wire::message::MessageError::Invalid(
-                    reth_eth_wire::EthVersion::Eth68,
-                    reth_eth_wire::EthMessageID::Status,
+                &EthStreamError::InvalidMessage(hanzo_evm_eth_wire::message::MessageError::Invalid(
+                    hanzo_evm_eth_wire::EthVersion::Eth68,
+                    hanzo_evm_eth_wire::EthMessageID::Status,
                 )),
             );
 
@@ -3112,7 +3112,7 @@ mod tests {
 
     #[tokio::test]
     async fn test_ip_filter_blocks_inbound_connection() {
-        use reth_net_banlist::IpFilter;
+        use hanzo_evm_net_banlist::IpFilter;
         use std::net::IpAddr;
 
         // Create a filter that only allows 192.168.0.0/16
@@ -3131,7 +3131,7 @@ mod tests {
 
     #[tokio::test]
     async fn test_ip_filter_blocks_outbound_connection() {
-        use reth_net_banlist::IpFilter;
+        use hanzo_evm_net_banlist::IpFilter;
         use std::net::SocketAddr;
 
         // Create a filter that only allows 192.168.0.0/16
@@ -3155,7 +3155,7 @@ mod tests {
 
     #[tokio::test]
     async fn test_ip_filter_ipv6() {
-        use reth_net_banlist::IpFilter;
+        use hanzo_evm_net_banlist::IpFilter;
         use std::net::IpAddr;
 
         // Create a filter that only allows IPv6 range 2001:db8::/32
@@ -3174,7 +3174,7 @@ mod tests {
 
     #[tokio::test]
     async fn test_ip_filter_multiple_ranges() {
-        use reth_net_banlist::IpFilter;
+        use hanzo_evm_net_banlist::IpFilter;
         use std::net::IpAddr;
 
         // Create a filter that allows multiple ranges
@@ -3195,7 +3195,7 @@ mod tests {
 
     #[tokio::test]
     async fn test_ip_filter_no_restriction() {
-        use reth_net_banlist::IpFilter;
+        use hanzo_evm_net_banlist::IpFilter;
         use std::net::IpAddr;
 
         // Create a filter with no restrictions (allow all)

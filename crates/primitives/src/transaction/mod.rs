@@ -5,7 +5,7 @@ pub use alloy_consensus::transaction::PooledTransaction;
 use once_cell as _;
 #[expect(deprecated)]
 pub use pooled::PooledTransactionsElementEcRecovered;
-pub use reth_primitives_traits::{
+pub use hanzo_evm_primitives_traits::{
     sync::{LazyLock, OnceLock},
     transaction::{
         error::{
@@ -27,7 +27,7 @@ mod pooled;
 mod tx_type;
 
 /// Signed transaction.
-pub use reth_ethereum_primitives::{Transaction, TransactionSigned};
+pub use hanzo_evm_ethereum_primitives::{Transaction, TransactionSigned};
 
 /// Type alias kept for backward compatibility.
 #[deprecated(note = "Use `Recovered` instead")]

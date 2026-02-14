@@ -5,13 +5,13 @@
 #[cfg(any(test, feature = "file-client"))]
 use crate::{bodies::test_utils::create_raw_bodies, file_codec::BlockFileCodec};
 use alloy_primitives::{map::B256Map, B256};
-use reth_ethereum_primitives::BlockBody;
-use reth_testing_utils::generators::{self, random_block_range, BlockRangeParams};
+use hanzo_evm_ethereum_primitives::BlockBody;
+use hanzo_evm_testing_utils::generators::{self, random_block_range, BlockRangeParams};
 use std::ops::RangeInclusive;
 
 mod bodies_client;
 pub use bodies_client::TestBodiesClient;
-use reth_primitives_traits::SealedHeader;
+use hanzo_evm_primitives_traits::SealedHeader;
 
 /// Metrics scope used for testing.
 pub(crate) const TEST_SCOPE: &str = "downloaders.test";

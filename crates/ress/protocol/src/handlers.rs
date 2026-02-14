@@ -2,11 +2,11 @@ use crate::{
     connection::{RessPeerRequest, RessProtocolConnection},
     NodeType, RessProtocolMessage, RessProtocolProvider,
 };
-use reth_eth_wire::{
+use hanzo_evm_eth_wire::{
     capability::SharedCapabilities, multiplex::ProtocolConnection, protocol::Protocol,
 };
-use reth_network::protocol::{ConnectionHandler, OnNotSupported, ProtocolHandler};
-use reth_network_api::{test_utils::PeersHandle, Direction, PeerId};
+use hanzo_evm_network::protocol::{ConnectionHandler, OnNotSupported, ProtocolHandler};
+use hanzo_evm_network_api::{test_utils::PeersHandle, Direction, PeerId};
 use std::{
     fmt,
     net::SocketAddr,

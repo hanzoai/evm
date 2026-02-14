@@ -12,8 +12,8 @@ use thiserror::Error;
 /// when writing to the `PruneCheckpoint` table, so changing the order here will corrupt the table.
 #[derive(Debug, Display, Clone, Copy, Eq, PartialEq, Ord, PartialOrd, Hash, EnumIter)]
 #[cfg_attr(test, derive(arbitrary::Arbitrary))]
-#[cfg_attr(any(test, feature = "reth-codec"), derive(reth_codecs::Compact))]
-#[cfg_attr(any(test, feature = "reth-codec"), reth_codecs::add_arbitrary_tests(compact))]
+#[cfg_attr(any(test, feature = "hanzo-evm-codec"), derive(hanzo_evm_codecs::Compact))]
+#[cfg_attr(any(test, feature = "hanzo-evm-codec"), hanzo_evm_codecs::add_arbitrary_tests(compact))]
 #[cfg_attr(any(test, feature = "serde"), derive(serde::Serialize, serde::Deserialize))]
 pub enum PruneSegment {
     /// Prune segment responsible for the `TransactionSenders` table.

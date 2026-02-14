@@ -10,9 +10,9 @@ use alloy_primitives::{
 };
 use alloy_rlp::{Decodable, Encodable};
 use alloy_trie::proof::DecodedProofNodes;
-use reth_execution_errors::{SparseStateTrieErrorKind, SparseStateTrieResult, SparseTrieErrorKind};
-use reth_primitives_traits::Account;
-use reth_trie_common::{
+use hanzo_evm_execution_errors::{SparseStateTrieErrorKind, SparseStateTrieResult, SparseTrieErrorKind};
+use hanzo_evm_primitives_traits::Account;
+use hanzo_evm_trie_common::{
     proof::ProofNodes,
     updates::{StorageTrieUpdates, TrieUpdates},
     BranchNodeMasks, BranchNodeMasksMap, DecodedMultiProof, DecodedStorageMultiProof, MultiProof,
@@ -293,7 +293,7 @@ where
         // If std then reveal storage proofs in parallel
         {
             use rayon::iter::ParallelIterator;
-            use reth_primitives_traits::ParallelBridgeBuffered;
+            use hanzo_evm_primitives_traits::ParallelBridgeBuffered;
 
             let retain_updates = self.retain_updates;
 
@@ -364,7 +364,7 @@ where
     )]
     pub fn reveal_decoded_multiproof_v2(
         &mut self,
-        multiproof: reth_trie_common::DecodedMultiProofV2,
+        multiproof: hanzo_evm_trie_common::DecodedMultiProofV2,
     ) -> SparseStateTrieResult<()> {
         // Reveal the account proof nodes.
         //
@@ -393,7 +393,7 @@ where
         // If std then reveal storage proofs in parallel
         {
             use rayon::iter::ParallelIterator;
-            use reth_primitives_traits::ParallelBridgeBuffered;
+            use hanzo_evm_primitives_traits::ParallelBridgeBuffered;
 
             let retain_updates = self.retain_updates;
             let skip_filtering = self.skip_proof_node_filtering;
@@ -1698,9 +1698,9 @@ mod tests {
     };
     use arbitrary::Arbitrary;
     use rand::{rngs::StdRng, Rng, SeedableRng};
-    use reth_primitives_traits::Account;
-    use reth_trie::{updates::StorageTrieUpdates, HashBuilder, MultiProof, EMPTY_ROOT_HASH};
-    use reth_trie_common::{
+    use hanzo_evm_primitives_traits::Account;
+    use hanzo_evm_trie::{updates::StorageTrieUpdates, HashBuilder, MultiProof, EMPTY_ROOT_HASH};
+    use hanzo_evm_trie_common::{
         proof::{ProofNodes, ProofRetainer},
         BranchNode, BranchNodeMasks, BranchNodeMasksMap, LeafNode, StorageMultiProof, TrieMask,
     };
@@ -1984,7 +1984,7 @@ mod tests {
 
     #[test]
     fn take_trie_updates() {
-        reth_tracing::init_test_tracing();
+        hanzo_evm_tracing::init_test_tracing();
 
         // let mut rng = generators::rng();
         let mut rng = StdRng::seed_from_u64(1);

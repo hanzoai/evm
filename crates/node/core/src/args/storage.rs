@@ -38,13 +38,13 @@ mod tests {
 
     #[test]
     fn test_default_storage_args() {
-        let args = CommandParser::parse_from(["reth"]).args;
+        let args = CommandParser::parse_from(["evm"]).args;
         assert!(!args.v2);
     }
 
     #[test]
     fn test_parse_v2_flag() {
-        let args = CommandParser::parse_from(["reth", "--storage.v2"]).args;
+        let args = CommandParser::parse_from(["evm", "--storage.v2"]).args;
         assert!(args.v2);
     }
 }

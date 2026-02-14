@@ -1,6 +1,6 @@
 //! Consensus component for the node builder.
-use reth_consensus::FullConsensus;
-use reth_node_api::PrimitivesTy;
+use hanzo_evm_consensus::FullConsensus;
+use hanzo_evm_node_api::PrimitivesTy;
 
 use crate::{BuilderContext, FullNodeTypes};
 use std::future::Future;

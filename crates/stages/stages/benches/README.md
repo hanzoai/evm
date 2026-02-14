@@ -6,12 +6,12 @@ Test vectors are automatically generated if they cannot be found. Furthermore, f
 
 It will run the normal criterion benchmark.
 ```
-cargo bench --package reth-stages --bench criterion --features test-utils
+cargo bench --package evm-stages --bench criterion --features test-utils
 ```
 
 It will generate a flamegraph report without running any criterion analysis.
 ```
-cargo bench --package reth-stages --bench criterion --features test-utils -- --profile-time=2
+cargo bench --package evm-stages --bench criterion --features test-utils -- --profile-time=2
 ```
 Flamegraph reports can be found at `target/criterion/Stages/$STAGE_LABEL/profile/flamegraph.svg` 
 

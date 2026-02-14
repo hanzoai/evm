@@ -2,19 +2,19 @@ use alloy_eips::eip2718::Encodable2718;
 use alloy_genesis::Genesis;
 use alloy_primitives::{b256, hex, Address};
 use futures::StreamExt;
-use reth_chainspec::ChainSpec;
-use reth_node_api::{BlockBody, FullNodeComponents};
-use reth_node_builder::{rpc::RethRpcAddOns, FullNode, NodeBuilder, NodeConfig, NodeHandle};
-use reth_node_core::args::DevArgs;
-use reth_node_ethereum::{node::EthereumAddOns, EthereumNode};
-use reth_provider::{providers::BlockchainProvider, CanonStateSubscriptions};
-use reth_rpc_eth_api::{helpers::EthTransactions, EthApiServer};
-use reth_tasks::TaskManager;
+use hanzo_evm_chainspec::ChainSpec;
+use hanzo_evm_node_api::{BlockBody, FullNodeComponents};
+use hanzo_evm_node_builder::{rpc::EvmRpcAddOns, FullNode, NodeBuilder, NodeConfig, NodeHandle};
+use hanzo_evm_node_core::args::DevArgs;
+use hanzo_evm_node_ethereum::{node::EthereumAddOns, EthereumNode};
+use hanzo_evm_provider::{providers::BlockchainProvider, CanonStateSubscriptions};
+use hanzo_evm_rpc_eth_api::{helpers::EthTransactions, EthApiServer};
+use hanzo_evm_tasks::TaskManager;
 use std::sync::Arc;
 
 #[tokio::test]
 async fn can_run_dev_node() -> eyre::Result<()> {
-    reth_tracing::init_test_tracing();
+    hanzo_evm_tracing::init_test_tracing();
     let tasks = TaskManager::current();
     let exec = tasks.executor();
 
@@ -36,7 +36,7 @@ async fn can_run_dev_node() -> eyre::Result<()> {
 
 #[tokio::test]
 async fn can_run_dev_node_custom_attributes() -> eyre::Result<()> {
-    reth_tracing::init_test_tracing();
+    hanzo_evm_tracing::init_test_tracing();
     let tasks = TaskManager::current();
     let exec = tasks.executor();
 
@@ -80,7 +80,7 @@ async fn can_run_dev_node_custom_attributes() -> eyre::Result<()> {
 async fn assert_chain_advances<N, AddOns>(node: &FullNode<N, AddOns>)
 where
     N: FullNodeComponents<Provider: CanonStateSubscriptions>,
-    AddOns: RethRpcAddOns<N, EthApi: EthTransactions>,
+    AddOns: EvmRpcAddOns<N, EthApi: EthTransactions>,
 {
     let mut notifications = node.provider.canonical_state_stream();
 

@@ -78,7 +78,7 @@ mod tests {
             engine_rpc_url: "http://localhost:8551".to_string(),
             ..Default::default()
         };
-        let args = CommandParser::<BenchmarkArgs>::parse_from(["reth-bench"]).args;
+        let args = CommandParser::<BenchmarkArgs>::parse_from(["evm-bench"]).args;
         assert_eq!(args, default_args);
     }
 }

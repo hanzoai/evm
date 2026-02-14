@@ -10,17 +10,17 @@ use alloy_rpc_types_mev::{
     SimBundleResponse, Validity,
 };
 use jsonrpsee::core::RpcResult;
-use reth_evm::{ConfigureEvm, Evm};
-use reth_primitives_traits::Recovered;
-use reth_rpc_api::MevSimApiServer;
-use reth_rpc_eth_api::{
+use hanzo_evm_execution::{ConfigureEvm, Evm};
+use hanzo_evm_primitives_traits::Recovered;
+use hanzo_evm_rpc_api::MevSimApiServer;
+use hanzo_evm_rpc_eth_api::{
     helpers::{block::LoadBlock, Call, EthTransactions},
     FromEthApiError, FromEvmError,
 };
-use reth_rpc_eth_types::{utils::recover_raw_transaction, EthApiError};
-use reth_storage_api::ProviderTx;
-use reth_tasks::pool::BlockingTaskGuard;
-use reth_transaction_pool::{PoolPooledTx, PoolTransaction, TransactionPool};
+use hanzo_evm_rpc_eth_types::{utils::recover_raw_transaction, EthApiError};
+use hanzo_evm_storage_api::ProviderTx;
+use hanzo_evm_tasks::pool::BlockingTaskGuard;
+use hanzo_evm_transaction_pool::{PoolPooledTx, PoolTransaction, TransactionPool};
 use revm::{
     context::Block, context_interface::result::ResultAndState, DatabaseCommit, DatabaseRef,
 };
@@ -260,7 +260,7 @@ where
                 let mut refundable_value = U256::ZERO;
                 let mut body_logs: Vec<SimBundleLogs> = Vec::new();
 
-                let mut evm = eth_api.evm_config().evm_with_env(db, evm_env);
+                let mut evm = eth_api.hanzo_evm_config().evm_with_env(db, evm_env);
                 let mut log_index = 0;
 
                 for (tx_index, item) in flattened_bundle.iter().enumerate() {
@@ -279,7 +279,7 @@ where
                     }
 
                     let ResultAndState { result, state } = evm
-                        .transact(eth_api.evm_config().tx_env(&item.tx))
+                        .transact(eth_api.hanzo_evm_config().tx_env(&item.tx))
                         .map_err(Eth::Error::from_evm_err)?;
 
                     if !result.is_success() && !item.can_revert {

@@ -2,20 +2,20 @@
 
 use alloy_primitives::{B256, U256};
 use proptest::prelude::*;
-use reth_db::{
+use hanzo_evm_db::{
     cursor::{DbCursorRO, DbCursorRW, DbDupCursorRW},
     tables,
     transaction::DbTxMut,
 };
-use reth_primitives_traits::{Account, StorageEntry};
-use reth_provider::test_utils::create_test_provider_factory;
-use reth_trie::{
+use hanzo_evm_primitives_traits::{Account, StorageEntry};
+use hanzo_evm_provider::test_utils::create_test_provider_factory;
+use hanzo_evm_trie::{
     test_utils::{state_root_prehashed, storage_root_prehashed},
     trie_cursor::InMemoryTrieCursorFactory,
     updates::TrieUpdates,
     HashedPostState, HashedStorage, StateRoot, StorageRoot,
 };
-use reth_trie_db::{DatabaseStateRoot, DatabaseStorageRoot, DatabaseTrieCursorFactory};
+use hanzo_evm_trie_db::{DatabaseStateRoot, DatabaseStorageRoot, DatabaseTrieCursorFactory};
 use std::collections::BTreeMap;
 
 proptest! {

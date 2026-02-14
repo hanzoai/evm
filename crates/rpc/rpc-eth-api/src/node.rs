@@ -1,16 +1,16 @@
 //! Helper trait for interfacing with [`FullNodeComponents`].
 
-use reth_chain_state::CanonStateSubscriptions;
-use reth_chainspec::{ChainSpecProvider, EthChainSpec, EthereumHardforks, Hardforks};
-use reth_evm::ConfigureEvm;
-use reth_network_api::NetworkInfo;
-use reth_node_api::{FullNodeComponents, NodePrimitives, PrimitivesTy};
-use reth_primitives_traits::{BlockTy, HeaderTy, ReceiptTy, TxTy};
-use reth_rpc_eth_types::EthStateCache;
-use reth_storage_api::{
+use hanzo_evm_chain_state::CanonStateSubscriptions;
+use hanzo_evm_chainspec::{ChainSpecProvider, EthChainSpec, EthereumHardforks, Hardforks};
+use hanzo_evm_execution::ConfigureEvm;
+use hanzo_evm_network_api::NetworkInfo;
+use hanzo_evm_node_api::{FullNodeComponents, NodePrimitives, PrimitivesTy};
+use hanzo_evm_primitives_traits::{BlockTy, HeaderTy, ReceiptTy, TxTy};
+use hanzo_evm_rpc_eth_types::EthStateCache;
+use hanzo_evm_storage_api::{
     BlockReader, BlockReaderIdExt, StageCheckpointReader, StateProviderFactory,
 };
-use reth_transaction_pool::{PoolTransaction, TransactionPool};
+use hanzo_evm_transaction_pool::{PoolTransaction, TransactionPool};
 
 /// Helper trait that provides the same interface as [`FullNodeComponents`] but without requiring
 /// implementation of trait bounds.
@@ -53,7 +53,7 @@ pub trait RpcNodeCore: Clone + Send + Sync + Unpin + 'static {
     fn pool(&self) -> &Self::Pool;
 
     /// Returns the node's evm config.
-    fn evm_config(&self) -> &Self::Evm;
+    fn hanzo_evm_config(&self) -> &Self::Evm;
 
     /// Returns the handle to the network
     fn network(&self) -> &Self::Network;
@@ -78,8 +78,8 @@ where
     }
 
     #[inline]
-    fn evm_config(&self) -> &Self::Evm {
-        FullNodeComponents::evm_config(self)
+    fn hanzo_evm_config(&self) -> &Self::Evm {
+        FullNodeComponents::hanzo_evm_config(self)
     }
 
     #[inline]
@@ -106,13 +106,13 @@ pub struct RpcNodeCoreAdapter<Provider, Pool, Network, Evm> {
     provider: Provider,
     pool: Pool,
     network: Network,
-    evm_config: Evm,
+    hanzo_evm_config: Evm,
 }
 
 impl<Provider, Pool, Network, Evm> RpcNodeCoreAdapter<Provider, Pool, Network, Evm> {
     /// Creates a new `RpcNodeCoreAdapter` instance.
-    pub const fn new(provider: Provider, pool: Pool, network: Network, evm_config: Evm) -> Self {
-        Self { provider, pool, network, evm_config }
+    pub const fn new(provider: Provider, pool: Pool, network: Network, hanzo_evm_config: Evm) -> Self {
+        Self { provider, pool, network, hanzo_evm_config }
     }
 }
 
@@ -151,8 +151,8 @@ where
         &self.pool
     }
 
-    fn evm_config(&self) -> &Self::Evm {
-        &self.evm_config
+    fn hanzo_evm_config(&self) -> &Self::Evm {
+        &self.hanzo_evm_config
     }
 
     fn network(&self) -> &Self::Network {

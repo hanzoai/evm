@@ -3,8 +3,8 @@
 use std::{future::Future, pin::Pin};
 
 use futures::{Sink, SinkExt};
-use reth_ecies::stream::ECIESStream;
-use reth_eth_wire_types::DisconnectReason;
+use hanzo_evm_ecies::stream::ECIESStream;
+use hanzo_evm_eth_wire_types::DisconnectReason;
 use tokio::io::AsyncWrite;
 use tokio_util::codec::{Encoder, Framed};
 

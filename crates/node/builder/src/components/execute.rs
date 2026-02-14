@@ -1,6 +1,6 @@
 //! EVM component for the node builder.
 use crate::{BuilderContext, ConfigureEvm, FullNodeTypes};
-use reth_node_api::PrimitivesTy;
+use hanzo_evm_node_api::PrimitivesTy;
 use std::future::Future;
 
 /// A type that knows how to build the executor types.

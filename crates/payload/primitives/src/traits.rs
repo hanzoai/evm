@@ -10,10 +10,10 @@ use alloy_primitives::{Address, B256, U256};
 use alloy_rpc_types_engine::{PayloadAttributes as EthPayloadAttributes, PayloadId};
 use core::fmt;
 use either::Either;
-use reth_chain_state::ComputedTrieData;
-use reth_execution_types::BlockExecutionOutput;
-use reth_primitives_traits::{NodePrimitives, RecoveredBlock, SealedBlock, SealedHeader};
-use reth_trie_common::{
+use hanzo_evm_chain_state::ComputedTrieData;
+use hanzo_evm_execution_types::BlockExecutionOutput;
+use hanzo_evm_primitives_traits::{NodePrimitives, RecoveredBlock, SealedBlock, SealedHeader};
+use hanzo_evm_trie_common::{
     updates::{TrieUpdates, TrieUpdatesSorted},
     HashedPostState, HashedPostStateSorted,
 };
@@ -41,11 +41,11 @@ pub struct BuiltPayloadExecutedBlock<N: NodePrimitives> {
 }
 
 impl<N: NodePrimitives> BuiltPayloadExecutedBlock<N> {
-    /// Converts this into an [`reth_chain_state::ExecutedBlock`].
+    /// Converts this into an [`hanzo_evm_chain_state::ExecutedBlock`].
     ///
     /// Ensures hashed state and trie updates are in their sorted representations
-    /// as required by `reth_chain_state::ExecutedBlock`.
-    pub fn into_executed_payload(self) -> reth_chain_state::ExecutedBlock<N> {
+    /// as required by `hanzo_evm_chain_state::ExecutedBlock`.
+    pub fn into_executed_payload(self) -> hanzo_evm_chain_state::ExecutedBlock<N> {
         let hashed_state = match self.hashed_state {
             // Convert unsorted to sorted
             Either::Left(unsorted) => Arc::new(Arc::unwrap_or_clone(unsorted).into_sorted()),
@@ -60,7 +60,7 @@ impl<N: NodePrimitives> BuiltPayloadExecutedBlock<N> {
             Either::Right(sorted) => sorted,
         };
 
-        reth_chain_state::ExecutedBlock::new(
+        hanzo_evm_chain_state::ExecutedBlock::new(
             self.recovered_block,
             self.execution_output,
             ComputedTrieData::without_trie_input(hashed_state, trie_updates),

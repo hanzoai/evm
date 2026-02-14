@@ -3,8 +3,8 @@
 //! This test verifies the behavior when attempting to reorg behind a finalized block.
 
 use eyre::Result;
-use reth_chainspec::{ChainSpecBuilder, MAINNET};
-use reth_e2e_test_utils::testsuite::{
+use hanzo_evm_chainspec::{ChainSpecBuilder, MAINNET};
+use hanzo_evm_e2e_test_utils::testsuite::{
     actions::{
         BlockReference, CaptureBlock, CreateFork, FinalizeBlock, MakeCanonical, ProduceBlocks,
         SendForkchoiceUpdate,
@@ -12,9 +12,9 @@ use reth_e2e_test_utils::testsuite::{
     setup::{NetworkSetup, Setup},
     TestBuilder,
 };
-use reth_engine_tree::tree::TreeConfig;
-use reth_ethereum_engine_primitives::EthEngineTypes;
-use reth_node_ethereum::EthereumNode;
+use hanzo_evm_engine_tree::tree::TreeConfig;
+use hanzo_evm_ethereum_engine_primitives::EthEngineTypes;
+use hanzo_evm_node_ethereum::EthereumNode;
 use std::sync::Arc;
 
 /// Creates the standard setup for engine tree e2e tests.
@@ -44,7 +44,7 @@ fn default_engine_tree_setup() -> Setup<EthEngineTypes> {
 /// 3. Attempts to switch to that fork (which would require changing history behind finalized)
 #[tokio::test]
 async fn test_reorg_to_fork_behind_finalized() -> Result<()> {
-    reth_tracing::init_test_tracing();
+    hanzo_evm_tracing::init_test_tracing();
 
     let test = TestBuilder::new()
         .with_setup(default_engine_tree_setup())

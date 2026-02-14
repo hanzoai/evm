@@ -1,12 +1,12 @@
-//! Helper types for `reth_rpc_eth_api::EthApiServer` implementation.
+//! Helper types for `hanzo_evm_rpc_eth_api::EthApiServer` implementation.
 //!
 //! Transaction wrapper that labels transaction with its origin.
 
 use alloy_primitives::B256;
 use alloy_rpc_types_eth::TransactionInfo;
-use reth_ethereum_primitives::TransactionSigned;
-use reth_primitives_traits::{NodePrimitives, Recovered, SignedTransaction};
-use reth_rpc_convert::{RpcConvert, RpcTransaction};
+use hanzo_evm_ethereum_primitives::TransactionSigned;
+use hanzo_evm_primitives_traits::{NodePrimitives, Recovered, SignedTransaction};
+use hanzo_evm_rpc_convert::{RpcConvert, RpcTransaction};
 
 /// Represents from where a transaction was fetched.
 #[derive(Debug, Clone, Eq, PartialEq)]

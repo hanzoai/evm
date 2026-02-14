@@ -4,14 +4,14 @@ use crate::Compact;
 use alloc::vec::Vec;
 use alloy_genesis::GenesisAccount as AlloyGenesisAccount;
 use alloy_primitives::{Bytes, B256, U256};
-use reth_codecs_derive::add_arbitrary_tests;
+use hanzo_evm_codecs_derive::add_arbitrary_tests;
 
 /// `GenesisAccount` acts as bridge which simplifies Compact implementation for
 /// `AlloyGenesisAccount`.
 ///
 /// Notice: Make sure this struct is 1:1 with `alloy_genesis::GenesisAccount`
 #[derive(Debug, Clone, PartialEq, Eq, Compact)]
-#[reth_codecs(crate = "crate")]
+#[hanzo_evm_codecs(crate = "crate")]
 pub(crate) struct GenesisAccountRef<'a> {
     /// The nonce of the account at genesis.
     nonce: Option<u64>,
@@ -28,7 +28,7 @@ pub(crate) struct GenesisAccountRef<'a> {
 /// Acts as bridge which simplifies Compact implementation for
 /// `AlloyGenesisAccount`.
 #[derive(Debug, Clone, PartialEq, Eq, Default, Compact)]
-#[reth_codecs(crate = "crate")]
+#[hanzo_evm_codecs(crate = "crate")]
 #[cfg_attr(
     any(test, feature = "test-utils"),
     derive(arbitrary::Arbitrary, serde::Serialize, serde::Deserialize)
@@ -49,7 +49,7 @@ pub(crate) struct GenesisAccount {
 }
 
 #[derive(Debug, Clone, PartialEq, Eq, Default, Compact)]
-#[reth_codecs(crate = "crate")]
+#[hanzo_evm_codecs(crate = "crate")]
 #[cfg_attr(
     any(test, feature = "test-utils"),
     derive(arbitrary::Arbitrary, serde::Serialize, serde::Deserialize)
@@ -60,7 +60,7 @@ pub(crate) struct StorageEntries {
 }
 
 #[derive(Debug, Clone, PartialEq, Eq, Default, Compact)]
-#[reth_codecs(crate = "crate")]
+#[hanzo_evm_codecs(crate = "crate")]
 #[cfg_attr(
     any(test, feature = "test-utils"),
     derive(arbitrary::Arbitrary, serde::Serialize, serde::Deserialize)

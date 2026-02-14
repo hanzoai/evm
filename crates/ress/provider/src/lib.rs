@@ -1,9 +1,9 @@
-//! Reth implementation of [`reth_ress_protocol::RessProtocolProvider`].
+//! Hanzo EVM implementation of [`hanzo_evm_ress_protocol::RessProtocolProvider`].
 
 #![doc(
-    html_logo_url = "https://raw.githubusercontent.com/paradigmxyz/reth/main/assets/reth-docs.png",
+    html_logo_url = "https://raw.githubusercontent.com/hanzoai/evm/main/assets/evm-docs.png",
     html_favicon_url = "https://avatars0.githubusercontent.com/u/97369466?s=256",
-    issue_tracker_base_url = "https://github.com/paradigmxyz/reth/issues/"
+    issue_tracker_base_url = "https://github.com/hanzoai/evm/issues/"
 )]
 #![cfg_attr(not(test), warn(unused_crate_dependencies))]
 #![cfg_attr(docsrs, feature(doc_cfg))]
@@ -11,15 +11,15 @@
 use alloy_consensus::BlockHeader as _;
 use alloy_primitives::{Bytes, B256};
 use parking_lot::Mutex;
-use reth_chain_state::{ExecutedBlock, MemoryOverlayStateProvider};
-use reth_errors::{ProviderError, ProviderResult};
-use reth_ethereum_primitives::{Block, BlockBody, EthPrimitives};
-use reth_evm::{execute::Executor, ConfigureEvm};
-use reth_primitives_traits::{Block as _, Header, RecoveredBlock};
-use reth_ress_protocol::RessProtocolProvider;
-use reth_revm::{database::StateProviderDatabase, db::State, witness::ExecutionWitnessRecord};
-use reth_tasks::TaskSpawner;
-use reth_trie::{MultiProofTargets, Nibbles, TrieInput};
+use hanzo_evm_chain_state::{ExecutedBlock, MemoryOverlayStateProvider};
+use hanzo_evm_errors::{ProviderError, ProviderResult};
+use hanzo_evm_ethereum_primitives::{Block, BlockBody, EthPrimitives};
+use hanzo_evm_execution::{execute::Executor, ConfigureEvm};
+use hanzo_evm_primitives_traits::{Block as _, Header, RecoveredBlock};
+use hanzo_evm_ress_protocol::RessProtocolProvider;
+use hanzo_evm_revm::{database::StateProviderDatabase, db::State, witness::ExecutionWitnessRecord};
+use hanzo_evm_tasks::TaskSpawner;
+use hanzo_evm_trie::{MultiProofTargets, Nibbles, TrieInput};
 use schnellru::{ByLength, LruMap};
 use std::{sync::Arc, time::Instant};
 use tokio::sync::{oneshot, Semaphore};
@@ -30,14 +30,14 @@ use recorder::StateWitnessRecorderDatabase;
 
 mod pending_state;
 pub use pending_state::*;
-use reth_storage_api::{BlockReader, BlockSource, StateProviderFactory};
+use hanzo_evm_storage_api::{BlockReader, BlockSource, StateProviderFactory};
 
-/// Reth provider implementing [`RessProtocolProvider`].
+/// Hanzo EVM provider implementing [`RessProtocolProvider`].
 #[expect(missing_debug_implementations)]
 #[derive(Clone)]
-pub struct RethRessProtocolProvider<P, E> {
+pub struct EvmRessProtocolProvider<P, E> {
     provider: P,
-    evm_config: E,
+    hanzo_evm_config: E,
     task_spawner: Box<dyn TaskSpawner>,
     max_witness_window: u64,
     witness_semaphore: Arc<Semaphore>,
@@ -45,7 +45,7 @@ pub struct RethRessProtocolProvider<P, E> {
     pending_state: PendingState<EthPrimitives>,
 }
 
-impl<P, E> RethRessProtocolProvider<P, E>
+impl<P, E> EvmRessProtocolProvider<P, E>
 where
     P: BlockReader<Block = Block> + StateProviderFactory,
     E: ConfigureEvm<Primitives = EthPrimitives> + 'static,
@@ -53,7 +53,7 @@ where
     /// Create new ress protocol provider.
     pub fn new(
         provider: P,
-        evm_config: E,
+        hanzo_evm_config: E,
         task_spawner: Box<dyn TaskSpawner>,
         max_witness_window: u64,
         witness_max_parallel: usize,
@@ -62,7 +62,7 @@ where
     ) -> eyre::Result<Self> {
         Ok(Self {
             provider,
-            evm_config,
+            hanzo_evm_config,
             task_spawner,
             max_witness_window,
             witness_semaphore: Arc::new(Semaphore::new(witness_max_parallel)),
@@ -76,7 +76,7 @@ where
         &self,
         block_hash: B256,
     ) -> ProviderResult<Option<Arc<RecoveredBlock<Block>>>> {
-        // NOTE: we keep track of the pending state locally because reth does not provider a way
+        // NOTE: we keep track of the pending state locally because evm does not provider a way
         // to access non-canonical or invalid blocks via the provider.
         let maybe_block = if let Some(block) = self.pending_state.recovered_block(&block_hash) {
             Some(block)
@@ -122,7 +122,7 @@ where
                         let Some(invalid) =
                             self.pending_state.invalid_recovered_block(&ancestor_hash)
                     {
-                        trace!(target: "reth::ress_provider", %block_hash, %ancestor_hash, "Using invalid ancestor block for witness construction");
+                        trace!(target: "evm::ress_provider", %block_hash, %ancestor_hash, "Using invalid ancestor block for witness construction");
                         executed =
                             Some(ExecutedBlock { recovered_block: invalid, ..Default::default() });
                     }
@@ -144,13 +144,13 @@ where
 
         // We allow block execution to fail, since we still want to record all accessed state by
         // invalid blocks.
-        if let Err(error) = self.evm_config.batch_executor(&mut db).execute_with_state_closure(
+        if let Err(error) = self.hanzo_evm_config.batch_executor(&mut db).execute_with_state_closure(
             &block,
             |state: &State<_>| {
                 record.record_executed_state(state);
             },
         ) {
-            debug!(target: "reth::ress_provider", %block_hash, %error, "Error executing the block");
+            debug!(target: "evm::ress_provider", %block_hash, %error, "Error executing the block");
         }
 
         // NOTE: there might be a race condition where target ancestor hash gets evicted from the
@@ -190,23 +190,23 @@ where
     }
 }
 
-impl<P, E> RessProtocolProvider for RethRessProtocolProvider<P, E>
+impl<P, E> RessProtocolProvider for EvmRessProtocolProvider<P, E>
 where
     P: BlockReader<Block = Block> + StateProviderFactory + Clone + 'static,
     E: ConfigureEvm<Primitives = EthPrimitives> + 'static,
 {
     fn header(&self, block_hash: B256) -> ProviderResult<Option<Header>> {
-        trace!(target: "reth::ress_provider", %block_hash, "Serving header");
+        trace!(target: "evm::ress_provider", %block_hash, "Serving header");
         Ok(self.block_by_hash(block_hash)?.map(|b| b.header().clone()))
     }
 
     fn block_body(&self, block_hash: B256) -> ProviderResult<Option<BlockBody>> {
-        trace!(target: "reth::ress_provider", %block_hash, "Serving block body");
+        trace!(target: "evm::ress_provider", %block_hash, "Serving block body");
         Ok(self.block_by_hash(block_hash)?.map(|b| b.body().clone()))
     }
 
     fn bytecode(&self, code_hash: B256) -> ProviderResult<Option<Bytes>> {
-        trace!(target: "reth::ress_provider", %code_hash, "Serving bytecode");
+        trace!(target: "evm::ress_provider", %code_hash, "Serving bytecode");
         let maybe_bytecode = 'bytecode: {
             if let Some(bytecode) = self.pending_state.find_bytecode(code_hash) {
                 break 'bytecode Some(bytecode);
@@ -219,7 +219,7 @@ where
     }
 
     async fn witness(&self, block_hash: B256) -> ProviderResult<Vec<Bytes>> {
-        trace!(target: "reth::ress_provider", %block_hash, "Serving witness");
+        trace!(target: "evm::ress_provider", %block_hash, "Serving witness");
         let started_at = Instant::now();
         let _permit = self.witness_semaphore.acquire().await.map_err(ProviderError::other)?;
         let this = self.clone();
@@ -230,7 +230,7 @@ where
         }));
         match rx.await {
             Ok(Ok(witness)) => {
-                trace!(target: "reth::ress_provider", %block_hash, elapsed = ?started_at.elapsed(), "Computed witness");
+                trace!(target: "evm::ress_provider", %block_hash, elapsed = ?started_at.elapsed(), "Computed witness");
                 Ok(witness)
             }
             Ok(Err(error)) => Err(error),

@@ -6,10 +6,10 @@ edition.workspace = true
 license.workspace = true
 
 [dependencies]
-reth-discv4.workspace = true
-reth-ethereum = { workspace = true, features = ["network"] }
-reth-ecies.workspace = true
-reth-network-peers.workspace = true
+hanzo-evm-discv4.workspace = true
+hanzo-evm-ethereum = { workspace = true, features = ["network"] }
+hanzo-evm-ecies.workspace = true
+hanzo-evm-network-peers.workspace = true
 
 alloy-consensus.workspace = true
 

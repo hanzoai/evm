@@ -1,27 +1,27 @@
 use alloy_eips::eip2718::Encodable2718;
 use alloy_primitives::{TxHash, TxNumber};
 use num_traits::Zero;
-use reth_config::config::{EtlConfig, TransactionLookupConfig};
+use hanzo_evm_config::config::{EtlConfig, TransactionLookupConfig};
 #[cfg(all(unix, feature = "rocksdb"))]
-use reth_db_api::Tables;
-use reth_db_api::{
+use hanzo_evm_db_api::Tables;
+use hanzo_evm_db_api::{
     table::{Decode, Decompress, Value},
     tables,
     transaction::DbTxMut,
 };
-use reth_etl::Collector;
-use reth_primitives_traits::{NodePrimitives, SignedTransaction};
-use reth_provider::{
+use hanzo_evm_etl::Collector;
+use hanzo_evm_primitives_traits::{NodePrimitives, SignedTransaction};
+use hanzo_evm_provider::{
     BlockReader, DBProvider, EitherWriter, PruneCheckpointReader, PruneCheckpointWriter,
     RocksDBProviderFactory, StaticFileProviderFactory, StatsReader, StorageSettingsCache,
     TransactionsProvider, TransactionsProviderExt,
 };
-use reth_prune_types::{PruneCheckpoint, PruneMode, PrunePurpose, PruneSegment};
-use reth_stages_api::{
+use hanzo_evm_prune_types::{PruneCheckpoint, PruneMode, PrunePurpose, PruneSegment};
+use hanzo_evm_stages_api::{
     EntitiesCheckpoint, ExecInput, ExecOutput, Stage, StageCheckpoint, StageError, StageId,
     UnwindInput, UnwindOutput,
 };
-use reth_storage_errors::provider::ProviderError;
+use hanzo_evm_storage_errors::provider::ProviderError;
 use tracing::*;
 
 /// The transaction lookup stage.
@@ -31,11 +31,11 @@ use tracing::*;
 /// [`tables::TransactionHashNumbers`] This is used for looking up changesets via the transaction
 /// hash.
 ///
-/// It uses [`reth_etl::Collector`] to collect all entries before finally writing them to disk.
+/// It uses [`hanzo_evm_etl::Collector`] to collect all entries before finally writing them to disk.
 #[derive(Debug, Clone)]
 pub struct TransactionLookupStage {
     /// The maximum number of lookup entries to hold in memory before pushing them to
-    /// [`reth_etl::Collector`].
+    /// [`hanzo_evm_etl::Collector`].
     chunk_size: u64,
     etl_config: EtlConfig,
     prune_mode: Option<PruneMode>,
@@ -285,14 +285,14 @@ mod tests {
     };
     use alloy_primitives::{BlockNumber, B256};
     use assert_matches::assert_matches;
-    use reth_db_api::{cursor::DbCursorRO, transaction::DbTx};
-    use reth_ethereum_primitives::Block;
-    use reth_primitives_traits::SealedBlock;
-    use reth_provider::{
+    use hanzo_evm_db_api::{cursor::DbCursorRO, transaction::DbTx};
+    use hanzo_evm_ethereum_primitives::Block;
+    use hanzo_evm_primitives_traits::SealedBlock;
+    use hanzo_evm_provider::{
         providers::StaticFileWriter, BlockBodyIndicesProvider, DatabaseProviderFactory,
     };
-    use reth_stages_api::StageUnitCheckpoint;
-    use reth_testing_utils::generators::{
+    use hanzo_evm_stages_api::StageUnitCheckpoint;
+    use hanzo_evm_testing_utils::generators::{
         self, random_block, random_block_range, BlockParams, BlockRangeParams,
     };
     use std::ops::Sub;
@@ -604,8 +604,8 @@ mod tests {
     #[cfg(all(unix, feature = "rocksdb"))]
     mod rocksdb_tests {
         use super::*;
-        use reth_provider::RocksDBProviderFactory;
-        use reth_storage_api::StorageSettings;
+        use hanzo_evm_provider::RocksDBProviderFactory;
+        use hanzo_evm_storage_api::StorageSettings;
 
         /// Test that when `transaction_hash_numbers_in_rocksdb` is enabled, the stage
         /// writes transaction hash mappings to `RocksDB` instead of MDBX.

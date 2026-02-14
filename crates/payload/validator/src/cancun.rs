@@ -2,7 +2,7 @@
 
 use alloy_consensus::{BlockBody, Transaction, Typed2718};
 use alloy_rpc_types_engine::{CancunPayloadFields, PayloadError};
-use reth_primitives_traits::{AlloyBlockHeader, Block, SealedBlock};
+use hanzo_evm_primitives_traits::{AlloyBlockHeader, Block, SealedBlock};
 
 /// Checks block and sidecar w.r.t new Cancun fields and new transaction type EIP-4844.
 ///

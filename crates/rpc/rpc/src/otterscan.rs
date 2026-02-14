@@ -12,15 +12,15 @@ use alloy_rpc_types_trace::{
 };
 use async_trait::async_trait;
 use jsonrpsee::{core::RpcResult, types::ErrorObjectOwned};
-use reth_primitives_traits::TxTy;
-use reth_rpc_api::{EthApiServer, OtterscanServer};
-use reth_rpc_convert::RpcTxReq;
-use reth_rpc_eth_api::{
+use hanzo_evm_primitives_traits::TxTy;
+use hanzo_evm_rpc_api::{EthApiServer, OtterscanServer};
+use hanzo_evm_rpc_convert::RpcTxReq;
+use hanzo_evm_rpc_eth_api::{
     helpers::{EthTransactions, TraceExt},
     FullEthApiTypes, RpcBlock, RpcHeader, RpcReceipt, RpcTransaction,
 };
-use reth_rpc_eth_types::{utils::binary_search, EthApiError};
-use reth_rpc_server_types::result::internal_rpc_err;
+use hanzo_evm_rpc_eth_types::{utils::binary_search, EthApiError};
+use hanzo_evm_rpc_server_types::result::internal_rpc_err;
 use revm::context_interface::result::ExecutionResult;
 use revm_inspectors::{
     tracing::{types::CallTraceNode, TracingInspectorConfig},

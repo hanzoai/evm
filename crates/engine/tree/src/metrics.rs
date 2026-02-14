@@ -1,4 +1,4 @@
-use reth_metrics::{
+use hanzo_evm_metrics::{
     metrics::{Gauge, Histogram},
     Metrics,
 };

@@ -1,7 +1,7 @@
 use alloy_primitives::BlockNumber;
-use reth_errors::ProviderResult;
-use reth_static_file_types::StaticFileSegment;
-use reth_storage_api::NodePrimitivesProvider;
+use hanzo_evm_errors::ProviderResult;
+use hanzo_evm_static_file_types::StaticFileSegment;
+use hanzo_evm_storage_api::NodePrimitivesProvider;
 
 use crate::providers::{StaticFileProvider, StaticFileProviderRWRefMut};
 

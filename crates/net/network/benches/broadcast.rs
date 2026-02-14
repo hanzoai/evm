@@ -3,10 +3,10 @@ use alloy_primitives::U256;
 use criterion::*;
 use futures::StreamExt;
 use rand::SeedableRng;
-use reth_network::{test_utils::Testnet, NetworkEventListenerProvider};
-use reth_network_api::Peers;
-use reth_provider::test_utils::{ExtendedAccount, MockEthProvider};
-use reth_transaction_pool::{test_utils::TransactionGenerator, PoolTransaction};
+use hanzo_evm_network::{test_utils::Testnet, NetworkEventListenerProvider};
+use hanzo_evm_network_api::Peers;
+use hanzo_evm_provider::test_utils::{ExtendedAccount, MockEthProvider};
+use hanzo_evm_transaction_pool::{test_utils::TransactionGenerator, PoolTransaction};
 use std::sync::Arc;
 use tokio::{runtime::Runtime as TokioRuntime, sync::mpsc::unbounded_channel};
 

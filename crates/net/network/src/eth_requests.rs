@@ -8,16 +8,16 @@ use alloy_consensus::{BlockHeader, ReceiptWithBloom};
 use alloy_eips::BlockHashOrNumber;
 use alloy_rlp::Encodable;
 use futures::StreamExt;
-use reth_eth_wire::{
+use hanzo_evm_eth_wire::{
     BlockBodies, BlockHeaders, EthNetworkPrimitives, GetBlockBodies, GetBlockHeaders, GetNodeData,
     GetReceipts, GetReceipts70, HeadersDirection, NetworkPrimitives, NodeData, Receipts,
     Receipts69, Receipts70,
 };
-use reth_network_api::test_utils::PeersHandle;
-use reth_network_p2p::error::RequestResult;
-use reth_network_peers::PeerId;
-use reth_primitives_traits::Block;
-use reth_storage_api::{BlockReader, HeaderProvider};
+use hanzo_evm_network_api::test_utils::PeersHandle;
+use hanzo_evm_network_p2p::error::RequestResult;
+use hanzo_evm_network_peers::PeerId;
+use hanzo_evm_primitives_traits::Block;
+use hanzo_evm_storage_api::{BlockReader, HeaderProvider};
 use std::{
     future::Future,
     pin::Pin,

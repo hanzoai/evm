@@ -2,8 +2,8 @@ use crate::BlockProvider;
 use alloy_provider::{ConnectionConfig, Network, Provider, ProviderBuilder, WebSocketConfig};
 use alloy_transport::TransportResult;
 use futures::{Stream, StreamExt};
-use reth_node_api::Block;
-use reth_tracing::tracing::{debug, warn};
+use hanzo_evm_node_api::Block;
+use hanzo_evm_tracing::tracing::{debug, warn};
 use std::sync::Arc;
 use tokio::sync::mpsc::Sender;
 

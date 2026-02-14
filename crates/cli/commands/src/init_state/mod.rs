@@ -4,12 +4,12 @@ use crate::common::{AccessRights, CliNodeTypes, Environment, EnvironmentArgs};
 use alloy_consensus::BlockHeader as AlloyBlockHeader;
 use alloy_primitives::{Sealable, B256};
 use clap::Parser;
-use reth_chainspec::{EthChainSpec, EthereumHardforks};
-use reth_cli::chainspec::ChainSpecParser;
-use reth_db_common::init::init_from_state_dump;
-use reth_node_api::NodePrimitives;
-use reth_primitives_traits::{header::HeaderMut, SealedHeader};
-use reth_provider::{
+use hanzo_evm_chainspec::{EthChainSpec, EthereumHardforks};
+use hanzo_evm_cli::chainspec::ChainSpecParser;
+use hanzo_evm_db_common::init::init_from_state_dump;
+use hanzo_evm_node_api::NodePrimitives;
+use hanzo_evm_primitives_traits::{header::HeaderMut, SealedHeader};
+use hanzo_evm_provider::{
     BlockNumReader, DBProvider, DatabaseProviderFactory, StaticFileProviderFactory,
     StaticFileWriter,
 };
@@ -72,7 +72,7 @@ impl<C: ChainSpecParser<ChainSpec: EthChainSpec + EthereumHardforks>> InitStateC
             Primitives: NodePrimitives<BlockHeader: HeaderMut>,
         >,
     {
-        info!(target: "reth::cli", "Reth init-state starting");
+        info!(target: "evm::cli", "Hanzo EVM init-state starting");
 
         let Environment { config, provider_factory, .. } = self.env.init::<N>(AccessRights::RW)?;
 
@@ -115,15 +115,15 @@ impl<C: ChainSpecParser<ChainSpec: EthChainSpec + EthereumHardforks>> InitStateC
             }
         }
 
-        info!(target: "reth::cli", "Initiating state dump");
+        info!(target: "evm::cli", "Initiating state dump");
 
-        let reader = BufReader::new(reth_fs_util::open(self.state)?);
+        let reader = BufReader::new(hanzo_evm_fs_util::open(self.state)?);
 
         let hash = init_from_state_dump(reader, &provider_rw, config.stages.etl)?;
 
         provider_rw.commit()?;
 
-        info!(target: "reth::cli", hash = ?hash, "Genesis block written");
+        info!(target: "evm::cli", hash = ?hash, "Genesis block written");
         Ok(())
     }
 }
@@ -139,12 +139,12 @@ impl<C: ChainSpecParser> InitStateCommand<C> {
 mod tests {
     use super::*;
     use alloy_primitives::b256;
-    use reth_ethereum_cli::chainspec::EthereumChainSpecParser;
+    use hanzo_evm_ethereum_cli::chainspec::EthereumChainSpecParser;
 
     #[test]
     fn parse_init_state_command_with_without_evm() {
         let cmd: InitStateCommand<EthereumChainSpecParser> = InitStateCommand::parse_from([
-            "reth",
+            "evm",
             "--chain",
             "sepolia",
             "--without-evm",

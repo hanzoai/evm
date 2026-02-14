@@ -13,11 +13,11 @@ use alloy_primitives::{bytes, Address, Bytes, TxKind, U256};
 use alloy_provider::{Provider, ProviderBuilder};
 use alloy_rpc_types_eth::TransactionRequest;
 use futures::StreamExt;
-use reth_chainspec::{ChainSpec, ChainSpecBuilder, MAINNET};
-use reth_e2e_test_utils::setup_engine;
-use reth_node_api::TreeConfig;
-use reth_node_ethereum::EthereumNode;
-use reth_revm::db::BundleAccount;
+use hanzo_evm_chainspec::{ChainSpec, ChainSpecBuilder, MAINNET};
+use hanzo_evm_e2e_test_utils::setup_engine;
+use hanzo_evm_node_api::TreeConfig;
+use hanzo_evm_node_ethereum::EthereumNode;
+use hanzo_evm_revm::db::BundleAccount;
 use std::sync::Arc;
 
 const MAX_FEE_PER_GAS: u128 = 20_000_000_000;
@@ -139,7 +139,7 @@ fn selfdestruct_contract_init_code() -> Bytes {
 /// 3. Output state shows account is NOT destroyed
 #[tokio::test]
 async fn test_selfdestruct_post_dencun() -> eyre::Result<()> {
-    reth_tracing::init_test_tracing();
+    hanzo_evm_tracing::init_test_tracing();
 
     let tree_config = TreeConfig::default().without_prewarming(true).without_state_cache(false);
     let (mut nodes, _tasks, wallet) =
@@ -233,7 +233,7 @@ async fn test_selfdestruct_post_dencun() -> eyre::Result<()> {
 /// 4. Since account never existed in DB before, bundle has no entry for it
 #[tokio::test]
 async fn test_selfdestruct_same_tx_post_dencun() -> eyre::Result<()> {
-    reth_tracing::init_test_tracing();
+    hanzo_evm_tracing::init_test_tracing();
 
     let tree_config = TreeConfig::default().without_prewarming(true).without_state_cache(false);
     let (mut nodes, _tasks, wallet) =
@@ -308,7 +308,7 @@ async fn test_selfdestruct_same_tx_post_dencun() -> eyre::Result<()> {
 /// 3. Output state shows account IS destroyed
 #[tokio::test]
 async fn test_selfdestruct_pre_dencun() -> eyre::Result<()> {
-    reth_tracing::init_test_tracing();
+    hanzo_evm_tracing::init_test_tracing();
 
     let tree_config = TreeConfig::default().without_prewarming(true).without_state_cache(false);
     let (mut nodes, _tasks, wallet) = setup_engine::<EthereumNode>(
@@ -418,7 +418,7 @@ async fn test_selfdestruct_pre_dencun() -> eyre::Result<()> {
 /// 5. Since account existed in DB before (had ETH), bundle marks it as Destroyed
 #[tokio::test]
 async fn test_selfdestruct_same_tx_preexisting_account_post_dencun() -> eyre::Result<()> {
-    reth_tracing::init_test_tracing();
+    hanzo_evm_tracing::init_test_tracing();
 
     let tree_config = TreeConfig::default().without_prewarming(true).without_state_cache(false);
     let (mut nodes, _tasks, wallet) =

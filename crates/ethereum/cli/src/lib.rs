@@ -1,9 +1,9 @@
-//! Reth CLI implementation.
+//! Hanzo EVM CLI implementation.
 
 #![doc(
-    html_logo_url = "https://raw.githubusercontent.com/paradigmxyz/reth/main/assets/reth-docs.png",
+    html_logo_url = "https://raw.githubusercontent.com/hanzoai/evm/main/assets/evm-docs.png",
     html_favicon_url = "https://avatars0.githubusercontent.com/u/97369466?s=256",
-    issue_tracker_base_url = "https://github.com/paradigmxyz/reth/issues/"
+    issue_tracker_base_url = "https://github.com/hanzoai/evm/issues/"
 )]
 #![cfg_attr(not(test), warn(unused_crate_dependencies))]
 #![cfg_attr(docsrs, feature(doc_cfg))]
@@ -21,13 +21,13 @@ pub use interface::{Cli, Commands, NoSubCmd};
 mod test {
     use crate::chainspec::EthereumChainSpecParser;
     use clap::Parser;
-    use reth_chainspec::DEV;
-    use reth_cli_commands::NodeCommand;
+    use hanzo_evm_chainspec::DEV;
+    use hanzo_evm_cli_commands::NodeCommand;
 
     #[test]
     #[ignore = "reth cmd output differs when optimism feature enabled"]
     fn parse_dev() {
-        let cmd: NodeCommand<EthereumChainSpecParser> = NodeCommand::parse_from(["reth", "--dev"]);
+        let cmd: NodeCommand<EthereumChainSpecParser> = NodeCommand::parse_from(["evm", "--dev"]);
         let chain = DEV.clone();
         assert_eq!(cmd.chain.chain, chain.chain);
         assert_eq!(cmd.chain.genesis_hash(), chain.genesis_hash());

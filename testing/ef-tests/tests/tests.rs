@@ -8,7 +8,7 @@ macro_rules! general_state_test {
     ($test_name:ident, $dir:ident) => {
         #[test]
         fn $test_name() {
-            reth_tracing::init_test_tracing();
+            hanzo_evm_tracing::init_test_tracing();
             let suite_path = PathBuf::from(env!("CARGO_MANIFEST_DIR"))
                 .join("ethereum-tests")
                 .join("BlockchainTests");
@@ -88,7 +88,7 @@ macro_rules! blockchain_test {
     ($test_name:ident, $dir:ident) => {
         #[test]
         fn $test_name() {
-            reth_tracing::init_test_tracing();
+            hanzo_evm_tracing::init_test_tracing();
             let suite_path = PathBuf::from(env!("CARGO_MANIFEST_DIR"))
                 .join("ethereum-tests")
                 .join("BlockchainTests");
@@ -103,7 +103,7 @@ blockchain_test!(invalid_blocks, InvalidBlocks);
 
 #[test]
 fn eest_fixtures() {
-    reth_tracing::init_test_tracing();
+    hanzo_evm_tracing::init_test_tracing();
     let suite_path = PathBuf::from(env!("CARGO_MANIFEST_DIR"))
         .join("execution-spec-tests")
         .join("blockchain_tests");

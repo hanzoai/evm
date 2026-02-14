@@ -6,7 +6,7 @@ edition.workspace = true
 license.workspace = true
 
 [dependencies]
-reth-ethereum = { workspace = true, features = ["test-utils", "network", "provider"] }
+hanzo-evm-ethereum = { workspace = true, features = ["test-utils", "network", "provider"] }
 futures.workspace = true
 tokio.workspace = true
 eyre.workspace = true

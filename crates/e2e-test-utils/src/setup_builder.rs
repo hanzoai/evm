@@ -5,22 +5,22 @@
 
 use crate::{node::NodeTestContext, wallet::Wallet, NodeBuilderHelper, NodeHelperType, TmpDB};
 use futures_util::future::TryJoinAll;
-use reth_chainspec::EthChainSpec;
-use reth_node_builder::{
+use hanzo_evm_chainspec::EthChainSpec;
+use hanzo_evm_node_builder::{
     EngineNodeLauncher, NodeBuilder, NodeConfig, NodeHandle, NodeTypes, NodeTypesWithDBAdapter,
     PayloadTypes,
 };
-use reth_node_core::args::{DiscoveryArgs, NetworkArgs, RpcServerArgs};
-use reth_primitives_traits::AlloyBlockHeader;
-use reth_provider::providers::BlockchainProvider;
-use reth_rpc_server_types::RpcModuleSelection;
-use reth_tasks::TaskManager;
+use hanzo_evm_node_core::args::{DiscoveryArgs, NetworkArgs, RpcServerArgs};
+use hanzo_evm_primitives_traits::AlloyBlockHeader;
+use hanzo_evm_provider::providers::BlockchainProvider;
+use hanzo_evm_rpc_server_types::RpcModuleSelection;
+use hanzo_evm_tasks::TaskManager;
 use std::sync::Arc;
 use tracing::{span, Instrument, Level};
 
 /// Type alias for tree config modifier closure
 type TreeConfigModifier =
-    Box<dyn Fn(reth_node_api::TreeConfig) -> reth_node_api::TreeConfig + Send + Sync>;
+    Box<dyn Fn(hanzo_evm_node_api::TreeConfig) -> hanzo_evm_node_api::TreeConfig + Send + Sync>;
 
 /// Type alias for node config modifier closure
 type NodeConfigModifier<C> = Box<dyn Fn(NodeConfig<C>) -> NodeConfig<C> + Send + Sync>;
@@ -79,7 +79,7 @@ where
     /// The closure receives the base tree config and returns a modified version.
     pub fn with_tree_config_modifier<G>(mut self, modifier: G) -> Self
     where
-        G: Fn(reth_node_api::TreeConfig) -> reth_node_api::TreeConfig + Send + Sync + 'static,
+        G: Fn(hanzo_evm_node_api::TreeConfig) -> hanzo_evm_node_api::TreeConfig + Send + Sync + 'static,
     {
         self.tree_config_modifier = Some(Box::new(modifier));
         self
@@ -123,7 +123,7 @@ where
 
         // Apply tree config modifier if present, with test-appropriate defaults
         let base_tree_config =
-            reth_node_api::TreeConfig::default().with_cross_block_cache_size(1024 * 1024);
+            hanzo_evm_node_api::TreeConfig::default().with_cross_block_cache_size(1024 * 1024);
         let tree_config = if let Some(modifier) = self.tree_config_modifier {
             modifier(base_tree_config)
         } else {

@@ -5,7 +5,7 @@ use std::fmt;
 use alloy_eips::BlockId;
 use alloy_rpc_types_engine::PayloadError;
 use jsonrpsee_core::RpcResult;
-use reth_errors::ConsensusError;
+use hanzo_evm_errors::ConsensusError;
 
 /// Helper trait to easily convert various `Result` types into [`RpcResult`]
 pub trait ToRpcResult<Ok, Err>: Sized {
@@ -104,9 +104,9 @@ macro_rules! impl_to_rpc_result {
 
 impl_to_rpc_result!(PayloadError);
 impl_to_rpc_result!(ConsensusError);
-impl_to_rpc_result!(reth_errors::RethError);
-impl_to_rpc_result!(reth_errors::ProviderError);
-impl_to_rpc_result!(reth_network_api::NetworkError);
+impl_to_rpc_result!(hanzo_evm_errors::EvmError);
+impl_to_rpc_result!(hanzo_evm_errors::ProviderError);
+impl_to_rpc_result!(hanzo_evm_network_api::NetworkError);
 
 /// Constructs an invalid params JSON-RPC error.
 pub fn invalid_params_rpc_err(
@@ -169,15 +169,15 @@ pub fn block_id_to_str(id: BlockId) -> String {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use reth_errors::{RethError, RethResult};
+    use hanzo_evm_errors::{EvmError, EvmResult};
 
     const fn assert_rpc_result<T, E, TRR: ToRpcResult<T, E>>() {}
 
     #[test]
     fn can_convert_rpc() {
-        assert_rpc_result::<(), RethError, RethResult<()>>();
+        assert_rpc_result::<(), EvmError, EvmResult<()>>();
 
-        let res = RethResult::Ok(100);
+        let res = EvmResult::Ok(100);
         let rpc_res = res.map_internal_err(|_| "This is a message");
         let val = rpc_res.unwrap();
         assert_eq!(val, 100);

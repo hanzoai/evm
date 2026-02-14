@@ -2,8 +2,8 @@
 //! are executed on the `tokio` runtime.
 
 use futures::Future;
-use reth_rpc_eth_types::EthApiError;
-use reth_tasks::{
+use hanzo_evm_rpc_eth_types::EthApiError;
+use hanzo_evm_tasks::{
     pool::{BlockingTaskGuard, BlockingTaskPool},
     TaskSpawner,
 };

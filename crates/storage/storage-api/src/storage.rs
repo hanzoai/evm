@@ -4,8 +4,8 @@ use alloc::{
 };
 use alloy_primitives::{Address, BlockNumber, B256};
 use core::ops::{RangeBounds, RangeInclusive};
-use reth_primitives_traits::StorageEntry;
-use reth_storage_errors::provider::ProviderResult;
+use hanzo_evm_primitives_traits::StorageEntry;
+use hanzo_evm_storage_errors::provider::ProviderResult;
 
 /// Storage reader
 #[auto_impl::auto_impl(&, Box)]
@@ -40,7 +40,7 @@ pub trait StorageChangeSetReader: Send {
     fn storage_changeset(
         &self,
         block_number: BlockNumber,
-    ) -> ProviderResult<Vec<(reth_db_api::models::BlockNumberAddress, StorageEntry)>>;
+    ) -> ProviderResult<Vec<(hanzo_evm_db_api::models::BlockNumberAddress, StorageEntry)>>;
 
     /// Search the block's changesets for the given address and storage key, and return the result.
     ///
@@ -56,7 +56,7 @@ pub trait StorageChangeSetReader: Send {
     fn storage_changesets_range(
         &self,
         range: impl RangeBounds<BlockNumber>,
-    ) -> ProviderResult<Vec<(reth_db_api::models::BlockNumberAddress, StorageEntry)>>;
+    ) -> ProviderResult<Vec<(hanzo_evm_db_api::models::BlockNumberAddress, StorageEntry)>>;
 
     /// Get the total count of all storage changes.
     fn storage_changeset_count(&self) -> ProviderResult<usize>;
@@ -67,11 +67,11 @@ pub trait StorageChangeSetReader: Send {
     fn storage_block_changeset(
         &self,
         block_number: BlockNumber,
-    ) -> ProviderResult<Vec<reth_db_models::StorageBeforeTx>> {
+    ) -> ProviderResult<Vec<hanzo_evm_db_models::StorageBeforeTx>> {
         self.storage_changeset(block_number).map(|changesets| {
             changesets
                 .into_iter()
-                .map(|(block_address, entry)| reth_db_models::StorageBeforeTx {
+                .map(|(block_address, entry)| hanzo_evm_db_models::StorageBeforeTx {
                     address: block_address.address(),
                     key: entry.key,
                     value: entry.value,

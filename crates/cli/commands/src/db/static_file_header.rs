@@ -1,11 +1,11 @@
 use clap::{Parser, Subcommand};
-use reth_db_common::DbTool;
-use reth_provider::{providers::ProviderNodeTypes, StaticFileProviderFactory};
-use reth_static_file_types::StaticFileSegment;
+use hanzo_evm_db_common::DbTool;
+use hanzo_evm_provider::{providers::ProviderNodeTypes, StaticFileProviderFactory};
+use hanzo_evm_static_file_types::StaticFileSegment;
 use std::path::PathBuf;
 use tracing::warn;
 
-/// The arguments for the `reth db static-file-header` command
+/// The arguments for the `evm db static-file-header` command
 #[derive(Parser, Debug)]
 pub struct Command {
     #[command(subcommand)]

@@ -2,17 +2,17 @@ use alloy_consensus::BlockHeader;
 use alloy_primitives::{keccak256, Address, Bytes, B256, U256};
 use alloy_rpc_types_debug::ExecutionWitness;
 use pretty_assertions::Comparison;
-use reth_engine_primitives::InvalidBlockHook;
-use reth_evm::{execute::Executor, ConfigureEvm};
-use reth_primitives_traits::{NodePrimitives, RecoveredBlock, SealedHeader};
-use reth_provider::{BlockExecutionOutput, StateProvider, StateProviderBox, StateProviderFactory};
-use reth_revm::{
+use hanzo_evm_engine_primitives::InvalidBlockHook;
+use hanzo_evm_execution::{execute::Executor, ConfigureEvm};
+use hanzo_evm_primitives_traits::{NodePrimitives, RecoveredBlock, SealedHeader};
+use hanzo_evm_provider::{BlockExecutionOutput, StateProvider, StateProviderBox, StateProviderFactory};
+use hanzo_evm_revm::{
     database::StateProviderDatabase,
     db::{BundleState, State},
 };
-use reth_rpc_api::DebugApiClient;
-use reth_tracing::tracing::warn;
-use reth_trie::{updates::TrieUpdates, HashedStorage};
+use hanzo_evm_rpc_api::DebugApiClient;
+use hanzo_evm_tracing::tracing::warn;
+use hanzo_evm_trie::{updates::TrieUpdates, HashedStorage};
 use revm::state::AccountInfo;
 use revm_bytecode::Bytecode;
 use revm_database::{
@@ -23,7 +23,7 @@ use serde::Serialize;
 use std::{collections::BTreeMap, fmt::Debug, fs::File, io::Write, path::PathBuf};
 
 type CollectionResult =
-    (BTreeMap<B256, Bytes>, BTreeMap<B256, Bytes>, reth_trie::HashedPostState, BundleState);
+    (BTreeMap<B256, Bytes>, BTreeMap<B256, Bytes>, hanzo_evm_trie::HashedPostState, BundleState);
 
 /// Serializable version of `BundleState` for deterministic comparison
 #[derive(Debug, PartialEq, Eq)]
@@ -157,7 +157,7 @@ fn collect_execution_data(
 fn generate(
     codes: BTreeMap<B256, Bytes>,
     preimages: BTreeMap<B256, Bytes>,
-    hashed_state: reth_trie::HashedPostState,
+    hashed_state: hanzo_evm_trie::HashedPostState,
     state_provider: Box<dyn StateProvider>,
 ) -> eyre::Result<ExecutionWitness> {
     let state = state_provider.witness(Default::default(), hashed_state)?;
@@ -178,7 +178,7 @@ pub struct InvalidBlockWitnessHook<P, E> {
     /// The provider to read the historical state and do the EVM execution.
     provider: P,
     /// The EVM configuration to use for the execution.
-    evm_config: E,
+    hanzo_evm_config: E,
     /// The directory to write the witness to. Additionally, diff files will be written to this
     /// directory in case of failed sanity checks.
     output_directory: PathBuf,
@@ -190,11 +190,11 @@ impl<P, E> InvalidBlockWitnessHook<P, E> {
     /// Creates a new witness hook.
     pub const fn new(
         provider: P,
-        evm_config: E,
+        hanzo_evm_config: E,
         output_directory: PathBuf,
         healthy_node_client: Option<jsonrpsee::http_client::HttpClient>,
     ) -> Self {
-        Self { provider, evm_config, output_directory, healthy_node_client }
+        Self { provider, hanzo_evm_config, output_directory, healthy_node_client }
     }
 }
 
@@ -210,7 +210,7 @@ where
         parent_header: &SealedHeader<N::BlockHeader>,
         block: &RecoveredBlock<N::Block>,
     ) -> eyre::Result<(ExecutionWitness, BundleState)> {
-        let mut executor = self.evm_config.batch_executor(StateProviderDatabase::new(
+        let mut executor = self.hanzo_evm_config.batch_executor(StateProviderDatabase::new(
             self.provider.state_by_block_hash(parent_header.hash())?,
         ));
 
@@ -410,16 +410,16 @@ mod tests {
     use super::*;
     use alloy_eips::eip7685::Requests;
     use alloy_primitives::{map::HashMap, Address, Bytes, B256, U256};
-    use reth_chainspec::ChainSpec;
-    use reth_ethereum_primitives::EthPrimitives;
-    use reth_evm_ethereum::EthEvmConfig;
-    use reth_provider::test_utils::MockEthProvider;
-    use reth_revm::db::{BundleAccount, BundleState};
+    use hanzo_evm_chainspec::ChainSpec;
+    use hanzo_evm_ethereum_primitives::EthPrimitives;
+    use hanzo_evm_eth_execution::EthEvmConfig;
+    use hanzo_evm_provider::test_utils::MockEthProvider;
+    use hanzo_evm_revm::db::{BundleAccount, BundleState};
     use revm_database::states::reverts::AccountRevert;
     use tempfile::TempDir;
 
-    use reth_revm::test_utils::StateProviderTest;
-    use reth_testing_utils::generators::{self, random_block, random_eoa_accounts, BlockParams};
+    use hanzo_evm_revm::test_utils::StateProviderTest;
+    use hanzo_evm_testing_utils::generators::{self, random_block, random_eoa_accounts, BlockParams};
     use revm_bytecode::Bytecode;
 
     /// Creates a test `BundleState` with realistic accounts, contracts, and reverts
@@ -599,10 +599,10 @@ mod tests {
         let output_directory = temp_dir.path().to_path_buf();
 
         let provider = MockEthProvider::<EthPrimitives, ChainSpec>::default();
-        let evm_config = EthEvmConfig::mainnet();
+        let hanzo_evm_config = EthEvmConfig::mainnet();
 
         let hook =
-            InvalidBlockWitnessHook::new(provider, evm_config, output_directory.clone(), None);
+            InvalidBlockWitnessHook::new(provider, hanzo_evm_config, output_directory.clone(), None);
 
         (hook, output_directory, temp_dir)
     }
@@ -681,7 +681,7 @@ mod tests {
         preimages.insert(B256::from([3u8; 32]), Bytes::from("preimage_1"));
         preimages.insert(B256::from([4u8; 32]), Bytes::from("preimage_2"));
 
-        let hashed_state = reth_trie::HashedPostState::default();
+        let hashed_state = hanzo_evm_trie::HashedPostState::default();
 
         // Call generate function
         let result = generate(codes.clone(), preimages.clone(), hashed_state, state_provider);
@@ -757,7 +757,7 @@ mod tests {
     /// Creates test `TrieUpdates` with account nodes and removed nodes
     fn create_test_trie_updates() -> TrieUpdates {
         use alloy_primitives::map::HashMap;
-        use reth_trie::{updates::TrieUpdates, BranchNodeCompact, Nibbles};
+        use hanzo_evm_trie::{updates::TrieUpdates, BranchNodeCompact, Nibbles};
         use std::collections::HashSet;
 
         let mut account_nodes = HashMap::default();
@@ -835,7 +835,7 @@ mod tests {
         // Create mock BlockExecutionOutput
         let output = BlockExecutionOutput {
             state: bundle_state,
-            result: reth_provider::BlockExecutionResult {
+            result: hanzo_evm_provider::BlockExecutionResult {
                 receipts: vec![],
                 requests: Requests::default(),
                 gas_used: 0,

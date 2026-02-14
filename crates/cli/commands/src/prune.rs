@@ -1,21 +1,21 @@
 //! Command that runs pruning.
 use crate::common::{AccessRights, CliNodeTypes, EnvironmentArgs};
 use clap::Parser;
-use reth_chainspec::{ChainSpecProvider, EthChainSpec, EthereumHardforks};
-use reth_cli::chainspec::ChainSpecParser;
-use reth_cli_runner::CliContext;
-use reth_cli_util::cancellation::CancellationToken;
-use reth_node_builder::common::metrics_hooks;
-use reth_node_core::{args::MetricArgs, version::version_metadata};
-use reth_node_metrics::{
+use hanzo_evm_chainspec::{ChainSpecProvider, EthChainSpec, EthereumHardforks};
+use hanzo_evm_cli::chainspec::ChainSpecParser;
+use hanzo_evm_cli_runner::CliContext;
+use hanzo_evm_cli_util::cancellation::CancellationToken;
+use hanzo_evm_node_builder::common::metrics_hooks;
+use hanzo_evm_node_core::{args::MetricArgs, version::version_metadata};
+use hanzo_evm_node_metrics::{
     chain::ChainSpecInfo,
     server::{MetricServer, MetricServerConfig},
     version::VersionInfo,
 };
 #[cfg(all(unix, feature = "rocksdb"))]
-use reth_provider::RocksDBProviderFactory;
-use reth_prune::PrunerBuilder;
-use reth_static_file::StaticFileProducer;
+use hanzo_evm_provider::RocksDBProviderFactory;
+use hanzo_evm_prune::PrunerBuilder;
+use hanzo_evm_static_file::StaticFileProducer;
 use std::sync::Arc;
 use tracing::info;
 
@@ -62,16 +62,16 @@ impl<C: ChainSpecParser<ChainSpec: EthChainSpec + EthereumHardforks>> PruneComma
         }
 
         // Copy data from database to static files
-        info!(target: "reth::cli", "Copying data from database to static files...");
+        info!(target: "evm::cli", "Copying data from database to static files...");
         let static_file_producer =
             StaticFileProducer::new(provider_factory.clone(), config.segments.clone());
         let lowest_static_file_height =
             static_file_producer.lock().copy_to_static_files()?.min_block_num();
-        info!(target: "reth::cli", ?lowest_static_file_height, "Copied data from database to static files");
+        info!(target: "evm::cli", ?lowest_static_file_height, "Copied data from database to static files");
 
         // Delete data which has been copied to static files.
         if let Some(prune_tip) = lowest_static_file_height {
-            info!(target: "reth::cli", ?prune_tip, ?config, "Pruning data from database...");
+            info!(target: "evm::cli", ?prune_tip, ?config, "Pruning data from database...");
 
             // Set up cancellation token for graceful shutdown on Ctrl+C
             let cancellation = CancellationToken::new();
@@ -92,7 +92,7 @@ impl<C: ChainSpecParser<ChainSpec: EthChainSpec + EthereumHardforks>> PruneComma
             let mut total_pruned = 0usize;
             loop {
                 if cancellation.is_cancelled() {
-                    info!(target: "reth::cli", total_pruned, "Pruning interrupted by user");
+                    info!(target: "evm::cli", total_pruned, "Pruning interrupted by user");
                     break;
                 }
 
@@ -101,7 +101,7 @@ impl<C: ChainSpecParser<ChainSpec: EthChainSpec + EthereumHardforks>> PruneComma
                 total_pruned = total_pruned.saturating_add(batch_pruned);
 
                 if output.progress.is_finished() {
-                    info!(target: "reth::cli", total_pruned, "Pruned data from database");
+                    info!(target: "evm::cli", total_pruned, "Pruned data from database");
                     break;
                 }
 
@@ -113,7 +113,7 @@ impl<C: ChainSpecParser<ChainSpec: EthChainSpec + EthereumHardforks>> PruneComma
                 }
 
                 info!(
-                    target: "reth::cli",
+                    target: "evm::cli",
                     batch_pruned,
                     total_pruned,
                     "Pruning batch complete, continuing..."
@@ -124,9 +124,9 @@ impl<C: ChainSpecParser<ChainSpec: EthChainSpec + EthereumHardforks>> PruneComma
         // Flush and compact RocksDB to reclaim disk space after pruning
         #[cfg(all(unix, feature = "rocksdb"))]
         {
-            info!(target: "reth::cli", "Flushing and compacting RocksDB...");
+            info!(target: "evm::cli", "Flushing and compacting RocksDB...");
             provider_factory.rocksdb_provider().flush_and_compact()?;
-            info!(target: "reth::cli", "RocksDB compaction complete");
+            info!(target: "evm::cli", "RocksDB compaction complete");
         }
 
         Ok(())

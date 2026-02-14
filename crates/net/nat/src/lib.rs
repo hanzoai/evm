@@ -5,9 +5,9 @@
 //! - `serde` (default): Enable serde support
 
 #![doc(
-    html_logo_url = "https://raw.githubusercontent.com/paradigmxyz/reth/main/assets/reth-docs.png",
+    html_logo_url = "https://raw.githubusercontent.com/hanzoai/evm/main/assets/evm-docs.png",
     html_favicon_url = "https://avatars0.githubusercontent.com/u/97369466?s=256",
-    issue_tracker_base_url = "https://github.com/paradigmxyz/reth/issues/"
+    issue_tracker_base_url = "https://github.com/hanzoai/evm/issues/"
 )]
 #![cfg_attr(not(test), warn(unused_crate_dependencies))]
 #![cfg_attr(docsrs, feature(doc_cfg))]
@@ -272,7 +272,7 @@ mod tests {
     #[tokio::test]
     #[ignore]
     async fn get_external_ip() {
-        reth_tracing::init_test_tracing();
+        hanzo_evm_tracing::init_test_tracing();
         let ip = external_ip().await;
         dbg!(ip);
     }
@@ -280,7 +280,7 @@ mod tests {
     #[tokio::test]
     #[ignore]
     async fn get_external_ip_interval() {
-        reth_tracing::init_test_tracing();
+        hanzo_evm_tracing::init_test_tracing();
         let mut interval = ResolveNatInterval::interval(Default::default(), Duration::from_secs(5));
 
         let ip = interval.tick().await;

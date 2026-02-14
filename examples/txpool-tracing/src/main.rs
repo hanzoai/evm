@@ -1,4 +1,4 @@
-//! Example of how to trace new pending transactions in the reth CLI
+//! Example of how to trace new pending transactions in the evm CLI
 //!
 //! Run with
 //!
@@ -14,7 +14,7 @@ use alloy_primitives::Address;
 use alloy_rpc_types_trace::{parity::TraceType, tracerequest::TraceCallRequest};
 use clap::Parser;
 use futures_util::StreamExt;
-use reth_ethereum::{
+use hanzo_evm_ethereum::{
     cli::{chainspec::EthereumChainSpecParser, interface::Cli},
     node::{builder::NodeHandle, EthereumNode},
     pool::TransactionPool,
@@ -24,7 +24,7 @@ use reth_ethereum::{
 mod submit;
 
 fn main() {
-    Cli::<EthereumChainSpecParser, RethCliTxpoolExt>::parse()
+    Cli::<EthereumChainSpecParser, EvmCliTxpoolExt>::parse()
         .run(|builder, args| async move {
             // launch the node
             let NodeHandle { node, node_exit_future } =
@@ -65,15 +65,15 @@ fn main() {
         .unwrap();
 }
 
-/// Our custom cli args extension that adds one flag to reth default CLI.
+/// Our custom cli args extension that adds one flag to evm default CLI.
 #[derive(Debug, Clone, Default, clap::Args)]
-struct RethCliTxpoolExt {
+struct EvmCliTxpoolExt {
     /// recipients' addresses that we want to trace
     #[arg(long, value_delimiter = ',')]
     pub recipients: Vec<Address>,
 }
 
-impl RethCliTxpoolExt {
+impl EvmCliTxpoolExt {
     /// Check if the recipient is in the list of recipients to trace.
     pub fn is_match(&self, recipient: &Address) -> bool {
         self.recipients.is_empty() || self.recipients.contains(recipient)

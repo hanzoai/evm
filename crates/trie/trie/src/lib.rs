@@ -8,9 +8,9 @@
 //! - `test-utils`: Export utilities for testing
 
 #![doc(
-    html_logo_url = "https://raw.githubusercontent.com/paradigmxyz/reth/main/assets/reth-docs.png",
+    html_logo_url = "https://raw.githubusercontent.com/hanzoai/evm/main/assets/evm-docs.png",
     html_favicon_url = "https://avatars0.githubusercontent.com/u/97369466?s=256",
-    issue_tracker_base_url = "https://github.com/paradigmxyz/reth/issues/"
+    issue_tracker_base_url = "https://github.com/hanzoai/evm/issues/"
 )]
 #![cfg_attr(docsrs, feature(doc_cfg))]
 
@@ -56,7 +56,7 @@ pub use progress::{
 pub mod stats;
 
 // re-export for convenience
-pub use reth_trie_common::*;
+pub use hanzo_evm_trie_common::*;
 
 /// Trie calculation metrics.
 #[cfg(feature = "metrics")]

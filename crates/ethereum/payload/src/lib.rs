@@ -1,9 +1,9 @@
 //! A basic Ethereum payload builder implementation.
 
 #![doc(
-    html_logo_url = "https://raw.githubusercontent.com/paradigmxyz/reth/main/assets/reth-docs.png",
+    html_logo_url = "https://raw.githubusercontent.com/hanzoai/evm/main/assets/evm-docs.png",
     html_favicon_url = "https://avatars0.githubusercontent.com/u/97369466?s=256",
-    issue_tracker_base_url = "https://github.com/paradigmxyz/reth/issues/"
+    issue_tracker_base_url = "https://github.com/hanzoai/evm/issues/"
 )]
 #![cfg_attr(not(test), warn(unused_crate_dependencies))]
 #![cfg_attr(docsrs, feature(doc_cfg))]
@@ -12,26 +12,26 @@
 use alloy_consensus::Transaction;
 use alloy_primitives::U256;
 use alloy_rlp::Encodable;
-use reth_basic_payload_builder::{
+use hanzo_evm_basic_payload_builder::{
     is_better_payload, BuildArguments, BuildOutcome, MissingPayloadBehaviour, PayloadBuilder,
     PayloadConfig,
 };
-use reth_chainspec::{ChainSpecProvider, EthChainSpec, EthereumHardforks};
-use reth_consensus_common::validation::MAX_RLP_BLOCK_SIZE;
-use reth_errors::{BlockExecutionError, BlockValidationError, ConsensusError};
-use reth_ethereum_primitives::{EthPrimitives, TransactionSigned};
-use reth_evm::{
+use hanzo_evm_chainspec::{ChainSpecProvider, EthChainSpec, EthereumHardforks};
+use hanzo_evm_consensus_common::validation::MAX_RLP_BLOCK_SIZE;
+use hanzo_evm_errors::{BlockExecutionError, BlockValidationError, ConsensusError};
+use hanzo_evm_ethereum_primitives::{EthPrimitives, TransactionSigned};
+use hanzo_evm_execution::{
     execute::{BlockBuilder, BlockBuilderOutcome},
     ConfigureEvm, Evm, NextBlockEnvAttributes,
 };
-use reth_evm_ethereum::EthEvmConfig;
-use reth_payload_builder::{BlobSidecars, EthBuiltPayload, EthPayloadBuilderAttributes};
-use reth_payload_builder_primitives::PayloadBuilderError;
-use reth_payload_primitives::PayloadBuilderAttributes;
-use reth_primitives_traits::transaction::error::InvalidTransactionError;
-use reth_revm::{database::StateProviderDatabase, db::State};
-use reth_storage_api::StateProviderFactory;
-use reth_transaction_pool::{
+use hanzo_evm_eth_execution::EthEvmConfig;
+use hanzo_evm_payload_builder::{BlobSidecars, EthBuiltPayload, EthPayloadBuilderAttributes};
+use hanzo_evm_payload_builder_primitives::PayloadBuilderError;
+use hanzo_evm_payload_primitives::PayloadBuilderAttributes;
+use hanzo_evm_primitives_traits::transaction::error::InvalidTransactionError;
+use hanzo_evm_revm::{database::StateProviderDatabase, db::State};
+use hanzo_evm_storage_api::StateProviderFactory;
+use hanzo_evm_transaction_pool::{
     error::{Eip4844PoolTransactionError, InvalidPoolTransactionError},
     BestTransactions, BestTransactionsAttributes, PoolTransaction, TransactionPool,
     ValidPoolTransaction,
@@ -58,7 +58,7 @@ pub struct EthereumPayloadBuilder<Pool, Client, EvmConfig = EthEvmConfig> {
     /// Transaction pool.
     pool: Pool,
     /// The type responsible for creating the evm.
-    evm_config: EvmConfig,
+    hanzo_evm_config: EvmConfig,
     /// Payload builder configuration.
     builder_config: EthereumBuilderConfig,
 }
@@ -68,10 +68,10 @@ impl<Pool, Client, EvmConfig> EthereumPayloadBuilder<Pool, Client, EvmConfig> {
     pub const fn new(
         client: Client,
         pool: Pool,
-        evm_config: EvmConfig,
+        hanzo_evm_config: EvmConfig,
         builder_config: EthereumBuilderConfig,
     ) -> Self {
-        Self { client, pool, evm_config, builder_config }
+        Self { client, pool, hanzo_evm_config, builder_config }
     }
 }
 
@@ -90,7 +90,7 @@ where
         args: BuildArguments<EthPayloadBuilderAttributes, EthBuiltPayload>,
     ) -> Result<BuildOutcome<EthBuiltPayload>, PayloadBuilderError> {
         default_ethereum_payload(
-            self.evm_config.clone(),
+            self.hanzo_evm_config.clone(),
             self.client.clone(),
             self.pool.clone(),
             self.builder_config.clone(),
@@ -117,7 +117,7 @@ where
         let args = BuildArguments::new(Default::default(), config, Default::default(), None);
 
         default_ethereum_payload(
-            self.evm_config.clone(),
+            self.hanzo_evm_config.clone(),
             self.client.clone(),
             self.pool.clone(),
             self.builder_config.clone(),
@@ -136,7 +136,7 @@ where
 /// a result indicating success with the payload or an error in case of failure.
 #[inline]
 pub fn default_ethereum_payload<EvmConfig, Client, Pool, F>(
-    evm_config: EvmConfig,
+    hanzo_evm_config: EvmConfig,
     client: Client,
     pool: Pool,
     builder_config: EthereumBuilderConfig,
@@ -157,7 +157,7 @@ where
     let mut db =
         State::builder().with_database(cached_reads.as_db_mut(state)).with_bundle_update().build();
 
-    let mut builder = evm_config
+    let mut builder = hanzo_evm_config
         .builder_for_next_block(
             &mut db,
             &parent_header,

@@ -16,7 +16,7 @@
 //!
 //! ```rust
 //! use alloy_consensus::Header;
-//! use reth_era::{common::decode::DecodeCompressedRlp, era1::types::execution::CompressedHeader};
+//! use hanzo_evm_era::{common::decode::DecodeCompressedRlp, era1::types::execution::CompressedHeader};
 //!
 //! let header = Header { number: 100, ..Default::default() };
 //! // Compress the header: rlp encoding and Snappy compression
@@ -24,7 +24,7 @@
 //! // Decompressed and decode typed compressed header
 //! let decoded_header: Header = compressed.decode_header()?;
 //! assert_eq!(decoded_header.number, 100);
-//! # Ok::<(), reth_era::e2s::error::E2sError>(())
+//! # Ok::<(), hanzo_evm_era::e2s::error::E2sError>(())
 //! ```
 //!
 //! ## [`CompressedBody`]
@@ -32,8 +32,8 @@
 //! ```rust
 //! use alloy_consensus::{BlockBody, Header};
 //! use alloy_primitives::Bytes;
-//! use reth_era::{common::decode::DecodeCompressedRlp, era1::types::execution::CompressedBody};
-//! use reth_ethereum_primitives::TransactionSigned;
+//! use hanzo_evm_era::{common::decode::DecodeCompressedRlp, era1::types::execution::CompressedBody};
+//! use hanzo_evm_ethereum_primitives::TransactionSigned;
 //!
 //! let body: BlockBody<Bytes> = BlockBody {
 //!     transactions: vec![Bytes::from(vec![1, 2, 3])],
@@ -46,14 +46,14 @@
 //! let decoded_body: alloy_consensus::BlockBody<alloy_primitives::Bytes> =
 //!     compressed_body.decode()?;
 //! assert_eq!(decoded_body.transactions.len(), 1);
-//! # Ok::<(), reth_era::e2s::error::E2sError>(())
+//! # Ok::<(), hanzo_evm_era::e2s::error::E2sError>(())
 //! ```
 //!
 //! ## [`CompressedReceipts`]
 //!
 //! ```rust
 //! use alloy_consensus::{Eip658Value, Receipt, ReceiptEnvelope, ReceiptWithBloom};
-//! use reth_era::{
+//! use hanzo_evm_era::{
 //!     common::decode::DecodeCompressedRlp, era1::types::execution::CompressedReceipts,
 //! };
 //!
@@ -66,7 +66,7 @@
 //! // Get raw receipt by decoding and decompressing compressed and encoded receipt
 //! let decompressed_receipt = compressed_receipt_data.decode::<ReceiptEnvelope>()?;
 //! assert_eq!(decompressed_receipt.cumulative_gas_used(), 21000);
-//! # Ok::<(), reth_era::e2s::error::E2sError>(())
+//! # Ok::<(), hanzo_evm_era::e2s::error::E2sError>(())
 //! ``````
 
 use crate::{
@@ -561,7 +561,7 @@ mod tests {
     use crate::test_utils::{create_header, create_test_receipt, create_test_receipts};
     use alloy_eips::eip4895::Withdrawals;
     use alloy_primitives::{Bytes, U256};
-    use reth_ethereum_primitives::{Receipt, TxType};
+    use hanzo_evm_ethereum_primitives::{Receipt, TxType};
 
     #[test]
     fn test_header_conversion_roundtrip() {

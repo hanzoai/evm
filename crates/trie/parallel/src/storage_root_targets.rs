@@ -1,6 +1,6 @@
 use alloy_primitives::{map::B256Map, B256};
 use derive_more::{Deref, DerefMut};
-use reth_trie::prefix_set::PrefixSet;
+use hanzo_evm_trie::prefix_set::PrefixSet;
 
 /// Target accounts with corresponding prefix sets for storage root calculation.
 #[derive(Deref, DerefMut, Debug)]

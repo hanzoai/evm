@@ -16,19 +16,19 @@ use crate::{
 use active::QueuedOutgoingMessages;
 use counter::SessionCounter;
 use futures::{future::Either, io, FutureExt, StreamExt};
-use reth_ecies::{stream::ECIESStream, ECIESError};
-use reth_eth_wire::{
+use hanzo_evm_ecies::{stream::ECIESStream, ECIESError};
+use hanzo_evm_eth_wire::{
     errors::EthStreamError, handshake::EthRlpxHandshake, multiplex::RlpxProtocolMultiplexer,
     BlockRangeUpdate, Capabilities, DisconnectReason, EthStream, EthVersion,
     HelloMessageWithProtocols, NetworkPrimitives, UnauthedP2PStream, UnifiedStatus,
     HANDSHAKE_TIMEOUT,
 };
-use reth_ethereum_forks::{ForkFilter, ForkId, ForkTransition, Head};
-use reth_metrics::common::mpsc::MeteredPollSender;
-use reth_network_api::{PeerRequest, PeerRequestSender};
-use reth_network_peers::PeerId;
-use reth_network_types::SessionsConfig;
-use reth_tasks::TaskSpawner;
+use hanzo_evm_ethereum_forks::{ForkFilter, ForkId, ForkTransition, Head};
+use hanzo_evm_metrics::common::mpsc::MeteredPollSender;
+use hanzo_evm_network_api::{PeerRequest, PeerRequestSender};
+use hanzo_evm_network_peers::PeerId;
+use hanzo_evm_network_types::SessionsConfig;
+use hanzo_evm_tasks::TaskSpawner;
 use rustc_hash::FxHashMap;
 use secp256k1::SecretKey;
 use std::{
@@ -54,7 +54,7 @@ pub use handle::{
     ActiveSessionHandle, ActiveSessionMessage, PendingSessionEvent, PendingSessionHandle,
     SessionCommand,
 };
-pub use reth_network_api::{Direction, PeerInfo};
+pub use hanzo_evm_network_api::{Direction, PeerInfo};
 
 /// Internal identifier for active sessions.
 #[derive(Debug, Clone, Copy, PartialOrd, PartialEq, Eq, Hash)]

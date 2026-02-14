@@ -1,5 +1,5 @@
 [package]
-name = "reth-era-utils"
+name = "hanzo-evm-era-utils"
 description = "Utilities to store and fetch history data with storage-api"
 version.workspace = true
 edition.workspace = true
@@ -14,16 +14,16 @@ exclude.workspace = true
 alloy-consensus.workspace = true
 alloy-primitives.workspace = true
 
-# reth
-reth-db-api.workspace = true
-reth-era.workspace = true
-reth-era-downloader.workspace = true
-reth-etl.workspace = true
-reth-fs-util.workspace = true
-reth-provider.workspace = true
-reth-stages-types.workspace = true
-reth-storage-api.workspace = true
-reth-primitives-traits.workspace = true
+# evm
+hanzo-evm-db-api.workspace = true
+hanzo-evm-era.workspace = true
+hanzo-evm-era-downloader.workspace = true
+hanzo-evm-etl.workspace = true
+hanzo-evm-fs-util.workspace = true
+hanzo-evm-provider.workspace = true
+hanzo-evm-stages-types.workspace = true
+hanzo-evm-storage-api.workspace = true
+hanzo-evm-primitives-traits.workspace = true
 
 # async
 tokio = { workspace = true, features = ["fs", "io-util", "macros", "rt-multi-thread"] }
@@ -34,10 +34,10 @@ eyre.workspace = true
 tracing.workspace = true
 
 [dev-dependencies]
-# reth
-reth-provider.workspace = true
-reth-provider.features = ["test-utils"]
-reth-db-common.workspace = true
+# evm
+hanzo-evm-provider.workspace = true
+hanzo-evm-provider.features = ["test-utils"]
+hanzo-evm-db-common.workspace = true
 
 # async
 tokio-util.workspace = true

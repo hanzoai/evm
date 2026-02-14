@@ -5,15 +5,15 @@ use crate::{PipelineTarget, StageCheckpoint, StageId};
 use alloy_primitives::{BlockNumber, B256};
 pub use event::*;
 use futures_util::Future;
-use reth_primitives_traits::constants::BEACON_CONSENSUS_REORG_UNWIND_DEPTH;
-use reth_provider::{
+use hanzo_evm_primitives_traits::constants::BEACON_CONSENSUS_REORG_UNWIND_DEPTH;
+use hanzo_evm_provider::{
     providers::ProviderNodeTypes, BlockHashReader, BlockNumReader, ChainStateBlockReader,
     ChainStateBlockWriter, DBProvider, DatabaseProviderFactory, ProviderFactory,
     PruneCheckpointReader, StageCheckpointReader, StageCheckpointWriter,
 };
-use reth_prune::PrunerBuilder;
-use reth_static_file::StaticFileProducer;
-use reth_tokio_util::{EventSender, EventStream};
+use hanzo_evm_prune::PrunerBuilder;
+use hanzo_evm_static_file::StaticFileProducer;
+use hanzo_evm_tokio_util::{EventSender, EventStream};
 use std::{
     pin::Pin,
     time::{Duration, Instant},
@@ -31,7 +31,7 @@ use crate::{
 };
 pub use builder::*;
 use progress::*;
-use reth_errors::RethResult;
+use hanzo_evm_errors::EvmResult;
 pub use set::*;
 
 /// A container for a queued stage.
@@ -258,20 +258,20 @@ impl<N: ProviderNodeTypes> Pipeline<N> {
         Ok(self.progress.next_ctrl())
     }
 
-    /// Run [static file producer](StaticFileProducer) and [pruner](reth_prune::Pruner) to **move**
+    /// Run [static file producer](StaticFileProducer) and [pruner](hanzo_evm_prune::Pruner) to **move**
     /// all data from the database to static files for corresponding
-    /// [segments](reth_static_file_types::StaticFileSegment), according to their [stage
+    /// [segments](hanzo_evm_static_file_types::StaticFileSegment), according to their [stage
     /// checkpoints](StageCheckpoint):
-    /// - [`StaticFileSegment::Headers`](reth_static_file_types::StaticFileSegment::Headers) ->
+    /// - [`StaticFileSegment::Headers`](hanzo_evm_static_file_types::StaticFileSegment::Headers) ->
     ///   [`StageId::Headers`]
-    /// - [`StaticFileSegment::Receipts`](reth_static_file_types::StaticFileSegment::Receipts) ->
+    /// - [`StaticFileSegment::Receipts`](hanzo_evm_static_file_types::StaticFileSegment::Receipts) ->
     ///   [`StageId::Execution`]
-    /// - [`StaticFileSegment::Transactions`](reth_static_file_types::StaticFileSegment::Transactions)
+    /// - [`StaticFileSegment::Transactions`](hanzo_evm_static_file_types::StaticFileSegment::Transactions)
     ///   -> [`StageId::Bodies`]
     ///
     /// CAUTION: This method locks the static file producer Mutex, hence can block the thread if the
     /// lock is occupied.
-    pub fn move_to_static_files(&self) -> RethResult<()> {
+    pub fn move_to_static_files(&self) -> EvmResult<()> {
         // Copies data from database to static files
         let lowest_static_file_height =
             self.static_file_producer.lock().copy_to_static_files()?.min_block_num();
@@ -660,11 +660,11 @@ mod tests {
     use super::*;
     use crate::{test_utils::TestStage, UnwindOutput};
     use assert_matches::assert_matches;
-    use reth_consensus::ConsensusError;
-    use reth_errors::ProviderError;
-    use reth_provider::test_utils::{create_test_provider_factory, MockNodeTypesWithDB};
-    use reth_prune::PruneModes;
-    use reth_testing_utils::generators::{self, random_block_with_parent};
+    use hanzo_evm_consensus::ConsensusError;
+    use hanzo_evm_errors::ProviderError;
+    use hanzo_evm_provider::test_utils::{create_test_provider_factory, MockNodeTypesWithDB};
+    use hanzo_evm_prune::PruneModes;
+    use hanzo_evm_testing_utils::generators::{self, random_block_with_parent};
     use tokio_stream::StreamExt;
 
     #[test]

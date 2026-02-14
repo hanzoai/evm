@@ -12,8 +12,8 @@ use discv5::{
     multiaddr::{Multiaddr, Protocol},
     ListenConfig,
 };
-use reth_ethereum_forks::{EnrForkIdEntry, ForkId};
-use reth_network_peers::NodeRecord;
+use hanzo_evm_ethereum_forks::{EnrForkIdEntry, ForkId};
+use hanzo_evm_network_peers::NodeRecord;
 use tracing::debug;
 
 use crate::{enr::discv4_id_to_multiaddr_id, filter::MustNotIncludeKeys, NetworkStackId};

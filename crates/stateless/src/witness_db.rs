@@ -1,15 +1,15 @@
-//! Provides the [`WitnessDatabase`] type, an implementation of [`reth_revm::Database`]
+//! Provides the [`WitnessDatabase`] type, an implementation of [`hanzo_evm_revm::Database`]
 //! specifically designed for stateless execution environments.
 
 use crate::trie::StatelessTrie;
 use alloc::{collections::btree_map::BTreeMap, format};
 use alloy_primitives::{map::B256Map, Address, B256, U256};
-use reth_errors::ProviderError;
-use reth_revm::{bytecode::Bytecode, state::AccountInfo, Database};
+use hanzo_evm_errors::ProviderError;
+use hanzo_evm_revm::{bytecode::Bytecode, state::AccountInfo, Database};
 
 /// An EVM database implementation backed by witness data.
 ///
-/// This struct implements the [`reth_revm::Database`] trait, allowing the EVM to execute
+/// This struct implements the [`hanzo_evm_revm::Database`] trait, allowing the EVM to execute
 /// transactions using:
 ///  - Account and storage slot data provided by a [`StatelessTrie`] implementation.
 ///  - Bytecode and ancestor block hashes provided by in-memory maps.

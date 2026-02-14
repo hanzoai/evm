@@ -2,14 +2,14 @@ use crate::metrics::{BodyDownloaderMetrics, ResponseMetrics};
 use alloy_consensus::BlockHeader;
 use alloy_primitives::B256;
 use futures::{Future, FutureExt};
-use reth_consensus::Consensus;
-use reth_network_p2p::{
+use hanzo_evm_consensus::Consensus;
+use hanzo_evm_network_p2p::{
     bodies::{client::BodiesClient, response::BlockResponse},
     error::{DownloadError, DownloadResult},
     priority::Priority,
 };
-use reth_network_peers::{PeerId, WithPeerId};
-use reth_primitives_traits::{Block, GotExpected, InMemorySize, SealedBlock, SealedHeader};
+use hanzo_evm_network_peers::{PeerId, WithPeerId};
+use hanzo_evm_primitives_traits::{Block, GotExpected, InMemorySize, SealedBlock, SealedHeader};
 use std::{
     collections::VecDeque,
     pin::Pin,
@@ -260,9 +260,9 @@ mod tests {
         bodies::test_utils::zip_blocks,
         test_utils::{generate_bodies, TestBodiesClient},
     };
-    use reth_consensus::test_utils::TestConsensus;
-    use reth_ethereum_primitives::Block;
-    use reth_testing_utils::{generators, generators::random_header_range};
+    use hanzo_evm_consensus::test_utils::TestConsensus;
+    use hanzo_evm_ethereum_primitives::Block;
+    use hanzo_evm_testing_utils::{generators, generators::random_header_range};
 
     /// Check if future returns empty bodies without dispatching any requests.
     #[tokio::test]

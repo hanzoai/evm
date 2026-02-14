@@ -1,15 +1,15 @@
 use alloy_consensus::BlockHeader;
 use alloy_primitives::{BlockNumber, B256};
 use alloy_rlp::Decodable;
-use reth_codecs::Compact;
-use reth_node_builder::NodePrimitives;
-use reth_primitives_traits::{SealedBlock, SealedHeader, SealedHeaderFor};
-use reth_provider::{
+use hanzo_evm_codecs::Compact;
+use hanzo_evm_node_builder::NodePrimitives;
+use hanzo_evm_primitives_traits::{SealedBlock, SealedHeader, SealedHeaderFor};
+use hanzo_evm_provider::{
     providers::StaticFileProvider, BlockWriter, ProviderResult, StageCheckpointWriter,
     StaticFileProviderFactory, StaticFileWriter,
 };
-use reth_stages::{StageCheckpoint, StageId};
-use reth_static_file_types::StaticFileSegment;
+use hanzo_evm_stages::{StageCheckpoint, StageId};
+use hanzo_evm_static_file_types::StaticFileSegment;
 use std::path::Path;
 use tracing::info;
 
@@ -20,11 +20,11 @@ pub(crate) fn read_header_from_file<H>(path: &Path) -> Result<H, eyre::Error>
 where
     H: Decodable,
 {
-    let buf = if let Ok(content) = reth_fs_util::read_to_string(path) {
+    let buf = if let Ok(content) = hanzo_evm_fs_util::read_to_string(path) {
         alloy_primitives::hex::decode(content.trim())?
     } else {
         // If UTF-8 decoding fails, read as raw bytes
-        reth_fs_util::read(path)?
+        hanzo_evm_fs_util::read(path)?
     };
 
     let header = H::decode(&mut &buf[..])?;
@@ -47,13 +47,13 @@ where
         + Sync
         + 'static,
 {
-    info!(target: "reth::cli", new_tip = ?header.num_hash(), "Setting up dummy EVM chain before importing state.");
+    info!(target: "evm::cli", new_tip = ?header.num_hash(), "Setting up dummy EVM chain before importing state.");
 
     let static_file_provider = provider_rw.static_file_provider();
     // Write EVM dummy data up to `header - 1` block
     append_dummy_chain(&static_file_provider, header.number() - 1, header_factory)?;
 
-    info!(target: "reth::cli", "Appending first valid block.");
+    info!(target: "evm::cli", "Appending first valid block.");
 
     append_first_block(provider_rw, &header)?;
 
@@ -61,7 +61,7 @@ where
         provider_rw.save_stage_checkpoint(stage, StageCheckpoint::new(header.number()))?;
     }
 
-    info!(target: "reth::cli", "Set up finished.");
+    info!(target: "evm::cli", "Set up finished.");
 
     Ok(())
 }
@@ -128,7 +128,7 @@ where
             StaticFileSegment::TransactionSenders => "init-state-senders",
             _ => "init-state-segment",
         };
-        reth_tasks::spawn_os_thread(thread_name, move || {
+        hanzo_evm_tasks::spawn_os_thread(thread_name, move || {
             let result = provider.latest_writer(segment).and_then(|mut writer| {
                 for block_num in 1..=target_height {
                     writer.increment_block(block_num)?;
@@ -142,7 +142,7 @@ where
 
     // Spawn job for appending empty headers
     let provider = sf_provider.clone();
-    reth_tasks::spawn_os_thread("init-state-headers", move || {
+    hanzo_evm_tasks::spawn_os_thread("init-state-headers", move || {
         let result = provider.latest_writer(StaticFileSegment::Headers).and_then(|mut writer| {
             for block_num in 1..=target_height {
                 // TODO: should we fill with real parent_hash?
@@ -158,7 +158,7 @@ where
     // Catches any StaticFileWriter error.
     while let Ok(append_result) = rx.recv() {
         if let Err(err) = append_result {
-            tracing::error!(target: "reth::cli", "Error appending dummy chain: {err}");
+            tracing::error!(target: "evm::cli", "Error appending dummy chain: {err}");
             return Err(err)
         }
     }
@@ -189,8 +189,8 @@ mod tests {
     use super::*;
     use alloy_consensus::Header;
     use alloy_primitives::{address, b256};
-    use reth_db_common::init::init_genesis;
-    use reth_provider::{test_utils::create_test_provider_factory, DatabaseProviderFactory};
+    use hanzo_evm_db_common::init::init_genesis;
+    use hanzo_evm_provider::{test_utils::create_test_provider_factory, DatabaseProviderFactory};
     use std::io::Write;
     use tempfile::NamedTempFile;
 

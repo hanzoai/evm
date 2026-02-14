@@ -2,8 +2,8 @@ use crate::{download::DownloadClient, error::PeerRequestResult, priority::Priori
 use alloy_consensus::Header;
 use alloy_eips::BlockHashOrNumber;
 use futures::{Future, FutureExt};
-pub use reth_eth_wire_types::{BlockHeaders, HeadersDirection};
-use reth_primitives_traits::BlockHeader;
+pub use hanzo_evm_eth_wire_types::{BlockHeaders, HeadersDirection};
+use hanzo_evm_primitives_traits::BlockHeader;
 use std::{
     fmt::Debug,
     pin::Pin,

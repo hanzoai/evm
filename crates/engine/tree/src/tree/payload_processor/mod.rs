@@ -21,26 +21,26 @@ use multiproof::{SparseTrieUpdate, *};
 use parking_lot::RwLock;
 use prewarm::PrewarmMetrics;
 use rayon::prelude::*;
-use reth_evm::{
+use hanzo_evm_execution::{
     block::ExecutableTxParts,
     execute::{ExecutableTxFor, WithTxEnv},
     ConfigureEvm, EvmEnvFor, ExecutableTxIterator, ExecutableTxTuple, OnStateHook, SpecFor,
     TxEnvFor,
 };
-use reth_metrics::Metrics;
-use reth_primitives_traits::NodePrimitives;
-use reth_provider::{
+use hanzo_evm_metrics::Metrics;
+use hanzo_evm_primitives_traits::NodePrimitives;
+use hanzo_evm_provider::{
     BlockExecutionOutput, BlockReader, DatabaseProviderROFactory, StateProvider,
     StateProviderFactory, StateReader,
 };
-use reth_revm::{db::BundleState, state::EvmState};
-use reth_trie::{hashed_cursor::HashedCursorFactory, trie_cursor::TrieCursorFactory};
-use reth_trie_parallel::{
+use hanzo_evm_revm::{db::BundleState, state::EvmState};
+use hanzo_evm_trie::{hashed_cursor::HashedCursorFactory, trie_cursor::TrieCursorFactory};
+use hanzo_evm_trie_parallel::{
     proof_task::{ProofTaskCtx, ProofWorkerHandle},
     root::ParallelStateRootError,
 };
-use reth_trie_sparse::{RevealableSparseTrie, SparseStateTrie};
-use reth_trie_sparse_parallel::{ParallelSparseTrie, ParallelismThresholds};
+use hanzo_evm_trie_sparse::{RevealableSparseTrie, SparseStateTrie};
+use hanzo_evm_trie_sparse_parallel::{ParallelSparseTrie, ParallelismThresholds};
 use std::{
     collections::BTreeMap,
     ops::Not,
@@ -120,7 +120,7 @@ where
     /// Whether state cache should be disable
     disable_state_cache: bool,
     /// Determines how to configure the evm for execution.
-    evm_config: Evm,
+    hanzo_evm_config: Evm,
     /// Whether precompile cache should be disabled.
     precompile_cache_disabled: bool,
     /// Precompile cache map.
@@ -152,7 +152,7 @@ where
     /// Creates a new payload processor.
     pub fn new(
         executor: WorkloadExecutor,
-        evm_config: Evm,
+        hanzo_evm_config: Evm,
         config: &TreeConfig,
         precompile_cache_map: PrecompileCacheMap<SpecFor<Evm>>,
     ) -> Self {
@@ -162,7 +162,7 @@ where
             trie_metrics: Default::default(),
             cross_block_cache_size: config.cross_block_cache_size(),
             disable_transaction_prewarming: config.disable_prewarming(),
-            evm_config,
+            hanzo_evm_config,
             disable_state_cache: config.disable_state_cache(),
             precompile_cache_disabled: config.precompile_cache_disabled(),
             precompile_cache_map,
@@ -444,7 +444,7 @@ where
         // configure prewarming
         let prewarm_ctx = PrewarmContext {
             env,
-            evm_config: self.evm_config.clone(),
+            hanzo_evm_config: self.hanzo_evm_config.clone(),
             saved_cache: saved_cache.clone(),
             provider: provider_builder,
             metrics: PrewarmMetrics::default(),
@@ -1007,21 +1007,21 @@ mod tests {
     use alloy_eips::eip1898::{BlockNumHash, BlockWithParent};
     use alloy_evm::block::StateChangeSource;
     use rand::Rng;
-    use reth_chainspec::ChainSpec;
-    use reth_db_common::init::init_genesis;
-    use reth_ethereum_primitives::TransactionSigned;
-    use reth_evm::OnStateHook;
-    use reth_evm_ethereum::EthEvmConfig;
-    use reth_primitives_traits::{Account, Recovered, StorageEntry};
-    use reth_provider::{
+    use hanzo_evm_chainspec::ChainSpec;
+    use hanzo_evm_db_common::init::init_genesis;
+    use hanzo_evm_ethereum_primitives::TransactionSigned;
+    use hanzo_evm_execution::OnStateHook;
+    use hanzo_evm_eth_execution::EthEvmConfig;
+    use hanzo_evm_primitives_traits::{Account, Recovered, StorageEntry};
+    use hanzo_evm_provider::{
         providers::{BlockchainProvider, OverlayStateProviderFactory},
         test_utils::create_test_provider_factory_with_chain_spec,
         ChainSpecProvider, HashingWriter,
     };
-    use reth_revm::db::BundleState;
-    use reth_testing_utils::generators;
-    use reth_trie::{test_utils::state_root, HashedPostState};
-    use reth_trie_db::ChangesetCache;
+    use hanzo_evm_revm::db::BundleState;
+    use hanzo_evm_testing_utils::generators;
+    use hanzo_evm_trie::{test_utils::state_root, HashedPostState};
+    use hanzo_evm_trie_db::ChangesetCache;
     use revm_primitives::{Address, HashMap, B256, KECCAK_EMPTY, U256};
     use revm_state::{AccountInfo, AccountStatus, EvmState, EvmStorageSlot};
     use std::sync::Arc;
@@ -1215,7 +1215,7 @@ mod tests {
 
     #[test]
     fn test_state_root() {
-        reth_tracing::init_test_tracing();
+        hanzo_evm_tracing::init_test_tracing();
 
         let factory = create_test_provider_factory_with_chain_spec(Arc::new(ChainSpec::default()));
         let genesis_hash = init_genesis(&factory).unwrap();

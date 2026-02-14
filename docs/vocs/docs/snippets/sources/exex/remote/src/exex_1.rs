@@ -2,7 +2,7 @@ use remote_exex::proto::{
     self,
     remote_ex_ex_server::{RemoteExEx, RemoteExExServer},
 };
-use reth_node_ethereum::EthereumNode;
+use hanzo_evm_node_ethereum::EthereumNode;
 use tokio::sync::mpsc;
 use tokio_stream::wrappers::ReceiverStream;
 use tonic::{transport::Server, Request, Response, Status};

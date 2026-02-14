@@ -2,7 +2,7 @@ use super::response::BlockResponse;
 use crate::error::DownloadResult;
 use alloy_primitives::BlockNumber;
 use futures::Stream;
-use reth_primitives_traits::Block;
+use hanzo_evm_primitives_traits::Block;
 use std::ops::RangeInclusive;
 
 /// Body downloader return type.

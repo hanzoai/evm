@@ -6,8 +6,8 @@ use alloy_primitives::{
     map::{AddressMap, B256Map, HashMap},
     Address, BlockNumber, Bloom, Log, B256, U256,
 };
-use reth_primitives_traits::{Account, Bytecode, Receipt, StorageEntry};
-use reth_trie_common::{HashedPostState, KeyHasher};
+use hanzo_evm_primitives_traits::{Account, Bytecode, Receipt, StorageEntry};
+use hanzo_evm_trie_common::{HashedPostState, KeyHasher};
 use revm::{
     database::{states::BundleState, BundleAccount},
     state::AccountInfo,
@@ -46,7 +46,7 @@ impl ChangedAccount {
 /// blocks, capturing the resulting state, receipts, and requests following the execution.
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
-pub struct ExecutionOutcome<T = reth_ethereum_primitives::Receipt> {
+pub struct ExecutionOutcome<T = hanzo_evm_ethereum_primitives::Receipt> {
     /// Bundle state with reverts.
     pub bundle: BundleState,
     /// The collection of receipts.
@@ -411,7 +411,7 @@ impl ExecutionOutcome {
     pub fn ethereum_receipts_root(&self, block_number: BlockNumber) -> Option<B256> {
         self.generic_receipts_root_slow(
             block_number,
-            reth_ethereum_primitives::Receipt::calculate_receipt_root_no_memo,
+            hanzo_evm_ethereum_primitives::Receipt::calculate_receipt_root_no_memo,
         )
     }
 }
@@ -427,7 +427,7 @@ pub(super) mod serde_bincode_compat {
     use alloc::{borrow::Cow, vec::Vec};
     use alloy_eips::eip7685::Requests;
     use alloy_primitives::BlockNumber;
-    use reth_primitives_traits::serde_bincode_compat::SerdeBincodeCompat;
+    use hanzo_evm_primitives_traits::serde_bincode_compat::SerdeBincodeCompat;
     use revm::database::BundleState;
     use serde::{Deserialize, Deserializer, Serialize, Serializer};
     use serde_with::{DeserializeAs, SerializeAs};
@@ -436,9 +436,9 @@ pub(super) mod serde_bincode_compat {
     ///
     /// Intended to use with the [`serde_with::serde_as`] macro in the following way:
     /// ```rust
-    /// use reth_execution_types::{serde_bincode_compat, ExecutionOutcome};
+    /// use hanzo_evm_execution_types::{serde_bincode_compat, ExecutionOutcome};
     /// ///
-    /// use reth_primitives_traits::serde_bincode_compat::SerdeBincodeCompat;
+    /// use hanzo_evm_primitives_traits::serde_bincode_compat::SerdeBincodeCompat;
     /// use serde::{Deserialize, Serialize};
     /// use serde_with::serde_as;
     ///
@@ -540,8 +540,8 @@ pub(super) mod serde_bincode_compat {
     mod tests {
         use super::super::{serde_bincode_compat, ExecutionOutcome};
         use rand::Rng;
-        use reth_ethereum_primitives::Receipt;
-        use reth_primitives_traits::serde_bincode_compat::SerdeBincodeCompat;
+        use hanzo_evm_ethereum_primitives::Receipt;
+        use hanzo_evm_primitives_traits::serde_bincode_compat::SerdeBincodeCompat;
         use serde::{Deserialize, Serialize};
         use serde_with::serde_as;
 
@@ -588,7 +588,7 @@ mod tests {
         );
 
         // Create a Receipts object with a vector of receipt vectors
-        let receipts = vec![vec![Some(reth_ethereum_primitives::Receipt {
+        let receipts = vec![vec![Some(hanzo_evm_ethereum_primitives::Receipt {
             tx_type: TxType::Legacy,
             cumulative_gas_used: 46913,
             logs: vec![],
@@ -647,7 +647,7 @@ mod tests {
     #[test]
     fn test_block_number_to_index() {
         // Create a Receipts object with a vector of receipt vectors
-        let receipts = vec![vec![Some(reth_ethereum_primitives::Receipt {
+        let receipts = vec![vec![Some(hanzo_evm_ethereum_primitives::Receipt {
             tx_type: TxType::Legacy,
             cumulative_gas_used: 46913,
             logs: vec![],
@@ -679,7 +679,7 @@ mod tests {
     #[test]
     fn test_get_logs() {
         // Create a Receipts object with a vector of receipt vectors
-        let receipts = vec![vec![reth_ethereum_primitives::Receipt {
+        let receipts = vec![vec![hanzo_evm_ethereum_primitives::Receipt {
             tx_type: TxType::Legacy,
             cumulative_gas_used: 46913,
             logs: vec![Log::<LogData>::default()],
@@ -708,7 +708,7 @@ mod tests {
     #[test]
     fn test_receipts_by_block() {
         // Create a Receipts object with a vector of receipt vectors
-        let receipts = vec![vec![Some(reth_ethereum_primitives::Receipt {
+        let receipts = vec![vec![Some(hanzo_evm_ethereum_primitives::Receipt {
             tx_type: TxType::Legacy,
             cumulative_gas_used: 46913,
             logs: vec![Log::<LogData>::default()],
@@ -733,7 +733,7 @@ mod tests {
         // Assert that the receipts for block number 123 match the expected receipts
         assert_eq!(
             receipts_by_block,
-            vec![&Some(reth_ethereum_primitives::Receipt {
+            vec![&Some(hanzo_evm_ethereum_primitives::Receipt {
                 tx_type: TxType::Legacy,
                 cumulative_gas_used: 46913,
                 logs: vec![Log::<LogData>::default()],
@@ -745,7 +745,7 @@ mod tests {
     #[test]
     fn test_receipts_len() {
         // Create a Receipts object with a vector of receipt vectors
-        let receipts = vec![vec![Some(reth_ethereum_primitives::Receipt {
+        let receipts = vec![vec![Some(hanzo_evm_ethereum_primitives::Receipt {
             tx_type: TxType::Legacy,
             cumulative_gas_used: 46913,
             logs: vec![Log::<LogData>::default()],
@@ -791,7 +791,7 @@ mod tests {
     #[test]
     fn test_revert_to() {
         // Create a random receipt object
-        let receipt = reth_ethereum_primitives::Receipt {
+        let receipt = hanzo_evm_ethereum_primitives::Receipt {
             tx_type: TxType::Legacy,
             cumulative_gas_used: 46913,
             logs: vec![],
@@ -837,7 +837,7 @@ mod tests {
     #[test]
     fn test_extend_execution_outcome() {
         // Create a Receipt object with specific attributes.
-        let receipt = reth_ethereum_primitives::Receipt {
+        let receipt = hanzo_evm_ethereum_primitives::Receipt {
             tx_type: TxType::Legacy,
             cumulative_gas_used: 46913,
             logs: vec![],
@@ -878,7 +878,7 @@ mod tests {
     #[test]
     fn test_split_at_execution_outcome() {
         // Create a random receipt object
-        let receipt = reth_ethereum_primitives::Receipt {
+        let receipt = hanzo_evm_ethereum_primitives::Receipt {
             tx_type: TxType::Legacy,
             cumulative_gas_used: 46913,
             logs: vec![],

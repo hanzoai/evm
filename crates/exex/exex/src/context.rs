@@ -1,11 +1,11 @@
 use crate::{ExExContextDyn, ExExEvent, ExExNotifications, ExExNotificationsStream};
 use alloy_eips::BlockNumHash;
-use reth_exex_types::ExExHead;
-use reth_node_api::{FullNodeComponents, NodePrimitives, NodeTypes, PrimitivesTy};
-use reth_node_core::node_config::NodeConfig;
-use reth_payload_builder::PayloadBuilderHandle;
-use reth_provider::BlockReader;
-use reth_tasks::TaskExecutor;
+use hanzo_evm_exex_types::ExExHead;
+use hanzo_evm_node_api::{FullNodeComponents, NodePrimitives, NodeTypes, PrimitivesTy};
+use hanzo_evm_node_core::node_config::NodeConfig;
+use hanzo_evm_payload_builder::PayloadBuilderHandle;
+use hanzo_evm_provider::BlockReader;
+use hanzo_evm_tasks::TaskExecutor;
 use std::fmt::Debug;
 use tokio::sync::mpsc::{error::SendError, UnboundedSender};
 
@@ -18,7 +18,7 @@ pub struct ExExContext<Node: FullNodeComponents> {
     /// The config of the node
     pub config: NodeConfig<<Node::Types as NodeTypes>::ChainSpec>,
     /// The loaded node config
-    pub reth_config: reth_config::Config,
+    pub hanzo_evm_config: hanzo_evm_config::Config,
     /// Channel used to send [`ExExEvent`]s to the rest of the node.
     ///
     /// # Important
@@ -48,7 +48,7 @@ where
         f.debug_struct("ExExContext")
             .field("head", &self.head)
             .field("config", &self.config)
-            .field("reth_config", &self.reth_config)
+            .field("hanzo_evm_config", &self.hanzo_evm_config)
             .field("events", &self.events)
             .field("notifications", &self.notifications)
             .field("components", &"...")
@@ -79,8 +79,8 @@ where
     }
 
     /// Returns the node's evm config.
-    pub fn evm_config(&self) -> &Node::Evm {
-        self.components.evm_config()
+    pub fn hanzo_evm_config(&self) -> &Node::Evm {
+        self.components.hanzo_evm_config()
     }
 
     /// Returns the provider of the node.
@@ -134,11 +134,11 @@ where
 #[cfg(test)]
 mod tests {
     use crate::ExExContext;
-    use reth_exex_types::ExExHead;
-    use reth_node_api::FullNodeComponents;
-    use reth_provider::BlockReader;
+    use hanzo_evm_exex_types::ExExHead;
+    use hanzo_evm_node_api::FullNodeComponents;
+    use hanzo_evm_provider::BlockReader;
 
-    /// <https://github.com/paradigmxyz/reth/issues/12054>
+    /// <https://github.com/hanzoai/evm/issues/12054>
     #[test]
     const fn issue_12054() {
         #[expect(dead_code)]
@@ -152,7 +152,7 @@ mod tests {
         {
             async fn _test_bounds(mut self) -> eyre::Result<()> {
                 self.ctx.pool();
-                self.ctx.evm_config();
+                self.ctx.hanzo_evm_config();
                 self.ctx.provider();
                 self.ctx.network();
                 self.ctx.payload_builder_handle();

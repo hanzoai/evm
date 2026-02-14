@@ -1,5 +1,5 @@
 [package]
-name = "reth-node-types"
+name = "hanzo-evm-node-types"
 version.workspace = true
 edition.workspace = true
 rust-version.workspace = true
@@ -11,17 +11,17 @@ repository.workspace = true
 workspace = true
 
 [dependencies]
-# reth
-reth-chainspec.workspace = true
-reth-db-api.workspace = true
-reth-engine-primitives.workspace = true
-reth-primitives-traits.workspace = true
-reth-payload-primitives.workspace = true
+# evm
+hanzo-evm-chainspec.workspace = true
+hanzo-evm-db-api.workspace = true
+hanzo-evm-engine-primitives.workspace = true
+hanzo-evm-primitives-traits.workspace = true
+hanzo-evm-payload-primitives.workspace = true
 
 [features]
 default = ["std"]
 std = [
-    "reth-primitives-traits/std",
-    "reth-chainspec/std",
-    "reth-engine-primitives/std",
+    "hanzo-evm-primitives-traits/std",
+    "hanzo-evm-chainspec/std",
+    "hanzo-evm-engine-primitives/std",
 ]

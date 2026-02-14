@@ -1,7 +1,7 @@
 //! Utils for `stages`.
 use alloy_primitives::{map::AddressMap, Address, BlockNumber, TxNumber, B256};
-use reth_config::config::EtlConfig;
-use reth_db_api::{
+use hanzo_evm_config::config::EtlConfig;
+use hanzo_evm_db_api::{
     cursor::{DbCursorRO, DbCursorRW},
     models::{
         sharded_key::NUM_OF_INDICES_IN_SHARD, storage_sharded_key::StorageShardedKey,
@@ -11,15 +11,15 @@ use reth_db_api::{
     transaction::DbTx,
     BlockNumberList,
 };
-use reth_etl::Collector;
-use reth_primitives_traits::NodePrimitives;
-use reth_provider::{
+use hanzo_evm_etl::Collector;
+use hanzo_evm_primitives_traits::NodePrimitives;
+use hanzo_evm_provider::{
     providers::StaticFileProvider, to_range, BlockReader, DBProvider, EitherWriter, ProviderError,
     StaticFileProviderFactory,
 };
-use reth_stages_api::StageError;
-use reth_static_file_types::StaticFileSegment;
-use reth_storage_api::{ChangeSetReader, StorageChangeSetReader};
+use hanzo_evm_stages_api::StageError;
+use hanzo_evm_static_file_types::StaticFileSegment;
+use hanzo_evm_storage_api::{ChangeSetReader, StorageChangeSetReader};
 use std::{collections::HashMap, hash::Hash, ops::RangeBounds};
 use tracing::info;
 
@@ -248,8 +248,8 @@ pub(crate) fn load_account_history<N, CURSOR>(
 ) -> Result<(), StageError>
 where
     N: NodePrimitives,
-    CURSOR: DbCursorRW<reth_db_api::tables::AccountsHistory>
-        + DbCursorRO<reth_db_api::tables::AccountsHistory>,
+    CURSOR: DbCursorRW<hanzo_evm_db_api::tables::AccountsHistory>
+        + DbCursorRO<hanzo_evm_db_api::tables::AccountsHistory>,
 {
     let mut current_address: Option<Address> = None;
     // Accumulator for block numbers where the current address changed.
@@ -316,8 +316,8 @@ fn flush_account_history_shards_partial<N, CURSOR>(
 ) -> Result<(), StageError>
 where
     N: NodePrimitives,
-    CURSOR: DbCursorRW<reth_db_api::tables::AccountsHistory>
-        + DbCursorRO<reth_db_api::tables::AccountsHistory>,
+    CURSOR: DbCursorRW<hanzo_evm_db_api::tables::AccountsHistory>
+        + DbCursorRO<hanzo_evm_db_api::tables::AccountsHistory>,
 {
     // Nothing to flush if we haven't filled a complete shard yet.
     if list.len() <= NUM_OF_INDICES_IN_SHARD {
@@ -372,8 +372,8 @@ fn flush_account_history_shards<N, CURSOR>(
 ) -> Result<(), StageError>
 where
     N: NodePrimitives,
-    CURSOR: DbCursorRW<reth_db_api::tables::AccountsHistory>
-        + DbCursorRO<reth_db_api::tables::AccountsHistory>,
+    CURSOR: DbCursorRW<hanzo_evm_db_api::tables::AccountsHistory>
+        + DbCursorRO<hanzo_evm_db_api::tables::AccountsHistory>,
 {
     if list.is_empty() {
         return Ok(());
@@ -456,8 +456,8 @@ pub(crate) fn load_storage_history<N, CURSOR>(
 ) -> Result<(), StageError>
 where
     N: NodePrimitives,
-    CURSOR: DbCursorRW<reth_db_api::tables::StoragesHistory>
-        + DbCursorRO<reth_db_api::tables::StoragesHistory>,
+    CURSOR: DbCursorRW<hanzo_evm_db_api::tables::StoragesHistory>
+        + DbCursorRO<hanzo_evm_db_api::tables::StoragesHistory>,
 {
     let mut current_key: Option<(Address, B256)> = None;
     // Accumulator for block numbers where the current (address, storage_key) changed.
@@ -538,8 +538,8 @@ fn flush_storage_history_shards_partial<N, CURSOR>(
 ) -> Result<(), StageError>
 where
     N: NodePrimitives,
-    CURSOR: DbCursorRW<reth_db_api::tables::StoragesHistory>
-        + DbCursorRO<reth_db_api::tables::StoragesHistory>,
+    CURSOR: DbCursorRW<hanzo_evm_db_api::tables::StoragesHistory>
+        + DbCursorRO<hanzo_evm_db_api::tables::StoragesHistory>,
 {
     // Nothing to flush if we haven't filled a complete shard yet.
     if list.len() <= NUM_OF_INDICES_IN_SHARD {
@@ -596,8 +596,8 @@ fn flush_storage_history_shards<N, CURSOR>(
 ) -> Result<(), StageError>
 where
     N: NodePrimitives,
-    CURSOR: DbCursorRW<reth_db_api::tables::StoragesHistory>
-        + DbCursorRO<reth_db_api::tables::StoragesHistory>,
+    CURSOR: DbCursorRW<hanzo_evm_db_api::tables::StoragesHistory>
+        + DbCursorRO<hanzo_evm_db_api::tables::StoragesHistory>,
 {
     if list.is_empty() {
         return Ok(());

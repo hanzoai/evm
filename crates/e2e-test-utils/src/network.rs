@@ -1,11 +1,11 @@
 use futures_util::StreamExt;
-use reth_network_api::{
+use hanzo_evm_network_api::{
     events::PeerEvent, test_utils::PeersHandleProvider, NetworkEvent, NetworkEventListenerProvider,
     PeerRequest, PeersInfo,
 };
-use reth_network_peers::{NodeRecord, PeerId};
-use reth_tokio_util::EventStream;
-use reth_tracing::tracing::info;
+use hanzo_evm_network_peers::{NodeRecord, PeerId};
+use hanzo_evm_tokio_util::EventStream;
+use hanzo_evm_tracing::tracing::info;
 
 /// Helper for network operations
 #[derive(Debug)]

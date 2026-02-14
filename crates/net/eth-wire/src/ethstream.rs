@@ -16,8 +16,8 @@ use alloy_primitives::bytes::{Bytes, BytesMut};
 use alloy_rlp::Encodable;
 use futures::{ready, Sink, SinkExt};
 use pin_project::pin_project;
-use reth_eth_wire_types::{NetworkPrimitives, RawCapabilityMessage};
-use reth_ethereum_forks::ForkFilter;
+use hanzo_evm_eth_wire_types::{NetworkPrimitives, RawCapabilityMessage};
+use hanzo_evm_ethereum_forks::ForkFilter;
 use std::{
     future::Future,
     pin::Pin,
@@ -333,10 +333,10 @@ mod tests {
     use alloy_primitives::{bytes::Bytes, B256, U256};
     use alloy_rlp::Decodable;
     use futures::{SinkExt, StreamExt};
-    use reth_ecies::stream::ECIESStream;
-    use reth_eth_wire_types::{EthNetworkPrimitives, UnifiedStatus};
-    use reth_ethereum_forks::{ForkFilter, Head};
-    use reth_network_peers::pk2id;
+    use hanzo_evm_ecies::stream::ECIESStream;
+    use hanzo_evm_eth_wire_types::{EthNetworkPrimitives, UnifiedStatus};
+    use hanzo_evm_ethereum_forks::{ForkFilter, Head};
+    use hanzo_evm_network_peers::pk2id;
     use secp256k1::{SecretKey, SECP256K1};
     use std::time::Duration;
     use tokio::net::{TcpListener, TcpStream};

@@ -5,13 +5,13 @@ use crate::{
     metrics::{DatabaseEnvMetrics, Operation, TransactionMode, TransactionOutcome},
     DatabaseError,
 };
-use reth_db_api::{
+use hanzo_evm_db_api::{
     table::{Compress, DupSort, Encode, IntoVec, Table, TableImporter},
     transaction::{DbTx, DbTxMut},
 };
-use reth_libmdbx::{ffi::MDBX_dbi, CommitLatency, Transaction, TransactionKind, WriteFlags, RW};
-use reth_storage_errors::db::{DatabaseWriteError, DatabaseWriteOperation};
-use reth_tracing::tracing::{debug, instrument, trace, warn};
+use hanzo_evm_libmdbx::{ffi::MDBX_dbi, CommitLatency, Transaction, TransactionKind, WriteFlags, RW};
+use hanzo_evm_storage_errors::db::{DatabaseWriteError, DatabaseWriteOperation};
+use hanzo_evm_tracing::tracing::{debug, instrument, trace, warn};
 use std::{
     backtrace::Backtrace,
     collections::HashMap,
@@ -50,7 +50,7 @@ impl<K: TransactionKind> Tx<K> {
         inner: Transaction<K>,
         dbis: Arc<HashMap<&'static str, MDBX_dbi>>,
         env_metrics: Option<Arc<DatabaseEnvMetrics>>,
-    ) -> reth_libmdbx::Result<Self> {
+    ) -> hanzo_evm_libmdbx::Result<Self> {
         let metrics_handler = env_metrics
             .map(|env_metrics| {
                 let handler = MetricsHandler::<K>::new(inner.id()?, env_metrics);
@@ -68,7 +68,7 @@ impl<K: TransactionKind> Tx<K> {
     }
 
     /// Gets this transaction ID.
-    pub fn id(&self) -> reth_libmdbx::Result<u64> {
+    pub fn id(&self) -> hanzo_evm_libmdbx::Result<u64> {
         self.metrics_handler.as_ref().map_or_else(|| self.inner.id(), |handler| Ok(handler.txn_id))
     }
 
@@ -449,9 +449,9 @@ impl DbTxMut for Tx<RW> {
 #[cfg(test)]
 mod tests {
     use crate::{mdbx::DatabaseArguments, tables, DatabaseEnv, DatabaseEnvKind};
-    use reth_db_api::{database::Database, models::ClientVersion, transaction::DbTx};
-    use reth_libmdbx::MaxReadTransactionDuration;
-    use reth_storage_errors::db::DatabaseError;
+    use hanzo_evm_db_api::{database::Database, models::ClientVersion, transaction::DbTx};
+    use hanzo_evm_libmdbx::MaxReadTransactionDuration;
+    use hanzo_evm_storage_errors::db::DatabaseError;
     use std::{sync::atomic::Ordering, thread::sleep, time::Duration};
     use tempfile::tempdir;
 
@@ -475,7 +475,7 @@ mod tests {
         // Transaction has not timed out.
         assert!(matches!(
             tx.get::<tables::Transactions>(0).unwrap_err(),
-            DatabaseError::Open(err) if err == reth_libmdbx::Error::NotFound.into()));
+            DatabaseError::Open(err) if err == hanzo_evm_libmdbx::Error::NotFound.into()));
         // Backtrace is not recorded.
         assert!(!tx.metrics_handler.unwrap().backtrace_recorded.load(Ordering::Relaxed));
     }
@@ -499,7 +499,7 @@ mod tests {
         // Transaction has timed out.
         assert!(matches!(
             tx.get::<tables::Transactions>(0).unwrap_err(),
-            DatabaseError::Open(err) if err == reth_libmdbx::Error::ReadTransactionTimeout.into()));
+            DatabaseError::Open(err) if err == hanzo_evm_libmdbx::Error::ReadTransactionTimeout.into()));
         // Backtrace is recorded.
         assert!(tx.metrics_handler.unwrap().backtrace_recorded.load(Ordering::Relaxed));
     }

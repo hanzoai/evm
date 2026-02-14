@@ -9,7 +9,7 @@
 
 #![warn(unused_crate_dependencies)]
 
-use reth_ethereum::{
+use hanzo_evm_ethereum::{
     network::{config::rng_secret_key, EthNetworkPrimitives, NetworkConfig, NetworkManager},
     pool::{
         blobstore::InMemoryBlobStore, test_utils::OkValidator, CoinbaseTipOrdering,
@@ -30,7 +30,7 @@ async fn main() -> eyre::Result<()> {
         OkValidator<EthPooledTransaction>,
         CoinbaseTipOrdering<EthPooledTransaction>,
         InMemoryBlobStore,
-    > = reth_ethereum::pool::Pool::new(
+    > = hanzo_evm_ethereum::pool::Pool::new(
         OkValidator::default(),
         CoinbaseTipOrdering::default(),
         InMemoryBlobStore::default(),

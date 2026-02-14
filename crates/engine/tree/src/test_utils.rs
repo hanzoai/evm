@@ -1,15 +1,15 @@
 use alloy_primitives::B256;
-use reth_chainspec::ChainSpec;
-use reth_ethereum_primitives::BlockBody;
-use reth_network_p2p::test_utils::TestFullBlockClient;
-use reth_primitives_traits::SealedHeader;
-use reth_provider::test_utils::{
+use hanzo_evm_chainspec::ChainSpec;
+use hanzo_evm_ethereum_primitives::BlockBody;
+use hanzo_evm_network_p2p::test_utils::TestFullBlockClient;
+use hanzo_evm_primitives_traits::SealedHeader;
+use hanzo_evm_provider::test_utils::{
     create_test_provider_factory_with_chain_spec, MockNodeTypesWithDB,
 };
-use reth_prune_types::PruneModes;
-use reth_stages::{test_utils::TestStages, ExecOutput, StageError};
-use reth_stages_api::Pipeline;
-use reth_static_file::StaticFileProducer;
+use hanzo_evm_prune_types::PruneModes;
+use hanzo_evm_stages::{test_utils::TestStages, ExecOutput, StageError};
+use hanzo_evm_stages_api::Pipeline;
+use hanzo_evm_static_file::StaticFileProducer;
 use std::{collections::VecDeque, ops::Range, sync::Arc};
 use tokio::sync::watch;
 
@@ -40,7 +40,7 @@ impl TestPipelineBuilder {
     )]
     pub fn with_executor_results(
         self,
-        executor_results: Vec<reth_provider::ExecutionOutcome>,
+        executor_results: Vec<hanzo_evm_provider::ExecutionOutcome>,
     ) -> Self {
         let _ = executor_results;
         self
@@ -48,7 +48,7 @@ impl TestPipelineBuilder {
 
     /// Builds the pipeline.
     pub fn build(self, chain_spec: Arc<ChainSpec>) -> Pipeline<MockNodeTypesWithDB> {
-        reth_tracing::init_test_tracing();
+        hanzo_evm_tracing::init_test_tracing();
 
         // Setup pipeline
         let (tip_tx, _tip_rx) = watch::channel(B256::default());

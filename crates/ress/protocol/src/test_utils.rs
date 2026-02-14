@@ -3,8 +3,8 @@
 use crate::RessProtocolProvider;
 use alloy_consensus::Header;
 use alloy_primitives::{map::B256Map, Bytes, B256};
-use reth_ethereum_primitives::BlockBody;
-use reth_storage_errors::provider::ProviderResult;
+use hanzo_evm_ethereum_primitives::BlockBody;
+use hanzo_evm_storage_errors::provider::ProviderResult;
 use std::{
     sync::{Arc, Mutex},
     time::Duration,

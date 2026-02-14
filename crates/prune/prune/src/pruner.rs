@@ -5,14 +5,14 @@ use crate::{
     Metrics, PruneLimiter, PrunerError, PrunerEvent,
 };
 use alloy_primitives::BlockNumber;
-use reth_exex_types::FinishedExExHeight;
-use reth_provider::{
+use hanzo_evm_exex_types::FinishedExExHeight;
+use hanzo_evm_provider::{
     DBProvider, DatabaseProviderFactory, PruneCheckpointReader, PruneCheckpointWriter,
     StageCheckpointReader,
 };
-use reth_prune_types::{PruneProgress, PrunedSegmentInfo, PrunerOutput};
-use reth_stages_types::StageId;
-use reth_tokio_util::{EventSender, EventStream};
+use hanzo_evm_prune_types::{PruneProgress, PrunedSegmentInfo, PrunerOutput};
+use hanzo_evm_stages_types::StageId;
+use hanzo_evm_tokio_util::{EventSender, EventStream};
 use std::time::{Duration, Instant};
 use tokio::sync::watch;
 use tracing::{debug, instrument};
@@ -362,8 +362,8 @@ fn is_stage_finished<Provider: StageCheckpointReader>(
 #[cfg(test)]
 mod tests {
     use crate::Pruner;
-    use reth_exex_types::FinishedExExHeight;
-    use reth_provider::test_utils::create_test_provider_factory;
+    use hanzo_evm_exex_types::FinishedExExHeight;
+    use hanzo_evm_provider::test_utils::create_test_provider_factory;
 
     #[test]
     fn is_pruning_needed() {

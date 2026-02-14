@@ -1,4 +1,4 @@
-//! This file contains the legacy reth `TransactionSigned` type that has been replaced with
+//! This file contains the legacy evm `TransactionSigned` type that has been replaced with
 //! alloy's TxEnvelope To test for consistency this is kept
 
 use alloc::vec::Vec;
@@ -17,7 +17,7 @@ use alloy_primitives::{
 };
 use alloy_rlp::{Decodable, Encodable};
 use core::hash::{Hash, Hasher};
-use reth_primitives_traits::{
+use hanzo_evm_primitives_traits::{
     crypto::secp256k1::{recover_signer, recover_signer_unchecked},
     sync::OnceLock,
     transaction::signed::RecoveryError,
@@ -42,7 +42,7 @@ macro_rules! delegate {
 #[derive(Debug, Clone, PartialEq, Eq, Hash, derive_more::From)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 #[cfg_attr(any(test, feature = "arbitrary"), derive(arbitrary::Arbitrary))]
-#[cfg_attr(any(test, feature = "reth-codec"), reth_codecs::add_arbitrary_tests(compact))]
+#[cfg_attr(any(test, feature = "hanzo-evm-codec"), hanzo_evm_codecs::add_arbitrary_tests(compact))]
 pub enum Transaction {
     /// Legacy transaction (type `0x0`).
     ///
@@ -216,8 +216,8 @@ impl InMemorySize for Transaction {
     }
 }
 
-#[cfg(any(test, feature = "reth-codec"))]
-impl reth_codecs::Compact for Transaction {
+#[cfg(any(test, feature = "hanzo-evm-codec"))]
+impl hanzo_evm_codecs::Compact for Transaction {
     // Serializes the TxType to the buffer if necessary, returning 2 bits of the type as an
     // identifier instead of the length.
     fn to_compact<B>(&self, buf: &mut B) -> usize
@@ -302,7 +302,7 @@ impl RlpEcdsaEncodableTx for Transaction {
 /// Signed Ethereum transaction.
 #[derive(Debug, Clone, Eq, derive_more::AsRef, derive_more::Deref)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
-#[cfg_attr(any(test, feature = "reth-codec"), reth_codecs::add_arbitrary_tests(rlp))]
+#[cfg_attr(any(test, feature = "hanzo-evm-codec"), hanzo_evm_codecs::add_arbitrary_tests(rlp))]
 #[cfg_attr(feature = "test-utils", derive(derive_more::DerefMut))]
 #[cfg_attr(feature = "serde", serde(rename_all = "camelCase"))]
 pub struct TransactionSigned {
@@ -462,7 +462,7 @@ impl<'a> arbitrary::Arbitrary<'a> for TransactionSigned {
 
         let secp = secp256k1::Secp256k1::new();
         let key_pair = secp256k1::Keypair::new(&secp, &mut rand_08::thread_rng());
-        let signature = reth_primitives_traits::crypto::secp256k1::sign_message(
+        let signature = hanzo_evm_primitives_traits::crypto::secp256k1::sign_message(
             B256::from_slice(&key_pair.secret_bytes()[..]),
             transaction.signature_hash(),
         )
@@ -558,8 +558,8 @@ impl Decodable for TransactionSigned {
     }
 }
 
-#[cfg(any(test, feature = "reth-codec"))]
-impl reth_codecs::Compact for TransactionSigned {
+#[cfg(any(test, feature = "hanzo-evm-codec"))]
+impl hanzo_evm_codecs::Compact for TransactionSigned {
     fn to_compact<B>(&self, buf: &mut B) -> usize
     where
         B: alloy_rlp::bytes::BufMut + AsMut<[u8]>,
@@ -577,7 +577,7 @@ impl reth_codecs::Compact for TransactionSigned {
 
         let tx_bits = if zstd_bit {
             let mut tmp = Vec::with_capacity(256);
-            reth_zstd_compressors::with_tx_compressor(|compressor| {
+            hanzo_evm_zstd_compressors::with_tx_compressor(|compressor| {
                 let tx_bits = self.transaction.to_compact(&mut tmp);
                 buf.put_slice(&compressor.compress(&tmp).expect("Failed to compress"));
                 tx_bits as u8
@@ -603,7 +603,7 @@ impl reth_codecs::Compact for TransactionSigned {
 
         let zstd_bit = bitflags >> 3;
         let (transaction, buf) = if zstd_bit != 0 {
-            reth_zstd_compressors::with_tx_decompressor(|decompressor| {
+            hanzo_evm_zstd_compressors::with_tx_decompressor(|decompressor| {
                 // TODO: enforce that zstd is only present at a "top" level type
                 let transaction_type = (bitflags & 0b110) >> 1;
                 let (transaction, _) =
@@ -657,16 +657,16 @@ mod tests {
     use alloy_consensus::EthereumTxEnvelope;
     use proptest::proptest;
     use proptest_arbitrary_interop::arb;
-    use reth_codecs::Compact;
+    use hanzo_evm_codecs::Compact;
 
     proptest! {
         #[test]
-        fn test_roundtrip_compact_encode_envelope(reth_tx in arb::<TransactionSigned>()) {
+        fn test_roundtrip_compact_encode_envelope(evm_tx in arb::<TransactionSigned>()) {
             let mut expected_buf = Vec::<u8>::new();
-            let expected_len = reth_tx.to_compact(&mut expected_buf);
+            let expected_len = evm_tx.to_compact(&mut expected_buf);
 
             let mut actual_but  = Vec::<u8>::new();
-            let alloy_tx = EthereumTxEnvelope::<TxEip4844>::from(reth_tx);
+            let alloy_tx = EthereumTxEnvelope::<TxEip4844>::from(evm_tx);
             let actual_len = alloy_tx.to_compact(&mut actual_but);
 
             assert_eq!(actual_but, expected_buf);
@@ -674,26 +674,26 @@ mod tests {
         }
 
         #[test]
-        fn test_roundtrip_compact_decode_envelope(reth_tx in arb::<TransactionSigned>()) {
+        fn test_roundtrip_compact_decode_envelope(evm_tx in arb::<TransactionSigned>()) {
             let mut buf = Vec::<u8>::new();
-            let len = reth_tx.to_compact(&mut buf);
+            let len = evm_tx.to_compact(&mut buf);
 
             let (actual_tx, _) = EthereumTxEnvelope::<TxEip4844>::from_compact(&buf, len);
-            let expected_tx = EthereumTxEnvelope::<TxEip4844>::from(reth_tx);
+            let expected_tx = EthereumTxEnvelope::<TxEip4844>::from(evm_tx);
 
             assert_eq!(actual_tx, expected_tx);
         }
 
         #[test]
-        fn test_roundtrip_compact_encode_envelope_zstd(mut reth_tx in arb::<TransactionSigned>()) {
+        fn test_roundtrip_compact_encode_envelope_zstd(mut evm_tx in arb::<TransactionSigned>()) {
                // zstd only kicks in if the input is large enough
-            *reth_tx.transaction.input_mut() = vec![0;33].into();
+            *evm_tx.transaction.input_mut() = vec![0;33].into();
 
             let mut expected_buf = Vec::<u8>::new();
-            let expected_len = reth_tx.to_compact(&mut expected_buf);
+            let expected_len = evm_tx.to_compact(&mut expected_buf);
 
             let mut actual_but  = Vec::<u8>::new();
-            let alloy_tx = EthereumTxEnvelope::<TxEip4844>::from(reth_tx);
+            let alloy_tx = EthereumTxEnvelope::<TxEip4844>::from(evm_tx);
             let actual_len = alloy_tx.to_compact(&mut actual_but);
 
             assert_eq!(actual_but, expected_buf);
@@ -701,15 +701,15 @@ mod tests {
         }
 
         #[test]
-        fn test_roundtrip_compact_decode_envelope_zstd(mut reth_tx in arb::<TransactionSigned>()) {
+        fn test_roundtrip_compact_decode_envelope_zstd(mut evm_tx in arb::<TransactionSigned>()) {
             // zstd only kicks in if the input is large enough
-            *reth_tx.transaction.input_mut() = vec![0;33].into();
+            *evm_tx.transaction.input_mut() = vec![0;33].into();
 
             let mut buf = Vec::<u8>::new();
-            let len = reth_tx.to_compact(&mut buf);
+            let len = evm_tx.to_compact(&mut buf);
 
             let (actual_tx, _) = EthereumTxEnvelope::<TxEip4844>::from_compact(&buf, len);
-            let expected_tx = EthereumTxEnvelope::<TxEip4844>::from(reth_tx);
+            let expected_tx = EthereumTxEnvelope::<TxEip4844>::from(evm_tx);
 
             assert_eq!(actual_tx, expected_tx);
         }

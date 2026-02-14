@@ -8,9 +8,9 @@ use alloy_primitives::{BlockNumber, Sealable, B256};
 use futures::{stream::Stream, FutureExt};
 use futures_util::{stream::FuturesUnordered, StreamExt};
 use rayon::prelude::*;
-use reth_config::config::HeadersConfig;
-use reth_consensus::HeaderValidator;
-use reth_network_p2p::{
+use hanzo_evm_config::config::HeadersConfig;
+use hanzo_evm_consensus::HeaderValidator;
+use hanzo_evm_network_p2p::{
     error::{DownloadError, DownloadResult, PeerRequestResult},
     headers::{
         client::{HeadersClient, HeadersRequest},
@@ -19,9 +19,9 @@ use reth_network_p2p::{
     },
     priority::Priority,
 };
-use reth_network_peers::PeerId;
-use reth_primitives_traits::{GotExpected, SealedHeader};
-use reth_tasks::{TaskSpawner, TokioTaskExecutor};
+use hanzo_evm_network_peers::PeerId;
+use hanzo_evm_primitives_traits::{GotExpected, SealedHeader};
+use hanzo_evm_tasks::{TaskSpawner, TokioTaskExecutor};
 use std::{
     cmp::{Ordering, Reverse},
     collections::{binary_heap::PeekMut, BinaryHeap},
@@ -61,7 +61,7 @@ impl<H: Sealable> From<HeadersResponseError> for ReverseHeadersDownloaderError<H
 /// requests at a time but yielding them in batches on [`Stream::poll_next`].
 ///
 /// **Note:** This downloader downloads in reverse, see also
-/// [`reth_network_p2p::headers::client::HeadersDirection`], this means the batches of headers that
+/// [`hanzo_evm_network_p2p::headers::client::HeadersDirection`], this means the batches of headers that
 /// this downloader yields will start at the chain tip and move towards the local head: falling
 /// block numbers.
 #[must_use = "Stream does nothing unless polled"]
@@ -112,7 +112,7 @@ pub struct ReverseHeadersDownloader<H: HeadersClient> {
 
 impl<H> ReverseHeadersDownloader<H>
 where
-    H: HeadersClient<Header: reth_primitives_traits::BlockHeader> + 'static,
+    H: HeadersClient<Header: hanzo_evm_primitives_traits::BlockHeader> + 'static,
 {
     /// Convenience method to create a [`ReverseHeadersDownloaderBuilder`] without importing it
     pub fn builder() -> ReverseHeadersDownloaderBuilder {
@@ -679,7 +679,7 @@ where
 
 impl<H> HeaderDownloader for ReverseHeadersDownloader<H>
 where
-    H: HeadersClient<Header: reth_primitives_traits::BlockHeader> + 'static,
+    H: HeadersClient<Header: hanzo_evm_primitives_traits::BlockHeader> + 'static,
 {
     type Header = H::Header;
 
@@ -777,7 +777,7 @@ where
 
 impl<H> Stream for ReverseHeadersDownloader<H>
 where
-    H: HeadersClient<Header: reth_primitives_traits::BlockHeader> + 'static,
+    H: HeadersClient<Header: hanzo_evm_primitives_traits::BlockHeader> + 'static,
 {
     type Item = HeadersDownloaderResult<Vec<SealedHeader<H::Header>>, H::Header>;
 
@@ -1258,8 +1258,8 @@ mod tests {
     use alloy_consensus::Header;
     use alloy_eips::{eip1898::BlockWithParent, BlockNumHash};
     use assert_matches::assert_matches;
-    use reth_consensus::test_utils::TestConsensus;
-    use reth_network_p2p::test_utils::TestHeadersClient;
+    use hanzo_evm_consensus::test_utils::TestConsensus;
+    use hanzo_evm_network_p2p::test_utils::TestHeadersClient;
 
     /// Tests that `replace_number` works the same way as `Option::replace`
     #[test]
@@ -1438,7 +1438,7 @@ mod tests {
 
     #[tokio::test]
     async fn download_at_fork_head() {
-        reth_tracing::init_test_tracing();
+        hanzo_evm_tracing::init_test_tracing();
 
         let client = Arc::new(TestHeadersClient::default());
 
@@ -1472,7 +1472,7 @@ mod tests {
 
     #[tokio::test]
     async fn download_one_by_one() {
-        reth_tracing::init_test_tracing();
+        hanzo_evm_tracing::init_test_tracing();
         let p3 = SealedHeader::default();
         let p2 = child_header(&p3);
         let p1 = child_header(&p2);
@@ -1515,7 +1515,7 @@ mod tests {
 
     #[tokio::test]
     async fn download_one_by_one_larger_request_limit() {
-        reth_tracing::init_test_tracing();
+        hanzo_evm_tracing::init_test_tracing();
         let p3 = SealedHeader::default();
         let p2 = child_header(&p3);
         let p1 = child_header(&p2);

@@ -15,7 +15,7 @@ use alloy_primitives::{
 use itertools::Itertools;
 #[cfg(feature = "rayon")]
 pub use rayon::*;
-use reth_primitives_traits::Account;
+use hanzo_evm_primitives_traits::Account;
 
 #[cfg(feature = "rayon")]
 use rayon::prelude::{FromParallelIterator, IntoParallelIterator, ParallelIterator};
@@ -1738,7 +1738,7 @@ pub mod serde_bincode_compat {
     ///
     /// Intended to use with the [`serde_with::serde_as`] macro in the following way:
     /// ```rust
-    /// use reth_trie_common::{serde_bincode_compat, HashedPostState};
+    /// use hanzo_evm_trie_common::{serde_bincode_compat, HashedPostState};
     /// use serde::{Deserialize, Serialize};
     /// use serde_with::serde_as;
     ///
@@ -1798,7 +1798,7 @@ pub mod serde_bincode_compat {
     ///
     /// Intended to use with the [`serde_with::serde_as`] macro in the following way:
     /// ```rust
-    /// use reth_trie_common::{serde_bincode_compat, HashedStorage};
+    /// use hanzo_evm_trie_common::{serde_bincode_compat, HashedStorage};
     /// use serde::{Deserialize, Serialize};
     /// use serde_with::serde_as;
     ///
@@ -1849,7 +1849,7 @@ pub mod serde_bincode_compat {
     ///
     /// Intended to use with the [`serde_with::serde_as`] macro in the following way:
     /// ```rust
-    /// use reth_trie_common::{serde_bincode_compat, HashedPostStateSorted};
+    /// use hanzo_evm_trie_common::{serde_bincode_compat, HashedPostStateSorted};
     /// use serde::{Deserialize, Serialize};
     /// use serde_with::serde_as;
     ///
@@ -1909,7 +1909,7 @@ pub mod serde_bincode_compat {
     ///
     /// Intended to use with the [`serde_with::serde_as`] macro in the following way:
     /// ```rust
-    /// use reth_trie_common::{serde_bincode_compat, HashedStorageSorted};
+    /// use hanzo_evm_trie_common::{serde_bincode_compat, HashedStorageSorted};
     /// use serde::{Deserialize, Serialize};
     /// use serde_with::serde_as;
     ///
@@ -1968,7 +1968,7 @@ pub mod serde_bincode_compat {
             serde_bincode_compat,
         };
         use alloy_primitives::{B256, U256};
-        use reth_primitives_traits::Account;
+        use hanzo_evm_primitives_traits::Account;
         use serde::{Deserialize, Serialize};
         use serde_with::serde_as;
 

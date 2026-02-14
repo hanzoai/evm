@@ -1,5 +1,5 @@
 [package]
-name = "reth-network"
+name = "hanzo-evm-network"
 version.workspace = true
 edition.workspace = true
 rust-version.workspace = true
@@ -12,28 +12,28 @@ description = "Ethereum network support"
 workspace = true
 
 [dependencies]
-# reth
-reth-chainspec.workspace = true
-reth-evm-ethereum = { workspace = true, optional = true }
-reth-fs-util.workspace = true
-reth-primitives-traits.workspace = true
-reth-net-banlist.workspace = true
-reth-network-api.workspace = true
-reth-network-p2p.workspace = true
-reth-discv4.workspace = true
-reth-discv5.workspace = true
-reth-dns-discovery.workspace = true
-reth-ethereum-forks.workspace = true
-reth-eth-wire.workspace = true
-reth-eth-wire-types.workspace = true
-reth-ecies.workspace = true
-reth-tasks.workspace = true
-reth-transaction-pool.workspace = true
-reth-storage-api.workspace = true
-reth-tokio-util.workspace = true
-reth-consensus.workspace = true
-reth-network-peers = { workspace = true, features = ["net"] }
-reth-network-types.workspace = true
+# evm
+hanzo-evm-chainspec.workspace = true
+hanzo-evm-eth-execution = { workspace = true, optional = true }
+hanzo-evm-fs-util.workspace = true
+hanzo-evm-primitives-traits.workspace = true
+hanzo-evm-net-banlist.workspace = true
+hanzo-evm-network-api.workspace = true
+hanzo-evm-network-p2p.workspace = true
+hanzo-evm-discv4.workspace = true
+hanzo-evm-discv5.workspace = true
+hanzo-evm-dns-discovery.workspace = true
+hanzo-evm-ethereum-forks.workspace = true
+hanzo-evm-eth-wire.workspace = true
+hanzo-evm-eth-wire-types.workspace = true
+hanzo-evm-ecies.workspace = true
+hanzo-evm-tasks.workspace = true
+hanzo-evm-transaction-pool.workspace = true
+hanzo-evm-storage-api.workspace = true
+hanzo-evm-tokio-util.workspace = true
+hanzo-evm-consensus.workspace = true
+hanzo-evm-network-peers = { workspace = true, features = ["net"] }
+hanzo-evm-network-types.workspace = true
 
 # ethereum
 alloy-consensus.workspace = true
@@ -43,8 +43,8 @@ alloy-rlp.workspace = true
 enr = { workspace = true, features = ["serde", "rust-secp256k1"] }
 discv5.workspace = true
 
-# reth-ethereum
-reth-ethereum-primitives.workspace = true
+# hanzo-evm-ethereum
+hanzo-evm-ethereum-primitives.workspace = true
 
 # async/futures
 futures.workspace = true
@@ -57,7 +57,7 @@ tokio-util = { workspace = true, features = ["codec"] }
 serde = { workspace = true, optional = true }
 
 # metrics
-reth-metrics = { workspace = true, features = ["common"] }
+hanzo-evm-metrics = { workspace = true, features = ["common"] }
 metrics.workspace = true
 
 # misc
@@ -77,18 +77,18 @@ itertools.workspace = true
 smallvec.workspace = true
 
 [dev-dependencies]
-# reth
-reth-discv4 = { workspace = true, features = ["test-utils"] }
+# evm
+hanzo-evm-discv4 = { workspace = true, features = ["test-utils"] }
 
 # we need to enable the test-utils feature in our own crate to use utils in
 # integration tests
-reth-network = { workspace = true, features = ["test-utils"] }
-reth-network-p2p = { workspace = true, features = ["test-utils"] }
-reth-network-types = { workspace = true, features = ["test-utils"] }
+hanzo-evm-network = { workspace = true, features = ["test-utils"] }
+hanzo-evm-network-p2p = { workspace = true, features = ["test-utils"] }
+hanzo-evm-network-types = { workspace = true, features = ["test-utils"] }
 
-reth-provider = { workspace = true, features = ["test-utils"] }
-reth-tracing.workspace = true
-reth-transaction-pool = { workspace = true, features = ["test-utils"] }
+hanzo-evm-provider = { workspace = true, features = ["test-utils"] }
+hanzo-evm-tracing.workspace = true
+hanzo-evm-transaction-pool = { workspace = true, features = ["test-utils"] }
 
 # alloy deps for testing against nodes
 alloy-genesis.workspace = true
@@ -105,10 +105,10 @@ serde = [
     "dep:serde",
     "secp256k1/serde",
     "enr/serde",
-    "reth-network-types/serde",
-    "reth-dns-discovery/serde",
-    "reth-eth-wire/serde",
-    "reth-eth-wire-types/serde",
+    "hanzo-evm-network-types/serde",
+    "hanzo-evm-dns-discovery/serde",
+    "hanzo-evm-eth-wire/serde",
+    "hanzo-evm-eth-wire-types/serde",
     "alloy-consensus/serde",
     "alloy-eips/serde",
     "alloy-primitives/serde",
@@ -117,28 +117,28 @@ serde = [
     "rand/serde",
     "smallvec/serde",
     "url/serde",
-    "reth-primitives-traits/serde",
-    "reth-ethereum-forks/serde",
-    "reth-network/serde",
-    "reth-transaction-pool/serde",
-    "reth-ethereum-primitives/serde",
-    "reth-network-api/serde",
+    "hanzo-evm-primitives-traits/serde",
+    "hanzo-evm-ethereum-forks/serde",
+    "hanzo-evm-network/serde",
+    "hanzo-evm-transaction-pool/serde",
+    "hanzo-evm-ethereum-primitives/serde",
+    "hanzo-evm-network-api/serde",
     "rand_08/serde",
-    "reth-storage-api/serde",
+    "hanzo-evm-storage-api/serde",
 ]
 test-utils = [
-    "reth-transaction-pool/test-utils",
-    "reth-network-types/test-utils",
-    "reth-chainspec/test-utils",
-    "reth-consensus/test-utils",
-    "reth-discv4/test-utils",
-    "reth-network/test-utils",
-    "reth-network-p2p/test-utils",
-    "reth-primitives-traits/test-utils",
-    "reth-provider/test-utils",
-    "reth-ethereum-primitives/test-utils",
-    "dep:reth-evm-ethereum",
-    "reth-evm-ethereum?/test-utils",
+    "hanzo-evm-transaction-pool/test-utils",
+    "hanzo-evm-network-types/test-utils",
+    "hanzo-evm-chainspec/test-utils",
+    "hanzo-evm-consensus/test-utils",
+    "hanzo-evm-discv4/test-utils",
+    "hanzo-evm-network/test-utils",
+    "hanzo-evm-network-p2p/test-utils",
+    "hanzo-evm-primitives-traits/test-utils",
+    "hanzo-evm-provider/test-utils",
+    "hanzo-evm-ethereum-primitives/test-utils",
+    "dep:hanzo-evm-eth-execution",
+    "hanzo-evm-eth-execution?/test-utils",
 ]
 
 [[bench]]

@@ -28,8 +28,8 @@ use alloy_rpc_types::{
     },
     Withdrawal,
 };
-use reth_basic_payload_builder::{BuildArguments, BuildOutcome, PayloadBuilder, PayloadConfig};
-use reth_ethereum::{
+use hanzo_evm_basic_payload_builder::{BuildArguments, BuildOutcome, PayloadBuilder, PayloadConfig};
+use hanzo_evm_ethereum::{
     chainspec::{Chain, ChainSpec, ChainSpecProvider},
     node::{
         api::{
@@ -57,9 +57,9 @@ use reth_ethereum::{
     tasks::TaskManager,
     EthPrimitives, TransactionSigned,
 };
-use reth_ethereum_payload_builder::{EthereumBuilderConfig, EthereumExecutionPayloadValidator};
-use reth_payload_builder::{EthBuiltPayload, EthPayloadBuilderAttributes, PayloadBuilderError};
-use reth_tracing::{RethTracer, Tracer};
+use hanzo_evm_ethereum_payload_builder::{EthereumBuilderConfig, EthereumExecutionPayloadValidator};
+use hanzo_evm_payload_builder::{EthBuiltPayload, EthPayloadBuilderAttributes, PayloadBuilderError};
+use hanzo_evm_tracing::{EvmTracer, Tracer};
 use serde::{Deserialize, Serialize};
 use std::{convert::Infallible, sync::Arc};
 use thiserror::Error;
@@ -154,7 +154,7 @@ impl PayloadTypes for CustomEngineTypes {
 
     fn block_to_payload(
         block: SealedBlock<
-                <<Self::BuiltPayload as reth_ethereum::node::api::BuiltPayload>::Primitives as reth_ethereum::node::api::NodePrimitives>::Block,
+                <<Self::BuiltPayload as hanzo_evm_ethereum::node::api::BuiltPayload>::Primitives as hanzo_evm_ethereum::node::api::NodePrimitives>::Block,
             >,
     ) -> ExecutionData {
         let (payload, sidecar) =
@@ -192,7 +192,7 @@ impl CustomEngineValidator {
 }
 
 impl PayloadValidator<CustomEngineTypes> for CustomEngineValidator {
-    type Block = reth_ethereum::Block;
+    type Block = hanzo_evm_ethereum::Block;
 
     fn convert_payload_to_block(
         &self,
@@ -331,13 +331,13 @@ where
         self,
         ctx: &BuilderContext<Node>,
         pool: Pool,
-        evm_config: EthEvmConfig,
+        hanzo_evm_config: EthEvmConfig,
     ) -> eyre::Result<Self::PayloadBuilder> {
         let payload_builder = CustomPayloadBuilder {
-            inner: reth_ethereum_payload_builder::EthereumPayloadBuilder::new(
+            inner: hanzo_evm_ethereum_payload_builder::EthereumPayloadBuilder::new(
                 ctx.provider().clone(),
                 pool,
-                evm_config,
+                hanzo_evm_config,
                 EthereumBuilderConfig::new()
                     .with_extra_data(ctx.payload_builder_config().extra_data_bytes()),
             ),
@@ -350,7 +350,7 @@ where
 #[derive(Debug, Clone)]
 #[non_exhaustive]
 pub struct CustomPayloadBuilder<Pool, Client> {
-    inner: reth_ethereum_payload_builder::EthereumPayloadBuilder<Pool, Client>,
+    inner: hanzo_evm_ethereum_payload_builder::EthereumPayloadBuilder<Pool, Client>,
 }
 
 impl<Pool, Client> PayloadBuilder for CustomPayloadBuilder<Pool, Client>
@@ -389,7 +389,7 @@ where
 
 #[tokio::main]
 async fn main() -> eyre::Result<()> {
-    let _guard = RethTracer::new().init()?;
+    let _guard = EvmTracer::new().init()?;
 
     let tasks = TaskManager::current();
 

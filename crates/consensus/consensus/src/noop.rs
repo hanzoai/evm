@@ -7,7 +7,7 @@
 //! # Examples
 //!
 //! ```rust
-//! use reth_consensus::noop::NoopConsensus;
+//! use hanzo_evm_consensus::noop::NoopConsensus;
 //! use std::sync::Arc;
 //!
 //! let consensus = NoopConsensus::default();
@@ -20,8 +20,8 @@
 
 use crate::{Consensus, ConsensusError, FullConsensus, HeaderValidator, ReceiptRootBloom};
 use alloc::sync::Arc;
-use reth_execution_types::BlockExecutionResult;
-use reth_primitives_traits::{Block, NodePrimitives, RecoveredBlock, SealedBlock, SealedHeader};
+use hanzo_evm_execution_types::BlockExecutionResult;
+use hanzo_evm_primitives_traits::{Block, NodePrimitives, RecoveredBlock, SealedBlock, SealedHeader};
 
 /// A Consensus implementation that does nothing.
 ///

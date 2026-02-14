@@ -16,7 +16,7 @@ use alloy_trie::{
 };
 use derive_more::{Deref, DerefMut, IntoIterator};
 use itertools::Itertools;
-use reth_primitives_traits::Account;
+use hanzo_evm_primitives_traits::Account;
 
 /// Proof targets map.
 #[derive(Deref, DerefMut, IntoIterator, Clone, PartialEq, Eq, Default, Debug)]

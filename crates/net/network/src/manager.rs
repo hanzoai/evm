@@ -38,20 +38,20 @@ use crate::{
 };
 use futures::{Future, StreamExt};
 use parking_lot::Mutex;
-use reth_chainspec::EnrForkIdEntry;
-use reth_eth_wire::{DisconnectReason, EthNetworkPrimitives, NetworkPrimitives};
-use reth_fs_util::{self as fs, FsPathError};
-use reth_metrics::common::mpsc::UnboundedMeteredSender;
-use reth_network_api::{
+use hanzo_evm_chainspec::EnrForkIdEntry;
+use hanzo_evm_eth_wire::{DisconnectReason, EthNetworkPrimitives, NetworkPrimitives};
+use hanzo_evm_fs_util::{self as fs, FsPathError};
+use hanzo_evm_metrics::common::mpsc::UnboundedMeteredSender;
+use hanzo_evm_network_api::{
     events::{PeerEvent, SessionInfo},
     test_utils::PeersHandle,
     EthProtocolInfo, NetworkEvent, NetworkStatus, PeerInfo, PeerRequest,
 };
-use reth_network_peers::{NodeRecord, PeerId};
-use reth_network_types::ReputationChangeKind;
-use reth_storage_api::BlockNumReader;
-use reth_tasks::shutdown::GracefulShutdown;
-use reth_tokio_util::EventSender;
+use hanzo_evm_network_peers::{NodeRecord, PeerId};
+use hanzo_evm_network_types::ReputationChangeKind;
+use hanzo_evm_storage_api::BlockNumReader;
+use hanzo_evm_tasks::shutdown::GracefulShutdown;
+use hanzo_evm_tokio_util::EventSender;
 use secp256k1::SecretKey;
 use std::{
     net::SocketAddr,
@@ -146,8 +146,8 @@ impl NetworkManager {
     ///
     /// ```no_run
     /// # async fn f() {
-    /// use reth_chainspec::MAINNET;
-    /// use reth_network::{NetworkConfig, NetworkManager};
+    /// use hanzo_evm_chainspec::MAINNET;
+    /// use hanzo_evm_network::{NetworkConfig, NetworkManager};
     /// let config =
     ///     NetworkConfig::builder_with_rng_secret_key().build_with_noop_provider(MAINNET.clone());
     /// let manager = NetworkManager::eth(config).await;
@@ -361,12 +361,12 @@ impl<N: NetworkPrimitives> NetworkManager<N> {
     /// components of the network
     ///
     /// ```
-    /// use reth_network::{
+    /// use hanzo_evm_network::{
     ///     config::rng_secret_key, EthNetworkPrimitives, NetworkConfig, NetworkManager,
     /// };
-    /// use reth_network_peers::mainnet_nodes;
-    /// use reth_storage_api::noop::NoopProvider;
-    /// use reth_transaction_pool::TransactionPool;
+    /// use hanzo_evm_network_peers::mainnet_nodes;
+    /// use hanzo_evm_storage_api::noop::NoopProvider;
+    /// use hanzo_evm_transaction_pool::TransactionPool;
     /// async fn launch<Pool: TransactionPool>(pool: Pool) {
     ///     // This block provider implementation is used for testing purposes.
     ///     let client = NoopProvider::default();
@@ -437,7 +437,7 @@ impl<N: NetworkPrimitives> NetworkManager<N> {
     pub fn write_peers_to_file(&self, persistent_peers_file: &Path) -> Result<(), FsPathError> {
         let known_peers = self.all_peers().collect::<Vec<_>>();
         persistent_peers_file.parent().map(fs::create_dir_all).transpose()?;
-        reth_fs_util::write_json_file(persistent_peers_file, &known_peers)?;
+        hanzo_evm_fs_util::write_json_file(persistent_peers_file, &known_peers)?;
         Ok(())
     }
 

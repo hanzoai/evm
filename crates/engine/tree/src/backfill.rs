@@ -8,9 +8,9 @@
 //! These modes are mutually exclusive and the node can only be in one mode at a time.
 
 use futures::FutureExt;
-use reth_provider::providers::ProviderNodeTypes;
-use reth_stages_api::{ControlFlow, Pipeline, PipelineError, PipelineTarget, PipelineWithResult};
-use reth_tasks::TaskSpawner;
+use hanzo_evm_provider::providers::ProviderNodeTypes;
+use hanzo_evm_stages_api::{ControlFlow, Pipeline, PipelineError, PipelineTarget, PipelineWithResult};
+use hanzo_evm_tasks::TaskSpawner;
 use std::task::{ready, Context, Poll};
 use tokio::sync::oneshot;
 use tracing::trace;
@@ -235,13 +235,13 @@ mod tests {
     use alloy_primitives::{BlockNumber, B256};
     use assert_matches::assert_matches;
     use futures::poll;
-    use reth_chainspec::{ChainSpecBuilder, MAINNET};
-    use reth_network_p2p::test_utils::TestFullBlockClient;
-    use reth_primitives_traits::SealedHeader;
-    use reth_provider::test_utils::MockNodeTypesWithDB;
-    use reth_stages::ExecOutput;
-    use reth_stages_api::StageCheckpoint;
-    use reth_tasks::TokioTaskExecutor;
+    use hanzo_evm_chainspec::{ChainSpecBuilder, MAINNET};
+    use hanzo_evm_network_p2p::test_utils::TestFullBlockClient;
+    use hanzo_evm_primitives_traits::SealedHeader;
+    use hanzo_evm_provider::test_utils::MockNodeTypesWithDB;
+    use hanzo_evm_stages::ExecOutput;
+    use hanzo_evm_stages_api::StageCheckpoint;
+    use hanzo_evm_tasks::TokioTaskExecutor;
     use std::{collections::VecDeque, future::poll_fn, sync::Arc};
 
     struct TestHarness {

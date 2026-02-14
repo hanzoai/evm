@@ -8,17 +8,17 @@ use alloy_rpc_types_trace::{
 use futures::StreamExt;
 use jsonrpsee::http_client::HttpClientBuilder;
 use jsonrpsee_http_client::HttpClient;
-use reth_ethereum_primitives::{Receipt, TransactionSigned};
-use reth_rpc_api_testing_util::{debug::DebugApiExt, trace::TraceApiExt, utils::parse_env_url};
-use reth_rpc_eth_api::EthApiClient;
+use hanzo_evm_ethereum_primitives::{Receipt, TransactionSigned};
+use hanzo_evm_rpc_api_testing_util::{debug::DebugApiExt, trace::TraceApiExt, utils::parse_env_url};
+use hanzo_evm_rpc_eth_api::EthApiClient;
 use std::time::Instant;
 
 /// This is intended to be run locally against a running node.
 ///
-/// This is a noop of env var `RETH_RPC_TEST_NODE_URL` is not set.
+/// This is a noop of env var `EVM_RPC_TEST_NODE_URL` is not set.
 #[tokio::test(flavor = "multi_thread")]
 async fn trace_many_blocks() {
-    let url = parse_env_url("RETH_RPC_TEST_NODE_URL");
+    let url = parse_env_url("EVM_RPC_TEST_NODE_URL");
     if url.is_err() {
         return
     }
@@ -37,7 +37,7 @@ async fn trace_many_blocks() {
 #[tokio::test(flavor = "multi_thread")]
 #[ignore]
 async fn replay_transactions() {
-    let url = parse_env_url("RETH_RPC_TEST_NODE_URL").unwrap();
+    let url = parse_env_url("EVM_RPC_TEST_NODE_URL").unwrap();
     let client = HttpClientBuilder::default().build(url).unwrap();
 
     let tx_hashes = vec![
@@ -60,7 +60,7 @@ async fn replay_transactions() {
 #[ignore]
 async fn trace_filters() {
     // Parse the node URL from environment variable and create an HTTP client.
-    let url = parse_env_url("RETH_RPC_TEST_NODE_URL").unwrap();
+    let url = parse_env_url("EVM_RPC_TEST_NODE_URL").unwrap();
     let client = HttpClientBuilder::default().build(url).unwrap();
 
     // Set up trace filters.
@@ -79,7 +79,7 @@ async fn trace_filters() {
 #[tokio::test(flavor = "multi_thread")]
 #[ignore]
 async fn trace_call() {
-    let url = parse_env_url("RETH_RPC_TEST_NODE_URL").unwrap();
+    let url = parse_env_url("EVM_RPC_TEST_NODE_URL").unwrap();
     let client = HttpClientBuilder::default().build(url).unwrap();
     let trace_call_request = TraceCallRequest::default();
     let mut stream = client.trace_call_stream(trace_call_request);
@@ -102,10 +102,10 @@ async fn trace_call() {
 /// This is intended to be run locally against a running node. This traces all blocks for a given
 /// chain.
 ///
-/// This is a noop of env var `RETH_RPC_TEST_NODE_URL` is not set.
+/// This is a noop of env var `EVM_RPC_TEST_NODE_URL` is not set.
 #[tokio::test(flavor = "multi_thread")]
 async fn debug_trace_block_entire_chain() {
-    let url = parse_env_url("RETH_RPC_TEST_NODE_URL");
+    let url = parse_env_url("EVM_RPC_TEST_NODE_URL");
     if url.is_err() {
         return
     }
@@ -136,11 +136,11 @@ async fn debug_trace_block_entire_chain() {
 /// This is intended to be run locally against a running node. This traces all blocks for a given
 /// chain.
 ///
-/// This is a noop of env var `RETH_RPC_TEST_NODE_URL` is not set.
+/// This is a noop of env var `EVM_RPC_TEST_NODE_URL` is not set.
 #[tokio::test(flavor = "multi_thread")]
 async fn debug_trace_block_opcodes_entire_chain() {
     let opcodes7702 = ["EXTCODESIZE", "EXTCODECOPY", "EXTCODEHASH"];
-    let url = parse_env_url("RETH_RPC_TEST_NODE_URL");
+    let url = parse_env_url("EVM_RPC_TEST_NODE_URL");
     if url.is_err() {
         return
     }

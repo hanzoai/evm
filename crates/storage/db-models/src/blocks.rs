@@ -11,8 +11,8 @@ pub type NumTransactions = u64;
 /// transaction in the block and the total number of transactions.
 #[derive(Debug, Default, Eq, PartialEq, Clone, Copy)]
 #[cfg_attr(any(test, feature = "arbitrary"), derive(arbitrary::Arbitrary))]
-#[cfg_attr(any(test, feature = "reth-codec"), derive(reth_codecs::Compact))]
-#[cfg_attr(any(test, feature = "reth-codec"), reth_codecs::add_arbitrary_tests(compact))]
+#[cfg_attr(any(test, feature = "hanzo-evm-codec"), derive(hanzo_evm_codecs::Compact))]
+#[cfg_attr(any(test, feature = "hanzo-evm-codec"), hanzo_evm_codecs::add_arbitrary_tests(compact))]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 pub struct StoredBlockBodyIndices {
     /// The number of the first transaction in this block
@@ -74,8 +74,8 @@ impl StoredBlockBodyIndices {
 /// The storage representation of block withdrawals.
 #[derive(Debug, Default, Eq, PartialEq, Clone)]
 #[cfg_attr(any(test, feature = "arbitrary"), derive(arbitrary::Arbitrary))]
-#[cfg_attr(any(test, feature = "reth-codec"), derive(reth_codecs::Compact))]
-#[cfg_attr(any(test, feature = "reth-codec"), reth_codecs::add_arbitrary_tests(compact))]
+#[cfg_attr(any(test, feature = "hanzo-evm-codec"), derive(hanzo_evm_codecs::Compact))]
+#[cfg_attr(any(test, feature = "hanzo-evm-codec"), hanzo_evm_codecs::add_arbitrary_tests(compact))]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 pub struct StoredBlockWithdrawals {
     /// The block withdrawals.
@@ -86,15 +86,15 @@ pub struct StoredBlockWithdrawals {
 /// represents a pre-merge block.
 #[derive(Debug, Default, Eq, PartialEq, Clone)]
 #[cfg_attr(any(test, feature = "arbitrary"), derive(arbitrary::Arbitrary))]
-#[cfg_attr(any(test, feature = "reth-codec"), reth_codecs::add_arbitrary_tests(compact))]
+#[cfg_attr(any(test, feature = "hanzo-evm-codec"), hanzo_evm_codecs::add_arbitrary_tests(compact))]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 pub struct StaticFileBlockWithdrawals {
     /// The block withdrawals. A `None` value represents a pre-merge block.
     pub withdrawals: Option<Withdrawals>,
 }
 
-#[cfg(any(test, feature = "reth-codec"))]
-impl reth_codecs::Compact for StaticFileBlockWithdrawals {
+#[cfg(any(test, feature = "hanzo-evm-codec"))]
+impl hanzo_evm_codecs::Compact for StaticFileBlockWithdrawals {
     fn to_compact<B>(&self, buf: &mut B) -> usize
     where
         B: bytes::BufMut + AsMut<[u8]>,

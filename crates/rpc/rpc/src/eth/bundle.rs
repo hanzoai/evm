@@ -6,15 +6,15 @@ use alloy_evm::env::BlockEnvironment;
 use alloy_primitives::{uint, Keccak256, U256};
 use alloy_rpc_types_mev::{EthCallBundle, EthCallBundleResponse, EthCallBundleTransactionResult};
 use jsonrpsee::core::RpcResult;
-use reth_chainspec::{ChainSpecProvider, EthChainSpec};
-use reth_evm::{ConfigureEvm, Evm};
-use reth_rpc_eth_api::{
+use hanzo_evm_chainspec::{ChainSpecProvider, EthChainSpec};
+use hanzo_evm_execution::{ConfigureEvm, Evm};
+use hanzo_evm_rpc_eth_api::{
     helpers::{Call, EthTransactions, LoadPendingBlock},
     EthCallBundleApiServer, FromEthApiError, FromEvmError,
 };
-use reth_rpc_eth_types::{utils::recover_raw_transaction, EthApiError, RpcInvalidTransactionError};
-use reth_tasks::pool::BlockingTaskGuard;
-use reth_transaction_pool::{
+use hanzo_evm_rpc_eth_types::{utils::recover_raw_transaction, EthApiError, RpcInvalidTransactionError};
+use hanzo_evm_tasks::pool::BlockingTaskGuard;
+use hanzo_evm_transaction_pool::{
     EthBlobTransactionSidecar, EthPoolTransaction, PoolPooledTx, PoolTransaction, TransactionPool,
 };
 use revm::{
@@ -157,7 +157,7 @@ where
                 let mut total_gas_fees = U256::ZERO;
                 let mut hasher = Keccak256::new();
 
-                let mut evm = eth_api.evm_config().evm_with_env(db, evm_env);
+                let mut evm = eth_api.hanzo_evm_config().evm_with_env(db, evm_env);
 
                 let mut results = Vec::with_capacity(transactions.len());
                 let mut transactions = transactions.into_iter().peekable();
@@ -182,7 +182,7 @@ where
 
                     hasher.update(*tx.tx_hash());
                     let ResultAndState { result, state } = evm
-                        .transact(eth_api.evm_config().tx_env(&tx))
+                        .transact(eth_api.hanzo_evm_config().tx_env(&tx))
                         .map_err(Eth::Error::from_evm_err)?;
 
                     let gas_price = tx

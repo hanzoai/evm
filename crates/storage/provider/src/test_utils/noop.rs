@@ -4,12 +4,12 @@ use crate::{
     providers::{RocksDBProvider, StaticFileProvider, StaticFileProviderRWRefMut},
     RocksDBProviderFactory, StaticFileProviderFactory,
 };
-use reth_errors::{ProviderError, ProviderResult};
-use reth_primitives_traits::NodePrimitives;
+use hanzo_evm_errors::{ProviderError, ProviderResult};
+use hanzo_evm_primitives_traits::NodePrimitives;
 use std::path::PathBuf;
 
 /// Re-exported for convenience
-pub use reth_storage_api::noop::NoopProvider;
+pub use hanzo_evm_storage_api::noop::NoopProvider;
 
 impl<C: Send + Sync, N: NodePrimitives> StaticFileProviderFactory for NoopProvider<C, N> {
     fn static_file_provider(&self) -> StaticFileProvider<Self::Primitives> {
@@ -19,7 +19,7 @@ impl<C: Send + Sync, N: NodePrimitives> StaticFileProviderFactory for NoopProvid
     fn get_static_file_writer(
         &self,
         _block: alloy_primitives::BlockNumber,
-        _segment: reth_static_file_types::StaticFileSegment,
+        _segment: hanzo_evm_static_file_types::StaticFileSegment,
     ) -> ProviderResult<StaticFileProviderRWRefMut<'_, Self::Primitives>> {
         Err(ProviderError::ReadOnlyStaticFileAccess)
     }

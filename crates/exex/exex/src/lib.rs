@@ -17,7 +17,7 @@
 //! # Pruning
 //!
 //! `ExEx`'s **SHOULD** emit an `ExExEvent::FinishedHeight` event to signify what blocks have been
-//! processed. This event is used by Reth to determine what state can be pruned.
+//! processed. This event is used by Hanzo EVM to determine what state can be pruned.
 //!
 //! An `ExEx` will only receive notifications for blocks greater than the block emitted in the
 //! event. To clarify: if the `ExEx` emits `ExExEvent::FinishedHeight(0)` it will receive
@@ -31,9 +31,9 @@
 //! ```no_run
 //! use alloy_consensus::BlockHeader;
 //! use futures::StreamExt;
-//! use reth_exex::ExExContext;
-//! use reth_node_api::FullNodeComponents;
-//! use reth_provider::CanonStateNotification;
+//! use hanzo_evm_exex::ExExContext;
+//! use hanzo_evm_node_api::FullNodeComponents;
+//! use hanzo_evm_provider::CanonStateNotification;
 //!
 //! async fn my_indexer<N: FullNodeComponents>(
 //!     mut ctx: ExExContext<N>,
@@ -65,7 +65,7 @@
 //!
 //! ## Invariants
 //!
-//! - An ExEx must not block the main Reth execution
+//! - An ExEx must not block the main Hanzo EVM execution
 //! - Notifications are processed in canonical order
 //! - `ExExs` should be able to recover from temporary failures
 //! - Memory and resource usage must be controlled
@@ -79,11 +79,11 @@
 //!
 //! [`Future`]: std::future::Future
 //! [`ExExContext`]: crate::ExExContext
-//! [`CanonStateNotification`]: reth_provider::CanonStateNotification
+//! [`CanonStateNotification`]: hanzo_evm_provider::CanonStateNotification
 #![doc(
-    html_logo_url = "https://raw.githubusercontent.com/paradigmxyz/reth/main/assets/reth-docs.png",
+    html_logo_url = "https://raw.githubusercontent.com/hanzoai/evm/main/assets/evm-docs.png",
     html_favicon_url = "https://avatars0.githubusercontent.com/u/97369466?s=256",
-    issue_tracker_base_url = "https://github.com/paradigmxyz/reth/issues/"
+    issue_tracker_base_url = "https://github.com/hanzoai/evm/issues/"
 )]
 #![cfg_attr(docsrs, feature(doc_cfg))]
 #![cfg_attr(not(test), warn(unused_crate_dependencies))]
@@ -111,4 +111,4 @@ pub use wal::*;
 
 // Re-export exex types
 #[doc(inline)]
-pub use reth_exex_types::*;
+pub use hanzo_evm_exex_types::*;

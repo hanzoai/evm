@@ -30,7 +30,7 @@ fn main() -> Result<(), Box<dyn Error>> {
     // if on a tag: v0.2.0-beta.3
     let not_on_tag = env::var("VERGEN_GIT_DESCRIBE")?.ends_with(&format!("-g{sha_short}"));
     let version_suffix = if is_dirty || not_on_tag { "-dev" } else { "" };
-    println!("cargo:rustc-env=RETH_VERSION_SUFFIX={version_suffix}");
+    println!("cargo:rustc-env=EVM_VERSION_SUFFIX={version_suffix}");
 
     // Set short SHA
     println!("cargo:rustc-env=VERGEN_GIT_SHA_SHORT={}", &sha[..8]);
@@ -38,19 +38,19 @@ fn main() -> Result<(), Box<dyn Error>> {
     // Set the build profile
     let out_dir = env::var("OUT_DIR").unwrap();
     let profile = out_dir.rsplit(std::path::MAIN_SEPARATOR).nth(3).unwrap();
-    println!("cargo:rustc-env=RETH_BUILD_PROFILE={profile}");
+    println!("cargo:rustc-env=EVM_BUILD_PROFILE={profile}");
 
     // Set formatted version strings
     let pkg_version = env!("CARGO_PKG_VERSION");
 
-    // The short version information for reth.
+    // The short version information for evm.
     // - The latest version from Cargo.toml
     // - The short SHA of the latest commit.
     // Example: 0.1.0 (defa64b2)
-    println!("cargo:rustc-env=RETH_SHORT_VERSION={pkg_version}{version_suffix} ({sha_short})");
+    println!("cargo:rustc-env=EVM_SHORT_VERSION={pkg_version}{version_suffix} ({sha_short})");
 
     // LONG_VERSION
-    // The long version information for reth.
+    // The long version information for evm.
     //
     // - The latest version from Cargo.toml + version suffix (if any)
     // - The full SHA of the latest commit
@@ -67,26 +67,26 @@ fn main() -> Result<(), Box<dyn Error>> {
     // Build Features: jemalloc
     // Build Profile: maxperf
     // ```
-    println!("cargo:rustc-env=RETH_LONG_VERSION_0=Version: {pkg_version}{version_suffix}");
-    println!("cargo:rustc-env=RETH_LONG_VERSION_1=Commit SHA: {sha}");
+    println!("cargo:rustc-env=EVM_LONG_VERSION_0=Version: {pkg_version}{version_suffix}");
+    println!("cargo:rustc-env=EVM_LONG_VERSION_1=Commit SHA: {sha}");
     println!(
-        "cargo:rustc-env=RETH_LONG_VERSION_2=Build Timestamp: {}",
+        "cargo:rustc-env=EVM_LONG_VERSION_2=Build Timestamp: {}",
         env::var("VERGEN_BUILD_TIMESTAMP")?
     );
     println!(
-        "cargo:rustc-env=RETH_LONG_VERSION_3=Build Features: {}",
+        "cargo:rustc-env=EVM_LONG_VERSION_3=Build Features: {}",
         env::var("VERGEN_CARGO_FEATURES")?
     );
-    println!("cargo:rustc-env=RETH_LONG_VERSION_4=Build Profile: {profile}");
+    println!("cargo:rustc-env=EVM_LONG_VERSION_4=Build Profile: {profile}");
 
-    // The version information for reth formatted for P2P (devp2p).
+    // The version information for evm formatted for P2P (devp2p).
     // - The latest version from Cargo.toml
     // - The target triple
     //
-    // Example: reth/v0.1.0-alpha.1-428a6dc2f/aarch64-apple-darwin
+    // Example: evm/v0.1.0-alpha.1-428a6dc2f/aarch64-apple-darwin
     println!(
-        "cargo:rustc-env=RETH_P2P_CLIENT_VERSION={}",
-        format_args!("reth/v{pkg_version}-{sha_short}/{}", env::var("VERGEN_CARGO_TARGET_TRIPLE")?)
+        "cargo:rustc-env=EVM_P2P_CLIENT_VERSION={}",
+        format_args!("evm/v{pkg_version}-{sha_short}/{}", env::var("VERGEN_CARGO_TARGET_TRIPLE")?)
     );
 
     Ok(())

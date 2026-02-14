@@ -35,15 +35,15 @@ use alloy_primitives::{address, b256, Address, BlockNumber, B256, U256};
 use alloy_trie::root::state_root_ref_unhashed;
 use core::fmt::Debug;
 use derive_more::From;
-use reth_ethereum_forks::{
+use hanzo_evm_ethereum_forks::{
     ChainHardforks, DisplayHardforks, EthereumHardfork, EthereumHardforks, ForkCondition,
     ForkFilter, ForkFilterKey, ForkHash, ForkId, Hardfork, Hardforks, Head, DEV_HARDFORKS,
 };
-use reth_network_peers::{
+use hanzo_evm_network_peers::{
     holesky_nodes, hoodi_nodes, mainnet_nodes, op_nodes, op_testnet_nodes, sepolia_nodes,
     NodeRecord,
 };
-use reth_primitives_traits::{sync::LazyLock, BlockHeader, SealedHeader};
+use hanzo_evm_primitives_traits::{sync::LazyLock, BlockHeader, SealedHeader};
 
 /// Helper method building a [`Header`] given [`Genesis`] and [`ChainHardforks`].
 pub fn make_genesis_header(genesis: &Genesis, hardforks: &ChainHardforks) -> Header {
@@ -780,7 +780,7 @@ impl<H: BlockHeader> ChainSpec<H> {
             C::Sepolia => Some(sepolia_nodes()),
             C::Holesky => Some(holesky_nodes()),
             C::Hoodi => Some(hoodi_nodes()),
-            // opstack uses the same bootnodes for all chains: <https://github.com/paradigmxyz/reth/issues/14603>
+            // opstack uses the same bootnodes for all chains: <https://github.com/hanzoai/evm/issues/14603>
             C::Base | C::Optimism | C::Unichain | C::World => Some(op_nodes()),
             C::OptimismSepolia | C::BaseSepolia | C::UnichainSepolia | C::WorldSepolia => {
                 Some(op_testnet_nodes())
@@ -1299,7 +1299,7 @@ mod tests {
     use alloy_primitives::{b256, hex};
     use alloy_trie::{TrieAccount, EMPTY_ROOT_HASH};
     use core::ops::Deref;
-    use reth_ethereum_forks::{ForkCondition, ForkHash, ForkId, Head};
+    use hanzo_evm_ethereum_forks::{ForkCondition, ForkHash, ForkId, Head};
     use std::{collections::HashMap, str::FromStr};
 
     fn test_hardfork_fork_ids(spec: &ChainSpec, cases: &[(EthereumHardfork, ForkId)]) {

@@ -2,7 +2,7 @@
 //!
 //! # Overview
 //!
-//! This module defines the tables in reth, as well as some table-related abstractions:
+//! This module defines the tables in evm, as well as some table-related abstractions:
 //!
 //! - [`codecs`] integrates different codecs into [`Encode`] and [`Decode`]
 //! - [`models`](crate::models) defines the values written to tables
@@ -28,11 +28,11 @@ use crate::{
 };
 use alloy_consensus::Header;
 use alloy_primitives::{Address, BlockHash, BlockNumber, TxHash, TxNumber, B256};
-use reth_ethereum_primitives::{Receipt, TransactionSigned};
-use reth_primitives_traits::{Account, Bytecode, StorageEntry};
-use reth_prune_types::{PruneCheckpoint, PruneSegment};
-use reth_stages_types::StageCheckpoint;
-use reth_trie_common::{BranchNodeCompact, StorageTrieEntry, StoredNibbles, StoredNibblesSubKey};
+use hanzo_evm_ethereum_primitives::{Receipt, TransactionSigned};
+use hanzo_evm_primitives_traits::{Account, Bytecode, StorageEntry};
+use hanzo_evm_prune_types::{PruneCheckpoint, PruneSegment};
+use hanzo_evm_stages_types::StageCheckpoint;
+use hanzo_evm_trie_common::{BranchNodeCompact, StorageTrieEntry, StoredNibbles, StoredNibblesSubKey};
 use serde::{Deserialize, Serialize};
 use std::fmt;
 
@@ -51,7 +51,7 @@ pub enum TableType {
 /// # Example
 ///
 /// ```
-/// use reth_db_api::{
+/// use hanzo_evm_db_api::{
 ///     table::{DupSort, Table},
 ///     TableViewer, Tables,
 /// };
@@ -94,7 +94,7 @@ pub trait TableViewer<R> {
     /// By default, the `view` function is invoked unless overridden.
     fn view_dupsort<T: DupSort>(&self) -> Result<R, Self::Error>
     where
-        T::Value: reth_primitives_traits::ValueWithSubKey<SubKey = T::SubKey>,
+        T::Value: hanzo_evm_primitives_traits::ValueWithSubKey<SubKey = T::SubKey>,
     {
         self.view::<T>()
     }
@@ -280,7 +280,7 @@ macro_rules! tables {
         /// # Examples
         ///
         /// ```
-        /// use reth_db_api::{table::Table, Tables, tables_to_generic};
+        /// use hanzo_evm_db_api::{table::Table, Tables, tables_to_generic};
         ///
         /// let table = Tables::Headers;
         /// let result = tables_to_generic!(table, |GenericTable| <GenericTable as Table>::NAME);
@@ -412,7 +412,7 @@ tables! {
     /// * If max block number is 200 and we ask for N=250 we would fetch last shard and know that needed entry is in `AccountPlainState`.
     /// * If there were no shard we would get `None` entry or entry of different storage key.
     ///
-    /// Code example can be found in `reth_provider::HistoricalStateProviderRef`
+    /// Code example can be found in `hanzo_evm_provider::HistoricalStateProviderRef`
     table AccountsHistory {
         type Key = ShardedKey<Address>;
         type Value = BlockNumberList;
@@ -434,7 +434,7 @@ tables! {
     /// * If max block number is 200 and we ask for N=250 we would fetch last shard and know that needed entry is in `StoragePlainState`.
     /// * If there were no shard we would get `None` entry or entry of different storage key.
     ///
-    /// Code example can be found in `reth_provider::HistoricalStateProviderRef`
+    /// Code example can be found in `hanzo_evm_provider::HistoricalStateProviderRef`
     table StoragesHistory {
         type Key = StorageShardedKey;
         type Value = BlockNumberList;

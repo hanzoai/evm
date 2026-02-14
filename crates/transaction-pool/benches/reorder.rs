@@ -3,7 +3,7 @@ use criterion::{
     criterion_group, criterion_main, measurement::WallTime, BenchmarkGroup, Criterion,
 };
 use proptest::{prelude::*, strategy::ValueTree, test_runner::TestRunner};
-use reth_transaction_pool::test_utils::MockTransaction;
+use hanzo_evm_transaction_pool::test_utils::MockTransaction;
 
 /// Transaction Pool trait for benching.
 trait BenchTxPool: Default {

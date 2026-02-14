@@ -1,26 +1,26 @@
-//! `reth stage` command
+//! `evm stage` command
 
 use std::sync::Arc;
 
 use crate::common::{CliNodeComponents, CliNodeTypes};
 use clap::{Parser, Subcommand};
-use reth_chainspec::{EthChainSpec, EthereumHardforks, Hardforks};
-use reth_cli::chainspec::ChainSpecParser;
-use reth_cli_runner::CliContext;
+use hanzo_evm_chainspec::{EthChainSpec, EthereumHardforks, Hardforks};
+use hanzo_evm_cli::chainspec::ChainSpecParser;
+use hanzo_evm_cli_runner::CliContext;
 
 pub mod drop;
 pub mod dump;
 pub mod run;
 pub mod unwind;
 
-/// `reth stage` command
+/// `evm stage` command
 #[derive(Debug, Parser)]
 pub struct Command<C: ChainSpecParser> {
     #[command(subcommand)]
     pub command: Subcommands<C>,
 }
 
-/// `reth stage` subcommands
+/// `evm stage` subcommands
 #[derive(Subcommand, Debug)]
 pub enum Subcommands<C: ChainSpecParser> {
     /// Run a single stage.

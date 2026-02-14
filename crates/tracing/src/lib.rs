@@ -10,14 +10,14 @@
 //!  Basic usage:
 //!
 //!  ```
-//!  use reth_tracing::{
-//!      LayerInfo, RethTracer, Tracer,
+//!  use hanzo_evm_tracing::{
+//!      LayerInfo, EvmTracer, Tracer,
 //!      tracing::level_filters::LevelFilter,
 //!      LogFormat,
 //!  };
 //!
 //!  fn main() -> eyre::Result<()> {
-//!      let tracer = RethTracer::new().with_stdout(LayerInfo::new(
+//!      let tracer = EvmTracer::new().with_stdout(LayerInfo::new(
 //!          LogFormat::Json,
 //!          LevelFilter::INFO.to_string(),
 //!          "debug".to_string(),
@@ -35,9 +35,9 @@
 //! This example sets up a tracer with JSON format logging to stdout.
 
 #![doc(
-    html_logo_url = "https://raw.githubusercontent.com/paradigmxyz/reth/main/assets/reth-docs.png",
+    html_logo_url = "https://raw.githubusercontent.com/hanzoai/evm/main/assets/evm-docs.png",
     html_favicon_url = "https://avatars0.githubusercontent.com/u/97369466?s=256",
-    issue_tracker_base_url = "https://github.com/paradigmxyz/reth/issues/"
+    issue_tracker_base_url = "https://github.com/hanzoai/evm/issues/"
 )]
 #![cfg_attr(not(test), warn(unused_crate_dependencies))]
 #![cfg_attr(docsrs, feature(doc_cfg))]
@@ -74,7 +74,7 @@ use tracing_subscriber::{layer::SubscriberExt, util::SubscriberInitExt};
 ///  Manages the configuration and initialization of logging layers,
 /// including standard output, optional journald, and optional file logging.
 #[derive(Debug, Clone)]
-pub struct RethTracer {
+pub struct EvmTracer {
     stdout: LayerInfo,
     journald: Option<String>,
     file: Option<(LayerInfo, FileInfo)>,
@@ -83,7 +83,7 @@ pub struct RethTracer {
     tracy: Option<LayerInfo>,
 }
 
-impl RethTracer {
+impl EvmTracer {
     /// Constructs a new `Tracer` with default settings.
     ///
     /// Initializes with default stdout layer configuration.
@@ -141,7 +141,7 @@ impl RethTracer {
     }
 }
 
-impl Default for RethTracer {
+impl Default for EvmTracer {
     fn default() -> Self {
         Self::new()
     }
@@ -226,7 +226,7 @@ pub trait Tracer: Sized {
     fn init_with_layers(self, layers: Layers) -> eyre::Result<Option<WorkerGuard>>;
 }
 
-impl Tracer for RethTracer {
+impl Tracer for EvmTracer {
     ///  Initializes the logging system based on the configured layers.
     ///
     ///  This method sets up the global tracing subscriber with the specified

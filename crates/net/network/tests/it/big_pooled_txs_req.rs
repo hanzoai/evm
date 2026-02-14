@@ -1,15 +1,15 @@
 use alloy_primitives::{Signature, B256};
-use reth_eth_wire::{GetPooledTransactions, PooledTransactions};
-use reth_ethereum_primitives::TransactionSigned;
-use reth_network::{
+use hanzo_evm_eth_wire::{GetPooledTransactions, PooledTransactions};
+use hanzo_evm_ethereum_primitives::TransactionSigned;
+use hanzo_evm_network::{
     test_utils::{NetworkEventStream, Testnet},
     NetworkEventListenerProvider, PeerRequest,
 };
-use reth_network_api::{NetworkInfo, Peers};
-use reth_network_p2p::sync::{NetworkSyncUpdater, SyncState};
-use reth_primitives_traits::SignedTransaction;
-use reth_provider::test_utils::MockEthProvider;
-use reth_transaction_pool::{
+use hanzo_evm_network_api::{NetworkInfo, Peers};
+use hanzo_evm_network_p2p::sync::{NetworkSyncUpdater, SyncState};
+use hanzo_evm_primitives_traits::SignedTransaction;
+use hanzo_evm_provider::test_utils::MockEthProvider;
+use hanzo_evm_transaction_pool::{
     test_utils::{testing_pool, MockTransaction},
     TransactionPool,
 };
@@ -19,7 +19,7 @@ use tokio::sync::oneshot;
 // peer1: `GetPooledTransactions` responder
 #[tokio::test(flavor = "multi_thread")]
 async fn test_large_tx_req() {
-    reth_tracing::init_test_tracing();
+    hanzo_evm_tracing::init_test_tracing();
 
     // create 2000 fake txs
     let txs: Vec<MockTransaction> = (0..2000)

@@ -1,10 +1,10 @@
 use remote_exex::proto::{remote_ex_ex_client::RemoteExExClient, SubscribeRequest};
-use reth_exex::ExExNotification;
-use reth_tracing::{tracing::info, RethTracer, Tracer};
+use hanzo_evm_exex::ExExNotification;
+use hanzo_evm_tracing::{tracing::info, EvmTracer, Tracer};
 
 #[tokio::main]
 async fn main() -> eyre::Result<()> {
-    let _ = RethTracer::new().init()?;
+    let _ = EvmTracer::new().init()?;
 
     let mut client = RemoteExExClient::connect("http://[::1]:10000")
         .await?

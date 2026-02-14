@@ -3685,7 +3685,7 @@ mod tests {
     #[test]
     fn discard_with_large_blob_txs() {
         // init tracing
-        reth_tracing::init_test_tracing();
+        hanzo_evm_tracing::init_test_tracing();
 
         // this test adds large txs to the parked pool, then attempting to discard worst
         let mut f = MockTransactionFactory::default();
@@ -3727,7 +3727,7 @@ mod tests {
     #[test]
     fn discard_with_parked_large_txs() {
         // init tracing
-        reth_tracing::init_test_tracing();
+        hanzo_evm_tracing::init_test_tracing();
 
         // this test adds large txs to the parked pool, then attempting to discard worst
         let mut f = MockTransactionFactory::default();
@@ -4353,7 +4353,7 @@ mod tests {
         );
     }
 
-    // <https://github.com/paradigmxyz/reth/issues/12286>
+    // <https://github.com/hanzoai/evm/issues/12286>
     #[test]
     fn one_sender_one_independent_transaction() {
         let mut on_chain_balance = U256::from(4_999); // only enough for 4 txs

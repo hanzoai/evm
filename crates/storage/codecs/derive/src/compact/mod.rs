@@ -250,9 +250,9 @@ mod tests {
 
             #[expect(non_snake_case)]
             mod TestStruct_flags {
-                use reth_codecs::__private::Buf;
-                use reth_codecs::__private::modular_bitfield;
-                use reth_codecs::__private::modular_bitfield::prelude::*;
+                use hanzo_evm_codecs::__private::Buf;
+                use hanzo_evm_codecs::__private::modular_bitfield;
+                use hanzo_evm_codecs::__private::modular_bitfield::prelude::*;
                 #[doc = "Fieldset that facilitates compacting the parent type. Used bytes: 2 | Unused bits: 1"]
                 #[bitfield]
                 #[derive(Clone, Copy, Debug, Default)]
@@ -277,11 +277,11 @@ mod tests {
                     }
                 }
             }
-            impl reth_codecs::Compact for TestStruct {
-                fn to_compact<B>(&self, buf: &mut B) -> usize where B: reth_codecs::__private::bytes::BufMut + AsMut<[u8]> {
+            impl hanzo_evm_codecs::Compact for TestStruct {
+                fn to_compact<B>(&self, buf: &mut B) -> usize where B: hanzo_evm_codecs::__private::bytes::BufMut + AsMut<[u8]> {
                     let mut flags = TestStructFlags::default();
                     let mut total_length = 0;
-                    let mut buffer = reth_codecs::__private::bytes::BytesMut::new();
+                    let mut buffer = hanzo_evm_codecs::__private::bytes::BytesMut::new();
                     let f_u64_len = self.f_u64.to_compact(&mut buffer);
                     flags.set_f_u64_len(f_u64_len as u8);
                     let f_u256_len = self.f_u256.to_compact(&mut buffer);

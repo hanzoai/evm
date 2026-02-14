@@ -16,19 +16,19 @@ use alloy_rpc_types_engine::{
 };
 use async_trait::async_trait;
 use jsonrpsee_core::{server::RpcModule, RpcResult};
-use reth_chainspec::EthereumHardforks;
-use reth_engine_primitives::{ConsensusEngineHandle, EngineApiValidator, EngineTypes};
-use reth_network_api::NetworkInfo;
-use reth_payload_builder::PayloadStore;
-use reth_payload_primitives::{
+use hanzo_evm_chainspec::EthereumHardforks;
+use hanzo_evm_engine_primitives::{ConsensusEngineHandle, EngineApiValidator, EngineTypes};
+use hanzo_evm_network_api::NetworkInfo;
+use hanzo_evm_payload_builder::PayloadStore;
+use hanzo_evm_payload_primitives::{
     validate_payload_timestamp, EngineApiMessageVersion, MessageValidationKind,
     PayloadOrAttributes, PayloadTypes,
 };
-use reth_primitives_traits::{Block, BlockBody};
-use reth_rpc_api::{EngineApiServer, IntoEngineApiRpcModule};
-use reth_storage_api::{BlockReader, HeaderProvider, StateProviderFactory};
-use reth_tasks::TaskSpawner;
-use reth_transaction_pool::TransactionPool;
+use hanzo_evm_primitives_traits::{Block, BlockBody};
+use hanzo_evm_rpc_api::{EngineApiServer, IntoEngineApiRpcModule};
+use hanzo_evm_storage_api::{BlockReader, HeaderProvider, StateProviderFactory};
+use hanzo_evm_tasks::TaskSpawner;
+use hanzo_evm_transaction_pool::TransactionPool;
 use std::{
     sync::Arc,
     time::{Instant, SystemTime},
@@ -738,7 +738,7 @@ where
             SystemTime::now().duration_since(SystemTime::UNIX_EPOCH).unwrap_or_default().as_secs();
         if self.inner.chain_spec.is_osaka_active_at_timestamp(current_timestamp) {
             return Err(EngineApiError::EngineObjectValidationError(
-                reth_payload_primitives::EngineObjectValidationError::UnsupportedFork,
+                hanzo_evm_payload_primitives::EngineObjectValidationError::UnsupportedFork,
             ));
         }
 
@@ -782,7 +782,7 @@ where
             SystemTime::now().duration_since(SystemTime::UNIX_EPOCH).unwrap_or_default().as_secs();
         if !self.inner.chain_spec.is_osaka_active_at_timestamp(current_timestamp) {
             return Err(EngineApiError::EngineObjectValidationError(
-                reth_payload_primitives::EngineObjectValidationError::UnsupportedFork,
+                hanzo_evm_payload_primitives::EngineObjectValidationError::UnsupportedFork,
             ));
         }
 
@@ -805,7 +805,7 @@ where
             SystemTime::now().duration_since(SystemTime::UNIX_EPOCH).unwrap_or_default().as_secs();
         if !self.inner.chain_spec.is_osaka_active_at_timestamp(current_timestamp) {
             return Err(EngineApiError::EngineObjectValidationError(
-                reth_payload_primitives::EngineObjectValidationError::UnsupportedFork,
+                hanzo_evm_payload_primitives::EngineObjectValidationError::UnsupportedFork,
             ));
         }
 
@@ -977,7 +977,7 @@ where
     ) -> RpcResult<PayloadStatus> {
         trace!(target: "rpc::engine", "Serving engine_newPayloadV5");
         Err(EngineApiError::EngineObjectValidationError(
-            reth_payload_primitives::EngineObjectValidationError::UnsupportedFork,
+            hanzo_evm_payload_primitives::EngineObjectValidationError::UnsupportedFork,
         ))?
     }
 
@@ -1115,7 +1115,7 @@ where
     ) -> RpcResult<EngineT::ExecutionPayloadEnvelopeV6> {
         trace!(target: "rpc::engine", "Serving engine_getPayloadV6");
         Err(EngineApiError::EngineObjectValidationError(
-            reth_payload_primitives::EngineObjectValidationError::UnsupportedFork,
+            hanzo_evm_payload_primitives::EngineObjectValidationError::UnsupportedFork,
         ))?
     }
 
@@ -1209,7 +1209,7 @@ where
     ) -> RpcResult<Vec<alloy_primitives::Bytes>> {
         trace!(target: "rpc::engine", "Serving engine_getBALsByHashV1");
         Err(EngineApiError::EngineObjectValidationError(
-            reth_payload_primitives::EngineObjectValidationError::UnsupportedFork,
+            hanzo_evm_payload_primitives::EngineObjectValidationError::UnsupportedFork,
         ))?
     }
 
@@ -1223,7 +1223,7 @@ where
     ) -> RpcResult<Vec<alloy_primitives::Bytes>> {
         trace!(target: "rpc::engine", "Serving engine_getBALsByRangeV1");
         Err(EngineApiError::EngineObjectValidationError(
-            reth_payload_primitives::EngineObjectValidationError::UnsupportedFork,
+            hanzo_evm_payload_primitives::EngineObjectValidationError::UnsupportedFork,
         ))?
     }
 }
@@ -1291,18 +1291,18 @@ mod tests {
     use super::*;
     use alloy_rpc_types_engine::{ClientCode, ClientVersionV1};
     use assert_matches::assert_matches;
-    use reth_chainspec::{ChainSpec, ChainSpecBuilder, MAINNET};
-    use reth_engine_primitives::BeaconEngineMessage;
-    use reth_ethereum_engine_primitives::EthEngineTypes;
-    use reth_ethereum_primitives::Block;
-    use reth_network_api::{
+    use hanzo_evm_chainspec::{ChainSpec, ChainSpecBuilder, MAINNET};
+    use hanzo_evm_engine_primitives::BeaconEngineMessage;
+    use hanzo_evm_ethereum_engine_primitives::EthEngineTypes;
+    use hanzo_evm_ethereum_primitives::Block;
+    use hanzo_evm_network_api::{
         noop::NoopNetwork, EthProtocolInfo, NetworkError, NetworkInfo, NetworkStatus,
     };
-    use reth_node_ethereum::EthereumEngineValidator;
-    use reth_payload_builder::test_utils::spawn_test_payload_service;
-    use reth_provider::test_utils::MockEthProvider;
-    use reth_tasks::TokioTaskExecutor;
-    use reth_transaction_pool::noop::NoopTransactionPool;
+    use hanzo_evm_node_ethereum::EthereumEngineValidator;
+    use hanzo_evm_payload_builder::test_utils::spawn_test_payload_service;
+    use hanzo_evm_provider::test_utils::MockEthProvider;
+    use hanzo_evm_tasks::TokioTaskExecutor;
+    use hanzo_evm_transaction_pool::noop::NoopTransactionPool;
     use tokio::sync::mpsc::{unbounded_channel, UnboundedReceiver};
 
     fn setup_engine_api() -> (
@@ -1317,7 +1317,7 @@ mod tests {
     ) {
         let client = ClientVersionV1 {
             code: ClientCode::RH,
-            name: "Reth".to_string(),
+            name: "Hanzo EVM".to_string(),
             version: "v0.2.0-beta.5".to_string(),
             commit: "defa64b2".to_string(),
         };
@@ -1348,7 +1348,7 @@ mod tests {
     async fn engine_client_version_v1() {
         let client = ClientVersionV1 {
             code: ClientCode::RH,
-            name: "Reth".to_string(),
+            name: "Hanzo EVM".to_string(),
             version: "v0.2.0-beta.5".to_string(),
             commit: "defa64b2".to_string(),
         };
@@ -1436,7 +1436,7 @@ mod tests {
             Box::<TokioTaskExecutor>::default(),
             ClientVersionV1 {
                 code: ClientCode::RH,
-                name: "Reth".to_string(),
+                name: "Hanzo EVM".to_string(),
                 version: "v0.0.0-test".to_string(),
                 commit: "test".to_string(),
             },
@@ -1454,7 +1454,7 @@ mod tests {
     mod get_payload_bodies {
         use super::*;
         use alloy_rpc_types_engine::ExecutionPayloadBodyV1;
-        use reth_testing_utils::generators::{self, random_block_range, BlockRangeParams};
+        use hanzo_evm_testing_utils::generators::{self, random_block_range, BlockRangeParams};
 
         #[tokio::test]
         async fn invalid_params() {

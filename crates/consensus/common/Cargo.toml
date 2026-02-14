@@ -1,5 +1,5 @@
 [package]
-name = "reth-consensus-common"
+name = "hanzo-evm-consensus-common"
 version.workspace = true
 edition.workspace = true
 rust-version.workspace = true
@@ -11,18 +11,18 @@ repository.workspace = true
 workspace = true
 
 [dependencies]
-# reth
-reth-chainspec.workspace = true
-reth-consensus.workspace = true
+# evm
+hanzo-evm-chainspec.workspace = true
+hanzo-evm-consensus.workspace = true
 
 # ethereum
-reth-primitives-traits.workspace = true
+hanzo-evm-primitives-traits.workspace = true
 alloy-consensus.workspace = true
 alloy-eips.workspace = true
 
 [dev-dependencies]
 alloy-primitives = { workspace = true, features = ["rand"] }
-reth-ethereum-primitives.workspace = true
+hanzo-evm-ethereum-primitives.workspace = true
 rand.workspace = true
 
 [features]
@@ -30,9 +30,9 @@ default = ["std"]
 std = [
     "alloy-consensus/std",
     "alloy-eips/std",
-    "reth-chainspec/std",
-    "reth-consensus/std",
-    "reth-primitives-traits/std",
-    "reth-ethereum-primitives/std",
+    "hanzo-evm-chainspec/std",
+    "hanzo-evm-consensus/std",
+    "hanzo-evm-primitives-traits/std",
+    "hanzo-evm-ethereum-primitives/std",
     "alloy-primitives/std",
 ]

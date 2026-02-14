@@ -1,11 +1,11 @@
 use alloy_primitives::B256;
-use reth_db_api::{
+use hanzo_evm_db_api::{
     cursor::{DbCursorRO, DbCursorRW, DbDupCursorRO, DbDupCursorRW},
     tables,
     transaction::DbTx,
     DatabaseError,
 };
-use reth_trie::{
+use hanzo_evm_trie::{
     trie_cursor::{TrieCursor, TrieCursorFactory, TrieStorageCursor},
     updates::StorageTrieUpdatesSorted,
     BranchNodeCompact, Nibbles, StorageTrieEntry, StoredNibbles, StoredNibblesSubKey,
@@ -213,8 +213,8 @@ where
 mod tests {
     use super::*;
     use alloy_primitives::hex_literal::hex;
-    use reth_db_api::{cursor::DbCursorRW, transaction::DbTxMut};
-    use reth_provider::test_utils::create_test_provider_factory;
+    use hanzo_evm_db_api::{cursor::DbCursorRW, transaction::DbTxMut};
+    use hanzo_evm_provider::test_utils::create_test_provider_factory;
 
     #[test]
     fn test_account_trie_order() {

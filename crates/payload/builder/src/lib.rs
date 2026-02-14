@@ -30,8 +30,8 @@
 //! use std::task::{Context, Poll};
 //! use alloy_consensus::{Header, Block};
 //! use alloy_primitives::U256;
-//! use reth_payload_builder::{EthBuiltPayload, PayloadBuilderError, KeepPayloadJobAlive, EthPayloadBuilderAttributes, PayloadJob, PayloadJobGenerator, PayloadKind};
-//! use reth_primitives_traits::SealedBlock;
+//! use hanzo_evm_payload_builder::{EthBuiltPayload, PayloadBuilderError, KeepPayloadJobAlive, EthPayloadBuilderAttributes, PayloadJob, PayloadJobGenerator, PayloadKind};
+//! use hanzo_evm_primitives_traits::SealedBlock;
 //!
 //! /// The generator type that creates new jobs that builds empty blocks.
 //! pub struct EmptyBlockPayloadJobGenerator;
@@ -100,9 +100,9 @@
 //! - `test-utils`: Export utilities for testing
 
 #![doc(
-    html_logo_url = "https://raw.githubusercontent.com/paradigmxyz/reth/main/assets/reth-docs.png",
+    html_logo_url = "https://raw.githubusercontent.com/hanzoai/evm/main/assets/evm-docs.png",
     html_favicon_url = "https://avatars0.githubusercontent.com/u/97369466?s=256",
-    issue_tracker_base_url = "https://github.com/paradigmxyz/reth/issues/"
+    issue_tracker_base_url = "https://github.com/hanzoai/evm/issues/"
 )]
 #![cfg_attr(not(test), warn(unused_crate_dependencies))]
 #![cfg_attr(docsrs, feature(doc_cfg))]
@@ -117,8 +117,8 @@ pub mod noop;
 pub mod test_utils;
 
 pub use alloy_rpc_types::engine::PayloadId;
-pub use reth_payload_builder_primitives::PayloadBuilderError;
-pub use reth_payload_primitives::PayloadKind;
+pub use hanzo_evm_payload_builder_primitives::PayloadBuilderError;
+pub use hanzo_evm_payload_primitives::PayloadKind;
 pub use service::{
     PayloadBuilderHandle, PayloadBuilderService, PayloadServiceCommand, PayloadStore,
 };
@@ -126,6 +126,6 @@ pub use traits::{KeepPayloadJobAlive, PayloadJob, PayloadJobGenerator};
 
 // re-export the Ethereum engine primitives for convenience
 #[doc(inline)]
-pub use reth_ethereum_engine_primitives::{
+pub use hanzo_evm_ethereum_engine_primitives::{
     BlobSidecars, EthBuiltPayload, EthPayloadBuilderAttributes,
 };

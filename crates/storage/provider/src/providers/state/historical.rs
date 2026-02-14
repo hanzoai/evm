@@ -4,20 +4,20 @@ use crate::{
 };
 use alloy_eips::merge::EPOCH_SLOTS;
 use alloy_primitives::{Address, BlockNumber, Bytes, StorageKey, StorageValue, B256};
-use reth_db_api::{
+use hanzo_evm_db_api::{
     cursor::{DbCursorRO, DbDupCursorRO},
     table::Table,
     tables,
     transaction::DbTx,
     BlockNumberList,
 };
-use reth_primitives_traits::{Account, Bytecode};
-use reth_storage_api::{
+use hanzo_evm_primitives_traits::{Account, Bytecode};
+use hanzo_evm_storage_api::{
     BlockNumReader, BytecodeReader, DBProvider, NodePrimitivesProvider, StateProofProvider,
     StorageChangeSetReader, StorageRootProvider, StorageSettingsCache,
 };
-use reth_storage_errors::provider::ProviderResult;
-use reth_trie::{
+use hanzo_evm_storage_errors::provider::ProviderResult;
+use hanzo_evm_trie::{
     proof::{Proof, StorageProof},
     updates::TrieUpdates,
     witness::TrieWitness,
@@ -25,7 +25,7 @@ use reth_trie::{
     MultiProof, MultiProofTargets, StateRoot, StorageMultiProof, StorageRoot, TrieInput,
     TrieInputSorted,
 };
-use reth_trie_db::{
+use hanzo_evm_trie_db::{
     hashed_storage_from_reverts_with_provider, DatabaseHashedPostState, DatabaseProof,
     DatabaseStateRoot, DatabaseStorageProof, DatabaseStorageRoot, DatabaseTrieWitness,
 };
@@ -342,7 +342,7 @@ impl<Provider: DBProvider + ChangeSetReader + StorageChangeSetReader + BlockNumR
         address: Address,
         slot: B256,
         hashed_storage: HashedStorage,
-    ) -> ProviderResult<reth_trie::StorageProof> {
+    ) -> ProviderResult<hanzo_evm_trie::StorageProof> {
         let mut revert_storage = self.revert_storage(address)?;
         revert_storage.extend(&hashed_storage);
         StorageProof::overlay_storage_proof(self.tx(), address, slot, revert_storage)
@@ -500,18 +500,18 @@ impl<Provider: DBProvider + ChangeSetReader + StorageChangeSetReader + BlockNumR
 }
 
 // Delegates all provider impls to [HistoricalStateProviderRef]
-reth_storage_api::macros::delegate_provider_impls!(HistoricalStateProvider<Provider> where [Provider: DBProvider + BlockNumReader + BlockHashReader + ChangeSetReader + StorageChangeSetReader + StorageSettingsCache + RocksDBProviderFactory + NodePrimitivesProvider]);
+hanzo_evm_storage_api::macros::delegate_provider_impls!(HistoricalStateProvider<Provider> where [Provider: DBProvider + BlockNumReader + BlockHashReader + ChangeSetReader + StorageChangeSetReader + StorageSettingsCache + RocksDBProviderFactory + NodePrimitivesProvider]);
 
 /// Lowest blocks at which different parts of the state are available.
 /// They may be [Some] if pruning is enabled.
 #[derive(Clone, Copy, Debug, Default)]
 pub struct LowestAvailableBlocks {
     /// Lowest block number at which the account history is available. It may not be available if
-    /// [`reth_prune_types::PruneSegment::AccountHistory`] was pruned.
+    /// [`hanzo_evm_prune_types::PruneSegment::AccountHistory`] was pruned.
     /// [`Option::None`] means all history is available.
     pub account_history_block_number: Option<BlockNumber>,
     /// Lowest block number at which the storage history is available. It may not be available if
-    /// [`reth_prune_types::PruneSegment::StorageHistory`] was pruned.
+    /// [`hanzo_evm_prune_types::PruneSegment::StorageHistory`] was pruned.
     /// [`Option::None`] means all history is available.
     pub storage_history_block_number: Option<BlockNumber>,
 }
@@ -543,7 +543,7 @@ impl LowestAvailableBlocks {
 /// This logic is shared between MDBX cursor-based lookups and `RocksDB` iterator lookups.
 #[inline]
 pub fn compute_history_rank(
-    chunk: &reth_db_api::BlockNumberList,
+    chunk: &hanzo_evm_db_api::BlockNumberList,
     block_number: BlockNumber,
 ) -> (u64, Option<u64>) {
     let mut rank = chunk.rank(block_number);
@@ -624,18 +624,18 @@ mod tests {
         StateProvider,
     };
     use alloy_primitives::{address, b256, Address, B256, U256};
-    use reth_db_api::{
+    use hanzo_evm_db_api::{
         models::{storage_sharded_key::StorageShardedKey, AccountBeforeTx, ShardedKey},
         tables,
         transaction::{DbTx, DbTxMut},
         BlockNumberList,
     };
-    use reth_primitives_traits::{Account, StorageEntry};
-    use reth_storage_api::{
+    use hanzo_evm_primitives_traits::{Account, StorageEntry};
+    use hanzo_evm_storage_api::{
         BlockHashReader, BlockNumReader, ChangeSetReader, DBProvider, DatabaseProviderFactory,
         NodePrimitivesProvider, StorageChangeSetReader, StorageSettingsCache,
     };
-    use reth_storage_errors::provider::ProviderError;
+    use hanzo_evm_storage_errors::provider::ProviderError;
 
     const ADDRESS: Address = address!("0x0000000000000000000000000000000000000001");
     const HIGHER_ADDRESS: Address = address!("0x0000000000000000000000000000000000000005");

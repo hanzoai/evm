@@ -5,16 +5,16 @@ use crate::{
 use alloy_primitives::map::foldhash::fast::FixedState;
 use clap::Parser;
 use itertools::Itertools;
-use reth_chainspec::EthereumHardforks;
-use reth_db::{static_file::iter_static_files, DatabaseEnv};
-use reth_db_api::{
+use hanzo_evm_chainspec::EthereumHardforks;
+use hanzo_evm_db::{static_file::iter_static_files, DatabaseEnv};
+use hanzo_evm_db_api::{
     cursor::DbCursorRO, table::Table, transaction::DbTx, RawKey, RawTable, RawValue, TableViewer,
     Tables,
 };
-use reth_db_common::DbTool;
-use reth_node_builder::{NodeTypesWithDB, NodeTypesWithDBAdapter};
-use reth_provider::{providers::ProviderNodeTypes, DBProvider, StaticFileProviderFactory};
-use reth_static_file_types::StaticFileSegment;
+use hanzo_evm_db_common::DbTool;
+use hanzo_evm_node_builder::{NodeTypesWithDB, NodeTypesWithDBAdapter};
+use hanzo_evm_provider::{providers::ProviderNodeTypes, DBProvider, StaticFileProviderFactory};
+use hanzo_evm_static_file_types::StaticFileSegment;
 use std::{
     hash::{BuildHasher, Hasher},
     time::{Duration, Instant},
@@ -28,7 +28,7 @@ mod rocksdb;
 const PROGRESS_LOG_INTERVAL: usize = 100_000;
 
 #[derive(Parser, Debug)]
-/// The arguments for the `reth db checksum` command
+/// The arguments for the `evm db checksum` command
 pub struct Command {
     #[command(subcommand)]
     subcommand: Subcommand,
@@ -112,7 +112,7 @@ impl Command {
 
 /// Creates a new hasher with the standard seed used for checksum computation.
 fn checksum_hasher() -> impl Hasher {
-    FixedState::with_seed(u64::from_be_bytes(*b"RETHRETH")).build_hasher()
+    FixedState::with_seed(u64::from_be_bytes(*b"HANZOEVM")).build_hasher()
 }
 
 fn checksum_static_file<N: CliNodeTypes<ChainSpec: EthereumHardforks>>(

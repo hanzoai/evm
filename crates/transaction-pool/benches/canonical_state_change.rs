@@ -4,10 +4,10 @@ use alloy_primitives::{map::AddressMap, Address, B256, U256};
 use criterion::{criterion_group, criterion_main, BatchSize, Criterion};
 use proptest::{prelude::*, strategy::ValueTree, test_runner::TestRunner};
 use rand::prelude::SliceRandom;
-use reth_ethereum_primitives::{Block, BlockBody};
-use reth_execution_types::ChangedAccount;
-use reth_primitives_traits::{Header, SealedBlock};
-use reth_transaction_pool::{
+use hanzo_evm_ethereum_primitives::{Block, BlockBody};
+use hanzo_evm_execution_types::ChangedAccount;
+use hanzo_evm_primitives_traits::{Header, SealedBlock};
+use hanzo_evm_transaction_pool::{
     test_utils::{MockTransaction, TestPoolBuilder},
     BlockInfo, CanonicalStateUpdate, PoolConfig, PoolTransaction, PoolUpdateKind, SubPoolLimit,
     TransactionOrigin, TransactionPool, TransactionPoolExt,
@@ -94,7 +94,7 @@ fn canonical_state_change_bench(c: &mut Criterion) {
                 max_account_slots: 50,
                 ..Default::default()
             });
-            struct Input<B: reth_primitives_traits::Block> {
+            struct Input<B: hanzo_evm_primitives_traits::Block> {
                 sealed_block: SealedBlock<B>,
                 pool: TestPoolBuilder,
             }

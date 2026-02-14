@@ -21,8 +21,8 @@
 use crate::trie_cursor::TrieCursorIter;
 use alloy_primitives::{map::B256Map, B256};
 use itertools::{merge_join_by, EitherOrBoth};
-use reth_storage_errors::db::DatabaseError;
-use reth_trie_common::{
+use hanzo_evm_storage_errors::db::DatabaseError;
+use hanzo_evm_trie_common::{
     updates::{StorageTrieUpdatesSorted, TrieUpdatesSorted},
     BranchNodeCompact, Nibbles,
 };
@@ -239,7 +239,7 @@ mod tests {
     use super::*;
     use crate::trie_cursor::mock::MockTrieCursorFactory;
     use alloy_primitives::map::B256Map;
-    use reth_trie_common::updates::StorageTrieUpdatesSorted;
+    use hanzo_evm_trie_common::updates::StorageTrieUpdatesSorted;
     use std::collections::BTreeMap;
 
     #[test]

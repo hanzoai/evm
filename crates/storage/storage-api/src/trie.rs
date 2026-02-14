@@ -1,7 +1,7 @@
 use alloc::vec::Vec;
 use alloy_primitives::{Address, Bytes, B256};
-use reth_storage_errors::provider::ProviderResult;
-use reth_trie_common::{
+use hanzo_evm_storage_errors::provider::ProviderResult;
+use hanzo_evm_trie_common::{
     updates::{StorageTrieUpdatesSorted, TrieUpdates, TrieUpdatesSorted},
     AccountProof, HashedPostState, HashedStorage, MultiProof, MultiProofTargets, StorageMultiProof,
     StorageProof, TrieInput,

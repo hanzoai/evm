@@ -1,20 +1,20 @@
 //! Session tests
 
 use futures::StreamExt;
-use reth_eth_wire::EthVersion;
-use reth_network::{
+use hanzo_evm_eth_wire::EthVersion;
+use hanzo_evm_network::{
     test_utils::{NetworkEventStream, PeerConfig, Testnet},
     NetworkEvent, NetworkEventListenerProvider,
 };
-use reth_network_api::{
+use hanzo_evm_network_api::{
     events::{PeerEvent, SessionInfo},
     NetworkInfo, Peers,
 };
-use reth_storage_api::noop::NoopProvider;
+use hanzo_evm_storage_api::noop::NoopProvider;
 
 #[tokio::test(flavor = "multi_thread")]
 async fn test_session_established_with_highest_version() {
-    reth_tracing::init_test_tracing();
+    hanzo_evm_tracing::init_test_tracing();
 
     let net = Testnet::create(2).await;
     net.for_each(|peer| assert_eq!(0, peer.num_peers()));
@@ -49,7 +49,7 @@ async fn test_session_established_with_highest_version() {
 
 #[tokio::test(flavor = "multi_thread")]
 async fn test_session_established_with_different_capability() {
-    reth_tracing::init_test_tracing();
+    hanzo_evm_tracing::init_test_tracing();
 
     let mut net = Testnet::create(1).await;
 
@@ -89,7 +89,7 @@ async fn test_session_established_with_different_capability() {
 
 #[tokio::test(flavor = "multi_thread")]
 async fn test_capability_version_mismatch() {
-    reth_tracing::init_test_tracing();
+    hanzo_evm_tracing::init_test_tracing();
 
     let mut net = Testnet::create(0).await;
 
@@ -126,7 +126,7 @@ async fn test_capability_version_mismatch() {
 
 #[tokio::test(flavor = "multi_thread")]
 async fn test_eth69_peers_can_connect() {
-    reth_tracing::init_test_tracing();
+    hanzo_evm_tracing::init_test_tracing();
 
     let mut net = Testnet::create(0).await;
 
@@ -171,7 +171,7 @@ async fn test_eth69_peers_can_connect() {
 
 #[tokio::test(flavor = "multi_thread")]
 async fn test_peers_negotiate_highest_version_eth69() {
-    reth_tracing::init_test_tracing();
+    hanzo_evm_tracing::init_test_tracing();
 
     let mut net = Testnet::create(0).await;
 
@@ -228,7 +228,7 @@ async fn test_peers_negotiate_highest_version_eth69() {
 
 #[tokio::test(flavor = "multi_thread")]
 async fn test_eth69_vs_eth68_incompatible() {
-    reth_tracing::init_test_tracing();
+    hanzo_evm_tracing::init_test_tracing();
 
     let mut net = Testnet::create(0).await;
 
@@ -266,7 +266,7 @@ async fn test_eth69_vs_eth68_incompatible() {
 
 #[tokio::test(flavor = "multi_thread")]
 async fn test_eth69_mixed_version_negotiation() {
-    reth_tracing::init_test_tracing();
+    hanzo_evm_tracing::init_test_tracing();
 
     let mut net = Testnet::create(0).await;
 
@@ -315,7 +315,7 @@ async fn test_eth69_mixed_version_negotiation() {
 
 #[tokio::test(flavor = "multi_thread")]
 async fn test_multiple_peers_different_eth_versions() {
-    reth_tracing::init_test_tracing();
+    hanzo_evm_tracing::init_test_tracing();
 
     let mut net = Testnet::create(0).await;
 
@@ -383,7 +383,7 @@ async fn test_multiple_peers_different_eth_versions() {
 
 #[tokio::test(flavor = "multi_thread")]
 async fn test_eth69_capability_negotiation_fallback() {
-    reth_tracing::init_test_tracing();
+    hanzo_evm_tracing::init_test_tracing();
 
     let mut net = Testnet::create(0).await;
 
@@ -435,7 +435,7 @@ async fn test_eth69_capability_negotiation_fallback() {
 
 #[tokio::test(flavor = "multi_thread")]
 async fn test_overlapping_version_sets_negotiation() {
-    reth_tracing::init_test_tracing();
+    hanzo_evm_tracing::init_test_tracing();
 
     let mut net = Testnet::create(0).await;
 

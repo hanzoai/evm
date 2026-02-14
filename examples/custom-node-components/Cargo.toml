@@ -6,7 +6,7 @@ edition.workspace = true
 license.workspace = true
 
 [dependencies]
-reth-ethereum = { workspace = true, features = ["node", "pool", "node-api", "cli"] }
-reth-tracing.workspace = true
+hanzo-evm-ethereum = { workspace = true, features = ["node", "pool", "node-api", "cli"] }
+hanzo-evm-tracing.workspace = true
 
 eyre.workspace = true

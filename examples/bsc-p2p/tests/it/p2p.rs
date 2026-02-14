@@ -2,12 +2,12 @@ use example_bsc_p2p::{
     chainspec::{boot_nodes, bsc_chain_spec, head},
     handshake::BscHandshake,
 };
-use reth_chainspec::NamedChain;
-use reth_discv4::Discv4ConfigBuilder;
-use reth_network::{
+use hanzo_evm_chainspec::NamedChain;
+use hanzo_evm_discv4::Discv4ConfigBuilder;
+use hanzo_evm_network::{
     EthNetworkPrimitives, NetworkConfig, NetworkEvent, NetworkEventListenerProvider, NetworkManager,
 };
-use reth_provider::noop::NoopProvider;
+use hanzo_evm_provider::noop::NoopProvider;
 use secp256k1::{rand, SecretKey};
 use std::{
     net::{Ipv4Addr, SocketAddr},
@@ -20,7 +20,7 @@ use tokio_stream::StreamExt;
 #[tokio::test(flavor = "multi_thread")]
 #[ignore]
 async fn can_connect() {
-    reth_tracing::init_test_tracing();
+    hanzo_evm_tracing::init_test_tracing();
     let local_addr = SocketAddr::new(Ipv4Addr::UNSPECIFIED.into(), 30303);
 
     let secret_key = SecretKey::new(&mut rand::thread_rng());

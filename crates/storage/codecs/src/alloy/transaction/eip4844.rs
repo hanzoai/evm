@@ -5,7 +5,7 @@ use alloc::vec::Vec;
 use alloy_consensus::TxEip4844 as AlloyTxEip4844;
 use alloy_eips::eip2930::AccessList;
 use alloy_primitives::{Address, Bytes, ChainId, B256, U256};
-use reth_codecs_derive::add_arbitrary_tests;
+use hanzo_evm_codecs_derive::add_arbitrary_tests;
 
 /// [EIP-4844 Blob Transaction](https://eips.ethereum.org/EIPS/eip-4844#blob-transaction)
 ///
@@ -16,7 +16,7 @@ use reth_codecs_derive::add_arbitrary_tests;
 ///
 /// Notice: Make sure this struct is 1:1 with [`alloy_consensus::TxEip4844`]
 #[derive(Debug, Clone, PartialEq, Eq, Hash, Default, Compact)]
-#[reth_codecs(crate = "crate")]
+#[hanzo_evm_codecs(crate = "crate")]
 #[cfg_attr(any(test, feature = "test-utils"), derive(serde::Serialize, serde::Deserialize))]
 #[cfg_attr(feature = "test-utils", allow(unreachable_pub), visibility::make(pub))]
 #[add_arbitrary_tests(crate, compact)]
@@ -28,7 +28,7 @@ pub(crate) struct TxEip4844 {
     max_priority_fee_per_gas: u128,
     /// TODO(debt): this should be removed if we break the DB.
     /// Makes sure that the Compact bitflag struct has one bit after the above field:
-    /// <https://github.com/paradigmxyz/reth/pull/8291#issuecomment-2117545016>
+    /// <https://github.com/hanzoai/evm/pull/8291#issuecomment-2117545016>
     #[cfg_attr(
         feature = "test-utils",
         serde(

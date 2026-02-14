@@ -2,10 +2,10 @@
 
 use crate::{BuilderContext, FullNodeTypes};
 use alloy_primitives::map::AddressSet;
-use reth_chain_state::CanonStateSubscriptions;
-use reth_chainspec::EthereumHardforks;
-use reth_node_api::{BlockTy, NodeTypes, TxTy};
-use reth_transaction_pool::{
+use hanzo_evm_chain_state::CanonStateSubscriptions;
+use hanzo_evm_chainspec::EthereumHardforks;
+use hanzo_evm_node_api::{BlockTy, NodeTypes, TxTy};
+use hanzo_evm_transaction_pool::{
     blobstore::DiskFileBlobStore, BlobStore, CoinbaseTipOrdering, PoolConfig, PoolTransaction,
     SubPoolLimit, TransactionPool, TransactionValidationTaskExecutor, TransactionValidator,
 };
@@ -22,7 +22,7 @@ pub trait PoolBuilder<Node: FullNodeTypes, Evm>: Send {
     fn build_pool(
         self,
         ctx: &BuilderContext<Node>,
-        evm_config: Evm,
+        hanzo_evm_config: Evm,
     ) -> impl Future<Output = eyre::Result<Self::Pool>> + Send;
 }
 
@@ -40,9 +40,9 @@ where
     fn build_pool(
         self,
         ctx: &BuilderContext<Node>,
-        evm_config: Evm,
+        hanzo_evm_config: Evm,
     ) -> impl Future<Output = eyre::Result<Self::Pool>> {
-        self(ctx, evm_config)
+        self(ctx, hanzo_evm_config)
     }
 }
 
@@ -133,15 +133,15 @@ where
     Node: FullNodeTypes<Types: NodeTypes<ChainSpec: EthereumHardforks>>,
     V: TransactionValidator<Block = BlockTy<Node::Types>> + 'static,
     V::Transaction:
-        PoolTransaction<Consensus = TxTy<Node::Types>> + reth_transaction_pool::EthPoolTransaction,
+        PoolTransaction<Consensus = TxTy<Node::Types>> + hanzo_evm_transaction_pool::EthPoolTransaction,
 {
-    /// Consume the ype and build the [`reth_transaction_pool::Pool`] with the given config and blob
+    /// Consume the ype and build the [`hanzo_evm_transaction_pool::Pool`] with the given config and blob
     /// store.
     pub fn build<BS>(
         self,
         blob_store: BS,
         pool_config: PoolConfig,
-    ) -> reth_transaction_pool::Pool<
+    ) -> hanzo_evm_transaction_pool::Pool<
         TransactionValidationTaskExecutor<V>,
         CoinbaseTipOrdering<V::Transaction>,
         BS,
@@ -150,7 +150,7 @@ where
         BS: BlobStore,
     {
         let TxPoolBuilder { validator, .. } = self;
-        reth_transaction_pool::Pool::new(
+        hanzo_evm_transaction_pool::Pool::new(
             validator,
             CoinbaseTipOrdering::default(),
             blob_store,
@@ -165,7 +165,7 @@ where
         blob_store: BS,
         pool_config: PoolConfig,
     ) -> eyre::Result<
-        reth_transaction_pool::Pool<
+        hanzo_evm_transaction_pool::Pool<
             TransactionValidationTaskExecutor<V>,
             CoinbaseTipOrdering<V::Transaction>,
             BS,
@@ -199,13 +199,13 @@ pub fn create_blob_store_with_cache<Node: FullNodeTypes>(
 ) -> eyre::Result<DiskFileBlobStore> {
     let data_dir = ctx.config().datadir();
     let config = if let Some(cache_size) = cache_size {
-        reth_transaction_pool::blobstore::DiskFileBlobStoreConfig::default()
+        hanzo_evm_transaction_pool::blobstore::DiskFileBlobStoreConfig::default()
             .with_max_cached_entries(cache_size)
     } else {
         Default::default()
     };
 
-    Ok(reth_transaction_pool::blobstore::DiskFileBlobStore::open(data_dir.blobstore(), config)?)
+    Ok(hanzo_evm_transaction_pool::blobstore::DiskFileBlobStore::open(data_dir.blobstore(), config)?)
 }
 
 /// Spawn local transaction backup task if enabled.
@@ -224,14 +224,14 @@ where
             .unwrap_or_else(|| data_dir.txpool_transactions());
 
         let transactions_backup_config =
-            reth_transaction_pool::maintain::LocalTransactionBackupConfig::with_local_txs_backup(
+            hanzo_evm_transaction_pool::maintain::LocalTransactionBackupConfig::with_local_txs_backup(
                 transactions_path,
             );
 
         ctx.task_executor().spawn_critical_with_graceful_shutdown_signal(
             "local transactions backup task",
             |shutdown| {
-                reth_transaction_pool::maintain::backup_local_transactions_task(
+                hanzo_evm_transaction_pool::maintain::backup_local_transactions_task(
                     shutdown,
                     pool,
                     transactions_backup_config,
@@ -250,7 +250,7 @@ fn spawn_pool_maintenance_task<Node, Pool>(
 ) -> eyre::Result<()>
 where
     Node: FullNodeTypes<Types: NodeTypes<ChainSpec: EthereumHardforks>>,
-    Pool: reth_transaction_pool::TransactionPoolExt<Block = BlockTy<Node::Types>> + Clone + 'static,
+    Pool: hanzo_evm_transaction_pool::TransactionPoolExt<Block = BlockTy<Node::Types>> + Clone + 'static,
     Pool::Transaction: PoolTransaction<Consensus = TxTy<Node::Types>>,
 {
     let chain_events = ctx.provider().canonical_state_stream();
@@ -258,12 +258,12 @@ where
 
     ctx.task_executor().spawn_critical(
         "txpool maintenance task",
-        reth_transaction_pool::maintain::maintain_transaction_pool_future(
+        hanzo_evm_transaction_pool::maintain::maintain_transaction_pool_future(
             client,
             pool,
             chain_events,
             ctx.task_executor().clone(),
-            reth_transaction_pool::maintain::MaintainPoolConfig {
+            hanzo_evm_transaction_pool::maintain::MaintainPoolConfig {
                 max_tx_lifetime: pool_config.max_queued_lifetime,
                 no_local_exemptions: pool_config.local_transactions_config.no_exemptions,
                 ..Default::default()
@@ -282,7 +282,7 @@ pub fn spawn_maintenance_tasks<Node, Pool>(
 ) -> eyre::Result<()>
 where
     Node: FullNodeTypes<Types: NodeTypes<ChainSpec: EthereumHardforks>>,
-    Pool: reth_transaction_pool::TransactionPoolExt<Block = BlockTy<Node::Types>> + Clone + 'static,
+    Pool: hanzo_evm_transaction_pool::TransactionPoolExt<Block = BlockTy<Node::Types>> + Clone + 'static,
     Pool::Transaction: PoolTransaction<Consensus = TxTy<Node::Types>>,
 {
     spawn_local_backup_task(ctx, pool.clone())?;
@@ -299,7 +299,7 @@ impl<Node: FullNodeTypes, V: std::fmt::Debug> std::fmt::Debug for TxPoolBuilder<
 #[cfg(test)]
 mod tests {
     use super::*;
-    use reth_transaction_pool::PoolConfig;
+    use hanzo_evm_transaction_pool::PoolConfig;
 
     #[test]
     fn test_pool_builder_config_overrides_apply() {

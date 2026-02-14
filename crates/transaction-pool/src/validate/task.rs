@@ -8,11 +8,11 @@ use crate::{
     TransactionValidator,
 };
 use futures_util::{lock::Mutex, StreamExt};
-use reth_chainspec::{ChainSpecProvider, EthereumHardforks};
-use reth_evm::ConfigureEvm;
-use reth_primitives_traits::{HeaderTy, SealedBlock};
-use reth_storage_api::BlockReaderIdExt;
-use reth_tasks::TaskSpawner;
+use hanzo_evm_chainspec::{ChainSpecProvider, EthereumHardforks};
+use hanzo_evm_execution::ConfigureEvm;
+use hanzo_evm_primitives_traits::{HeaderTy, SealedBlock};
+use hanzo_evm_storage_api::BlockReaderIdExt;
+use hanzo_evm_tasks::TaskSpawner;
 use std::{future::Future, pin::Pin, sync::Arc};
 use tokio::{
     sync,
@@ -121,14 +121,14 @@ impl TransactionValidationTaskExecutor<()> {
     /// Convenience method to create a [`EthTransactionValidatorBuilder`]
     pub fn eth_builder<Client, Evm>(
         client: Client,
-        evm_config: Evm,
+        hanzo_evm_config: Evm,
     ) -> EthTransactionValidatorBuilder<Client, Evm>
     where
         Client: ChainSpecProvider<ChainSpec: EthereumHardforks>
             + BlockReaderIdExt<Header = HeaderTy<Evm::Primitives>>,
         Evm: ConfigureEvm,
     {
-        EthTransactionValidatorBuilder::new(client, evm_config)
+        EthTransactionValidatorBuilder::new(client, hanzo_evm_config)
     }
 }
 
@@ -155,14 +155,14 @@ impl<Client, Tx, Evm> TransactionValidationTaskExecutor<EthTransactionValidator<
     ///
     /// This will spawn a single validation tasks that performs the actual validation.
     /// See [`TransactionValidationTaskExecutor::eth_with_additional_tasks`]
-    pub fn eth<T, S: BlobStore>(client: Client, evm_config: Evm, blob_store: S, tasks: T) -> Self
+    pub fn eth<T, S: BlobStore>(client: Client, hanzo_evm_config: Evm, blob_store: S, tasks: T) -> Self
     where
         T: TaskSpawner,
         Client: ChainSpecProvider<ChainSpec: EthereumHardforks>
             + BlockReaderIdExt<Header = HeaderTy<Evm::Primitives>>,
         Evm: ConfigureEvm,
     {
-        Self::eth_with_additional_tasks(client, evm_config, blob_store, tasks, 0)
+        Self::eth_with_additional_tasks(client, hanzo_evm_config, blob_store, tasks, 0)
     }
 
     /// Creates a new instance for the given client
@@ -176,7 +176,7 @@ impl<Client, Tx, Evm> TransactionValidationTaskExecutor<EthTransactionValidator<
     /// `num_additional_tasks` additional tasks.
     pub fn eth_with_additional_tasks<T, S: BlobStore>(
         client: Client,
-        evm_config: Evm,
+        hanzo_evm_config: Evm,
         blob_store: S,
         tasks: T,
         num_additional_tasks: usize,
@@ -187,7 +187,7 @@ impl<Client, Tx, Evm> TransactionValidationTaskExecutor<EthTransactionValidator<
             + BlockReaderIdExt<Header = HeaderTy<Evm::Primitives>>,
         Evm: ConfigureEvm,
     {
-        EthTransactionValidatorBuilder::new(client, evm_config)
+        EthTransactionValidatorBuilder::new(client, hanzo_evm_config)
             .with_additional_tasks(num_additional_tasks)
             .build_with_tasks(tasks, blob_store)
     }
@@ -323,7 +323,7 @@ mod tests {
 
     impl TransactionValidator for NoopValidator {
         type Transaction = MockTransaction;
-        type Block = reth_ethereum_primitives::Block;
+        type Block = hanzo_evm_ethereum_primitives::Block;
 
         async fn validate_transaction(
             &self,

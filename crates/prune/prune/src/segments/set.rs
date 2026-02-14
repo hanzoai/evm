@@ -3,15 +3,15 @@ use crate::segments::{
     TransactionLookup, UserReceipts,
 };
 use alloy_eips::eip2718::Encodable2718;
-use reth_db_api::{table::Value, transaction::DbTxMut};
-use reth_primitives_traits::NodePrimitives;
-use reth_provider::{
+use hanzo_evm_db_api::{table::Value, transaction::DbTxMut};
+use hanzo_evm_primitives_traits::NodePrimitives;
+use hanzo_evm_provider::{
     providers::StaticFileProvider, BlockReader, ChainStateBlockReader, DBProvider,
     PruneCheckpointReader, PruneCheckpointWriter, RocksDBProviderFactory,
     StaticFileProviderFactory,
 };
-use reth_prune_types::PruneModes;
-use reth_storage_api::{ChangeSetReader, StorageChangeSetReader, StorageSettingsCache};
+use hanzo_evm_prune_types::PruneModes;
+use hanzo_evm_storage_api::{ChangeSetReader, StorageChangeSetReader, StorageSettingsCache};
 
 /// Collection of [`Segment`]. Thread-safe, allocated on the heap.
 #[derive(Debug)]

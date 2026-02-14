@@ -2,8 +2,8 @@
 
 use alloy_primitives::TxHash;
 use criterion::{criterion_group, criterion_main, Criterion};
-use reth_db::{test_utils::create_test_rw_db_with_path, Database, TransactionHashNumbers};
-use reth_db_api::transaction::DbTx;
+use hanzo_evm_db::{test_utils::create_test_rw_db_with_path, Database, TransactionHashNumbers};
+use hanzo_evm_db_api::transaction::DbTx;
 use std::{fs, sync::Arc};
 
 mod utils;

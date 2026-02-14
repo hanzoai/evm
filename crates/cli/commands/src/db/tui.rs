@@ -10,7 +10,7 @@ use ratatui::{
     widgets::{Block, Borders, List, ListItem, ListState, Paragraph, Wrap},
     Frame, Terminal,
 };
-use reth_db_api::{
+use hanzo_evm_db_api::{
     table::{Table, TableRow},
     RawValue,
 };

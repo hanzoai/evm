@@ -1,12 +1,12 @@
 //! Contains RPC handler implementations for fee history.
 
-use reth_rpc_convert::RpcConvert;
-use reth_rpc_eth_api::{
+use hanzo_evm_rpc_convert::RpcConvert;
+use hanzo_evm_rpc_eth_api::{
     helpers::{EthFees, LoadFee},
     FromEvmError, RpcNodeCore,
 };
-use reth_rpc_eth_types::{EthApiError, FeeHistoryCache, GasPriceOracle};
-use reth_storage_api::ProviderHeader;
+use hanzo_evm_rpc_eth_types::{EthApiError, FeeHistoryCache, GasPriceOracle};
+use hanzo_evm_storage_api::ProviderHeader;
 
 use crate::EthApi;
 

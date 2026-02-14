@@ -3,17 +3,17 @@
 use alloy_primitives::{Address, B256};
 use alloy_rpc_types_engine::ExecutionPayloadEnvelopeV4;
 use jsonrpsee_core::client::ClientT;
-use reth_db::test_utils::create_test_rw_db;
-use reth_ethereum_engine_primitives::EthPayloadAttributes;
-use reth_node_builder::{NodeBuilder, NodeConfig};
-use reth_node_core::{
+use hanzo_evm_db::test_utils::create_test_rw_db;
+use hanzo_evm_ethereum_engine_primitives::EthPayloadAttributes;
+use hanzo_evm_node_builder::{NodeBuilder, NodeConfig};
+use hanzo_evm_node_core::{
     args::DatadirArgs,
     dirs::{DataDirPath, MaybePlatformPath},
 };
-use reth_node_ethereum::{node::EthereumAddOns, EthereumNode};
-use reth_rpc_api::TestingBuildBlockRequestV1;
-use reth_rpc_server_types::{RethRpcModule, RpcModuleSelection};
-use reth_tasks::TaskManager;
+use hanzo_evm_node_ethereum::{node::EthereumAddOns, EthereumNode};
+use hanzo_evm_rpc_api::TestingBuildBlockRequestV1;
+use hanzo_evm_rpc_server_types::{EvmRpcModule, RpcModuleSelection};
+use hanzo_evm_tasks::TaskManager;
 use std::str::FromStr;
 use tempfile::tempdir;
 use tokio::sync::oneshot;
@@ -21,8 +21,8 @@ use tokio::sync::oneshot;
 #[tokio::test(flavor = "multi_thread")]
 async fn testing_rpc_build_block_works() -> eyre::Result<()> {
     let tasks = TaskManager::current();
-    let mut rpc_args = reth_node_core::args::RpcServerArgs::default().with_http();
-    rpc_args.http_api = Some(RpcModuleSelection::from_iter([RethRpcModule::Testing]));
+    let mut rpc_args = hanzo_evm_node_core::args::RpcServerArgs::default().with_http();
+    rpc_args.http_api = Some(RpcModuleSelection::from_iter([EvmRpcModule::Testing]));
     let tempdir = tempdir().expect("temp datadir");
     let datadir_args = DatadirArgs {
         datadir: MaybePlatformPath::<DataDirPath>::from_str(tempdir.path().to_str().unwrap())

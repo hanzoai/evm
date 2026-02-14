@@ -6,20 +6,20 @@ use alloy_rpc_types_eth::{
     state::StateOverridesBuilder,
     BlockOverrides, TransactionRequest,
 };
-use reth_chainspec::{ChainSpecBuilder, MAINNET};
-use reth_e2e_test_utils::setup_engine;
-use reth_node_ethereum::EthereumNode;
+use hanzo_evm_chainspec::{ChainSpecBuilder, MAINNET};
+use hanzo_evm_e2e_test_utils::setup_engine;
+use hanzo_evm_node_ethereum::EthereumNode;
 use std::sync::Arc;
 
 /// Tests that `eth_simulateV1` handles a transaction with `maxFeePerBlobGas` set but no
 /// `blob_versioned_hashes` or sidecar. The transaction should be treated as EIP-1559, not
 /// EIP-4844.
 ///
-/// Reproduces <https://github.com/paradigmxyz/reth/issues/21809>
+/// Reproduces <https://github.com/hanzoai/evm/issues/21809>
 #[tokio::test]
 #[ignore = "depends on alloy-rs/alloy#3651"]
 async fn test_simulate_v1_with_max_fee_per_blob_gas_only() -> eyre::Result<()> {
-    reth_tracing::init_test_tracing();
+    hanzo_evm_tracing::init_test_tracing();
 
     let chain_spec = Arc::new(
         ChainSpecBuilder::default()

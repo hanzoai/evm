@@ -1,9 +1,9 @@
 //! Beacon consensus implementation.
 
 #![doc(
-    html_logo_url = "https://raw.githubusercontent.com/paradigmxyz/reth/main/assets/reth-docs.png",
+    html_logo_url = "https://raw.githubusercontent.com/hanzoai/evm/main/assets/evm-docs.png",
     html_favicon_url = "https://avatars0.githubusercontent.com/u/97369466?s=256",
-    issue_tracker_base_url = "https://github.com/paradigmxyz/reth/issues/"
+    issue_tracker_base_url = "https://github.com/hanzoai/evm/issues/"
 )]
 #![cfg_attr(not(test), warn(unused_crate_dependencies))]
 #![cfg_attr(docsrs, feature(doc_cfg))]
@@ -14,17 +14,17 @@ extern crate alloc;
 use alloc::{fmt::Debug, sync::Arc};
 use alloy_consensus::{constants::MAXIMUM_EXTRA_DATA_SIZE, EMPTY_OMMER_ROOT_HASH};
 use alloy_eips::eip7840::BlobParams;
-use reth_chainspec::{EthChainSpec, EthereumHardforks};
-use reth_consensus::{Consensus, ConsensusError, FullConsensus, HeaderValidator, ReceiptRootBloom};
-use reth_consensus_common::validation::{
+use hanzo_evm_chainspec::{EthChainSpec, EthereumHardforks};
+use hanzo_evm_consensus::{Consensus, ConsensusError, FullConsensus, HeaderValidator, ReceiptRootBloom};
+use hanzo_evm_consensus_common::validation::{
     validate_4844_header_standalone, validate_against_parent_4844,
     validate_against_parent_eip1559_base_fee, validate_against_parent_gas_limit,
     validate_against_parent_hash_number, validate_against_parent_timestamp,
     validate_block_pre_execution, validate_body_against_header, validate_header_base_fee,
     validate_header_extra_data, validate_header_gas,
 };
-use reth_execution_types::BlockExecutionResult;
-use reth_primitives_traits::{
+use hanzo_evm_execution_types::BlockExecutionResult;
+use hanzo_evm_primitives_traits::{
     Block, BlockHeader, NodePrimitives, RecoveredBlock, SealedBlock, SealedHeader,
 };
 
@@ -216,15 +216,15 @@ mod tests {
     use super::*;
     use alloy_consensus::Header;
     use alloy_primitives::B256;
-    use reth_chainspec::{ChainSpec, ChainSpecBuilder};
-    use reth_consensus_common::validation::validate_against_parent_gas_limit;
-    use reth_primitives_traits::{
+    use hanzo_evm_chainspec::{ChainSpec, ChainSpecBuilder};
+    use hanzo_evm_consensus_common::validation::validate_against_parent_gas_limit;
+    use hanzo_evm_primitives_traits::{
         constants::{GAS_LIMIT_BOUND_DIVISOR, MINIMUM_GAS_LIMIT},
         proofs,
     };
 
     fn header_with_gas_limit(gas_limit: u64) -> SealedHeader {
-        let header = reth_primitives_traits::Header { gas_limit, ..Default::default() };
+        let header = hanzo_evm_primitives_traits::Header { gas_limit, ..Default::default() };
         SealedHeader::new(header, B256::ZERO)
     }
 
@@ -300,7 +300,7 @@ mod tests {
         // that the header is valid
         let chain_spec = Arc::new(ChainSpecBuilder::mainnet().shanghai_activated().build());
 
-        let header = reth_primitives_traits::Header {
+        let header = hanzo_evm_primitives_traits::Header {
             base_fee_per_gas: Some(1337),
             withdrawals_root: Some(proofs::calculate_withdrawals_root(&[])),
             ..Default::default()

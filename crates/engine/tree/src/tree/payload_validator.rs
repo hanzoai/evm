@@ -18,33 +18,33 @@ use alloy_primitives::B256;
 
 use crate::tree::payload_processor::receipt_root_task::{IndexedReceipt, ReceiptRootTaskHandle};
 use rayon::prelude::*;
-use reth_chain_state::{CanonicalInMemoryState, DeferredTrieData, ExecutedBlock, LazyOverlay};
-use reth_consensus::{ConsensusError, FullConsensus, ReceiptRootBloom};
-use reth_engine_primitives::{
+use hanzo_evm_chain_state::{CanonicalInMemoryState, DeferredTrieData, ExecutedBlock, LazyOverlay};
+use hanzo_evm_consensus::{ConsensusError, FullConsensus, ReceiptRootBloom};
+use hanzo_evm_engine_primitives::{
     ConfigureEngineEvm, ExecutableTxIterator, ExecutionPayload, InvalidBlockHook, PayloadValidator,
 };
-use reth_errors::{BlockExecutionError, ProviderResult};
-use reth_evm::{
+use hanzo_evm_errors::{BlockExecutionError, ProviderResult};
+use hanzo_evm_execution::{
     block::BlockExecutor, execute::ExecutableTxFor, ConfigureEvm, EvmEnvFor, ExecutionCtxFor,
     SpecFor,
 };
-use reth_payload_primitives::{
+use hanzo_evm_payload_primitives::{
     BuiltPayload, InvalidPayloadAttributesError, NewPayloadError, PayloadTypes,
 };
-use reth_primitives_traits::{
+use hanzo_evm_primitives_traits::{
     AlloyBlockHeader, BlockBody, BlockTy, GotExpected, NodePrimitives, RecoveredBlock, SealedBlock,
     SealedHeader, SignerRecoverable,
 };
-use reth_provider::{
+use hanzo_evm_provider::{
     providers::OverlayStateProviderFactory, BlockExecutionOutput, BlockNumReader, BlockReader,
     ChangeSetReader, DatabaseProviderFactory, DatabaseProviderROFactory, HashedPostStateProvider,
     ProviderError, PruneCheckpointReader, StageCheckpointReader, StateProvider,
     StateProviderFactory, StateReader, StorageChangeSetReader,
 };
-use reth_revm::db::{states::bundle_state::BundleRetention, State};
-use reth_trie::{updates::TrieUpdates, HashedPostState, StateRoot};
-use reth_trie_db::ChangesetCache;
-use reth_trie_parallel::root::{ParallelStateRoot, ParallelStateRootError};
+use hanzo_evm_revm::db::{states::bundle_state::BundleRetention, State};
+use hanzo_evm_trie::{updates::TrieUpdates, HashedPostState, StateRoot};
+use hanzo_evm_trie_db::ChangesetCache;
+use hanzo_evm_trie_parallel::root::{ParallelStateRoot, ParallelStateRootError};
 use revm_primitives::Address;
 use std::{
     collections::HashMap,
@@ -116,7 +116,7 @@ where
     /// Consensus implementation for validation.
     consensus: Arc<dyn FullConsensus<Evm::Primitives>>,
     /// EVM configuration.
-    evm_config: Evm,
+    hanzo_evm_config: Evm,
     /// Configuration for the tree.
     config: TreeConfig,
     /// Payload processor for state root computation.
@@ -161,7 +161,7 @@ where
     pub fn new(
         provider: P,
         consensus: Arc<dyn FullConsensus<N>>,
-        evm_config: Evm,
+        hanzo_evm_config: Evm,
         validator: V,
         config: TreeConfig,
         invalid_block_hook: Box<dyn InvalidBlockHook<N>>,
@@ -170,14 +170,14 @@ where
         let precompile_cache_map = PrecompileCacheMap::default();
         let payload_processor = PayloadProcessor::new(
             WorkloadExecutor::default(),
-            evm_config.clone(),
+            hanzo_evm_config.clone(),
             &config,
             precompile_cache_map.clone(),
         );
         Self {
             provider,
             consensus,
-            evm_config,
+            hanzo_evm_config,
             payload_processor,
             precompile_cache_map,
             precompile_cache_metrics: HashMap::new(),
@@ -214,8 +214,8 @@ where
         Evm: ConfigureEngineEvm<T::ExecutionData, Primitives = N>,
     {
         match input {
-            BlockOrPayload::Payload(payload) => Ok(self.evm_config.evm_env_for_payload(payload)?),
-            BlockOrPayload::Block(block) => Ok(self.evm_config.evm_env(block.header())?),
+            BlockOrPayload::Payload(payload) => Ok(self.hanzo_evm_config.evm_env_for_payload(payload)?),
+            BlockOrPayload::Block(block) => Ok(self.hanzo_evm_config.evm_env(block.header())?),
         }
     }
 
@@ -231,7 +231,7 @@ where
         match input {
             BlockOrPayload::Payload(payload) => {
                 let (iter, convert) = self
-                    .evm_config
+                    .hanzo_evm_config
                     .tx_iterator_for_payload(payload)
                     .map_err(NewPayloadError::other)?
                     .into();
@@ -269,8 +269,8 @@ where
         Evm: ConfigureEngineEvm<T::ExecutionData, Primitives = N>,
     {
         match input {
-            BlockOrPayload::Payload(payload) => Ok(self.evm_config.context_for_payload(payload)?),
-            BlockOrPayload::Block(block) => Ok(self.evm_config.context_for_block(block)?),
+            BlockOrPayload::Payload(payload) => Ok(self.hanzo_evm_config.context_for_payload(payload)?),
+            BlockOrPayload::Block(block) => Ok(self.hanzo_evm_config.context_for_block(block)?),
         }
     }
 
@@ -706,10 +706,10 @@ where
             .build();
 
         let spec_id = *env.evm_env.spec_id();
-        let evm = self.evm_config.evm_with_env(&mut db, env.evm_env);
+        let evm = self.hanzo_evm_config.evm_with_env(&mut db, env.evm_env);
         let ctx =
             self.execution_ctx_for(input).map_err(|e| InsertBlockErrorKind::Other(Box::new(e)))?;
-        let mut executor = self.evm_config.create_executor(evm, ctx);
+        let mut executor = self.hanzo_evm_config.create_executor(evm, ctx);
 
         if !self.config.precompile_cache_disabled() {
             // Only cache pure precompiles to avoid issues with stateful precompiles
@@ -1224,7 +1224,7 @@ where
     /// blocking task that calls `wait_cloned()` to:
     /// 1. Sort the block's hashed state and trie updates
     /// 2. Merge ancestor overlays and extend with the sorted data
-    /// 3. Create an [`AnchoredTrieInput`](reth_chain_state::AnchoredTrieInput) for efficient future
+    /// 3. Create an [`AnchoredTrieInput`](hanzo_evm_chain_state::AnchoredTrieInput) for efficient future
     ///    trie computations
     /// 4. Cache the result so subsequent calls return immediately
     ///
@@ -1309,7 +1309,7 @@ where
                 // Get a provider from the overlay factory for trie cursor access
                 let changeset_result =
                     overlay_factory.database_provider_ro().and_then(|provider| {
-                        reth_trie::changesets::compute_trie_changesets(
+                        hanzo_evm_trie::changesets::compute_trie_changesets(
                             &provider,
                             &computed.trie_updates,
                         )

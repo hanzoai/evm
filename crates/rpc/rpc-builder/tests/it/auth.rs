@@ -6,11 +6,11 @@ use alloy_rpc_types_engine::{
     ExecutionPayloadInputV2, ExecutionPayloadV1, ForkchoiceState, PayloadId,
 };
 use jsonrpsee::core::client::{ClientT, SubscriptionClientT};
-use reth_ethereum_engine_primitives::EthEngineTypes;
-use reth_ethereum_primitives::{Block, TransactionSigned};
-use reth_primitives_traits::block::Block as _;
-use reth_rpc_api::clients::EngineApiClient;
-use reth_rpc_layer::JwtSecret;
+use hanzo_evm_ethereum_engine_primitives::EthEngineTypes;
+use hanzo_evm_ethereum_primitives::{Block, TransactionSigned};
+use hanzo_evm_primitives_traits::block::Block as _;
+use hanzo_evm_rpc_api::clients::EngineApiClient;
+use hanzo_evm_rpc_layer::JwtSecret;
 
 #[expect(unused_must_use)]
 async fn test_basic_engine_calls<C>(client: &C)
@@ -43,7 +43,7 @@ where
 
 #[tokio::test(flavor = "multi_thread")]
 async fn test_auth_endpoints_http() {
-    reth_tracing::init_test_tracing();
+    hanzo_evm_tracing::init_test_tracing();
     let secret = JwtSecret::random();
     let handle = launch_auth(secret).await;
     let client = handle.http_client();
@@ -52,7 +52,7 @@ async fn test_auth_endpoints_http() {
 
 #[tokio::test(flavor = "multi_thread")]
 async fn test_auth_endpoints_ws() {
-    reth_tracing::init_test_tracing();
+    hanzo_evm_tracing::init_test_tracing();
     let secret = JwtSecret::random();
     let handle = launch_auth(secret).await;
     let client = handle.ws_client().await;

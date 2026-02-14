@@ -1,15 +1,15 @@
 use crate::PruneLimiter;
 use alloy_primitives::BlockNumber;
 use itertools::Itertools;
-use reth_db_api::{
+use hanzo_evm_db_api::{
     cursor::{DbCursorRO, DbCursorRW},
     models::ShardedKey,
     table::Table,
     transaction::DbTxMut,
     BlockNumberList, DatabaseError, RawKey, RawTable, RawValue,
 };
-use reth_provider::DBProvider;
-use reth_prune_types::{SegmentOutput, SegmentOutputCheckpoint};
+use hanzo_evm_provider::DBProvider;
+use hanzo_evm_prune_types::{SegmentOutput, SegmentOutputCheckpoint};
 use rustc_hash::FxHashMap;
 
 enum PruneShardOutcome {

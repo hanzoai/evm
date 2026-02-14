@@ -9,7 +9,7 @@ use alloy_rpc_types_trace::geth::{
     BlockTraceResult, GethDebugTracingCallOptions, GethDebugTracingOptions, GethTrace, TraceResult,
 };
 use jsonrpsee::{core::RpcResult, proc_macros::rpc};
-use reth_trie_common::{updates::TrieUpdates, HashedPostState};
+use hanzo_evm_trie_common::{updates::TrieUpdates, HashedPostState};
 
 /// Debug rpc interface.
 #[cfg_attr(not(feature = "client"), rpc(server, namespace = "debug"))]

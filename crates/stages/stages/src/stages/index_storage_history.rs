@@ -1,20 +1,20 @@
 use super::{collect_history_indices, collect_storage_history_indices};
 use crate::{stages::utils::load_storage_history, StageCheckpoint, StageId};
-use reth_config::config::{EtlConfig, IndexHistoryConfig};
+use hanzo_evm_config::config::{EtlConfig, IndexHistoryConfig};
 #[cfg(all(unix, feature = "rocksdb"))]
-use reth_db_api::Tables;
-use reth_db_api::{
+use hanzo_evm_db_api::Tables;
+use hanzo_evm_db_api::{
     models::{storage_sharded_key::StorageShardedKey, AddressStorageKey, BlockNumberAddress},
     tables,
     transaction::DbTxMut,
 };
-use reth_provider::{
+use hanzo_evm_provider::{
     DBProvider, EitherWriter, HistoryWriter, PruneCheckpointReader, PruneCheckpointWriter,
     RocksDBProviderFactory, StaticFileProviderFactory, StorageChangeSetReader,
     StorageSettingsCache,
 };
-use reth_prune_types::{PruneCheckpoint, PruneMode, PrunePurpose, PruneSegment};
-use reth_stages_api::{ExecInput, ExecOutput, Stage, StageError, UnwindInput, UnwindOutput};
+use hanzo_evm_prune_types::{PruneCheckpoint, PruneMode, PrunePurpose, PruneSegment};
+use hanzo_evm_stages_api::{ExecInput, ExecOutput, Stage, StageError, UnwindInput, UnwindOutput};
 use std::fmt::Debug;
 use tracing::info;
 
@@ -59,7 +59,7 @@ where
         + RocksDBProviderFactory
         + StorageChangeSetReader
         + StaticFileProviderFactory
-        + reth_provider::NodePrimitivesProvider,
+        + hanzo_evm_provider::NodePrimitivesProvider,
 {
     /// Return the id of the stage
     fn id(&self) -> StageId {
@@ -144,7 +144,7 @@ where
         provider.with_rocksdb_batch_auto_commit(|rocksdb_batch| {
             let mut writer = EitherWriter::new_storages_history(provider, rocksdb_batch)?;
             load_storage_history(collector, first_sync, &mut writer)
-                .map_err(|e| reth_provider::ProviderError::other(Box::new(e)))?;
+                .map_err(|e| hanzo_evm_provider::ProviderError::other(Box::new(e)))?;
             Ok(((), writer.into_raw_rocksdb_batch()))
         })?;
 
@@ -181,7 +181,7 @@ mod tests {
     };
     use alloy_primitives::{address, b256, Address, BlockNumber, B256, U256};
     use itertools::Itertools;
-    use reth_db_api::{
+    use hanzo_evm_db_api::{
         cursor::DbCursorRO,
         models::{
             sharded_key, storage_sharded_key::NUM_OF_INDICES_IN_SHARD, ShardedKey,
@@ -190,9 +190,9 @@ mod tests {
         transaction::DbTx,
         BlockNumberList,
     };
-    use reth_primitives_traits::StorageEntry;
-    use reth_provider::{providers::StaticFileWriter, DatabaseProviderFactory};
-    use reth_testing_utils::generators::{
+    use hanzo_evm_primitives_traits::StorageEntry;
+    use hanzo_evm_provider::{providers::StaticFileWriter, DatabaseProviderFactory};
+    use hanzo_evm_testing_utils::generators::{
         self, random_block_range, random_changeset_range, random_contract_account_range,
         BlockRangeParams,
     };
@@ -694,8 +694,8 @@ mod tests {
     #[cfg(all(unix, feature = "rocksdb"))]
     mod rocksdb_tests {
         use super::*;
-        use reth_provider::RocksDBProviderFactory;
-        use reth_storage_api::StorageSettings;
+        use hanzo_evm_provider::RocksDBProviderFactory;
+        use hanzo_evm_storage_api::StorageSettings;
 
         /// Test that when `storages_history_in_rocksdb` is enabled, the stage
         /// writes storage history indices to `RocksDB` instead of MDBX.
@@ -916,7 +916,7 @@ mod tests {
         /// Test multi-shard unwind correctly handles shards that span across unwind boundary.
         #[tokio::test]
         async fn unwind_multi_shard() {
-            use reth_db_api::models::sharded_key::NUM_OF_INDICES_IN_SHARD;
+            use hanzo_evm_db_api::models::sharded_key::NUM_OF_INDICES_IN_SHARD;
 
             let db = TestStageDB::default();
 

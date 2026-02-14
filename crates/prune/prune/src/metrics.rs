@@ -1,8 +1,8 @@
-use reth_metrics::{
+use hanzo_evm_metrics::{
     metrics::{Gauge, Histogram},
     Metrics,
 };
-use reth_prune_types::PruneSegment;
+use hanzo_evm_prune_types::PruneSegment;
 use std::collections::HashMap;
 
 #[derive(Metrics)]

@@ -1,11 +1,11 @@
 use alloy_consensus::Sealable;
 use alloy_primitives::B256;
-use reth_node_api::{
+use hanzo_evm_node_api::{
     BuiltPayload, ConsensusEngineHandle, EngineApiMessageVersion, ExecutionPayload, NodePrimitives,
     PayloadTypes,
 };
-use reth_primitives_traits::{Block, SealedBlock};
-use reth_tracing::tracing::warn;
+use hanzo_evm_primitives_traits::{Block, SealedBlock};
+use hanzo_evm_tracing::tracing::warn;
 use ringbuffer::{AllocRingBuffer, RingBuffer};
 use std::future::Future;
 use tokio::sync::mpsc;

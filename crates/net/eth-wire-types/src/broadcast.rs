@@ -11,9 +11,9 @@ use alloy_rlp::{
 };
 use core::{fmt::Debug, mem};
 use derive_more::{Constructor, Deref, DerefMut, From, IntoIterator};
-use reth_codecs_derive::{add_arbitrary_tests, generate_tests};
-use reth_ethereum_primitives::TransactionSigned;
-use reth_primitives_traits::{Block, SignedTransaction};
+use hanzo_evm_codecs_derive::{add_arbitrary_tests, generate_tests};
+use hanzo_evm_ethereum_primitives::TransactionSigned;
+use hanzo_evm_primitives_traits::{Block, SignedTransaction};
 
 /// This informs peers of new blocks that have appeared on the network.
 #[derive(Clone, Debug, PartialEq, Eq, RlpEncodableWrapper, RlpDecodableWrapper, Default)]
@@ -80,7 +80,7 @@ pub trait NewBlockPayload:
 #[derive(Clone, Debug, PartialEq, Eq, RlpEncodable, RlpDecodable, Default)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 #[cfg_attr(any(test, feature = "arbitrary"), derive(arbitrary::Arbitrary))]
-pub struct NewBlock<B = reth_ethereum_primitives::Block> {
+pub struct NewBlock<B = hanzo_evm_ethereum_primitives::Block> {
     /// A new block.
     pub block: B,
     /// The current total difficulty.
@@ -95,7 +95,7 @@ impl<B: Block + 'static> NewBlockPayload for NewBlock<B> {
     }
 }
 
-generate_tests!(#[rlp, 25] NewBlock<reth_ethereum_primitives::Block>, EthNewBlockTests);
+generate_tests!(#[rlp, 25] NewBlock<hanzo_evm_ethereum_primitives::Block>, EthNewBlockTests);
 
 /// This informs peers of transactions that have appeared on the network and are not yet included
 /// in a block.
@@ -371,7 +371,7 @@ impl proptest::prelude::Arbitrary for NewPooledTransactionHashes68 {
             .prop_flat_map(|len| {
                 // Use the generated length to create vectors of TxType, usize, and B256
                 let types_vec = vec(
-                    proptest_arbitrary_interop::arb::<reth_ethereum_primitives::TxType>()
+                    proptest_arbitrary_interop::arb::<hanzo_evm_ethereum_primitives::TxType>()
                         .prop_map(|ty| ty as u8),
                     len..=len,
                 );
@@ -811,7 +811,7 @@ mod tests {
     use alloy_consensus::{transaction::TxHashRef, Typed2718};
     use alloy_eips::eip2718::Encodable2718;
     use alloy_primitives::{b256, hex, Signature, U256};
-    use reth_ethereum_primitives::{Transaction, TransactionSigned};
+    use hanzo_evm_ethereum_primitives::{Transaction, TransactionSigned};
     use std::str::FromStr;
 
     /// Takes as input a struct / encoded hex message pair, ensuring that we encode to the exact hex

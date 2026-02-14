@@ -6,16 +6,16 @@ use crate::EthApi;
 use alloy_consensus::BlobTransactionValidationError;
 use alloy_eips::{eip7594::BlobTransactionSidecarVariant, BlockId, Typed2718};
 use alloy_primitives::{hex, B256};
-use reth_chainspec::{ChainSpecProvider, EthereumHardforks};
-use reth_primitives_traits::{AlloyBlockHeader, Recovered, WithEncoded};
-use reth_rpc_convert::RpcConvert;
-use reth_rpc_eth_api::{
+use hanzo_evm_chainspec::{ChainSpecProvider, EthereumHardforks};
+use hanzo_evm_primitives_traits::{AlloyBlockHeader, Recovered, WithEncoded};
+use hanzo_evm_rpc_convert::RpcConvert;
+use hanzo_evm_rpc_eth_api::{
     helpers::{spec::SignersForRpc, EthTransactions, LoadTransaction},
     FromEvmError, RpcNodeCore,
 };
-use reth_rpc_eth_types::{error::RpcPoolError, EthApiError};
-use reth_storage_api::BlockReaderIdExt;
-use reth_transaction_pool::{
+use hanzo_evm_rpc_eth_types::{error::RpcPoolError, EthApiError};
+use hanzo_evm_storage_api::BlockReaderIdExt;
+use hanzo_evm_transaction_pool::{
     error::Eip4844PoolTransactionError, AddedTransactionOutcome, EthBlobTransactionSidecar,
     EthPoolTransaction, PoolPooledTx, PoolTransaction, TransactionPool,
 };
@@ -139,15 +139,15 @@ mod tests {
     };
     use alloy_primitives::{map::AddressMap, Address, U256};
     use alloy_rpc_types_eth::request::TransactionRequest;
-    use reth_chainspec::{ChainSpec, ChainSpecBuilder};
-    use reth_evm_ethereum::EthEvmConfig;
-    use reth_network_api::noop::NoopNetwork;
-    use reth_provider::{
+    use hanzo_evm_chainspec::{ChainSpec, ChainSpecBuilder};
+    use hanzo_evm_eth_execution::EthEvmConfig;
+    use hanzo_evm_network_api::noop::NoopNetwork;
+    use hanzo_evm_provider::{
         test_utils::{ExtendedAccount, MockEthProvider},
         ChainSpecProvider,
     };
-    use reth_rpc_eth_api::node::RpcNodeCoreAdapter;
-    use reth_transaction_pool::test_utils::{testing_pool, TestPool};
+    use hanzo_evm_rpc_eth_api::node::RpcNodeCoreAdapter;
+    use hanzo_evm_transaction_pool::test_utils::{testing_pool, TestPool};
     use revm_primitives::Bytes;
 
     fn mock_eth_api(
@@ -160,7 +160,7 @@ mod tests {
             .with_chain_spec(ChainSpecBuilder::mainnet().cancun_activated().build());
         mock_provider.extend_accounts(accounts);
 
-        let evm_config = EthEvmConfig::new(mock_provider.chain_spec());
+        let hanzo_evm_config = EthEvmConfig::new(mock_provider.chain_spec());
         let pool = testing_pool();
 
         let genesis_header = Header {
@@ -176,7 +176,7 @@ mod tests {
         let genesis_hash = B256::ZERO;
         mock_provider.add_block(genesis_hash, Block::new(genesis_header, Default::default()));
 
-        EthApi::builder(mock_provider, pool, NoopNetwork::default(), evm_config).build()
+        EthApi::builder(mock_provider, pool, NoopNetwork::default(), hanzo_evm_config).build()
     }
 
     #[tokio::test]

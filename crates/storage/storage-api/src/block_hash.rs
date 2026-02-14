@@ -1,7 +1,7 @@
 use alloc::vec::Vec;
 use alloy_eips::BlockHashOrNumber;
 use alloy_primitives::{BlockNumber, B256};
-use reth_storage_errors::provider::ProviderResult;
+use hanzo_evm_storage_errors::provider::ProviderResult;
 
 /// Client trait for fetching block hashes by number.
 #[auto_impl::auto_impl(&, Box, Arc)]

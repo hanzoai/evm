@@ -10,7 +10,7 @@ exclude.workspace = true
 
 [dependencies]
 alloy-primitives.workspace = true
-reth-ethereum = { workspace = true, features = ["node"] }
+hanzo-evm-ethereum = { workspace = true, features = ["node"] }
 eyre.workspace = true
 
 [lints]

@@ -9,9 +9,9 @@ use core::{
     fmt::{Display, Formatter, Result},
     time::Duration,
 };
-use reth_chain_state::ExecutedBlock;
-use reth_ethereum_primitives::EthPrimitives;
-use reth_primitives_traits::{NodePrimitives, SealedBlock, SealedHeader};
+use hanzo_evm_chain_state::ExecutedBlock;
+use hanzo_evm_ethereum_primitives::EthPrimitives;
+use hanzo_evm_primitives_traits::{NodePrimitives, SealedBlock, SealedHeader};
 
 /// Type alias for backwards compat
 #[deprecated(note = "Use ConsensusEngineEvent instead")]

@@ -1,4 +1,4 @@
-//! Reth RPC implementation
+//! Hanzo EVM RPC implementation
 //!
 //! Provides the implementation of all RPC interfaces.
 //!
@@ -18,9 +18,9 @@
 //! disk-io, hence these calls are spawned as futures to a blocking task manually.
 
 #![doc(
-    html_logo_url = "https://raw.githubusercontent.com/paradigmxyz/reth/main/assets/reth-docs.png",
+    html_logo_url = "https://raw.githubusercontent.com/hanzoai/evm/main/assets/evm-docs.png",
     html_favicon_url = "https://avatars0.githubusercontent.com/u/97369466?s=256",
-    issue_tracker_base_url = "https://github.com/paradigmxyz/reth/issues/"
+    issue_tracker_base_url = "https://github.com/hanzoai/evm/issues/"
 )]
 #![cfg_attr(docsrs, feature(doc_cfg))]
 #![cfg_attr(not(test), warn(unused_crate_dependencies))]
@@ -33,7 +33,7 @@ pub mod eth;
 mod miner;
 mod net;
 mod otterscan;
-mod reth;
+mod evm;
 mod rpc;
 mod testing;
 mod trace;
@@ -49,8 +49,8 @@ pub use eth::{helpers::SyncListener, EthApi, EthApiBuilder, EthBundle, EthFilter
 pub use miner::MinerApi;
 pub use net::NetApi;
 pub use otterscan::OtterscanApi;
-pub use reth::RethApi;
-pub use reth_rpc_convert::RpcTypes;
+pub use evm::EvmApi;
+pub use hanzo_evm_rpc_convert::RpcTypes;
 pub use rpc::RPCApi;
 pub use testing::TestingApi;
 pub use trace::TraceApi;

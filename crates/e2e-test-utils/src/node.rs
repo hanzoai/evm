@@ -7,23 +7,23 @@ use alloy_rpc_types_eth::BlockNumberOrTag;
 use eyre::Ok;
 use futures_util::Future;
 use jsonrpsee::{core::client::ClientT, http_client::HttpClient};
-use reth_chainspec::EthereumHardforks;
-use reth_network_api::test_utils::PeersHandleProvider;
-use reth_node_api::{
+use hanzo_evm_chainspec::EthereumHardforks;
+use hanzo_evm_network_api::test_utils::PeersHandleProvider;
+use hanzo_evm_node_api::{
     Block, BlockBody, BlockTy, EngineApiMessageVersion, FullNodeComponents, PayloadTypes,
     PrimitivesTy,
 };
-use reth_node_builder::{rpc::RethRpcAddOns, FullNode, NodeTypes};
+use hanzo_evm_node_builder::{rpc::EvmRpcAddOns, FullNode, NodeTypes};
 
-use reth_payload_primitives::{BuiltPayload, PayloadBuilderAttributes};
-use reth_provider::{
+use hanzo_evm_payload_primitives::{BuiltPayload, PayloadBuilderAttributes};
+use hanzo_evm_provider::{
     BlockReader, BlockReaderIdExt, CanonStateNotificationStream, CanonStateSubscriptions,
     HeaderProvider, StageCheckpointReader,
 };
-use reth_rpc_api::TestingBuildBlockRequestV1;
-use reth_rpc_builder::auth::AuthServerHandle;
-use reth_rpc_eth_api::helpers::{EthApiSpec, EthTransactions, TraceExt};
-use reth_stages_types::StageId;
+use hanzo_evm_rpc_api::TestingBuildBlockRequestV1;
+use hanzo_evm_rpc_builder::auth::AuthServerHandle;
+use hanzo_evm_rpc_eth_api::helpers::{EthApiSpec, EthTransactions, TraceExt};
+use hanzo_evm_stages_types::StageId;
 use std::pin::Pin;
 use tokio_stream::StreamExt;
 use url::Url;
@@ -33,7 +33,7 @@ use url::Url;
 pub struct NodeTestContext<Node, AddOns>
 where
     Node: FullNodeComponents,
-    AddOns: RethRpcAddOns<Node>,
+    AddOns: EvmRpcAddOns<Node>,
 {
     /// The core structure representing the full node.
     pub inner: FullNode<Node, AddOns>,
@@ -53,7 +53,7 @@ where
     Node: FullNodeComponents,
     Node::Types: NodeTypes<ChainSpec: EthereumHardforks, Payload = Payload>,
     Node::Network: PeersHandleProvider,
-    AddOns: RethRpcAddOns<Node>,
+    AddOns: EvmRpcAddOns<Node>,
 {
     /// Creates a new test node
     pub async fn new(

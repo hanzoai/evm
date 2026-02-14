@@ -11,8 +11,8 @@ use crate::{
 };
 use alloy_primitives::B256;
 use alloy_trie::BranchNodeCompact;
-use reth_execution_errors::StateRootError;
-use reth_storage_errors::db::DatabaseError;
+use hanzo_evm_execution_errors::StateRootError;
+use hanzo_evm_storage_errors::db::DatabaseError;
 use std::cmp::{Ordering, Reverse};
 use tracing::trace;
 
@@ -477,7 +477,7 @@ mod tests {
     use alloy_primitives::{address, keccak256, map::B256Map, U256};
     use alloy_trie::TrieMask;
     use assert_matches::assert_matches;
-    use reth_primitives_traits::Account;
+    use hanzo_evm_primitives_traits::Account;
     use std::collections::BTreeMap;
 
     /// Helper function to create a simple test `BranchNodeCompact`

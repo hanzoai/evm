@@ -7,8 +7,8 @@ use std::{
     time::Duration,
 };
 
-use reth_net_banlist::{BanList, IpFilter};
-use reth_network_peers::{NodeRecord, TrustedPeer};
+use hanzo_evm_net_banlist::{BanList, IpFilter};
+use hanzo_evm_network_peers::{NodeRecord, TrustedPeer};
 use tracing::info;
 
 use crate::{BackoffKind, ReputationChangeWeights};

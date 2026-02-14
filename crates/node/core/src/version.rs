@@ -1,20 +1,20 @@
-//! Version information for reth.
+//! Version information for evm.
 use std::{borrow::Cow, sync::OnceLock};
 
 use alloy_primitives::Bytes;
 use alloy_rpc_types_engine::ClientCode;
-use reth_db::ClientVersion;
+use hanzo_evm_db::ClientVersion;
 
 /// The client code for Reth
 pub const CLIENT_CODE: ClientCode = ClientCode::RH;
 
 /// Global static version metadata
-static VERSION_METADATA: OnceLock<RethCliVersionConsts> = OnceLock::new();
+static VERSION_METADATA: OnceLock<EvmCliVersionConsts> = OnceLock::new();
 
 /// Initialize the global version metadata.
 pub fn try_init_version_metadata(
-    metadata: RethCliVersionConsts,
-) -> Result<(), RethCliVersionConsts> {
+    metadata: EvmCliVersionConsts,
+) -> Result<(), EvmCliVersionConsts> {
     VERSION_METADATA.set(metadata)
 }
 
@@ -22,7 +22,7 @@ pub fn try_init_version_metadata(
 ///
 /// Global defaults can be set via [`try_init_version_metadata`].
 #[derive(Debug, Default)]
-pub struct RethCliVersionConsts {
+pub struct EvmCliVersionConsts {
     /// The human readable name of the client
     pub name_client: Cow<'static, str>,
 
@@ -44,15 +44,15 @@ pub struct RethCliVersionConsts {
     /// The build features.
     pub vergen_cargo_features: Cow<'static, str>,
 
-    /// The short version information for reth.
+    /// The short version information for evm.
     pub short_version: Cow<'static, str>,
 
-    /// The long version information for reth.
+    /// The long version information for evm.
     pub long_version: Cow<'static, str>,
     /// The build profile name.
     pub build_profile_name: Cow<'static, str>,
 
-    /// The version information for reth formatted for P2P (devp2p).
+    /// The version information for evm formatted for P2P (devp2p).
     ///
     /// - The latest version from Cargo.toml
     /// - The target triple
@@ -60,9 +60,9 @@ pub struct RethCliVersionConsts {
     /// # Example
     ///
     /// ```text
-    /// reth/v{major}.{minor}.{patch}-{sha1}/{target}
+    /// evm/v{major}.{minor}.{patch}-{sha1}/{target}
     /// ```
-    /// e.g.: `reth/v0.1.0-alpha.1-428a6dc2f/aarch64-apple-darwin`
+    /// e.g.: `evm/v0.1.0-alpha.1-428a6dc2f/aarch64-apple-darwin`
     pub p2p_client_version: Cow<'static, str>,
 
     /// extra data used for payload building
@@ -77,10 +77,10 @@ pub struct RethCliVersionConsts {
 /// # Example
 ///
 /// ```text
-/// reth/v{major}.{minor}.{patch}/{OS}
+/// evm/v{major}.{minor}.{patch}/{OS}
 /// ```
 pub fn default_extra_data() -> String {
-    format!("reth/v{}/{}", env!("CARGO_PKG_VERSION"), std::env::consts::OS)
+    format!("evm/v{}/{}", env!("CARGO_PKG_VERSION"), std::env::consts::OS)
 }
 
 /// The default extra data in bytes.
@@ -100,32 +100,32 @@ pub fn default_client_version() -> ClientVersion {
 }
 
 /// Get a reference to the global version metadata
-pub fn version_metadata() -> &'static RethCliVersionConsts {
-    VERSION_METADATA.get_or_init(default_reth_version_metadata)
+pub fn version_metadata() -> &'static EvmCliVersionConsts {
+    VERSION_METADATA.get_or_init(default_evm_version_metadata)
 }
 
-/// default reth version metadata using compile-time env! macros.
-pub fn default_reth_version_metadata() -> RethCliVersionConsts {
-    RethCliVersionConsts {
-        name_client: Cow::Borrowed("Reth"),
+/// default evm version metadata using compile-time env! macros.
+pub fn default_evm_version_metadata() -> EvmCliVersionConsts {
+    EvmCliVersionConsts {
+        name_client: Cow::Borrowed("Evm"),
         cargo_pkg_version: Cow::Borrowed(env!("CARGO_PKG_VERSION")),
         vergen_git_sha_long: Cow::Borrowed(env!("VERGEN_GIT_SHA")),
         vergen_git_sha: Cow::Borrowed(env!("VERGEN_GIT_SHA_SHORT")),
         vergen_build_timestamp: Cow::Borrowed(env!("VERGEN_BUILD_TIMESTAMP")),
         vergen_cargo_target_triple: Cow::Borrowed(env!("VERGEN_CARGO_TARGET_TRIPLE")),
         vergen_cargo_features: Cow::Borrowed(env!("VERGEN_CARGO_FEATURES")),
-        short_version: Cow::Borrowed(env!("RETH_SHORT_VERSION")),
+        short_version: Cow::Borrowed(env!("EVM_SHORT_VERSION")),
         long_version: Cow::Owned(format!(
             "{}\n{}\n{}\n{}\n{}",
-            env!("RETH_LONG_VERSION_0"),
-            env!("RETH_LONG_VERSION_1"),
-            env!("RETH_LONG_VERSION_2"),
-            env!("RETH_LONG_VERSION_3"),
-            env!("RETH_LONG_VERSION_4"),
+            env!("EVM_LONG_VERSION_0"),
+            env!("EVM_LONG_VERSION_1"),
+            env!("EVM_LONG_VERSION_2"),
+            env!("EVM_LONG_VERSION_3"),
+            env!("EVM_LONG_VERSION_4"),
         )),
 
-        build_profile_name: Cow::Borrowed(env!("RETH_BUILD_PROFILE")),
-        p2p_client_version: Cow::Borrowed(env!("RETH_P2P_CLIENT_VERSION")),
+        build_profile_name: Cow::Borrowed(env!("EVM_BUILD_PROFILE")),
+        p2p_client_version: Cow::Borrowed(env!("EVM_P2P_CLIENT_VERSION")),
         extra_data: Cow::Owned(default_extra_data()),
     }
 }

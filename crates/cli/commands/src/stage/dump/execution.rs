@@ -1,18 +1,18 @@
 use super::setup;
-use reth_consensus::{noop::NoopConsensus, FullConsensus};
-use reth_db::DatabaseEnv;
-use reth_db_api::{
+use hanzo_evm_consensus::{noop::NoopConsensus, FullConsensus};
+use hanzo_evm_db::DatabaseEnv;
+use hanzo_evm_db_api::{
     cursor::DbCursorRO, database::Database, table::TableImporter, tables, transaction::DbTx,
 };
-use reth_db_common::DbTool;
-use reth_evm::ConfigureEvm;
-use reth_node_builder::NodeTypesWithDB;
-use reth_node_core::dirs::{ChainPath, DataDirPath};
-use reth_provider::{
+use hanzo_evm_db_common::DbTool;
+use hanzo_evm_execution::ConfigureEvm;
+use hanzo_evm_node_builder::NodeTypesWithDB;
+use hanzo_evm_node_core::dirs::{ChainPath, DataDirPath};
+use hanzo_evm_provider::{
     providers::{ProviderNodeTypes, RocksDBProvider, StaticFileProvider},
     DatabaseProviderFactory, ProviderFactory,
 };
-use reth_stages::{stages::ExecutionStage, Stage, StageCheckpoint, UnwindInput};
+use hanzo_evm_stages::{stages::ExecutionStage, Stage, StageCheckpoint, UnwindInput};
 use std::sync::Arc;
 use tracing::info;
 
@@ -22,7 +22,7 @@ pub(crate) async fn dump_execution_stage<N, E, C>(
     to: u64,
     output_datadir: ChainPath<DataDirPath>,
     should_run: bool,
-    evm_config: E,
+    hanzo_evm_config: E,
     consensus: C,
 ) -> eyre::Result<()>
 where
@@ -34,7 +34,7 @@ where
 
     import_tables_with_range(&output_db, db_tool, from, to)?;
 
-    unwind_and_copy(db_tool, from, tip_block_number, &output_db, evm_config.clone())?;
+    unwind_and_copy(db_tool, from, tip_block_number, &output_db, hanzo_evm_config.clone())?;
 
     if should_run {
         dry_run(
@@ -46,7 +46,7 @@ where
             )?,
             to,
             from,
-            evm_config,
+            hanzo_evm_config,
             consensus,
         )?;
     }
@@ -133,11 +133,11 @@ fn unwind_and_copy<N: ProviderNodeTypes>(
     from: u64,
     tip_block_number: u64,
     output_db: &DatabaseEnv,
-    evm_config: impl ConfigureEvm<Primitives = N::Primitives>,
+    hanzo_evm_config: impl ConfigureEvm<Primitives = N::Primitives>,
 ) -> eyre::Result<()> {
     let provider = db_tool.provider_factory.database_provider_rw()?;
 
-    let mut exec_stage = ExecutionStage::new_with_executor(evm_config, NoopConsensus::arc());
+    let mut exec_stage = ExecutionStage::new_with_executor(hanzo_evm_config, NoopConsensus::arc());
 
     exec_stage.unwind(
         &provider,
@@ -163,7 +163,7 @@ fn dry_run<N, E, C>(
     output_provider_factory: ProviderFactory<N>,
     to: u64,
     from: u64,
-    evm_config: E,
+    hanzo_evm_config: E,
     consensus: C,
 ) -> eyre::Result<()>
 where
@@ -171,15 +171,15 @@ where
     E: ConfigureEvm<Primitives = N::Primitives> + 'static,
     C: FullConsensus<E::Primitives> + 'static,
 {
-    info!(target: "reth::cli", "Executing stage. [dry-run]");
+    info!(target: "evm::cli", "Executing stage. [dry-run]");
 
-    let mut exec_stage = ExecutionStage::new_with_executor(evm_config, Arc::new(consensus));
+    let mut exec_stage = ExecutionStage::new_with_executor(hanzo_evm_config, Arc::new(consensus));
 
     let input =
-        reth_stages::ExecInput { target: Some(to), checkpoint: Some(StageCheckpoint::new(from)) };
+        hanzo_evm_stages::ExecInput { target: Some(to), checkpoint: Some(StageCheckpoint::new(from)) };
     exec_stage.execute(&output_provider_factory.database_provider_rw()?, input)?;
 
-    info!(target: "reth::cli", "Success");
+    info!(target: "evm::cli", "Success");
 
     Ok(())
 }

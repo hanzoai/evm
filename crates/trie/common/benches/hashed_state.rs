@@ -2,8 +2,8 @@
 use alloy_primitives::{B256, U256};
 use criterion::{black_box, criterion_group, criterion_main, BenchmarkId, Criterion, Throughput};
 use rayon::prelude::{IntoParallelIterator, ParallelIterator};
-use reth_primitives_traits::Account;
-use reth_trie_common::{HashedPostState, HashedStorage};
+use hanzo_evm_primitives_traits::Account;
+use hanzo_evm_trie_common::{HashedPostState, HashedStorage};
 
 /// Generate test data: (`hashed_address`, account, storage)
 fn generate_test_data(size: usize) -> Vec<(B256, Option<Account>, Option<HashedStorage>)> {

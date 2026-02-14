@@ -2,9 +2,9 @@
 
 use alloy_consensus::Block;
 use alloy_rpc_types_engine::{ExecutionData, PayloadError};
-use reth_chainspec::EthereumHardforks;
-use reth_payload_validator::{cancun, prague, shanghai};
-use reth_primitives_traits::{Block as _, SealedBlock, SignedTransaction};
+use hanzo_evm_chainspec::EthereumHardforks;
+use hanzo_evm_payload_validator::{cancun, prague, shanghai};
+use hanzo_evm_primitives_traits::{Block as _, SealedBlock, SignedTransaction};
 use std::sync::Arc;
 
 /// Execution payload validator.

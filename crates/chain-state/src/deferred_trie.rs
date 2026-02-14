@@ -1,7 +1,7 @@
 use alloy_primitives::B256;
 use parking_lot::Mutex;
-use reth_metrics::{metrics::Counter, Metrics};
-use reth_trie::{
+use hanzo_evm_metrics::{metrics::Counter, Metrics};
+use hanzo_evm_trie::{
     updates::{TrieUpdates, TrieUpdatesSorted},
     HashedPostState, HashedPostStateSorted, TrieInputSorted,
 };
@@ -389,8 +389,8 @@ impl ComputedTrieData {
 mod tests {
     use super::*;
     use alloy_primitives::{map::B256Map, U256};
-    use reth_primitives_traits::Account;
-    use reth_trie::updates::TrieUpdates;
+    use hanzo_evm_primitives_traits::Account;
+    use hanzo_evm_trie::updates::TrieUpdates;
     use std::{
         sync::Arc,
         thread,

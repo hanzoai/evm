@@ -31,14 +31,14 @@ jobs:
           RUST_TOOLCHAIN=$(rustc --version | cut -d' ' -f2)
           docker build \
             --build-arg "RUST_TOOLCHAIN=${RUST_TOOLCHAIN}" \
-            -f Dockerfile.reproducible -t reth:release \
+            -f Dockerfile.reproducible -t evm:release \
             --target artifacts \
             --output type=local,dest=./target .
 
       - name: Calculate SHA256
         id: sha256
         run: |
-          sha256sum target/reth > checksum.sha256
+          sha256sum target/evm > checksum.sha256
           echo "Binaries SHA256 on ${{ matrix.machine }}: $(cat checksum.sha256)"
 
       - name: Upload the hash

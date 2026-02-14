@@ -1,6 +1,6 @@
 use crate::{
     error::{RpcError, ServerKind},
-    middleware::RethRpcMiddleware,
+    middleware::EvmRpcMiddleware,
 };
 use http::header::AUTHORIZATION;
 use jsonrpsee::{
@@ -10,18 +10,18 @@ use jsonrpsee::{
     ws_client::RpcServiceBuilder,
     Methods,
 };
-use reth_rpc_api::servers::*;
-use reth_rpc_eth_types::EthSubscriptionIdProvider;
-use reth_rpc_layer::{
+use hanzo_evm_rpc_api::servers::*;
+use hanzo_evm_rpc_eth_types::EthSubscriptionIdProvider;
+use hanzo_evm_rpc_layer::{
     secret_to_bearer_header, AuthClientLayer, AuthLayer, JwtAuthValidator, JwtSecret,
 };
-use reth_rpc_server_types::constants;
+use hanzo_evm_rpc_server_types::constants;
 use std::net::{IpAddr, Ipv4Addr, SocketAddr};
 use tower::layer::util::Identity;
 
 pub use jsonrpsee::server::ServerBuilder;
 use jsonrpsee::server::{ServerConfig, ServerConfigBuilder};
-pub use reth_ipc::server::Builder as IpcServerBuilder;
+pub use hanzo_evm_ipc::server::Builder as IpcServerBuilder;
 
 /// Server configuration for the auth server.
 #[derive(Debug)]
@@ -70,7 +70,7 @@ impl<RpcMiddleware> AuthServerConfig<RpcMiddleware> {
     /// Convenience function to start a server in one step.
     pub async fn start(self, module: AuthRpcModule) -> Result<AuthServerHandle, RpcError>
     where
-        RpcMiddleware: RethRpcMiddleware,
+        RpcMiddleware: EvmRpcMiddleware,
     {
         let Self {
             socket_addr,
@@ -382,7 +382,7 @@ impl AuthServerHandle {
     /// Returns an ipc client connected to the server.
     #[cfg(unix)]
     pub async fn ipc_client(&self) -> Option<jsonrpsee::async_client::Client> {
-        use reth_ipc::client::IpcClientBuilder;
+        use hanzo_evm_ipc::client::IpcClientBuilder;
 
         if let Some(ipc_endpoint) = &self.ipc_endpoint {
             return Some(

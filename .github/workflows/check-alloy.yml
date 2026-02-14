@@ -1,4 +1,4 @@
-# Checks reth compilation against alloy branches to detect breaking changes.
+# Checks evm compilation against alloy branches to detect breaking changes.
 # Run on-demand via workflow_dispatch.
 
 name: Check Alloy Breaking Changes

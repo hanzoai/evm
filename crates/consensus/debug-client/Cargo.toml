@@ -1,5 +1,5 @@
 [package]
-name = "reth-consensus-debug-client"
+name = "hanzo-evm-consensus-debug-client"
 version.workspace = true
 edition.workspace = true
 rust-version.workspace = true
@@ -11,10 +11,10 @@ repository.workspace = true
 workspace = true
 
 [dependencies]
-# reth
-reth-node-api.workspace = true
-reth-tracing.workspace = true
-reth-primitives-traits.workspace = true
+# evm
+hanzo-evm-node-api.workspace = true
+hanzo-evm-tracing.workspace = true
+hanzo-evm-primitives-traits.workspace = true
 
 # ethereum
 alloy-consensus = { workspace = true, features = ["serde"] }

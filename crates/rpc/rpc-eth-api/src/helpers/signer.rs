@@ -4,7 +4,7 @@ use alloy_dyn_abi::TypedData;
 use alloy_primitives::{Address, Signature};
 use alloy_rpc_types_eth::TransactionRequest;
 use dyn_clone::DynClone;
-use reth_rpc_eth_types::SignError;
+use hanzo_evm_rpc_eth_types::SignError;
 use std::result;
 
 /// Result returned by [`EthSigner`] methods.

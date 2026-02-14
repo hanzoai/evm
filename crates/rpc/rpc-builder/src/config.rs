@@ -1,9 +1,9 @@
 use jsonrpsee::server::ServerConfigBuilder;
-use reth_node_core::{args::RpcServerArgs, utils::get_or_create_jwt_secret_from_path};
-use reth_rpc::ValidationApiConfig;
-use reth_rpc_eth_types::{EthConfig, EthStateCacheConfig, GasPriceOracleConfig};
-use reth_rpc_layer::{JwtError, JwtSecret};
-use reth_rpc_server_types::RpcModuleSelection;
+use hanzo_evm_node_core::{args::RpcServerArgs, utils::get_or_create_jwt_secret_from_path};
+use hanzo_evm_rpc::ValidationApiConfig;
+use hanzo_evm_rpc_eth_types::{EthConfig, EthStateCacheConfig, GasPriceOracleConfig};
+use hanzo_evm_rpc_layer::{JwtError, JwtSecret};
+use hanzo_evm_rpc_server_types::RpcModuleSelection;
 use std::{net::SocketAddr, path::PathBuf};
 use tower::layer::util::Identity;
 use tracing::{debug, warn};
@@ -17,7 +17,7 @@ use crate::{
 ///
 /// This provides all basic config values for the RPC server and is implemented by the
 /// [`RpcServerArgs`] type.
-pub trait RethRpcServerConfig {
+pub trait EvmRpcServerConfig {
     /// Returns whether ipc is enabled.
     fn is_ipc_enabled(&self) -> bool;
 
@@ -81,7 +81,7 @@ pub trait RethRpcServerConfig {
     fn rpc_secret_key(&self) -> Option<JwtSecret>;
 }
 
-impl RethRpcServerConfig for RpcServerArgs {
+impl EvmRpcServerConfig for RpcServerArgs {
     fn is_ipc_enabled(&self) -> bool {
         // By default IPC is enabled therefore it is enabled if the `ipcdisable` is false.
         !self.ipcdisable
@@ -188,14 +188,14 @@ impl RethRpcServerConfig for RpcServerArgs {
 
         if self.http_api.is_some() && !self.http {
             warn!(
-                target: "reth::cli",
+                target: "evm::cli",
                 "The --http.api flag is set but --http is not enabled. HTTP RPC API will not be exposed."
             );
         }
 
         if self.ws_api.is_some() && !self.ws {
             warn!(
-                target: "reth::cli",
+                target: "evm::cli",
                 "The --ws.api flag is set but --ws is not enabled. WS RPC API will not be exposed."
             );
         }
@@ -241,7 +241,7 @@ impl RethRpcServerConfig for RpcServerArgs {
     fn auth_jwt_secret(&self, default_jwt_path: PathBuf) -> Result<JwtSecret, JwtError> {
         match self.auth_jwtsecret.as_ref() {
             Some(fpath) => {
-                debug!(target: "reth::cli", user_path=?fpath, "Reading JWT auth secret file");
+                debug!(target: "evm::cli", user_path=?fpath, "Reading JWT auth secret file");
                 JwtSecret::from_file(fpath)
             }
             None => get_or_create_jwt_secret_from_path(&default_jwt_path),
@@ -256,12 +256,12 @@ impl RethRpcServerConfig for RpcServerArgs {
 #[cfg(test)]
 mod tests {
     use clap::{Args, Parser};
-    use reth_node_core::args::RpcServerArgs;
-    use reth_rpc_eth_types::RPC_DEFAULT_GAS_CAP;
-    use reth_rpc_server_types::{constants, RethRpcModule, RpcModuleSelection};
+    use hanzo_evm_node_core::args::RpcServerArgs;
+    use hanzo_evm_rpc_eth_types::RPC_DEFAULT_GAS_CAP;
+    use hanzo_evm_rpc_server_types::{constants, EvmRpcModule, RpcModuleSelection};
     use std::net::{Ipv4Addr, SocketAddr, SocketAddrV4};
 
-    use crate::config::RethRpcServerConfig;
+    use crate::config::EvmRpcServerConfig;
 
     /// A helper type to parse Args more easily
     #[derive(Parser)]
@@ -272,23 +272,23 @@ mod tests {
 
     #[test]
     fn test_rpc_gas_cap() {
-        let args = CommandParser::<RpcServerArgs>::parse_from(["reth"]).args;
+        let args = CommandParser::<RpcServerArgs>::parse_from(["evm"]).args;
         let config = args.eth_config();
         assert_eq!(config.rpc_gas_cap, u64::from(RPC_DEFAULT_GAS_CAP));
 
         let args =
-            CommandParser::<RpcServerArgs>::parse_from(["reth", "--rpc.gascap", "1000"]).args;
+            CommandParser::<RpcServerArgs>::parse_from(["evm", "--rpc.gascap", "1000"]).args;
         let config = args.eth_config();
         assert_eq!(config.rpc_gas_cap, 1000);
 
-        let args = CommandParser::<RpcServerArgs>::try_parse_from(["reth", "--rpc.gascap", "0"]);
+        let args = CommandParser::<RpcServerArgs>::try_parse_from(["evm", "--rpc.gascap", "0"]);
         assert!(args.is_err());
     }
 
     #[test]
     fn test_transport_rpc_module_config() {
         let args = CommandParser::<RpcServerArgs>::parse_from([
-            "reth",
+            "evm",
             "--http.api",
             "eth,admin,debug",
             "--http",
@@ -296,7 +296,7 @@ mod tests {
         ])
         .args;
         let config = args.transport_rpc_module_config();
-        let expected = [RethRpcModule::Eth, RethRpcModule::Admin, RethRpcModule::Debug];
+        let expected = [EvmRpcModule::Eth, EvmRpcModule::Admin, EvmRpcModule::Debug];
         assert_eq!(config.http().cloned().unwrap().into_selection(), expected.into());
         assert_eq!(
             config.ws().cloned().unwrap().into_selection(),
@@ -307,7 +307,7 @@ mod tests {
     #[test]
     fn test_transport_rpc_module_trim_config() {
         let args = CommandParser::<RpcServerArgs>::parse_from([
-            "reth",
+            "evm",
             "--http.api",
             " eth, admin, debug",
             "--http",
@@ -315,7 +315,7 @@ mod tests {
         ])
         .args;
         let config = args.transport_rpc_module_config();
-        let expected = [RethRpcModule::Eth, RethRpcModule::Admin, RethRpcModule::Debug];
+        let expected = [EvmRpcModule::Eth, EvmRpcModule::Admin, EvmRpcModule::Debug];
         assert_eq!(config.http().cloned().unwrap().into_selection(), expected.into());
         assert_eq!(
             config.ws().cloned().unwrap().into_selection(),
@@ -326,7 +326,7 @@ mod tests {
     #[test]
     fn test_unique_rpc_modules() {
         let args = CommandParser::<RpcServerArgs>::parse_from([
-            "reth",
+            "evm",
             "--http.api",
             " eth, admin, debug, eth,admin",
             "--http",
@@ -334,7 +334,7 @@ mod tests {
         ])
         .args;
         let config = args.transport_rpc_module_config();
-        let expected = [RethRpcModule::Eth, RethRpcModule::Admin, RethRpcModule::Debug];
+        let expected = [EvmRpcModule::Eth, EvmRpcModule::Admin, EvmRpcModule::Debug];
         assert_eq!(config.http().cloned().unwrap().into_selection(), expected.into());
         assert_eq!(
             config.ws().cloned().unwrap().into_selection(),
@@ -345,7 +345,7 @@ mod tests {
     #[test]
     fn test_rpc_server_config() {
         let args = CommandParser::<RpcServerArgs>::parse_from([
-            "reth",
+            "evm",
             "--http.api",
             "eth,admin,debug",
             "--http",
@@ -374,7 +374,7 @@ mod tests {
     #[test]
     fn test_zero_filter_limits() {
         let args = CommandParser::<RpcServerArgs>::parse_from([
-            "reth",
+            "evm",
             "--rpc-max-blocks-per-filter",
             "0",
             "--rpc-max-logs-per-response",
@@ -390,7 +390,7 @@ mod tests {
     #[test]
     fn test_custom_filter_limits() {
         let args = CommandParser::<RpcServerArgs>::parse_from([
-            "reth",
+            "evm",
             "--rpc-max-blocks-per-filter",
             "100",
             "--rpc-max-logs-per-response",

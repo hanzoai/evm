@@ -2,8 +2,8 @@
 
 use clap::Parser;
 use eyre::WrapErr;
-use reth_tracing::{tracing_subscriber::EnvFilter, Layers};
-use reth_tracing_otlp::OtlpProtocol;
+use hanzo_evm_tracing::{tracing_subscriber::EnvFilter, Layers};
+use hanzo_evm_tracing_otlp::OtlpProtocol;
 use url::Url;
 
 /// CLI arguments for configuring `Opentelemetry` trace and logs export.
@@ -101,7 +101,7 @@ pub struct TraceArgs {
     /// Service name to use for OTLP tracing export.
     ///
     /// This name will be used to identify the service in distributed tracing systems
-    /// like Jaeger or Zipkin. Useful for differentiating between multiple reth instances.
+    /// like Jaeger or Zipkin. Useful for differentiating between multiple evm instances.
     ///
     /// Set via `OTEL_SERVICE_NAME` environment variable. Defaults to "reth" if not specified.
     #[arg(
@@ -109,7 +109,7 @@ pub struct TraceArgs {
         env = "OTEL_SERVICE_NAME",
         global = true,
         value_name = "NAME",
-        default_value = "reth",
+        default_value = "evm",
         hide = true,
         help_heading = "Tracing"
     )]
@@ -142,7 +142,7 @@ impl Default for TraceArgs {
             otlp_filter: EnvFilter::from_default_env(),
             logs_otlp_filter: EnvFilter::try_new("info").expect("valid filter"),
             sample_ratio: None,
-            service_name: "reth".to_string(),
+            service_name: "evm".to_string(),
         }
     }
 }
@@ -168,7 +168,7 @@ impl TraceArgs {
             #[cfg(feature = "otlp")]
             {
                 {
-                    let config = reth_tracing_otlp::OtlpConfig::new(
+                    let config = hanzo_evm_tracing_otlp::OtlpConfig::new(
                         self.service_name.clone(),
                         endpoint.clone(),
                         self.protocol,
@@ -201,7 +201,7 @@ impl TraceArgs {
 
             #[cfg(feature = "otlp-logs")]
             {
-                let config = reth_tracing_otlp::OtlpLogsConfig::new(
+                let config = hanzo_evm_tracing_otlp::OtlpLogsConfig::new(
                     self.service_name.clone(),
                     endpoint.clone(),
                     self.protocol,

@@ -7,12 +7,12 @@ use crate::{
     state::{NetworkState, StateAction},
 };
 use futures::Stream;
-use reth_eth_wire::{
+use hanzo_evm_eth_wire::{
     errors::EthStreamError, Capabilities, DisconnectReason, EthNetworkPrimitives, EthVersion,
     NetworkPrimitives, UnifiedStatus,
 };
-use reth_network_api::{PeerRequest, PeerRequestSender};
-use reth_network_peers::PeerId;
+use hanzo_evm_network_api::{PeerRequest, PeerRequestSender};
+use hanzo_evm_network_peers::PeerId;
 use std::{
     io,
     net::SocketAddr,

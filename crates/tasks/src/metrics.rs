@@ -2,7 +2,7 @@
 
 use core::fmt;
 
-use reth_metrics::{metrics::Counter, Metrics};
+use hanzo_evm_metrics::{metrics::Counter, Metrics};
 
 /// Task Executor Metrics
 #[derive(Metrics, Clone)]

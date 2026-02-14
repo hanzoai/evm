@@ -1,17 +1,17 @@
 //! Utilities for end-to-end tests.
 
 use node::NodeTestContext;
-use reth_chainspec::ChainSpec;
-use reth_db::{test_utils::TempDatabase, DatabaseEnv};
-use reth_network_api::test_utils::PeersHandleProvider;
-use reth_node_builder::{
+use hanzo_evm_chainspec::ChainSpec;
+use hanzo_evm_db::{test_utils::TempDatabase, DatabaseEnv};
+use hanzo_evm_network_api::test_utils::PeersHandleProvider;
+use hanzo_evm_node_builder::{
     components::NodeComponentsBuilder,
-    rpc::{EngineValidatorAddOn, RethRpcAddOns},
+    rpc::{EngineValidatorAddOn, EvmRpcAddOns},
     FullNodeTypesAdapter, Node, NodeAdapter, NodeComponents, NodeTypes, NodeTypesWithDBAdapter,
     PayloadTypes,
 };
-use reth_provider::providers::{BlockchainProvider, NodeTypesForProvider};
-use reth_tasks::TaskManager;
+use hanzo_evm_provider::providers::{BlockchainProvider, NodeTypesForProvider};
+use hanzo_evm_tasks::TaskManager;
 use std::sync::Arc;
 use wallet::Wallet;
 
@@ -65,7 +65,7 @@ pub async fn setup_engine<N>(
     num_nodes: usize,
     chain_spec: Arc<N::ChainSpec>,
     is_dev: bool,
-    tree_config: reth_node_api::TreeConfig,
+    tree_config: hanzo_evm_node_api::TreeConfig,
     attributes_generator: impl Fn(u64) -> <<N as NodeTypes>::Payload as PayloadTypes>::PayloadBuilderAttributes + Send + Sync + Copy + 'static,
 ) -> eyre::Result<(
     Vec<NodeHelperType<N, BlockchainProvider<NodeTypesWithDBAdapter<N, TmpDB>>>>,
@@ -91,7 +91,7 @@ pub async fn setup_engine_with_connection<N>(
     num_nodes: usize,
     chain_spec: Arc<N::ChainSpec>,
     is_dev: bool,
-    tree_config: reth_node_api::TreeConfig,
+    tree_config: hanzo_evm_node_api::TreeConfig,
     attributes_generator: impl Fn(u64) -> <<N as NodeTypes>::Payload as PayloadTypes>::PayloadBuilderAttributes + Send + Sync + Copy + 'static,
     connect_nodes: bool,
 ) -> eyre::Result<(
@@ -138,7 +138,7 @@ where
     Self: Default
         + NodeTypesForProvider<
             Payload: PayloadTypes<
-                PayloadBuilderAttributes: From<reth_payload_builder::EthPayloadBuilderAttributes>,
+                PayloadBuilderAttributes: From<hanzo_evm_payload_builder::EthPayloadBuilderAttributes>,
             >,
         > + Node<
             TmpNodeAdapter<Self, BlockchainProvider<NodeTypesWithDBAdapter<Self, TmpDB>>>,
@@ -149,7 +149,7 @@ where
                     Network: PeersHandleProvider,
                 >,
             >,
-            AddOns: RethRpcAddOns<
+            AddOns: EvmRpcAddOns<
                 Adapter<Self, BlockchainProvider<NodeTypesWithDBAdapter<Self, TmpDB>>>,
             > + EngineValidatorAddOn<
                 Adapter<Self, BlockchainProvider<NodeTypesWithDBAdapter<Self, TmpDB>>>,
@@ -163,7 +163,7 @@ impl<T> NodeBuilderHelper for T where
     Self: Default
         + NodeTypesForProvider<
             Payload: PayloadTypes<
-                PayloadBuilderAttributes: From<reth_payload_builder::EthPayloadBuilderAttributes>,
+                PayloadBuilderAttributes: From<hanzo_evm_payload_builder::EthPayloadBuilderAttributes>,
             >,
         > + Node<
             TmpNodeAdapter<Self, BlockchainProvider<NodeTypesWithDBAdapter<Self, TmpDB>>>,
@@ -174,7 +174,7 @@ impl<T> NodeBuilderHelper for T where
                     Network: PeersHandleProvider,
                 >,
             >,
-            AddOns: RethRpcAddOns<
+            AddOns: EvmRpcAddOns<
                 Adapter<Self, BlockchainProvider<NodeTypesWithDBAdapter<Self, TmpDB>>>,
             > + EngineValidatorAddOn<
                 Adapter<Self, BlockchainProvider<NodeTypesWithDBAdapter<Self, TmpDB>>>,

@@ -2,9 +2,9 @@ use alloc::vec::Vec;
 use alloy_consensus::{proofs::calculate_receipt_root, BlockHeader, TxReceipt};
 use alloy_eips::{eip7685::Requests, Encodable2718};
 use alloy_primitives::{Bloom, Bytes, B256};
-use reth_chainspec::EthereumHardforks;
-use reth_consensus::ConsensusError;
-use reth_primitives_traits::{
+use hanzo_evm_chainspec::EthereumHardforks;
+use hanzo_evm_consensus::ConsensusError;
+use hanzo_evm_primitives_traits::{
     receipt::gas_spent_by_transactions, Block, GotExpected, Receipt, RecoveredBlock,
 };
 
@@ -128,7 +128,7 @@ fn compare_receipts_root_and_logs_bloom(
 mod tests {
     use super::*;
     use alloy_primitives::{b256, hex};
-    use reth_ethereum_primitives::Receipt;
+    use hanzo_evm_ethereum_primitives::Receipt;
 
     #[test]
     fn test_verify_receipts_success() {

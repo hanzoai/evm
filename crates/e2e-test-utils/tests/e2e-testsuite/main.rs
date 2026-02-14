@@ -3,8 +3,8 @@
 use alloy_primitives::{Address, B256};
 use alloy_rpc_types_engine::PayloadAttributes;
 use eyre::Result;
-use reth_chainspec::{ChainSpecBuilder, MAINNET};
-use reth_e2e_test_utils::{
+use hanzo_evm_chainspec::{ChainSpecBuilder, MAINNET};
+use hanzo_evm_e2e_test_utils::{
     test_rlp_utils::{generate_test_blocks, write_blocks_to_rlp},
     testsuite::{
         actions::{
@@ -17,16 +17,16 @@ use reth_e2e_test_utils::{
     },
     E2ETestSetupBuilder,
 };
-use reth_node_api::TreeConfig;
-use reth_node_ethereum::{EthEngineTypes, EthereumNode};
-use reth_payload_builder::EthPayloadBuilderAttributes;
+use hanzo_evm_node_api::TreeConfig;
+use hanzo_evm_node_ethereum::{EthEngineTypes, EthereumNode};
+use hanzo_evm_payload_builder::EthPayloadBuilderAttributes;
 use std::sync::Arc;
 use tempfile::TempDir;
 use tracing::debug;
 
 #[tokio::test]
 async fn test_apply_with_import() -> Result<()> {
-    reth_tracing::init_test_tracing();
+    hanzo_evm_tracing::init_test_tracing();
 
     // Create test chain spec
     let chain_spec = Arc::new(
@@ -78,13 +78,13 @@ async fn test_apply_with_import() -> Result<()> {
     loop {
         // Check if we can get the block from RPC (indicates pipeline finished)
         let client = &env.node_clients[0];
-        let block_result = reth_rpc_api::clients::EthApiClient::<
+        let block_result = hanzo_evm_rpc_api::clients::EthApiClient::<
             alloy_rpc_types_eth::TransactionRequest,
             alloy_rpc_types_eth::Transaction,
             alloy_rpc_types_eth::Block,
             alloy_rpc_types_eth::Receipt,
             alloy_rpc_types_eth::Header,
-            reth_ethereum_primitives::TransactionSigned,
+            hanzo_evm_ethereum_primitives::TransactionSigned,
         >::block_by_number(
             &client.rpc,
             alloy_eips::BlockNumberOrTag::Number(10),
@@ -129,7 +129,7 @@ async fn test_apply_with_import() -> Result<()> {
 
 #[tokio::test]
 async fn test_testsuite_assert_mine_block() -> Result<()> {
-    reth_tracing::init_test_tracing();
+    hanzo_evm_tracing::init_test_tracing();
 
     let setup = Setup::default()
         .with_chain_spec(Arc::new(
@@ -171,7 +171,7 @@ async fn test_testsuite_assert_mine_block() -> Result<()> {
 
 #[tokio::test]
 async fn test_testsuite_produce_blocks() -> Result<()> {
-    reth_tracing::init_test_tracing();
+    hanzo_evm_tracing::init_test_tracing();
 
     let setup = Setup::default()
         .with_chain_spec(Arc::new(
@@ -200,7 +200,7 @@ async fn test_testsuite_produce_blocks() -> Result<()> {
 
 #[tokio::test]
 async fn test_testsuite_create_fork() -> Result<()> {
-    reth_tracing::init_test_tracing();
+    hanzo_evm_tracing::init_test_tracing();
 
     let setup = Setup::default()
         .with_chain_spec(Arc::new(
@@ -230,7 +230,7 @@ async fn test_testsuite_create_fork() -> Result<()> {
 
 #[tokio::test]
 async fn test_testsuite_reorg_with_tagging() -> Result<()> {
-    reth_tracing::init_test_tracing();
+    hanzo_evm_tracing::init_test_tracing();
 
     let setup = Setup::default()
         .with_chain_spec(Arc::new(
@@ -262,7 +262,7 @@ async fn test_testsuite_reorg_with_tagging() -> Result<()> {
 
 #[tokio::test]
 async fn test_testsuite_deep_reorg() -> Result<()> {
-    reth_tracing::init_test_tracing();
+    hanzo_evm_tracing::init_test_tracing();
 
     let setup = Setup::default()
         .with_chain_spec(Arc::new(
@@ -312,7 +312,7 @@ async fn test_testsuite_deep_reorg() -> Result<()> {
 /// - Node-specific state is properly tracked
 #[tokio::test]
 async fn test_testsuite_multinode_block_production() -> Result<()> {
-    reth_tracing::init_test_tracing();
+    hanzo_evm_tracing::init_test_tracing();
 
     let setup = Setup::default()
         .with_chain_spec(Arc::new(
@@ -355,7 +355,7 @@ async fn test_testsuite_multinode_block_production() -> Result<()> {
 
 #[tokio::test]
 async fn test_setup_builder_with_custom_tree_config() -> Result<()> {
-    reth_tracing::init_test_tracing();
+    hanzo_evm_tracing::init_test_tracing();
 
     let chain_spec = Arc::new(
         ChainSpecBuilder::default()

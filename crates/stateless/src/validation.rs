@@ -13,17 +13,17 @@ use alloc::{
 };
 use alloy_consensus::{BlockHeader, Header};
 use alloy_primitives::{keccak256, B256};
-use reth_chainspec::{EthChainSpec, EthereumHardforks};
-use reth_consensus::{Consensus, HeaderValidator};
-use reth_errors::ConsensusError;
-use reth_ethereum_consensus::{validate_block_post_execution, EthBeaconConsensus};
-use reth_ethereum_primitives::{Block, EthPrimitives, EthereumReceipt};
-use reth_evm::{
+use hanzo_evm_chainspec::{EthChainSpec, EthereumHardforks};
+use hanzo_evm_consensus::{Consensus, HeaderValidator};
+use hanzo_evm_errors::ConsensusError;
+use hanzo_evm_ethereum_consensus::{validate_block_post_execution, EthBeaconConsensus};
+use hanzo_evm_ethereum_primitives::{Block, EthPrimitives, EthereumReceipt};
+use hanzo_evm_execution::{
     execute::{BlockExecutionOutput, Executor},
     ConfigureEvm,
 };
-use reth_primitives_traits::{RecoveredBlock, SealedHeader};
-use reth_trie_common::{HashedPostState, KeccakKeyHasher};
+use hanzo_evm_primitives_traits::{RecoveredBlock, SealedHeader};
+use hanzo_evm_trie_common::{HashedPostState, KeccakKeyHasher};
 
 /// BLOCKHASH ancestor lookup window limit per EVM (number of most recent blocks accessible).
 const BLOCKHASH_ANCESTOR_LIMIT: usize = 256;
@@ -146,7 +146,7 @@ pub fn stateless_validation<ChainSpec, E>(
     public_keys: Vec<UncompressedPublicKey>,
     witness: ExecutionWitness,
     chain_spec: Arc<ChainSpec>,
-    evm_config: E,
+    hanzo_evm_config: E,
 ) -> Result<(B256, BlockExecutionOutput<EthereumReceipt>), StatelessValidationError>
 where
     ChainSpec: Send + Sync + EthChainSpec<Header = Header> + EthereumHardforks + Debug,
@@ -157,7 +157,7 @@ where
         public_keys,
         witness,
         chain_spec,
-        evm_config,
+        hanzo_evm_config,
     )
 }
 
@@ -172,7 +172,7 @@ pub fn stateless_validation_with_trie<T, ChainSpec, E>(
     public_keys: Vec<UncompressedPublicKey>,
     witness: ExecutionWitness,
     chain_spec: Arc<ChainSpec>,
-    evm_config: E,
+    hanzo_evm_config: E,
 ) -> Result<(B256, BlockExecutionOutput<EthereumReceipt>), StatelessValidationError>
 where
     T: StatelessTrie,
@@ -225,7 +225,7 @@ where
     let db = WitnessDatabase::new(&trie, bytecode, ancestor_hashes);
 
     // Execute the block
-    let executor = evm_config.executor(db);
+    let executor = hanzo_evm_config.executor(db);
     let output = executor
         .execute(&current_block)
         .map_err(|e| StatelessValidationError::StatelessExecutionFailed(e.to_string()))?;

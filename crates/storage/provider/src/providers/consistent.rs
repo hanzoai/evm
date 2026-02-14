@@ -16,20 +16,20 @@ use alloy_primitives::{
     map::{hash_map, HashMap},
     Address, BlockHash, BlockNumber, TxHash, TxNumber, B256,
 };
-use reth_chain_state::{BlockState, CanonicalInMemoryState, MemoryOverlayStateProviderRef};
-use reth_chainspec::ChainInfo;
-use reth_db_api::models::{AccountBeforeTx, BlockNumberAddress, StoredBlockBodyIndices};
-use reth_execution_types::{BundleStateInit, ExecutionOutcome, RevertsInit};
-use reth_node_types::{BlockTy, HeaderTy, ReceiptTy, TxTy};
-use reth_primitives_traits::{Account, BlockBody, RecoveredBlock, SealedHeader, StorageEntry};
-use reth_prune_types::{PruneCheckpoint, PruneSegment};
-use reth_stages_types::{StageCheckpoint, StageId};
-use reth_static_file_types::StaticFileSegment;
-use reth_storage_api::{
+use hanzo_evm_chain_state::{BlockState, CanonicalInMemoryState, MemoryOverlayStateProviderRef};
+use hanzo_evm_chainspec::ChainInfo;
+use hanzo_evm_db_api::models::{AccountBeforeTx, BlockNumberAddress, StoredBlockBodyIndices};
+use hanzo_evm_execution_types::{BundleStateInit, ExecutionOutcome, RevertsInit};
+use hanzo_evm_node_types::{BlockTy, HeaderTy, ReceiptTy, TxTy};
+use hanzo_evm_primitives_traits::{Account, BlockBody, RecoveredBlock, SealedHeader, StorageEntry};
+use hanzo_evm_prune_types::{PruneCheckpoint, PruneSegment};
+use hanzo_evm_stages_types::{StageCheckpoint, StageId};
+use hanzo_evm_static_file_types::StaticFileSegment;
+use hanzo_evm_storage_api::{
     BlockBodyIndicesProvider, DatabaseProviderFactory, NodePrimitivesProvider, StateProvider,
     StateProviderBox, StorageChangeSetReader, TryIntoHistoricalStateProvider,
 };
-use reth_storage_errors::provider::ProviderResult;
+use hanzo_evm_storage_errors::provider::ProviderResult;
 use revm_database::states::PlainStorageRevert;
 use std::{
     ops::{Add, Bound, RangeBounds, RangeInclusive, Sub},
@@ -215,7 +215,7 @@ impl<N: ProviderNodeTypes> ConsistentProvider<N> {
     }
 
     /// Populate a [`BundleStateInit`] and [`RevertsInit`] using cursors over the
-    /// [`reth_db::PlainAccountState`] and [`reth_db::PlainStorageState`] tables, based on the given
+    /// [`hanzo_evm_db::PlainAccountState`] and [`hanzo_evm_db::PlainStorageState`] tables, based on the given
     /// storage and account changesets.
     fn populate_bundle_state(
         &self,
@@ -1700,13 +1700,13 @@ mod tests {
     use alloy_primitives::B256;
     use itertools::Itertools;
     use rand::Rng;
-    use reth_chain_state::{ExecutedBlock, NewCanonicalChain};
-    use reth_db_api::models::AccountBeforeTx;
-    use reth_ethereum_primitives::Block;
-    use reth_execution_types::{BlockExecutionOutput, BlockExecutionResult, ExecutionOutcome};
-    use reth_primitives_traits::{RecoveredBlock, SealedBlock};
-    use reth_storage_api::{BlockReader, BlockSource, ChangeSetReader};
-    use reth_testing_utils::generators::{
+    use hanzo_evm_chain_state::{ExecutedBlock, NewCanonicalChain};
+    use hanzo_evm_db_api::models::AccountBeforeTx;
+    use hanzo_evm_ethereum_primitives::Block;
+    use hanzo_evm_execution_types::{BlockExecutionOutput, BlockExecutionResult, ExecutionOutcome};
+    use hanzo_evm_primitives_traits::{RecoveredBlock, SealedBlock};
+    use hanzo_evm_storage_api::{BlockReader, BlockSource, ChangeSetReader};
+    use hanzo_evm_testing_utils::generators::{
         self, random_block_range, random_changeset_range, random_eoa_accounts, BlockRangeParams,
     };
     use revm_database::BundleState;

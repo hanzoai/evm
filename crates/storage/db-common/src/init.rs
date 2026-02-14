@@ -1,4 +1,4 @@
-//! Reth genesis initialization utility functions.
+//! Hanzo EVM genesis initialization utility functions.
 
 use alloy_consensus::BlockHeader;
 use alloy_genesis::GenesisAccount;
@@ -7,21 +7,21 @@ use alloy_primitives::{
     map::{AddressMap, B256Map, HashMap},
     Address, B256, U256,
 };
-use reth_chainspec::EthChainSpec;
-use reth_codecs::Compact;
-use reth_config::config::EtlConfig;
-use reth_db_api::{
+use hanzo_evm_chainspec::EthChainSpec;
+use hanzo_evm_codecs::Compact;
+use hanzo_evm_config::config::EtlConfig;
+use hanzo_evm_db_api::{
     models::{storage_sharded_key::StorageShardedKey, ShardedKey},
     tables,
     transaction::DbTxMut,
     BlockNumberList, DatabaseError,
 };
-use reth_etl::Collector;
-use reth_execution_errors::StateRootError;
-use reth_primitives_traits::{
+use hanzo_evm_etl::Collector;
+use hanzo_evm_execution_errors::StateRootError;
+use hanzo_evm_primitives_traits::{
     Account, Bytecode, GotExpected, NodePrimitives, SealedHeader, StorageEntry,
 };
-use reth_provider::{
+use hanzo_evm_provider::{
     errors::provider::ProviderResult, providers::StaticFileWriter, BlockHashReader, BlockNumReader,
     BundleStateInit, ChainSpecProvider, DBProvider, DatabaseProviderFactory, EitherWriter,
     ExecutionOutcome, HashingWriter, HeaderProvider, HistoryWriter, MetadataProvider,
@@ -29,13 +29,13 @@ use reth_provider::{
     RocksDBProviderFactory, StageCheckpointReader, StageCheckpointWriter, StateWriteConfig,
     StateWriter, StaticFileProviderFactory, StorageSettings, StorageSettingsCache, TrieWriter,
 };
-use reth_stages_types::{StageCheckpoint, StageId};
-use reth_static_file_types::StaticFileSegment;
-use reth_trie::{
+use hanzo_evm_stages_types::{StageCheckpoint, StageId};
+use hanzo_evm_static_file_types::StaticFileSegment;
+use hanzo_evm_trie::{
     prefix_set::{TriePrefixSets, TriePrefixSetsMut},
     IntermediateStateRootState, Nibbles, StateRoot as StateRootComputer, StateRootProgress,
 };
-use reth_trie_db::DatabaseStateRoot;
+use hanzo_evm_trie_db::DatabaseStateRoot;
 use serde::{Deserialize, Serialize};
 use std::io::BufRead;
 use tracing::{debug, error, info, trace, warn};
@@ -166,14 +166,14 @@ where
                 // database. Since `factory.block_hash` will only query the static files, we need to
                 // make sure that our database has been written to, and throw error if it's empty.
                 if factory.get_stage_checkpoint(StageId::Headers)?.is_none() {
-                    error!(target: "reth::storage", "Genesis header found on static files, but database is uninitialized.");
+                    error!(target: "evm::storage", "Genesis header found on static files, but database is uninitialized.");
                     return Err(InitStorageError::UninitializedDatabase)
                 }
 
                 let stored = factory.storage_settings()?.unwrap_or_else(StorageSettings::v1);
                 if stored != genesis_storage_settings {
                     warn!(
-                        target: "reth::storage",
+                        target: "evm::storage",
                         ?stored,
                         requested = ?genesis_storage_settings,
                         "Storage settings mismatch detected"
@@ -377,7 +377,7 @@ where
         StateWriteConfig::default(),
     )?;
 
-    trace!(target: "reth::cli", "Inserted state");
+    trace!(target: "evm::cli", "Inserted state");
 
     Ok(())
 }
@@ -394,7 +394,7 @@ where
     let alloc_accounts = alloc.clone().map(|(addr, account)| (*addr, Some(Account::from(account))));
     provider.insert_account_for_hashing(alloc_accounts)?;
 
-    trace!(target: "reth::cli", "Inserted account hashes");
+    trace!(target: "evm::cli", "Inserted account hashes");
 
     let alloc_storage = alloc.filter_map(|(addr, account)| {
         // only return Some if there is storage
@@ -404,7 +404,7 @@ where
     });
     provider.insert_storage_for_hashing(alloc_storage)?;
 
-    trace!(target: "reth::cli", "Inserted storage hashes");
+    trace!(target: "evm::cli", "Inserted storage hashes");
 
     Ok(())
 }
@@ -451,7 +451,7 @@ where
         for (addr, _) in alloc.clone() {
             writer.upsert_account_history(ShardedKey::last(*addr), &list)?;
         }
-        trace!(target: "reth::cli", "Inserted account history");
+        trace!(target: "evm::cli", "Inserted account history");
         Ok(((), writer.into_raw_rocksdb_batch()))
     })?;
 
@@ -465,7 +465,7 @@ where
                 }
             }
         }
-        trace!(target: "reth::cli", "Inserted storage history");
+        trace!(target: "evm::cli", "Inserted storage history");
         Ok(((), writer.into_raw_rocksdb_batch()))
     })?;
 
@@ -567,7 +567,7 @@ where
     // first line can be state root
     let dump_state_root = parse_state_root(&mut reader)?;
     if expected_state_root != dump_state_root {
-        error!(target: "reth::cli",
+        error!(target: "evm::cli",
             ?dump_state_root,
             ?expected_state_root,
             header=?header.num_hash(),
@@ -580,7 +580,7 @@ where
         .into())
     }
 
-    debug!(target: "reth::cli",
+    debug!(target: "evm::cli",
         block,
         chain=%provider_rw.chain_spec().chain(),
         "Initializing state at block"
@@ -593,17 +593,17 @@ where
     let mut prefix_sets = TriePrefixSetsMut::default();
     dump_state(collector, provider_rw, block, &mut prefix_sets)?;
 
-    info!(target: "reth::cli", "All accounts written to database, starting state root computation (may take some time)");
+    info!(target: "evm::cli", "All accounts written to database, starting state root computation (may take some time)");
 
     // compute and compare state root. this advances the stage checkpoints.
     let computed_state_root = compute_state_root(provider_rw, Some(prefix_sets.freeze()))?;
     if computed_state_root == expected_state_root {
-        info!(target: "reth::cli",
+        info!(target: "evm::cli",
             ?computed_state_root,
             "Computed state root matches state root in state dump"
         );
     } else {
-        error!(target: "reth::cli",
+        error!(target: "evm::cli",
             ?computed_state_root,
             ?expected_state_root,
             "Computed state root does not match state root in state dump"
@@ -630,7 +630,7 @@ fn parse_state_root(reader: &mut impl BufRead) -> eyre::Result<B256> {
     reader.read_line(&mut line)?;
 
     let expected_state_root = serde_json::from_str::<StateRoot>(&line)?.root;
-    trace!(target: "reth::cli",
+    trace!(target: "evm::cli",
         root=%expected_state_root,
         "Read state root from file"
     );
@@ -657,7 +657,7 @@ fn parse_accounts(
         if !collector.is_empty() &&
             collector.len().is_multiple_of(AVERAGE_COUNT_ACCOUNTS_PER_GB_STATE_DUMP)
         {
-            info!(target: "reth::cli",
+            info!(target: "evm::cli",
                 parsed_new_accounts=collector.len(),
             );
         }
@@ -719,7 +719,7 @@ where
         {
             total_inserted_accounts += accounts.len();
 
-            info!(target: "reth::cli",
+            info!(target: "evm::cli",
                 total_inserted_accounts,
                 "Writing accounts to db"
             );
@@ -758,7 +758,7 @@ fn compute_state_root<Provider>(
 where
     Provider: DBProvider<Tx: DbTxMut> + TrieWriter,
 {
-    trace!(target: "reth::cli", "Computing state root");
+    trace!(target: "evm::cli", "Computing state root");
 
     let tx = provider.tx_ref();
     let mut intermediate_state: Option<IntermediateStateRootState> = None;
@@ -777,7 +777,7 @@ where
                 let updated_len = provider.write_trie_updates(updates)?;
                 total_flushed_updates += updated_len;
 
-                trace!(target: "reth::cli",
+                trace!(target: "evm::cli",
                     last_account_key = %state.account_root_state.last_hashed_key,
                     updated_len,
                     total_flushed_updates,
@@ -787,7 +787,7 @@ where
                 intermediate_state = Some(*state);
 
                 if total_flushed_updates.is_multiple_of(SOFT_LIMIT_COUNT_FLUSHED_UPDATES) {
-                    info!(target: "reth::cli",
+                    info!(target: "evm::cli",
                         total_flushed_updates,
                         "Flushing trie updates"
                     );
@@ -797,7 +797,7 @@ where
                 let updated_len = provider.write_trie_updates(updates)?;
                 total_flushed_updates += updated_len;
 
-                trace!(target: "reth::cli",
+                trace!(target: "evm::cli",
                     %root,
                     updated_len,
                     total_flushed_updates,
@@ -834,16 +834,16 @@ mod tests {
         HOLESKY_GENESIS_HASH, MAINNET_GENESIS_HASH, SEPOLIA_GENESIS_HASH,
     };
     use alloy_genesis::Genesis;
-    use reth_chainspec::{Chain, ChainSpec, HOLESKY, MAINNET, SEPOLIA};
-    use reth_db::DatabaseEnv;
-    use reth_db_api::{
+    use hanzo_evm_chainspec::{Chain, ChainSpec, HOLESKY, MAINNET, SEPOLIA};
+    use hanzo_evm_db::DatabaseEnv;
+    use hanzo_evm_db_api::{
         cursor::DbCursorRO,
         models::{storage_sharded_key::StorageShardedKey, IntegerList, ShardedKey},
         table::{Table, TableRow},
         transaction::DbTx,
         Database,
     };
-    use reth_provider::{
+    use hanzo_evm_provider::{
         test_utils::{create_test_provider_factory_with_chain_spec, MockNodeTypesWithDB},
         ProviderFactory, RocksDBProviderFactory,
     };
@@ -968,7 +968,7 @@ mod tests {
             let settings = factory.cached_storage_settings();
             let rocksdb = factory.rocksdb_provider();
 
-            let collect_rocksdb = |rocksdb: &reth_provider::providers::RocksDBProvider| {
+            let collect_rocksdb = |rocksdb: &hanzo_evm_provider::providers::RocksDBProvider| {
                 (
                     rocksdb
                         .iter::<tables::AccountsHistory>()

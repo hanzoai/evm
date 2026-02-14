@@ -5,16 +5,16 @@ use crate::{
 };
 use alloy_eips::eip2718::Encodable2718;
 use rayon::prelude::*;
-use reth_db_api::{tables, transaction::DbTxMut};
-use reth_provider::{
+use hanzo_evm_db_api::{tables, transaction::DbTxMut};
+use hanzo_evm_provider::{
     BlockReader, DBProvider, PruneCheckpointReader, RocksDBProviderFactory,
     StaticFileProviderFactory,
 };
-use reth_prune_types::{
+use hanzo_evm_prune_types::{
     PruneCheckpoint, PruneMode, PruneProgress, PrunePurpose, PruneSegment, SegmentOutputCheckpoint,
 };
-use reth_static_file_types::StaticFileSegment;
-use reth_storage_api::StorageSettingsCache;
+use hanzo_evm_static_file_types::StaticFileSegment;
+use hanzo_evm_storage_api::StorageSettingsCache;
 use tracing::{debug, instrument, trace};
 
 #[derive(Debug)]
@@ -301,13 +301,13 @@ mod tests {
         FoldWhile::{Continue, Done},
         Itertools,
     };
-    use reth_db_api::tables;
-    use reth_provider::{DBProvider, DatabaseProviderFactory, PruneCheckpointReader};
-    use reth_prune_types::{
+    use hanzo_evm_db_api::tables;
+    use hanzo_evm_provider::{DBProvider, DatabaseProviderFactory, PruneCheckpointReader};
+    use hanzo_evm_prune_types::{
         PruneCheckpoint, PruneInterruptReason, PruneMode, PruneProgress, PruneSegment,
     };
-    use reth_stages::test_utils::{StorageKind, TestStageDB};
-    use reth_testing_utils::generators::{self, random_block_range, BlockRangeParams};
+    use hanzo_evm_stages::test_utils::{StorageKind, TestStageDB};
+    use hanzo_evm_testing_utils::generators::{self, random_block_range, BlockRangeParams};
     use std::ops::Sub;
 
     #[test]
@@ -441,9 +441,9 @@ mod tests {
     #[cfg(all(unix, feature = "rocksdb"))]
     #[test]
     fn prune_rocksdb() {
-        use reth_db_api::models::StorageSettings;
-        use reth_provider::RocksDBProviderFactory;
-        use reth_storage_api::StorageSettingsCache;
+        use hanzo_evm_db_api::models::StorageSettings;
+        use hanzo_evm_provider::RocksDBProviderFactory;
+        use hanzo_evm_storage_api::StorageSettingsCache;
 
         let db = TestStageDB::default();
         let mut rng = generators::rng();
@@ -544,9 +544,9 @@ mod tests {
     #[cfg(all(unix, feature = "rocksdb"))]
     #[test]
     fn prune_rocksdb_zero_deleted_checkpoint() {
-        use reth_db_api::models::StorageSettings;
-        use reth_provider::RocksDBProviderFactory;
-        use reth_storage_api::StorageSettingsCache;
+        use hanzo_evm_db_api::models::StorageSettings;
+        use hanzo_evm_provider::RocksDBProviderFactory;
+        use hanzo_evm_storage_api::StorageSettingsCache;
 
         let db = TestStageDB::default();
         let mut rng = generators::rng();

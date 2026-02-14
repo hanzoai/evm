@@ -49,13 +49,13 @@ Test files use a simple request-response format:
 
 ```rust
 use alloy_genesis::Genesis;
-use reth_chainspec::ChainSpec;
-use reth_e2e_test_utils::testsuite::{
+use evm_chainspec::ChainSpec;
+use evm_e2e_test_utils::testsuite::{
     actions::{MakeCanonical, UpdateBlockInfo},
     setup::{NetworkSetup, Setup},
     TestBuilder,
 };
-use reth_rpc_e2e_tests::rpc_compat::{InitializeFromExecutionApis, RunRpcCompatTests};
+use evm_rpc_e2e_tests::rpc_compat::{InitializeFromExecutionApis, RunRpcCompatTests};
 
 #[tokio::test]
 async fn test_eth_get_logs_compat() -> Result<()> {

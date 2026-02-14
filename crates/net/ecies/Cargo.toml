@@ -1,5 +1,5 @@
 [package]
-name = "reth-ecies"
+name = "hanzo-evm-ecies"
 version.workspace = true
 edition.workspace = true
 rust-version.workspace = true
@@ -11,7 +11,7 @@ repository.workspace = true
 workspace = true
 
 [dependencies]
-reth-network-peers = { workspace = true, features = ["secp256k1"] }
+hanzo-evm-network-peers = { workspace = true, features = ["secp256k1"] }
 
 alloy-primitives = { workspace = true, features = ["rand", "rlp"] }
 alloy-rlp = { workspace = true, features = ["derive", "arrayvec"] }

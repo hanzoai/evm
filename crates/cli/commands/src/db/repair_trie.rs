@@ -1,33 +1,33 @@
 use clap::Parser;
 use metrics::{self, Counter};
-use reth_chainspec::EthChainSpec;
-use reth_cli_util::parse_socket_address;
-use reth_db_api::{
+use hanzo_evm_chainspec::EthChainSpec;
+use hanzo_evm_cli_util::parse_socket_address;
+use hanzo_evm_db_api::{
     cursor::{DbCursorRO, DbCursorRW, DbDupCursorRO},
     database::Database,
     tables,
     transaction::{DbTx, DbTxMut},
 };
-use reth_db_common::DbTool;
-use reth_node_core::{
+use hanzo_evm_db_common::DbTool;
+use hanzo_evm_node_core::{
     dirs::{ChainPath, DataDirPath},
     version::version_metadata,
 };
-use reth_node_metrics::{
+use hanzo_evm_node_metrics::{
     chain::ChainSpecInfo,
     hooks::Hooks,
     server::{MetricServer, MetricServerConfig},
     version::VersionInfo,
 };
-use reth_provider::{providers::ProviderNodeTypes, ChainSpecProvider, StageCheckpointReader};
-use reth_stages::StageId;
-use reth_tasks::TaskExecutor;
-use reth_trie::{
+use hanzo_evm_provider::{providers::ProviderNodeTypes, ChainSpecProvider, StageCheckpointReader};
+use hanzo_evm_stages::StageId;
+use hanzo_evm_tasks::TaskExecutor;
+use hanzo_evm_trie::{
     verify::{Output, Verifier},
     Nibbles,
 };
-use reth_trie_common::{StorageTrieEntry, StoredNibbles, StoredNibblesSubKey};
-use reth_trie_db::{DatabaseHashedCursorFactory, DatabaseTrieCursorFactory};
+use hanzo_evm_trie_common::{StorageTrieEntry, StoredNibbles, StoredNibblesSubKey};
+use hanzo_evm_trie_db::{DatabaseHashedCursorFactory, DatabaseTrieCursorFactory};
 use std::{
     net::SocketAddr,
     time::{Duration, Instant},
@@ -36,7 +36,7 @@ use tracing::{info, warn};
 
 const PROGRESS_PERIOD: Duration = Duration::from_secs(5);
 
-/// The arguments for the `reth db repair-trie` command
+/// The arguments for the `evm db repair-trie` command
 #[derive(Parser, Debug)]
 pub struct Command {
     /// Only show inconsistencies without making any repairs
@@ -173,7 +173,7 @@ fn verify_checkpoints(provider: impl StageCheckpointReader) -> eyre::Result<()> 
 
     if account_hashing_checkpoint.block_number != merkle_checkpoint.block_number {
         return Err(eyre::eyre!(
-            "MerkleExecute stage checkpoint ({}) != AccountHashing stage checkpoint ({}), you must first complete the pipeline sync by running `reth node`",
+            "MerkleExecute stage checkpoint ({}) != AccountHashing stage checkpoint ({}), you must first complete the pipeline sync by running `evm node`",
             merkle_checkpoint.block_number,
             account_hashing_checkpoint.block_number,
         ))
@@ -181,7 +181,7 @@ fn verify_checkpoints(provider: impl StageCheckpointReader) -> eyre::Result<()> 
 
     if storage_hashing_checkpoint.block_number != merkle_checkpoint.block_number {
         return Err(eyre::eyre!(
-            "MerkleExecute stage checkpoint ({}) != StorageHashing stage checkpoint ({}), you must first complete the pipeline sync by running `reth node`",
+            "MerkleExecute stage checkpoint ({}) != StorageHashing stage checkpoint ({}), you must first complete the pipeline sync by running `evm node`",
             merkle_checkpoint.block_number,
             storage_hashing_checkpoint.block_number,
         ))
@@ -191,7 +191,7 @@ fn verify_checkpoints(provider: impl StageCheckpointReader) -> eyre::Result<()> 
         provider.get_stage_checkpoint_progress(StageId::MerkleExecute)?;
     if merkle_checkpoint_progress.is_some_and(|progress| !progress.is_empty()) {
         return Err(eyre::eyre!(
-            "MerkleExecute sync stage in-progress, you must first complete the pipeline sync by running `reth node`",
+            "MerkleExecute sync stage in-progress, you must first complete the pipeline sync by running `evm node`",
         ))
     }
 

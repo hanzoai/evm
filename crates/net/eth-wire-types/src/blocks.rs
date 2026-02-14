@@ -6,7 +6,7 @@ use alloc::vec::Vec;
 use alloy_eips::BlockHashOrNumber;
 use alloy_primitives::B256;
 use alloy_rlp::{RlpDecodable, RlpDecodableWrapper, RlpEncodable, RlpEncodableWrapper};
-use reth_codecs_derive::{add_arbitrary_tests, generate_tests};
+use hanzo_evm_codecs_derive::{add_arbitrary_tests, generate_tests};
 
 /// A request for a peer to return block headers starting at the requested block.
 /// The peer must return at most [`limit`](#structfield.limit) headers.
@@ -76,12 +76,12 @@ impl From<Vec<B256>> for GetBlockBodies {
 #[derive(Clone, Debug, PartialEq, Eq, RlpEncodableWrapper, RlpDecodableWrapper, Default)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 #[cfg_attr(any(test, feature = "arbitrary"), derive(arbitrary::Arbitrary))]
-pub struct BlockBodies<B = reth_ethereum_primitives::BlockBody>(
+pub struct BlockBodies<B = hanzo_evm_ethereum_primitives::BlockBody>(
     /// The requested block bodies, each of which should correspond to a hash in the request.
     pub Vec<B>,
 );
 
-generate_tests!(#[rlp, 16] BlockBodies<reth_ethereum_primitives::BlockBody>, EthBlockBodiesTests);
+generate_tests!(#[rlp, 16] BlockBodies<hanzo_evm_ethereum_primitives::BlockBody>, EthBlockBodiesTests);
 
 impl<B> From<Vec<B>> for BlockBodies<B> {
     fn from(bodies: Vec<B>) -> Self {
@@ -99,7 +99,7 @@ mod tests {
     use alloy_eips::BlockHashOrNumber;
     use alloy_primitives::{hex, Signature, TxKind, U256};
     use alloy_rlp::{Decodable, Encodable};
-    use reth_ethereum_primitives::{BlockBody, Transaction, TransactionSigned};
+    use hanzo_evm_ethereum_primitives::{BlockBody, Transaction, TransactionSigned};
     use std::str::FromStr;
 
     #[test]

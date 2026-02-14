@@ -11,8 +11,8 @@ use alloy_primitives::{
 use itertools::Itertools;
 use metrics::Label;
 use parking_lot::Mutex;
-use reth_chain_state::ExecutedBlock;
-use reth_db_api::{
+use hanzo_evm_chain_state::ExecutedBlock;
+use hanzo_evm_db_api::{
     database_metrics::DatabaseMetrics,
     models::{
         sharded_key::NUM_OF_INDICES_IN_SHARD, storage_sharded_key::StorageShardedKey, ShardedKey,
@@ -21,9 +21,9 @@ use reth_db_api::{
     table::{Compress, Decode, Decompress, Encode, Table},
     tables, BlockNumberList, DatabaseError,
 };
-use reth_primitives_traits::BlockBody as _;
-use reth_prune_types::PruneMode;
-use reth_storage_errors::{
+use hanzo_evm_primitives_traits::BlockBody as _;
+use hanzo_evm_prune_types::PruneMode;
+use hanzo_evm_storage_errors::{
     db::{DatabaseErrorInfo, DatabaseWriteError, DatabaseWriteOperation, LogLevel},
     provider::{ProviderError, ProviderResult},
 };
@@ -266,7 +266,7 @@ impl RocksDBBuilder {
         self
     }
 
-    /// Registers the default tables used by reth for `RocksDB` storage.
+    /// Registers the default tables used by evm for `RocksDB` storage.
     ///
     /// This registers:
     /// - [`tables::TransactionHashNumbers`] - Transaction hash to number mapping
@@ -856,7 +856,7 @@ impl RocksDBProvider {
 
             match iter.next() {
                 Some(Ok((key_bytes, value_bytes))) => {
-                    let key = <T::Key as reth_db_api::table::Decode>::decode(&key_bytes)
+                    let key = <T::Key as hanzo_evm_db_api::table::Decode>::decode(&key_bytes)
                         .map_err(|_| ProviderError::Database(DatabaseError::Decode))?;
                     let value = T::Value::decompress(&value_bytes)
                         .map_err(|_| ProviderError::Database(DatabaseError::Decode))?;
@@ -1188,7 +1188,7 @@ impl RocksDBProvider {
     /// the provided storage settings. Each operation runs in parallel with its own batch,
     /// pushing to `ctx.pending_batches` for later commit.
     #[instrument(level = "debug", target = "providers::rocksdb", skip_all, fields(num_blocks = blocks.len(), first_block = ctx.first_block_number))]
-    pub(crate) fn write_blocks_data<N: reth_node_types::NodePrimitives>(
+    pub(crate) fn write_blocks_data<N: hanzo_evm_node_types::NodePrimitives>(
         &self,
         blocks: &[ExecutedBlock<N>],
         tx_nums: &[TxNumber],
@@ -1254,7 +1254,7 @@ impl RocksDBProvider {
 
     /// Writes transaction hash to number mappings for the given blocks.
     #[instrument(level = "debug", target = "providers::rocksdb", skip_all)]
-    fn write_tx_hash_numbers<N: reth_node_types::NodePrimitives>(
+    fn write_tx_hash_numbers<N: hanzo_evm_node_types::NodePrimitives>(
         &self,
         blocks: &[ExecutedBlock<N>],
         tx_nums: &[TxNumber],
@@ -1277,7 +1277,7 @@ impl RocksDBProvider {
     ///
     /// Derives history indices from reverts (same source as changesets) to ensure consistency.
     #[instrument(level = "debug", target = "providers::rocksdb", skip_all)]
-    fn write_account_history<N: reth_node_types::NodePrimitives>(
+    fn write_account_history<N: hanzo_evm_node_types::NodePrimitives>(
         &self,
         blocks: &[ExecutedBlock<N>],
         ctx: &RocksDBWriteCtx,
@@ -1310,7 +1310,7 @@ impl RocksDBProvider {
     ///
     /// Derives history indices from reverts (same source as changesets) to ensure consistency.
     #[instrument(level = "debug", target = "providers::rocksdb", skip_all)]
-    fn write_storage_history<N: reth_node_types::NodePrimitives>(
+    fn write_storage_history<N: hanzo_evm_node_types::NodePrimitives>(
         &self,
         blocks: &[ExecutedBlock<N>],
         ctx: &RocksDBWriteCtx,
@@ -2314,7 +2314,7 @@ impl<'db> RocksTx<'db> {
         encoded_key: &[u8],
         block_number: BlockNumber,
         lowest_available_block_number: Option<BlockNumber>,
-        key_matches: impl FnOnce(&[u8]) -> Result<bool, reth_db_api::DatabaseError>,
+        key_matches: impl FnOnce(&[u8]) -> Result<bool, hanzo_evm_db_api::DatabaseError>,
         prev_key_matches: impl Fn(&[u8]) -> bool,
     ) -> ProviderResult<HistoryInfo>
     where
@@ -2560,7 +2560,7 @@ fn decode_iter_item<T: Table>(result: RawKVResult) -> ProviderResult<(T::Key, T:
         }))
     })?;
 
-    let key = <T::Key as reth_db_api::table::Decode>::decode(&key_bytes)
+    let key = <T::Key as hanzo_evm_db_api::table::Decode>::decode(&key_bytes)
         .map_err(|_| ProviderError::Database(DatabaseError::Decode))?;
 
     let value = T::Value::decompress(&value_bytes)
@@ -2585,7 +2585,7 @@ mod tests {
     use super::*;
     use crate::providers::HistoryInfo;
     use alloy_primitives::{Address, TxHash, B256};
-    use reth_db_api::{
+    use hanzo_evm_db_api::{
         models::{
             sharded_key::{ShardedKey, NUM_OF_INDICES_IN_SHARD},
             storage_sharded_key::StorageShardedKey,

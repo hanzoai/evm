@@ -2,9 +2,9 @@
 
 use alloy_consensus::{BlockHeader as _, EMPTY_OMMER_ROOT_HASH};
 use alloy_eips::{eip4844::DATA_GAS_PER_BLOB, eip7840::BlobParams};
-use reth_chainspec::{EthChainSpec, EthereumHardfork, EthereumHardforks};
-use reth_consensus::ConsensusError;
-use reth_primitives_traits::{
+use hanzo_evm_chainspec::{EthChainSpec, EthereumHardfork, EthereumHardforks};
+use hanzo_evm_consensus::ConsensusError;
+use hanzo_evm_primitives_traits::{
     constants::{GAS_LIMIT_BOUND_DIVISOR, MAXIMUM_GAS_LIMIT_BLOCK, MINIMUM_GAS_LIMIT},
     Block, BlockBody, BlockHeader, GotExpected, SealedBlock, SealedHeader,
 };
@@ -429,9 +429,9 @@ mod tests {
     use alloy_eips::eip4895::Withdrawals;
     use alloy_primitives::{Address, Bytes, Signature, U256};
     use rand::Rng;
-    use reth_chainspec::ChainSpecBuilder;
-    use reth_ethereum_primitives::{Transaction, TransactionSigned};
-    use reth_primitives_traits::proofs;
+    use hanzo_evm_chainspec::ChainSpecBuilder;
+    use hanzo_evm_ethereum_primitives::{Transaction, TransactionSigned};
+    use hanzo_evm_primitives_traits::proofs;
 
     fn mock_blob_tx(nonce: u64, num_blobs: usize) -> TransactionSigned {
         let mut rng = rand::rng();

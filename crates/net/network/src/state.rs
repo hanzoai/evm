@@ -12,15 +12,15 @@ use crate::{
 use alloy_consensus::BlockHeader;
 use alloy_primitives::B256;
 use rand::seq::SliceRandom;
-use reth_eth_wire::{
+use hanzo_evm_eth_wire::{
     BlockHashNumber, Capabilities, DisconnectReason, EthNetworkPrimitives, NetworkPrimitives,
     NewBlockHashes, NewBlockPayload, UnifiedStatus,
 };
-use reth_ethereum_forks::ForkId;
-use reth_network_api::{DiscoveredEvent, DiscoveryEvent, PeerRequest, PeerRequestSender};
-use reth_network_peers::PeerId;
-use reth_network_types::{PeerAddr, PeerKind};
-use reth_primitives_traits::Block;
+use hanzo_evm_ethereum_forks::ForkId;
+use hanzo_evm_network_api::{DiscoveredEvent, DiscoveryEvent, PeerRequest, PeerRequestSender};
+use hanzo_evm_network_peers::PeerId;
+use hanzo_evm_network_types::{PeerAddr, PeerKind};
+use hanzo_evm_primitives_traits::Block;
 use std::{
     collections::{HashMap, VecDeque},
     fmt,
@@ -39,11 +39,11 @@ use tracing::{debug, trace};
 const PEER_BLOCK_CACHE_LIMIT: u32 = 512;
 
 /// Wrapper type for the [`BlockNumReader`] trait.
-pub(crate) struct BlockNumReader(Box<dyn reth_storage_api::BlockNumReader>);
+pub(crate) struct BlockNumReader(Box<dyn hanzo_evm_storage_api::BlockNumReader>);
 
 impl BlockNumReader {
     /// Create a new instance with the given reader.
-    pub fn new(reader: impl reth_storage_api::BlockNumReader + 'static) -> Self {
+    pub fn new(reader: impl hanzo_evm_storage_api::BlockNumReader + 'static) -> Self {
         Self(Box::new(reader))
     }
 }
@@ -55,7 +55,7 @@ impl fmt::Debug for BlockNumReader {
 }
 
 impl Deref for BlockNumReader {
-    type Target = Box<dyn reth_storage_api::BlockNumReader>;
+    type Target = Box<dyn hanzo_evm_storage_api::BlockNumReader>;
 
     fn deref(&self) -> &Self::Target {
         &self.0
@@ -574,12 +574,12 @@ mod tests {
     };
     use alloy_consensus::Header;
     use alloy_primitives::B256;
-    use reth_eth_wire::{BlockBodies, Capabilities, Capability, EthNetworkPrimitives, EthVersion};
-    use reth_ethereum_primitives::BlockBody;
-    use reth_network_api::PeerRequestSender;
-    use reth_network_p2p::{bodies::client::BodiesClient, error::RequestError};
-    use reth_network_peers::PeerId;
-    use reth_storage_api::noop::NoopProvider;
+    use hanzo_evm_eth_wire::{BlockBodies, Capabilities, Capability, EthNetworkPrimitives, EthVersion};
+    use hanzo_evm_ethereum_primitives::BlockBody;
+    use hanzo_evm_network_api::PeerRequestSender;
+    use hanzo_evm_network_p2p::{bodies::client::BodiesClient, error::RequestError};
+    use hanzo_evm_network_peers::PeerId;
+    use hanzo_evm_storage_api::noop::NoopProvider;
     use std::{
         future::poll_fn,
         sync::{atomic::AtomicU64, Arc},

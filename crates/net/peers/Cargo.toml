@@ -1,5 +1,5 @@
 [package]
-name = "reth-network-peers"
+name = "hanzo-evm-network-peers"
 version.workspace = true
 edition.workspace = true
 rust-version.workspace = true

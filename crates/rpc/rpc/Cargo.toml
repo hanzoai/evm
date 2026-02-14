@@ -1,47 +1,47 @@
 [package]
-name = "reth-rpc"
+name = "hanzo-evm-rpc"
 version.workspace = true
 edition.workspace = true
 rust-version.workspace = true
 license.workspace = true
 homepage.workspace = true
 repository.workspace = true
-description = "Reth RPC implementation"
+description = "Hanzo EVM RPC implementation"
 
 [lints]
 workspace = true
 
 [dependencies]
-# reth
-reth-chainspec.workspace = true
-reth-primitives-traits.workspace = true
-reth-rpc-api.workspace = true
-reth-rpc-eth-api.workspace = true
-reth-engine-primitives.workspace = true
-reth-errors.workspace = true
-reth-metrics.workspace = true
-reth-storage-api.workspace = true
-reth-execution-types.workspace = true
-reth-chain-state.workspace = true
-reth-transaction-pool.workspace = true
-reth-network-api.workspace = true
-reth-rpc-engine-api.workspace = true
-reth-revm = { workspace = true, features = ["witness"] }
-reth-tasks = { workspace = true, features = ["rayon"] }
-reth-rpc-convert.workspace = true
+# evm
+hanzo-evm-chainspec.workspace = true
+hanzo-evm-primitives-traits.workspace = true
+hanzo-evm-rpc-api.workspace = true
+hanzo-evm-rpc-eth-api.workspace = true
+hanzo-evm-engine-primitives.workspace = true
+hanzo-evm-errors.workspace = true
+hanzo-evm-metrics.workspace = true
+hanzo-evm-storage-api.workspace = true
+hanzo-evm-execution-types.workspace = true
+hanzo-evm-chain-state.workspace = true
+hanzo-evm-transaction-pool.workspace = true
+hanzo-evm-network-api.workspace = true
+hanzo-evm-rpc-engine-api.workspace = true
+hanzo-evm-revm = { workspace = true, features = ["witness"] }
+hanzo-evm-tasks = { workspace = true, features = ["rayon"] }
+hanzo-evm-rpc-convert.workspace = true
 revm-inspectors.workspace = true
-reth-network-peers = { workspace = true, features = ["secp256k1"] }
-reth-evm.workspace = true
-reth-evm-ethereum.workspace = true
-reth-rpc-eth-types.workspace = true
-reth-rpc-server-types.workspace = true
-reth-network-types.workspace = true
-reth-consensus.workspace = true
-reth-consensus-common.workspace = true
-reth-ethereum-primitives.workspace = true
-reth-ethereum-engine-primitives.workspace = true
-reth-node-api.workspace = true
-reth-trie-common.workspace = true
+hanzo-evm-network-peers = { workspace = true, features = ["secp256k1"] }
+hanzo-evm-execution.workspace = true
+hanzo-evm-eth-execution.workspace = true
+hanzo-evm-rpc-eth-types.workspace = true
+hanzo-evm-rpc-server-types.workspace = true
+hanzo-evm-network-types.workspace = true
+hanzo-evm-consensus.workspace = true
+hanzo-evm-consensus-common.workspace = true
+hanzo-evm-ethereum-primitives.workspace = true
+hanzo-evm-ethereum-engine-primitives.workspace = true
+hanzo-evm-node-api.workspace = true
+hanzo-evm-trie-common.workspace = true
 
 # ethereum
 alloy-eip7928.workspace = true
@@ -93,11 +93,11 @@ derive_more.workspace = true
 itertools.workspace = true
 
 [dev-dependencies]
-reth-ethereum-primitives.workspace = true
-reth-testing-utils.workspace = true
-reth-transaction-pool = { workspace = true, features = ["test-utils"] }
-reth-provider = { workspace = true, features = ["test-utils"] }
-reth-db-api.workspace = true
+hanzo-evm-ethereum-primitives.workspace = true
+hanzo-evm-testing-utils.workspace = true
+hanzo-evm-transaction-pool = { workspace = true, features = ["test-utils"] }
+hanzo-evm-provider = { workspace = true, features = ["test-utils"] }
+hanzo-evm-db-api.workspace = true
 
 rand.workspace = true
 
@@ -106,6 +106,6 @@ jsonrpsee = { workspace = true, features = ["client"] }
 [features]
 js-tracer = [
     "revm-inspectors/js-tracer",
-    "reth-rpc-eth-types/js-tracer",
-    "reth-rpc-eth-api/js-tracer",
+    "hanzo-evm-rpc-eth-types/js-tracer",
+    "hanzo-evm-rpc-eth-api/js-tracer",
 ]

@@ -3,8 +3,8 @@ use crate::error::{DownloadError, DownloadResult};
 use alloy_eips::{eip1898::BlockWithParent, BlockHashOrNumber};
 use alloy_primitives::{Sealable, B256};
 use futures::Stream;
-use reth_consensus::HeaderValidator;
-use reth_primitives_traits::{BlockHeader, Header, SealedHeader};
+use hanzo_evm_consensus::HeaderValidator;
+use hanzo_evm_primitives_traits::{BlockHeader, Header, SealedHeader};
 use std::fmt::Debug;
 
 /// A downloader capable of fetching and yielding block headers.

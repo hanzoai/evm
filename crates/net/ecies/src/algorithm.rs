@@ -16,7 +16,7 @@ use byteorder::{BigEndian, ByteOrder, ReadBytesExt};
 use ctr::Ctr64BE;
 use digest::crypto_common::KeyIvInit;
 use rand_08::{thread_rng as rng, Rng};
-use reth_network_peers::{id2pk, pk2id};
+use hanzo_evm_network_peers::{id2pk, pk2id};
 use secp256k1::{
     ecdsa::{RecoverableSignature, RecoveryId},
     PublicKey, SecretKey, SECP256K1,

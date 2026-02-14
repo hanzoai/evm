@@ -16,8 +16,8 @@ use alloy_primitives::{
 };
 use alloy_rlp::{BufMut, Encodable};
 use alloy_trie::proof::AddedRemovedKeys;
-use reth_execution_errors::trie::StateProofError;
-use reth_trie_common::{
+use hanzo_evm_execution_errors::trie::StateProofError;
+use hanzo_evm_trie_common::{
     proof::ProofRetainer, AccountProof, BranchNodeMasks, BranchNodeMasksMap, MultiProof,
     MultiProofTargets, StorageMultiProof,
 };
@@ -336,7 +336,7 @@ where
     pub fn storage_proof(
         self,
         slot: B256,
-    ) -> Result<reth_trie_common::StorageProof, StateProofError> {
+    ) -> Result<hanzo_evm_trie_common::StorageProof, StateProofError> {
         let targets = HashSet::from_iter([keccak256(slot)]);
         Ok(self.storage_multiproof(targets)?.storage_proof(slot)?)
     }

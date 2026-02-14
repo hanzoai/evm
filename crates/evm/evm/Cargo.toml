@@ -1,5 +1,5 @@
 [package]
-name = "reth-evm"
+name = "hanzo-evm-execution"
 version.workspace = true
 edition.workspace = true
 rust-version.workspace = true
@@ -11,14 +11,14 @@ repository.workspace = true
 workspace = true
 
 [dependencies]
-# reth
-reth-execution-errors.workspace = true
-reth-execution-types.workspace = true
-reth-metrics = { workspace = true, optional = true }
-reth-primitives-traits.workspace = true
-reth-storage-api.workspace = true
-reth-storage-errors.workspace = true
-reth-trie-common.workspace = true
+# evm
+hanzo-evm-execution-errors.workspace = true
+hanzo-evm-execution-types.workspace = true
+hanzo-evm-metrics = { workspace = true, optional = true }
+hanzo-evm-primitives-traits.workspace = true
+hanzo-evm-storage-api.workspace = true
+hanzo-evm-storage-errors.workspace = true
+hanzo-evm-trie-common.workspace = true
 
 revm.workspace = true
 
@@ -35,31 +35,31 @@ metrics = { workspace = true, optional = true }
 rayon = { workspace = true, optional = true }
 
 [dev-dependencies]
-reth-ethereum-primitives.workspace = true
+hanzo-evm-ethereum-primitives.workspace = true
 
 [features]
 default = ["std"]
 std = [
     "dep:rayon",
-    "reth-primitives-traits/std",
+    "hanzo-evm-primitives-traits/std",
     "alloy-eips/std",
     "alloy-primitives/std",
     "alloy-consensus/std",
     "revm/std",
     "alloy-evm/std",
-    "reth-execution-errors/std",
-    "reth-execution-types/std",
-    "reth-storage-errors/std",
+    "hanzo-evm-execution-errors/std",
+    "hanzo-evm-execution-types/std",
+    "hanzo-evm-storage-errors/std",
     "futures-util/std",
     "derive_more/std",
-    "reth-storage-api/std",
-    "reth-trie-common/std",
-    "reth-ethereum-primitives/std",
+    "hanzo-evm-storage-api/std",
+    "hanzo-evm-trie-common/std",
+    "hanzo-evm-ethereum-primitives/std",
 ]
-metrics = ["std", "dep:metrics", "dep:reth-metrics"]
+metrics = ["std", "dep:metrics", "dep:hanzo-evm-metrics"]
 test-utils = [
-    "reth-primitives-traits/test-utils",
-    "reth-trie-common/test-utils",
-    "reth-ethereum-primitives/test-utils",
+    "hanzo-evm-primitives-traits/test-utils",
+    "hanzo-evm-trie-common/test-utils",
+    "hanzo-evm-ethereum-primitives/test-utils",
 ]
-op = ["alloy-evm/op", "reth-primitives-traits/op"]
+op = ["alloy-evm/op", "hanzo-evm-primitives-traits/op"]

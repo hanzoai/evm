@@ -1,9 +1,9 @@
-//! Standalone crate for ethereum-specific Reth primitive types.
+//! Standalone crate for ethereum-specific Hanzo EVM primitive types.
 
 #![doc(
-    html_logo_url = "https://raw.githubusercontent.com/paradigmxyz/reth/main/assets/reth-docs.png",
+    html_logo_url = "https://raw.githubusercontent.com/hanzoai/evm/main/assets/evm-docs.png",
     html_favicon_url = "https://avatars0.githubusercontent.com/u/97369466?s=256",
-    issue_tracker_base_url = "https://github.com/paradigmxyz/reth/issues/"
+    issue_tracker_base_url = "https://github.com/hanzoai/evm/issues/"
 )]
 #![cfg_attr(docsrs, feature(doc_cfg))]
 #![cfg_attr(not(test), warn(unused_crate_dependencies))]
@@ -46,13 +46,13 @@ pub type Block = alloy_consensus::Block<TransactionSigned>;
 pub type BlockBody = alloy_consensus::BlockBody<TransactionSigned>;
 
 /// Helper struct that specifies the ethereum
-/// [`NodePrimitives`](reth_primitives_traits::NodePrimitives) types.
+/// [`NodePrimitives`](hanzo_evm_primitives_traits::NodePrimitives) types.
 #[derive(Debug, Clone, Default, PartialEq, Eq)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 #[non_exhaustive]
 pub struct EthPrimitives;
 
-impl reth_primitives_traits::NodePrimitives for EthPrimitives {
+impl hanzo_evm_primitives_traits::NodePrimitives for EthPrimitives {
     type Block = crate::Block;
     type BlockHeader = alloy_consensus::Header;
     type BlockBody = crate::BlockBody;

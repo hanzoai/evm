@@ -5,12 +5,12 @@ members = ["exex/hello-world", "exex/remote", "exex/tracking-state"]
 # https://doc.rust-lang.org/edition-guide/rust-2021/default-cargo-resolver.html
 resolver = "2"
 
-[patch.'https://github.com/paradigmxyz/reth']
+[patch.'https://github.com/hanzoai/evm']
 reth = { path = "../../bin/reth" }
-reth-exex = { path = "../../crates/exex/exex" }
-reth-node-ethereum = { path = "../../crates/ethereum/node" }
-reth-tracing = { path = "../../crates/tracing" }
-reth-node-api = { path = "../../crates/node/api" }
+hanzo-evm-exex = { path = "../../crates/exex/exex" }
+hanzo-evm-node-ethereum = { path = "../../crates/ethereum/node" }
+hanzo-evm-tracing = { path = "../../crates/tracing" }
+hanzo-evm-node-api = { path = "../../crates/node/api" }
 
 [patch.crates-io]
 alloy-consensus = { git = "https://github.com/alloy-rs/alloy", rev = "08fa016ed950b6e65f810fc9cdef7cf38fbc63f6" }

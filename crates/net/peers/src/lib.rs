@@ -20,7 +20,7 @@
 //!
 //! When we need to deserialize an identifier that could be any of these three types ([`PeerId`],
 //! [`NodeRecord`], and [`Enr`]), we use the [`AnyNode`] type, which is an enum over the three
-//! types. [`AnyNode`] is used in reth's `admin_addTrustedPeer` RPC method.
+//! types. [`AnyNode`] is used in evm's `admin_addTrustedPeer` RPC method.
 //!
 //! The __final__ type is the [`TrustedPeer`] type, which is similar to a [`NodeRecord`] but may
 //! include a domain name instead of a direct IP address. It includes a `resolve` method, which can
@@ -46,9 +46,9 @@
 //! - `net`: Support for address lookups.
 
 #![doc(
-    html_logo_url = "https://raw.githubusercontent.com/paradigmxyz/reth/main/assets/reth-docs.png",
+    html_logo_url = "https://raw.githubusercontent.com/hanzoai/evm/main/assets/evm-docs.png",
     html_favicon_url = "https://avatars0.githubusercontent.com/u/97369466?s=256",
-    issue_tracker_base_url = "https://github.com/paradigmxyz/reth/issues/"
+    issue_tracker_base_url = "https://github.com/hanzoai/evm/issues/"
 )]
 #![cfg_attr(not(test), warn(unused_crate_dependencies))]
 #![cfg_attr(docsrs, feature(doc_cfg))]

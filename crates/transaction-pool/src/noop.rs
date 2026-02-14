@@ -20,8 +20,8 @@ use alloy_eips::{
     eip7594::BlobTransactionSidecarVariant,
 };
 use alloy_primitives::{map::AddressSet, Address, TxHash, B256, U256};
-use reth_eth_wire_types::HandleMempoolData;
-use reth_primitives_traits::Recovered;
+use hanzo_evm_eth_wire_types::HandleMempoolData;
+use hanzo_evm_primitives_traits::Recovered;
 use std::{marker::PhantomData, sync::Arc};
 use tokio::sync::{mpsc, mpsc::Receiver};
 
@@ -380,7 +380,7 @@ pub struct MockTransactionValidator<T> {
 
 impl<T: EthPoolTransaction> TransactionValidator for MockTransactionValidator<T> {
     type Transaction = T;
-    type Block = reth_ethereum_primitives::Block;
+    type Block = hanzo_evm_ethereum_primitives::Block;
 
     async fn validate_transaction(
         &self,

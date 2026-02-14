@@ -1,5 +1,5 @@
-// Reth block related imports
-use reth_ethereum::{provider::BlockReaderIdExt, rpc::eth::EthResult, Block};
+// Hanzo EVM block related imports
+use hanzo_evm_ethereum::{provider::BlockReaderIdExt, rpc::eth::EthResult, Block};
 
 // Rpc related imports
 use jsonrpsee::proc_macros::rpc;

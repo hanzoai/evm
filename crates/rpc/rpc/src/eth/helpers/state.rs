@@ -1,12 +1,12 @@
 //! Contains RPC handler implementations specific to state.
 
 use crate::EthApi;
-use reth_rpc_convert::RpcConvert;
-use reth_rpc_eth_api::{
+use hanzo_evm_rpc_convert::RpcConvert;
+use hanzo_evm_rpc_eth_api::{
     helpers::{EthState, LoadPendingBlock, LoadState},
     RpcNodeCore,
 };
-use reth_rpc_eth_types::EthApiError;
+use hanzo_evm_rpc_eth_types::EthApiError;
 
 impl<N, Rpc> EthState for EthApi<N, Rpc>
 where
@@ -36,15 +36,15 @@ mod tests {
         map::{AddressMap, B256Map},
         Address, StorageKey, StorageValue, U256,
     };
-    use reth_chainspec::ChainSpec;
-    use reth_evm_ethereum::EthEvmConfig;
-    use reth_network_api::noop::NoopNetwork;
-    use reth_provider::{
+    use hanzo_evm_chainspec::ChainSpec;
+    use hanzo_evm_eth_execution::EthEvmConfig;
+    use hanzo_evm_network_api::noop::NoopNetwork;
+    use hanzo_evm_provider::{
         test_utils::{ExtendedAccount, MockEthProvider, NoopProvider},
         ChainSpecProvider,
     };
-    use reth_rpc_eth_api::{helpers::EthState, node::RpcNodeCoreAdapter};
-    use reth_transaction_pool::test_utils::{testing_pool, TestPool};
+    use hanzo_evm_rpc_eth_api::{helpers::EthState, node::RpcNodeCoreAdapter};
+    use hanzo_evm_transaction_pool::test_utils::{testing_pool, TestPool};
 
     fn noop_eth_api() -> EthApi<
         RpcNodeCoreAdapter<NoopProvider, TestPool, NoopNetwork, EthEvmConfig>,
@@ -52,9 +52,9 @@ mod tests {
     > {
         let provider = NoopProvider::default();
         let pool = testing_pool();
-        let evm_config = EthEvmConfig::mainnet();
+        let hanzo_evm_config = EthEvmConfig::mainnet();
 
-        EthApi::builder(provider, pool, NoopNetwork::default(), evm_config).build()
+        EthApi::builder(provider, pool, NoopNetwork::default(), hanzo_evm_config).build()
     }
 
     fn mock_eth_api(
@@ -66,10 +66,10 @@ mod tests {
         let pool = testing_pool();
         let mock_provider = MockEthProvider::default();
 
-        let evm_config = EthEvmConfig::new(mock_provider.chain_spec());
+        let hanzo_evm_config = EthEvmConfig::new(mock_provider.chain_spec());
         mock_provider.extend_accounts(accounts);
 
-        EthApi::builder(mock_provider, pool, NoopNetwork::default(), evm_config).build()
+        EthApi::builder(mock_provider, pool, NoopNetwork::default(), hanzo_evm_config).build()
     }
 
     #[tokio::test]

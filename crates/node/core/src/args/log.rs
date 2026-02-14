@@ -2,9 +2,9 @@
 
 use crate::dirs::{LogsDir, PlatformPath};
 use clap::{ArgAction, Args, ValueEnum};
-use reth_tracing::{
+use hanzo_evm_tracing::{
     tracing_subscriber::filter::Directive, FileInfo, FileWorkerGuard, LayerInfo, Layers, LogFormat,
-    RethTracer, Tracer,
+    EvmTracer, Tracer,
 };
 use std::{fmt, fmt::Display};
 use tracing::{level_filters::LevelFilter, Level};
@@ -40,7 +40,7 @@ pub struct LogArgs {
     pub log_file_directory: PlatformPath<LogsDir>,
 
     /// The prefix name of the log files.
-    #[arg(long = "log.file.name", value_name = "NAME", global = true, default_value = "reth.log")]
+    #[arg(long = "log.file.name", value_name = "NAME", global = true, default_value = "evm.log")]
     pub log_file_name: String,
 
     /// The maximum size (in MB) of one log file.
@@ -146,7 +146,7 @@ impl LogArgs {
         &self,
         layers: Layers,
     ) -> eyre::Result<Option<FileWorkerGuard>> {
-        let mut tracer = RethTracer::new();
+        let mut tracer = EvmTracer::new();
 
         let stdout = self.layer_info(self.log_stdout_format, self.log_stdout_filter.clone(), true);
         tracer = tracer.with_stdout(stdout);

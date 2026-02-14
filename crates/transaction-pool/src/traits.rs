@@ -72,10 +72,10 @@ use alloy_eips::{
 };
 use alloy_primitives::{map::AddressSet, Address, Bytes, TxHash, TxKind, B256, U256};
 use futures_util::{ready, Stream};
-use reth_eth_wire_types::HandleMempoolData;
-use reth_ethereum_primitives::{PooledTransactionVariant, TransactionSigned};
-use reth_execution_types::ChangedAccount;
-use reth_primitives_traits::{Block, InMemorySize, Recovered, SealedBlock, SignedTransaction};
+use hanzo_evm_eth_wire_types::HandleMempoolData;
+use hanzo_evm_ethereum_primitives::{PooledTransactionVariant, TransactionSigned};
+use hanzo_evm_execution_types::ChangedAccount;
+use hanzo_evm_primitives_traits::{Block, InMemorySize, Recovered, SealedBlock, SignedTransaction};
 use serde::{Deserialize, Serialize};
 use std::{
     collections::HashMap,
@@ -416,7 +416,7 @@ pub trait TransactionPool: Clone + Debug + Send + Sync {
     }
 
     /// Returns first `max` transactions that can be included in the next block.
-    /// See <https://github.com/paradigmxyz/reth/issues/12767#issuecomment-2493223579>
+    /// See <https://github.com/hanzoai/evm/issues/12767#issuecomment-2493223579>
     ///
     /// Consumer: Block production
     fn pending_transactions_max(

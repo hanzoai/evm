@@ -1,5 +1,5 @@
 [package]
-name = "reth-errors"
+name = "hanzo-evm-errors"
 version.workspace = true
 edition.workspace = true
 rust-version.workspace = true
@@ -11,9 +11,9 @@ repository.workspace = true
 workspace = true
 
 [dependencies]
-reth-consensus.workspace = true
-reth-execution-errors.workspace = true
-reth-storage-errors.workspace = true
+hanzo-evm-consensus.workspace = true
+hanzo-evm-execution-errors.workspace = true
+hanzo-evm-storage-errors.workspace = true
 
 # misc
 thiserror.workspace = true

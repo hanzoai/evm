@@ -1,5 +1,5 @@
 [package]
-name = "reth-stages-api"
+name = "hanzo-evm-stages-api"
 version.workspace = true
 edition.workspace = true
 rust-version.workspace = true
@@ -11,24 +11,24 @@ repository.workspace = true
 workspace = true
 
 [dependencies]
-# reth
-reth-primitives-traits.workspace = true
-reth-provider.workspace = true
-reth-static-file.workspace = true
-reth-network-p2p.workspace = true
-reth-tokio-util.workspace = true
-reth-consensus.workspace = true
-reth-prune.workspace = true
-reth-errors.workspace = true
-reth-stages-types.workspace = true
-reth-static-file-types.workspace = true
+# evm
+hanzo-evm-primitives-traits.workspace = true
+hanzo-evm-provider.workspace = true
+hanzo-evm-static-file.workspace = true
+hanzo-evm-network-p2p.workspace = true
+hanzo-evm-tokio-util.workspace = true
+hanzo-evm-consensus.workspace = true
+hanzo-evm-prune.workspace = true
+hanzo-evm-errors.workspace = true
+hanzo-evm-stages-types.workspace = true
+hanzo-evm-static-file-types.workspace = true
 
 # alloy
 alloy-primitives.workspace = true
 alloy-eips.workspace = true
 
 # metrics
-reth-metrics.workspace = true
+hanzo-evm-metrics.workspace = true
 metrics.workspace = true
 
 # async
@@ -43,22 +43,22 @@ auto_impl.workspace = true
 
 [dev-dependencies]
 assert_matches.workspace = true
-reth-chainspec.workspace = true
-reth-db = { workspace = true, features = ["test-utils"] }
-reth-db-api.workspace = true
-reth-provider = { workspace = true, features = ["test-utils"] }
+hanzo-evm-chainspec.workspace = true
+hanzo-evm-db = { workspace = true, features = ["test-utils"] }
+hanzo-evm-db-api.workspace = true
+hanzo-evm-provider = { workspace = true, features = ["test-utils"] }
 tokio = { workspace = true, features = ["sync", "rt-multi-thread"] }
 tokio-stream.workspace = true
-reth-testing-utils.workspace = true
+hanzo-evm-testing-utils.workspace = true
 
 [features]
 test-utils = [
-    "reth-chainspec/test-utils",
-    "reth-consensus/test-utils",
-    "reth-db-api/test-utils",
-    "reth-db/test-utils",
-    "reth-network-p2p/test-utils",
-    "reth-primitives-traits/test-utils",
-    "reth-provider/test-utils",
-    "reth-stages-types/test-utils",
+    "hanzo-evm-chainspec/test-utils",
+    "hanzo-evm-consensus/test-utils",
+    "hanzo-evm-db-api/test-utils",
+    "hanzo-evm-db/test-utils",
+    "hanzo-evm-network-p2p/test-utils",
+    "hanzo-evm-primitives-traits/test-utils",
+    "hanzo-evm-provider/test-utils",
+    "hanzo-evm-stages-types/test-utils",
 ]

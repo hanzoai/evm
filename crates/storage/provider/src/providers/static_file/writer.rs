@@ -5,16 +5,16 @@ use crate::providers::static_file::metrics::StaticFileProviderOperation;
 use alloy_consensus::BlockHeader;
 use alloy_primitives::{BlockHash, BlockNumber, TxNumber, U256};
 use parking_lot::{lock_api::RwLockWriteGuard, RawRwLock, RwLock};
-use reth_codecs::Compact;
-use reth_db::models::{AccountBeforeTx, StorageBeforeTx};
-use reth_db_api::models::CompactU256;
-use reth_nippy_jar::{NippyJar, NippyJarError, NippyJarWriter};
-use reth_node_types::NodePrimitives;
-use reth_static_file_types::{
+use hanzo_evm_codecs::Compact;
+use hanzo_evm_db::models::{AccountBeforeTx, StorageBeforeTx};
+use hanzo_evm_db_api::models::CompactU256;
+use hanzo_evm_nippy_jar::{NippyJar, NippyJarError, NippyJarWriter};
+use hanzo_evm_node_types::NodePrimitives;
+use hanzo_evm_static_file_types::{
     ChangesetOffset, ChangesetOffsetReader, ChangesetOffsetWriter, SegmentHeader,
     SegmentRangeInclusive, StaticFileSegment,
 };
-use reth_storage_errors::provider::{ProviderError, ProviderResult, StaticFileWriterError};
+use hanzo_evm_storage_errors::provider::{ProviderError, ProviderResult, StaticFileWriterError};
 use std::{
     borrow::Borrow,
     cmp::Ordering,
@@ -219,7 +219,7 @@ impl<N> std::ops::Deref for StaticFileProviderRWRefMut<'_, N> {
 /// Extends `StaticFileProvider` with writing capabilities
 pub struct StaticFileProviderRW<N> {
     /// Reference back to the provider. We need [Weak] here because [`StaticFileProviderRW`] is
-    /// stored in a [`reth_primitives_traits::dashmap::DashMap`] inside the parent
+    /// stored in a [`hanzo_evm_primitives_traits::dashmap::DashMap`] inside the parent
     /// [`StaticFileProvider`].which is an [Arc]. If we were to use an [Arc] here, we would
     /// create a reference cycle.
     reader: Weak<StaticFileProviderInner<N>>,
@@ -332,7 +332,7 @@ impl<N: NodePrimitives> StaticFileProviderRW<N> {
     /// However, for transaction based segments, the block end range has to be found and healed
     /// externally.
     ///
-    /// Check [`reth_nippy_jar::NippyJarChecker`] &
+    /// Check [`hanzo_evm_nippy_jar::NippyJarChecker`] &
     /// [`NippyJarWriter`] for more on healing.
     fn ensure_end_range_consistency(&mut self) -> ProviderResult<()> {
         // If we have lost rows (in this run or previous), we need to update the [SegmentHeader].
@@ -383,7 +383,7 @@ impl<N: NodePrimitives> StaticFileProviderRW<N> {
 
         // Get actual sidecar file size (may differ from header after crash)
         let actual_sidecar_blocks = if csoff_path.exists() {
-            let file_len = reth_fs_util::metadata(&csoff_path).map_err(ProviderError::other)?.len();
+            let file_len = hanzo_evm_fs_util::metadata(&csoff_path).map_err(ProviderError::other)?.len();
             // Remove partial records from crash mid-write
             let aligned_len = file_len - (file_len % 16);
             aligned_len / 16
@@ -430,7 +430,7 @@ impl<N: NodePrimitives> StaticFileProviderRW<N> {
 
         if correct_blocks != header_claims_blocks || actual_sidecar_blocks != correct_blocks {
             tracing::warn!(
-                target: "reth::static_file",
+                target: "evm::static_file",
                 path = %csoff_path.display(),
                 header_claims = header_claims_blocks,
                 sidecar_has = actual_sidecar_blocks,
@@ -450,7 +450,7 @@ impl<N: NodePrimitives> StaticFileProviderRW<N> {
                 file.sync_all().map_err(ProviderError::other)?;
 
                 tracing::debug!(
-                    target: "reth::static_file",
+                    target: "evm::static_file",
                     "Truncated sidecar from {} to {} blocks",
                     actual_sidecar_blocks,
                     correct_blocks
@@ -465,7 +465,7 @@ impl<N: NodePrimitives> StaticFileProviderRW<N> {
                 self.writer.user_header_mut().prune(blocks_removed);
 
                 tracing::debug!(
-                    target: "reth::static_file",
+                    target: "evm::static_file",
                     "Updated header: removed {} blocks (changeset_offsets_len: {} -> {})",
                     blocks_removed,
                     header_claims_blocks,
@@ -476,7 +476,7 @@ impl<N: NodePrimitives> StaticFileProviderRW<N> {
             }
         } else {
             tracing::debug!(
-                target: "reth::static_file",
+                target: "evm::static_file",
                 path = %csoff_path.display(),
                 blocks = correct_blocks,
                 "Changeset sidecar consistent, no healing needed"
@@ -494,7 +494,7 @@ impl<N: NodePrimitives> StaticFileProviderRW<N> {
             self.writer.commit().map_err(ProviderError::other)?;
 
             tracing::info!(
-                target: "reth::static_file",
+                target: "evm::static_file",
                 path = %csoff_path.display(),
                 blocks = correct_blocks,
                 "Committed healed changeset offset header"

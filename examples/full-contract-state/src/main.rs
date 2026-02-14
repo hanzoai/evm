@@ -1,14 +1,14 @@
-//! Example demonstrating how to extract the full state of a specific contract from the reth
+//! Example demonstrating how to extract the full state of a specific contract from the evm
 //! database.
 //!
 //! This example shows how to:
-//! 1. Connect to a reth database
+//! 1. Connect to a evm database
 //! 2. Get basic account information (balance, nonce, code hash)
 //! 3. Get contract bytecode
 //! 4. Iterate through all storage slots for the contract
 
 use alloy_primitives::map::B256Map;
-use reth_ethereum::{
+use hanzo_evm_ethereum::{
     chainspec::ChainSpecBuilder,
     evm::revm::primitives::{Address, U256},
     node::EthereumNode,
@@ -70,7 +70,7 @@ fn main() -> eyre::Result<()> {
     let address = std::env::var("CONTRACT_ADDRESS")?;
     let contract_address = Address::from_str(&address)?;
 
-    let datadir = std::env::var("RETH_DATADIR")?;
+    let datadir = std::env::var("EVM_DATADIR")?;
     let spec = ChainSpecBuilder::mainnet().build();
     let factory = EthereumNode::provider_factory_builder()
         .open_read_only(spec.into(), ReadOnlyConfig::from_datadir(datadir))?;

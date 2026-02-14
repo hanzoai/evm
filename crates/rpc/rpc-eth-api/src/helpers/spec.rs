@@ -3,11 +3,11 @@
 use alloy_primitives::{U256, U64};
 use alloy_rpc_types_eth::{Stage, SyncInfo, SyncStatus};
 use futures::Future;
-use reth_chainspec::ChainInfo;
-use reth_errors::{RethError, RethResult};
-use reth_network_api::NetworkInfo;
-use reth_rpc_convert::RpcTxReq;
-use reth_storage_api::{BlockNumReader, StageCheckpointReader, TransactionsProvider};
+use hanzo_evm_chainspec::ChainInfo;
+use hanzo_evm_errors::{EvmError, EvmResult};
+use hanzo_evm_network_api::NetworkInfo;
+use hanzo_evm_rpc_convert::RpcTxReq;
+use hanzo_evm_storage_api::{BlockNumReader, StageCheckpointReader, TransactionsProvider};
 
 use crate::{helpers::EthSigner, EthApiTypes, RpcNodeCore};
 
@@ -20,9 +20,9 @@ pub trait EthApiSpec: RpcNodeCore + EthApiTypes {
     fn starting_block(&self) -> U256;
 
     /// Returns the current ethereum protocol version.
-    fn protocol_version(&self) -> impl Future<Output = RethResult<U64>> + Send {
+    fn protocol_version(&self) -> impl Future<Output = EvmResult<U64>> + Send {
         async move {
-            let status = self.network().network_status().await.map_err(RethError::other)?;
+            let status = self.network().network_status().await.map_err(EvmError::other)?;
             Ok(U64::from(status.protocol_version))
         }
     }
@@ -33,7 +33,7 @@ pub trait EthApiSpec: RpcNodeCore + EthApiTypes {
     }
 
     /// Returns provider chain info
-    fn chain_info(&self) -> RethResult<ChainInfo> {
+    fn chain_info(&self) -> EvmResult<ChainInfo> {
         Ok(self.provider().chain_info()?)
     }
 
@@ -43,7 +43,7 @@ pub trait EthApiSpec: RpcNodeCore + EthApiTypes {
     }
 
     /// Returns the [`SyncStatus`] of the network
-    fn sync_status(&self) -> RethResult<SyncStatus> {
+    fn sync_status(&self) -> EvmResult<SyncStatus> {
         let status = if self.is_syncing() {
             let current_block = U256::from(
                 self.provider().chain_info().map(|info| info.best_number).unwrap_or_default(),
@@ -73,7 +73,7 @@ pub trait EthApiSpec: RpcNodeCore + EthApiTypes {
 }
 
 /// A handle to [`EthSigner`]s with its generics set from [`TransactionsProvider`] and
-/// [`reth_rpc_convert::RpcTypes`].
+/// [`hanzo_evm_rpc_convert::RpcTypes`].
 pub type SignersForRpc<Provider, Rpc> = parking_lot::RwLock<
     Vec<Box<dyn EthSigner<<Provider as TransactionsProvider>::Transaction, RpcTxReq<Rpc>>>>,
 >;

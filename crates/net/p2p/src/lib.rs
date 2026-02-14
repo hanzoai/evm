@@ -4,9 +4,9 @@
 //!
 //! - `test-utils`: Export utilities for testing
 #![doc(
-    html_logo_url = "https://raw.githubusercontent.com/paradigmxyz/reth/main/assets/reth-docs.png",
+    html_logo_url = "https://raw.githubusercontent.com/hanzoai/evm/main/assets/evm-docs.png",
     html_favicon_url = "https://avatars0.githubusercontent.com/u/97369466?s=256",
-    issue_tracker_base_url = "https://github.com/paradigmxyz/reth/issues/"
+    issue_tracker_base_url = "https://github.com/hanzoai/evm/issues/"
 )]
 #![cfg_attr(not(test), warn(unused_crate_dependencies))]
 #![cfg_attr(docsrs, feature(doc_cfg))]
@@ -28,7 +28,7 @@ pub use full_block::{FullBlockClient, NoopFullBlockClient};
 /// of a Linear and a Parallel downloader generic over the [`Consensus`] and
 /// [`HeadersClient`].
 ///
-/// [`Consensus`]: reth_consensus::Consensus
+/// [`Consensus`]: hanzo_evm_consensus::Consensus
 /// [`HeadersClient`]: crate::headers::client::HeadersClient
 pub mod headers;
 
@@ -51,7 +51,7 @@ pub mod test_utils;
 
 pub use bodies::client::BodiesClient;
 pub use headers::client::HeadersClient;
-use reth_primitives_traits::Block;
+use hanzo_evm_primitives_traits::Block;
 
 /// Helper trait that unifies network behaviour needed for fetching entire blocks.
 pub trait BlockClient:
@@ -65,6 +65,6 @@ pub trait BlockClient:
 }
 
 /// The [`BlockClient`] providing Ethereum block parts.
-pub trait EthBlockClient: BlockClient<Block = reth_ethereum_primitives::Block> {}
+pub trait EthBlockClient: BlockClient<Block = hanzo_evm_ethereum_primitives::Block> {}
 
-impl<T> EthBlockClient for T where T: BlockClient<Block = reth_ethereum_primitives::Block> {}
+impl<T> EthBlockClient for T where T: BlockClient<Block = hanzo_evm_ethereum_primitives::Block> {}

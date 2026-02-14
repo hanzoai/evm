@@ -2,7 +2,7 @@
 use alloy_primitives::Address;
 use criterion::{criterion_group, criterion_main, Criterion};
 use proptest::{prelude::*, strategy::ValueTree, test_runner::TestRunner};
-use reth_transaction_pool::{
+use hanzo_evm_transaction_pool::{
     batcher::{BatchTxProcessor, BatchTxRequest},
     test_utils::{testing_pool, MockTransaction},
     TransactionOrigin, TransactionPool,

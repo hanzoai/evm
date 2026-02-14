@@ -4,12 +4,12 @@ use alloy_consensus::BlockHeader;
 use alloy_primitives::BlockNumber;
 use futures::{stream::FuturesUnordered, Stream};
 use futures_util::StreamExt;
-use reth_consensus::Consensus;
-use reth_network_p2p::{
+use hanzo_evm_consensus::Consensus;
+use hanzo_evm_network_p2p::{
     bodies::{client::BodiesClient, response::BlockResponse},
     error::DownloadResult,
 };
-use reth_primitives_traits::{Block, SealedHeader};
+use hanzo_evm_primitives_traits::{Block, SealedHeader};
 use std::{
     pin::Pin,
     sync::Arc,

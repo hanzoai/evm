@@ -7,8 +7,8 @@ use derive_more::Deref;
 use revm_bytecode::{Bytecode as RevmBytecode, BytecodeDecodeError};
 use revm_state::AccountInfo;
 
-#[cfg(any(test, feature = "reth-codec"))]
-/// Identifiers used in [`Compact`](reth_codecs::Compact) encoding of [`Bytecode`].
+#[cfg(any(test, feature = "hanzo-evm-codec"))]
+/// Identifiers used in [`Compact`](hanzo_evm_codecs::Compact) encoding of [`Bytecode`].
 pub mod compact_ids {
     /// Identifier for legacy raw bytecode.
     pub const LEGACY_RAW_BYTECODE_ID: u8 = 0;
@@ -27,8 +27,8 @@ pub mod compact_ids {
 #[cfg_attr(any(test, feature = "serde"), derive(serde::Serialize, serde::Deserialize))]
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Default)]
 #[cfg_attr(any(test, feature = "arbitrary"), derive(arbitrary::Arbitrary))]
-#[cfg_attr(any(test, feature = "reth-codec"), derive(reth_codecs::Compact))]
-#[cfg_attr(any(test, feature = "reth-codec"), reth_codecs::add_arbitrary_tests(compact))]
+#[cfg_attr(any(test, feature = "hanzo-evm-codec"), derive(hanzo_evm_codecs::Compact))]
+#[cfg_attr(any(test, feature = "hanzo-evm-codec"), hanzo_evm_codecs::add_arbitrary_tests(compact))]
 pub struct Account {
     /// Account nonce.
     pub nonce: u64,
@@ -129,8 +129,8 @@ impl Bytecode {
     }
 }
 
-#[cfg(any(test, feature = "reth-codec"))]
-impl reth_codecs::Compact for Bytecode {
+#[cfg(any(test, feature = "hanzo-evm-codec"))]
+impl hanzo_evm_codecs::Compact for Bytecode {
     fn to_compact<B>(&self, buf: &mut B) -> usize
     where
         B: bytes::BufMut + AsMut<[u8]>,
@@ -238,11 +238,11 @@ impl From<&AccountInfo> for Account {
 }
 
 impl From<Account> for AccountInfo {
-    fn from(reth_acc: Account) -> Self {
+    fn from(evm_acc: Account) -> Self {
         Self {
-            balance: reth_acc.balance,
-            nonce: reth_acc.nonce,
-            code_hash: reth_acc.bytecode_hash.unwrap_or(KECCAK_EMPTY),
+            balance: evm_acc.balance,
+            nonce: evm_acc.nonce,
+            code_hash: evm_acc.bytecode_hash.unwrap_or(KECCAK_EMPTY),
             code: None,
             account_id: None,
         }
@@ -255,7 +255,7 @@ mod tests {
 
     use super::*;
     use alloy_primitives::{hex_literal::hex, B256, U256};
-    use reth_codecs::Compact;
+    use hanzo_evm_codecs::Compact;
     use revm_bytecode::{JumpTable, LegacyAnalyzedBytecode};
 
     #[test]

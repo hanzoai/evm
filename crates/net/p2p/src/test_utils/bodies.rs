@@ -6,8 +6,8 @@ use crate::{
 };
 use alloy_primitives::B256;
 use futures::FutureExt;
-use reth_ethereum_primitives::BlockBody;
-use reth_network_peers::PeerId;
+use hanzo_evm_ethereum_primitives::BlockBody;
+use hanzo_evm_network_peers::PeerId;
 use std::{
     fmt::{Debug, Formatter},
     ops::RangeInclusive,

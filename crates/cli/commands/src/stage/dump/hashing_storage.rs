@@ -1,14 +1,14 @@
 use super::setup;
 use eyre::Result;
-use reth_db::DatabaseEnv;
-use reth_db_api::{database::Database, table::TableImporter, tables};
-use reth_db_common::DbTool;
-use reth_node_core::dirs::{ChainPath, DataDirPath};
-use reth_provider::{
+use hanzo_evm_db::DatabaseEnv;
+use hanzo_evm_db_api::{database::Database, table::TableImporter, tables};
+use hanzo_evm_db_common::DbTool;
+use hanzo_evm_node_core::dirs::{ChainPath, DataDirPath};
+use hanzo_evm_provider::{
     providers::{ProviderNodeTypes, RocksDBProvider, StaticFileProvider},
     DatabaseProviderFactory, ProviderFactory,
 };
-use reth_stages::{stages::StorageHashingStage, Stage, StageCheckpoint, UnwindInput};
+use hanzo_evm_stages::{stages::StorageHashingStage, Stage, StageCheckpoint, UnwindInput};
 use tracing::info;
 
 pub(crate) async fn dump_hashing_storage_stage<N: ProviderNodeTypes<DB = DatabaseEnv>>(
@@ -74,7 +74,7 @@ fn dry_run<N: ProviderNodeTypes>(
     to: u64,
     from: u64,
 ) -> eyre::Result<()> {
-    info!(target: "reth::cli", "Executing stage.");
+    info!(target: "evm::cli", "Executing stage.");
 
     let provider = output_provider_factory.database_provider_rw()?;
     let mut stage = StorageHashingStage {
@@ -83,7 +83,7 @@ fn dry_run<N: ProviderNodeTypes>(
     };
 
     loop {
-        let input = reth_stages::ExecInput {
+        let input = hanzo_evm_stages::ExecInput {
             target: Some(to),
             checkpoint: Some(StageCheckpoint::new(from)),
         };
@@ -92,7 +92,7 @@ fn dry_run<N: ProviderNodeTypes>(
         }
     }
 
-    info!(target: "reth::cli", "Success.");
+    info!(target: "evm::cli", "Success.");
 
     Ok(())
 }

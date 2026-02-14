@@ -1,6 +1,6 @@
 use crate::{stats::TrieStats, trie::TrieType};
 use metrics::{Counter, Histogram};
-use reth_metrics::Metrics;
+use hanzo_evm_metrics::Metrics;
 
 /// Wrapper for state root metrics.
 #[derive(Debug)]

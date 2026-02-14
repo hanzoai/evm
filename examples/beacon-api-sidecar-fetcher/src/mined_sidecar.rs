@@ -6,7 +6,7 @@ use alloy_rpc_types_beacon::sidecar::{BeaconBlobBundle, SidecarIterator};
 use eyre::Result;
 use futures_util::{stream::FuturesUnordered, Future, Stream, StreamExt};
 use reqwest::{Error, StatusCode};
-use reth_ethereum::{
+use hanzo_evm_ethereum::{
     pool::{BlobStoreError, TransactionPoolExt},
     primitives::RecoveredBlock,
     provider::CanonStateNotification,
@@ -98,7 +98,7 @@ where
     St: Stream<Item = CanonStateNotification> + Send + Unpin + 'static,
     P: TransactionPoolExt + Unpin + 'static,
 {
-    fn process_block(&mut self, block: &RecoveredBlock<reth_ethereum::Block>) {
+    fn process_block(&mut self, block: &RecoveredBlock<hanzo_evm_ethereum::Block>) {
         let txs: Vec<_> = block
             .body()
             .transactions()
@@ -230,8 +230,8 @@ where
 async fn fetch_blobs_for_block(
     client: reqwest::Client,
     url: String,
-    block: RecoveredBlock<reth_ethereum::Block>,
-    txs: Vec<(reth_ethereum::TransactionSigned, usize)>,
+    block: RecoveredBlock<hanzo_evm_ethereum::Block>,
+    txs: Vec<(hanzo_evm_ethereum::TransactionSigned, usize)>,
 ) -> Result<Vec<BlobTransactionEvent>, SideCarError> {
     let response = match client.get(url).header("Accept", "application/json").send().await {
         Ok(response) => response,

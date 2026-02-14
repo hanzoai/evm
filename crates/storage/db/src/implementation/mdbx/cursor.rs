@@ -5,7 +5,7 @@ use crate::{
     metrics::{DatabaseEnvMetrics, Operation},
     DatabaseError,
 };
-use reth_db_api::{
+use hanzo_evm_db_api::{
     common::{PairResult, ValueOnlyResult},
     cursor::{
         DbCursorRO, DbCursorRW, DbDupCursorRO, DbDupCursorRW, DupWalker, RangeWalker,
@@ -13,8 +13,8 @@ use reth_db_api::{
     },
     table::{Compress, Decode, Decompress, DupSort, Encode, IntoVec, Table},
 };
-use reth_libmdbx::{Error as MDBXError, TransactionKind, WriteFlags, RO, RW};
-use reth_storage_errors::db::{DatabaseErrorInfo, DatabaseWriteError, DatabaseWriteOperation};
+use hanzo_evm_libmdbx::{Error as MDBXError, TransactionKind, WriteFlags, RO, RW};
+use hanzo_evm_storage_errors::db::{DatabaseErrorInfo, DatabaseWriteError, DatabaseWriteOperation};
 use std::{borrow::Cow, collections::Bound, marker::PhantomData, ops::RangeBounds, sync::Arc};
 
 /// Read only Cursor.
@@ -26,7 +26,7 @@ pub type CursorRW<T> = Cursor<RW, T>;
 #[derive(Debug)]
 pub struct Cursor<K: TransactionKind, T: Table> {
     /// Inner `libmdbx` cursor.
-    pub(crate) inner: reth_libmdbx::Cursor<K>,
+    pub(crate) inner: hanzo_evm_libmdbx::Cursor<K>,
     /// Cache buffer that receives compressed values.
     buf: Vec<u8>,
     /// Reference to metric handles in the DB environment. If `None`, metrics are not recorded.
@@ -37,7 +37,7 @@ pub struct Cursor<K: TransactionKind, T: Table> {
 
 impl<K: TransactionKind, T: Table> Cursor<K, T> {
     pub(crate) const fn new_with_metrics(
-        inner: reth_libmdbx::Cursor<K>,
+        inner: hanzo_evm_libmdbx::Cursor<K>,
         metrics: Option<Arc<DatabaseEnvMetrics>>,
     ) -> Self {
         Self { inner, buf: Vec::new(), metrics, _dbi: PhantomData }
@@ -367,13 +367,13 @@ mod tests {
         Database,
     };
     use alloy_primitives::{address, Address, B256, U256};
-    use reth_db_api::{
+    use hanzo_evm_db_api::{
         cursor::{DbCursorRO, DbDupCursorRW},
         models::{BlockNumberAddress, ClientVersion},
         table::TableImporter,
         transaction::{DbTx, DbTxMut},
     };
-    use reth_primitives_traits::StorageEntry;
+    use hanzo_evm_primitives_traits::StorageEntry;
     use tempfile::TempDir;
 
     fn create_test_db() -> DatabaseEnv {

@@ -17,22 +17,22 @@ use alloy_network::{TransactionBuilder, TransactionBuilder4844};
 use alloy_primitives::{Address, Bytes, TxHash, B256, U256};
 use alloy_rpc_types_eth::{BlockNumberOrTag, TransactionInfo};
 use futures::{Future, StreamExt};
-use reth_chain_state::CanonStateSubscriptions;
-use reth_primitives_traits::{
+use hanzo_evm_chain_state::CanonStateSubscriptions;
+use hanzo_evm_primitives_traits::{
     BlockBody, Recovered, RecoveredBlock, SignedTransaction, TxTy, WithEncoded,
 };
-use reth_rpc_convert::{transaction::RpcConvert, RpcTxReq, TransactionConversionError};
-use reth_rpc_eth_types::{
+use hanzo_evm_rpc_convert::{transaction::RpcConvert, RpcTxReq, TransactionConversionError};
+use hanzo_evm_rpc_eth_types::{
     block::convert_transaction_receipt,
     utils::{binary_search, recover_raw_transaction},
     EthApiError::{self, TransactionConfirmationTimeout},
     FillTransaction, SignError, TransactionSource,
 };
-use reth_storage_api::{
+use hanzo_evm_storage_api::{
     BlockNumReader, BlockReaderIdExt, ProviderBlock, ProviderReceipt, ProviderTx, ReceiptProvider,
     TransactionsProvider,
 };
-use reth_transaction_pool::{
+use hanzo_evm_transaction_pool::{
     AddedTransactionOutcome, PoolPooledTx, PoolTransaction, TransactionOrigin, TransactionPool,
 };
 use std::{sync::Arc, time::Duration};
@@ -43,7 +43,7 @@ use std::{sync::Arc, time::Duration};
 /// This includes utilities for transaction tracing, transacting and inspection.
 ///
 /// Async functions that are spawned onto the
-/// [`BlockingTaskPool`](reth_tasks::pool::BlockingTaskPool) begin with `spawn_`
+/// [`BlockingTaskPool`](hanzo_evm_tasks::pool::BlockingTaskPool) begin with `spawn_`
 ///
 /// ## Calls
 ///
@@ -56,7 +56,7 @@ use std::{sync::Arc, time::Duration};
 /// Geth also disables the basefee check for tracing: <https://github.com/ethereum/go-ethereum/blob/bc0b87ca196f92e5af49bd33cc190ef0ec32b197/eth/tracers/api.go#L955-L955>
 /// Erigon does not: <https://github.com/ledgerwatch/erigon/blob/aefb97b07d1c4fd32a66097a24eddd8f6ccacae0/turbo/transactions/tracing.go#L209-L209>
 ///
-/// See also <https://github.com/paradigmxyz/reth/issues/6240>
+/// See also <https://github.com/hanzoai/evm/issues/6240>
 ///
 /// This implementation follows the behaviour of Geth and disables the basefee check for tracing.
 pub trait EthTransactions: LoadTransaction<Provider: BlockReaderIdExt> {

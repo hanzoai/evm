@@ -2,12 +2,12 @@ use crate::{BackfillJobFactory, ExExNotification, StreamBackfillJob, WalHandle};
 use alloy_consensus::BlockHeader;
 use alloy_eips::BlockNumHash;
 use futures::{Stream, StreamExt};
-use reth_ethereum_primitives::EthPrimitives;
-use reth_evm::ConfigureEvm;
-use reth_exex_types::ExExHead;
-use reth_node_api::NodePrimitives;
-use reth_provider::{BlockReader, Chain, HeaderProvider, StateProviderFactory};
-use reth_tracing::tracing::debug;
+use hanzo_evm_ethereum_primitives::EthPrimitives;
+use hanzo_evm_execution::ConfigureEvm;
+use hanzo_evm_exex_types::ExExHead;
+use hanzo_evm_node_api::NodePrimitives;
+use hanzo_evm_provider::{BlockReader, Chain, HeaderProvider, StateProviderFactory};
+use hanzo_evm_tracing::tracing::debug;
 use std::{
     fmt::Debug,
     pin::Pin,
@@ -86,7 +86,7 @@ where
     pub const fn new(
         node_head: BlockNumHash,
         provider: P,
-        evm_config: E,
+        hanzo_evm_config: E,
         notifications: Receiver<ExExNotification<E::Primitives>>,
         wal_handle: WalHandle<E::Primitives>,
     ) -> Self {
@@ -94,7 +94,7 @@ where
             inner: ExExNotificationsInner::WithoutHead(ExExNotificationsWithoutHead::new(
                 node_head,
                 provider,
-                evm_config,
+                hanzo_evm_config,
                 notifications,
                 wal_handle,
             )),
@@ -114,7 +114,7 @@ where
             ExExNotificationsInner::WithHead(notifications) => ExExNotificationsWithoutHead::new(
                 notifications.initial_local_head,
                 notifications.provider,
-                notifications.evm_config,
+                notifications.hanzo_evm_config,
                 notifications.notifications,
                 notifications.wal_handle,
             ),
@@ -132,7 +132,7 @@ where
                 Box::new(ExExNotificationsWithHead::new(
                     notifications.initial_local_head,
                     notifications.provider,
-                    notifications.evm_config,
+                    notifications.hanzo_evm_config,
                     notifications.notifications,
                     notifications.wal_handle,
                     exex_head,
@@ -181,7 +181,7 @@ where
 {
     node_head: BlockNumHash,
     provider: P,
-    evm_config: E,
+    hanzo_evm_config: E,
     notifications: Receiver<ExExNotification<E::Primitives>>,
     wal_handle: WalHandle<E::Primitives>,
 }
@@ -193,7 +193,7 @@ where
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         f.debug_struct("ExExNotifications")
             .field("provider", &self.provider)
-            .field("evm_config", &self.evm_config)
+            .field("hanzo_evm_config", &self.hanzo_evm_config)
             .field("notifications", &self.notifications)
             .finish()
     }
@@ -207,11 +207,11 @@ where
     const fn new(
         node_head: BlockNumHash,
         provider: P,
-        evm_config: E,
+        hanzo_evm_config: E,
         notifications: Receiver<ExExNotification<E::Primitives>>,
         wal_handle: WalHandle<E::Primitives>,
     ) -> Self {
-        Self { node_head, provider, evm_config, notifications, wal_handle }
+        Self { node_head, provider, hanzo_evm_config, notifications, wal_handle }
     }
 
     /// Subscribe to notifications with the given head.
@@ -219,7 +219,7 @@ where
         ExExNotificationsWithHead::new(
             self.node_head,
             self.provider,
-            self.evm_config,
+            self.hanzo_evm_config,
             self.notifications,
             self.wal_handle,
             head,
@@ -254,7 +254,7 @@ where
     /// The node's local head at launch.
     initial_local_head: BlockNumHash,
     provider: P,
-    evm_config: E,
+    hanzo_evm_config: E,
     notifications: Receiver<ExExNotification<E::Primitives>>,
     wal_handle: WalHandle<E::Primitives>,
     /// The exex head at launch
@@ -278,7 +278,7 @@ where
     const fn new(
         node_head: BlockNumHash,
         provider: P,
-        evm_config: E,
+        hanzo_evm_config: E,
         notifications: Receiver<ExExNotification<E::Primitives>>,
         wal_handle: WalHandle<E::Primitives>,
         exex_head: ExExHead,
@@ -286,7 +286,7 @@ where
         Self {
             initial_local_head: node_head,
             provider,
-            evm_config,
+            hanzo_evm_config,
             notifications,
             wal_handle,
             initial_exex_head: exex_head,
@@ -360,7 +360,7 @@ where
     ///   node_head.number`). Nothing to do.
     fn check_backfill(&mut self) -> eyre::Result<()> {
         let backfill_job_factory =
-            BackfillJobFactory::new(self.evm_config.clone(), self.provider.clone());
+            BackfillJobFactory::new(self.hanzo_evm_config.clone(), self.provider.clone());
         match self.initial_exex_head.block.number.cmp(&self.initial_local_head.number) {
             std::cmp::Ordering::Less => {
                 // ExEx is behind the node head, start backfill
@@ -451,15 +451,15 @@ mod tests {
     use alloy_eips::BlockNumHash;
     use eyre::OptionExt;
     use futures::StreamExt;
-    use reth_db_common::init::init_genesis;
-    use reth_ethereum_primitives::Block;
-    use reth_evm_ethereum::EthEvmConfig;
-    use reth_primitives_traits::Block as _;
-    use reth_provider::{
+    use hanzo_evm_db_common::init::init_genesis;
+    use hanzo_evm_ethereum_primitives::Block;
+    use hanzo_evm_eth_execution::EthEvmConfig;
+    use hanzo_evm_primitives_traits::Block as _;
+    use hanzo_evm_provider::{
         providers::BlockchainProvider, test_utils::create_test_provider_factory, BlockWriter,
         Chain, DBProvider, DatabaseProviderFactory,
     };
-    use reth_testing_utils::generators::{self, random_block, BlockParams};
+    use hanzo_evm_testing_utils::generators::{self, random_block, BlockParams};
     use std::collections::BTreeMap;
     use tokio::sync::mpsc;
 
@@ -523,7 +523,7 @@ mod tests {
             Some(ExExNotification::ChainCommitted {
                 new: Arc::new(
                     BackfillJobFactory::new(
-                        notifications.evm_config.clone(),
+                        notifications.hanzo_evm_config.clone(),
                         notifications.provider.clone()
                     )
                     .backfill(1..=1)
@@ -683,7 +683,7 @@ mod tests {
 
     #[tokio::test]
     async fn test_notifications_ahead_of_head() -> eyre::Result<()> {
-        reth_tracing::init_test_tracing();
+        hanzo_evm_tracing::init_test_tracing();
         let mut rng = generators::rng();
 
         let temp_dir = tempfile::tempdir().unwrap();

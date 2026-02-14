@@ -6,7 +6,7 @@ use alloy_eips::eip2718::Encodable2718;
 use alloy_primitives::B256;
 use alloy_rlp::{RlpDecodableWrapper, RlpEncodableWrapper};
 use derive_more::{Constructor, Deref, IntoIterator};
-use reth_codecs_derive::add_arbitrary_tests;
+use hanzo_evm_codecs_derive::add_arbitrary_tests;
 
 /// A list of transaction hashes that the peer would like transaction bodies for.
 #[derive(Clone, Debug, PartialEq, Eq, RlpEncodableWrapper, RlpDecodableWrapper, Default)]
@@ -88,8 +88,8 @@ mod tests {
     use alloy_consensus::{transaction::PooledTransaction, TxEip1559, TxLegacy};
     use alloy_primitives::{hex, Signature, TxKind, U256};
     use alloy_rlp::{Decodable, Encodable};
-    use reth_chainspec::MIN_TRANSACTION_GAS;
-    use reth_ethereum_primitives::{Transaction, TransactionSigned};
+    use hanzo_evm_chainspec::MIN_TRANSACTION_GAS;
+    use hanzo_evm_ethereum_primitives::{Transaction, TransactionSigned};
     use std::str::FromStr;
 
     #[test]

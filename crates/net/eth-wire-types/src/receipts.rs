@@ -4,8 +4,8 @@ use alloc::vec::Vec;
 use alloy_consensus::{ReceiptWithBloom, RlpDecodableReceipt, RlpEncodableReceipt, TxReceipt};
 use alloy_primitives::B256;
 use alloy_rlp::{RlpDecodableWrapper, RlpEncodableWrapper};
-use reth_codecs_derive::add_arbitrary_tests;
-use reth_ethereum_primitives::Receipt;
+use hanzo_evm_codecs_derive::add_arbitrary_tests;
+use hanzo_evm_ethereum_primitives::Receipt;
 
 /// A request for transaction receipts from the given block hashes.
 #[derive(Clone, Debug, PartialEq, Eq, RlpEncodableWrapper, RlpDecodableWrapper, Default)]

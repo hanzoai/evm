@@ -7,17 +7,17 @@ pub use client::FetchClient;
 use crate::{message::BlockRequest, session::BlockRangeInfo};
 use alloy_primitives::B256;
 use futures::StreamExt;
-use reth_eth_wire::{
+use hanzo_evm_eth_wire::{
     Capabilities, EthNetworkPrimitives, GetBlockBodies, GetBlockHeaders, NetworkPrimitives,
 };
-use reth_network_api::test_utils::PeersHandle;
-use reth_network_p2p::{
+use hanzo_evm_network_api::test_utils::PeersHandle;
+use hanzo_evm_network_p2p::{
     error::{EthResponseValidator, PeerRequestResult, RequestError, RequestResult},
     headers::client::HeadersRequest,
     priority::Priority,
 };
-use reth_network_peers::PeerId;
-use reth_network_types::ReputationChangeKind;
+use hanzo_evm_network_peers::PeerId;
+use hanzo_evm_network_types::ReputationChangeKind;
 use std::{
     collections::{HashMap, VecDeque},
     ops::RangeInclusive,

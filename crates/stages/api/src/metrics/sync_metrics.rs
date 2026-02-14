@@ -1,5 +1,5 @@
 use crate::StageId;
-use reth_metrics::{metrics::Gauge, Metrics};
+use hanzo_evm_metrics::{metrics::Gauge, Metrics};
 use std::collections::HashMap;
 
 #[derive(Debug, Default)]

@@ -8,16 +8,16 @@ use alloy_consensus::{transaction::TransactionMeta, BlockHeader};
 use alloy_eips::{BlockHashOrNumber, BlockNumHash};
 use alloy_primitives::{map::B256Map, BlockNumber, TxHash, B256};
 use parking_lot::RwLock;
-use reth_chainspec::ChainInfo;
-use reth_ethereum_primitives::EthPrimitives;
-use reth_execution_types::{BlockExecutionOutput, BlockExecutionResult, Chain, ExecutionOutcome};
-use reth_metrics::{metrics::Gauge, Metrics};
-use reth_primitives_traits::{
+use hanzo_evm_chainspec::ChainInfo;
+use hanzo_evm_ethereum_primitives::EthPrimitives;
+use hanzo_evm_execution_types::{BlockExecutionOutput, BlockExecutionResult, Chain, ExecutionOutcome};
+use hanzo_evm_metrics::{metrics::Gauge, Metrics};
+use hanzo_evm_primitives_traits::{
     BlockBody as _, IndexedTx, NodePrimitives, RecoveredBlock, SealedBlock, SealedHeader,
     SignedTransaction,
 };
-use reth_storage_api::StateProviderBox;
-use reth_trie::{
+use hanzo_evm_storage_api::StateProviderBox;
+use hanzo_evm_trie::{
     updates::TrieUpdatesSorted, HashedPostStateSorted, LazyTrieData, SortedTrieData,
     TrieInputSorted,
 };
@@ -170,7 +170,7 @@ impl<N: NodePrimitives> CanonicalInMemoryStateInner<N> {
 }
 
 type PendingBlockAndReceipts<N> =
-    (RecoveredBlock<<N as NodePrimitives>::Block>, Vec<reth_primitives_traits::ReceiptTy<N>>);
+    (RecoveredBlock<<N as NodePrimitives>::Block>, Vec<hanzo_evm_primitives_traits::ReceiptTy<N>>);
 
 /// This type is responsible for providing the blocks, receipts, and state for
 /// all canonical blocks not on disk yet and keeps track of the block range that
@@ -1008,14 +1008,14 @@ mod tests {
     use alloy_eips::eip7685::Requests;
     use alloy_primitives::{Address, BlockNumber, Bytes, StorageKey, StorageValue};
     use rand::Rng;
-    use reth_errors::ProviderResult;
-    use reth_ethereum_primitives::{EthPrimitives, Receipt};
-    use reth_primitives_traits::{Account, Bytecode};
-    use reth_storage_api::{
+    use hanzo_evm_errors::ProviderResult;
+    use hanzo_evm_ethereum_primitives::{EthPrimitives, Receipt};
+    use hanzo_evm_primitives_traits::{Account, Bytecode};
+    use hanzo_evm_storage_api::{
         AccountReader, BlockHashReader, BytecodeReader, HashedPostStateProvider,
         StateProofProvider, StateProvider, StateRootProvider, StorageRootProvider,
     };
-    use reth_trie::{
+    use hanzo_evm_trie::{
         updates::TrieUpdates, AccountProof, HashedPostState, HashedStorage, MultiProof,
         MultiProofTargets, StorageMultiProof, StorageProof, TrieInput,
     };

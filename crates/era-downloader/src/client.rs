@@ -3,7 +3,7 @@ use bytes::Bytes;
 use eyre::{eyre, OptionExt};
 use futures_util::{stream::StreamExt, Stream, TryStreamExt};
 use reqwest::{Client, IntoUrl, Url};
-use reth_era::common::file_ops::EraFileType;
+use hanzo_evm_era::common::file_ops::EraFileType;
 use sha2::{Digest, Sha256};
 use std::{future::Future, path::Path, str::FromStr};
 use tokio::{
@@ -136,7 +136,7 @@ impl<Http: HttpClient + Clone> EraClient<Http> {
                     let Some(number) = self.file_name_to_number(name) &&
                     (number < index || number >= last)
                 {
-                    reth_fs_util::remove_file(entry.path())?;
+                    hanzo_evm_fs_util::remove_file(entry.path())?;
                 }
             }
         }

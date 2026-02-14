@@ -10,17 +10,17 @@ use alloy_evm::{
     Evm, EvmEnv, EvmFactory, RecoveredTx, ToTxEnv,
 };
 use alloy_primitives::{Address, B256};
-pub use reth_execution_errors::{
+pub use hanzo_evm_execution_errors::{
     BlockExecutionError, BlockValidationError, InternalBlockExecutionError,
 };
-use reth_execution_types::BlockExecutionResult;
-pub use reth_execution_types::{BlockExecutionOutput, ExecutionOutcome};
-use reth_primitives_traits::{
+use hanzo_evm_execution_types::BlockExecutionResult;
+pub use hanzo_evm_execution_types::{BlockExecutionOutput, ExecutionOutcome};
+use hanzo_evm_primitives_traits::{
     Block, HeaderTy, NodePrimitives, ReceiptTy, Recovered, RecoveredBlock, SealedHeader, TxTy,
 };
-use reth_storage_api::StateProvider;
-pub use reth_storage_errors::provider::ProviderError;
-use reth_trie_common::{updates::TrieUpdates, HashedPostState};
+use hanzo_evm_storage_api::StateProvider;
+pub use hanzo_evm_storage_errors::provider::ProviderError;
+use hanzo_evm_trie_common::{updates::TrieUpdates, HashedPostState};
 use revm::{
     context::result::ExecutionResult,
     database::{states::bundle_state::BundleRetention, BundleState, State},
@@ -647,7 +647,7 @@ mod tests {
     use alloy_evm::block::state_changes::balance_increment_state;
     use alloy_primitives::{address, map::HashMap, U256};
     use core::marker::PhantomData;
-    use reth_ethereum_primitives::EthPrimitives;
+    use hanzo_evm_ethereum_primitives::EthPrimitives;
     use revm::{
         database::{CacheDB, EmptyDB},
         state::AccountInfo,

@@ -1,8 +1,8 @@
 use crate::proof_v2::DeferredValueEncoder;
 use alloy_rlp::Encodable;
 use alloy_trie::nodes::ExtensionNodeRef;
-use reth_execution_errors::trie::StateProofError;
-use reth_trie_common::{
+use hanzo_evm_execution_errors::trie::StateProofError;
+use hanzo_evm_trie_common::{
     BranchNode, BranchNodeMasks, ExtensionNode, LeafNode, LeafNodeRef, Nibbles, ProofTrieNode,
     RlpNode, TrieMask, TrieNode,
 };

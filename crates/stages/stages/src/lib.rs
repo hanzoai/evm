@@ -1,7 +1,7 @@
-//! Staged syncing primitives for reth.
+//! Staged syncing primitives for evm.
 //!
 //! This crate contains the syncing primitives [`Pipeline`] and [`Stage`], as well as all stages
-//! that reth uses to sync.
+//! that evm uses to sync.
 //!
 //! A pipeline can be configured using [`Pipeline::builder()`].
 //!
@@ -13,28 +13,28 @@
 //!
 //! ```
 //! # use std::sync::Arc;
-//! # use reth_downloaders::bodies::bodies::BodiesDownloaderBuilder;
-//! # use reth_downloaders::headers::reverse_headers::ReverseHeadersDownloaderBuilder;
-//! # use reth_network_p2p::test_utils::{TestBodiesClient, TestHeadersClient};
+//! # use hanzo_evm_downloaders::bodies::bodies::BodiesDownloaderBuilder;
+//! # use hanzo_evm_downloaders::headers::reverse_headers::ReverseHeadersDownloaderBuilder;
+//! # use hanzo_evm_network_p2p::test_utils::{TestBodiesClient, TestHeadersClient};
 //! # use alloy_primitives::B256;
-//! # use reth_chainspec::MAINNET;
-//! # use reth_prune_types::PruneModes;
-//! # use reth_network_peers::PeerId;
-//! # use reth_stages::Pipeline;
-//! # use reth_stages::sets::DefaultStages;
+//! # use hanzo_evm_chainspec::MAINNET;
+//! # use hanzo_evm_prune_types::PruneModes;
+//! # use hanzo_evm_network_peers::PeerId;
+//! # use hanzo_evm_stages::Pipeline;
+//! # use hanzo_evm_stages::sets::DefaultStages;
 //! # use tokio::sync::watch;
-//! # use reth_evm_ethereum::EthEvmConfig;
-//! # use reth_provider::ProviderFactory;
-//! # use reth_provider::StaticFileProviderFactory;
-//! # use reth_provider::test_utils::{create_test_provider_factory, MockNodeTypesWithDB};
-//! # use reth_static_file::StaticFileProducer;
-//! # use reth_config::config::StageConfig;
-//! # use reth_consensus::Consensus;
-//! # use reth_consensus::test_utils::TestConsensus;
-//! # use reth_consensus::FullConsensus;
+//! # use hanzo_evm_eth_execution::EthEvmConfig;
+//! # use hanzo_evm_provider::ProviderFactory;
+//! # use hanzo_evm_provider::StaticFileProviderFactory;
+//! # use hanzo_evm_provider::test_utils::{create_test_provider_factory, MockNodeTypesWithDB};
+//! # use hanzo_evm_static_file::StaticFileProducer;
+//! # use hanzo_evm_config::config::StageConfig;
+//! # use hanzo_evm_consensus::Consensus;
+//! # use hanzo_evm_consensus::test_utils::TestConsensus;
+//! # use hanzo_evm_consensus::FullConsensus;
 //! #
 //! # let chain_spec = MAINNET.clone();
-//! # let consensus: Arc<dyn FullConsensus<reth_ethereum_primitives::EthPrimitives>> = Arc::new(TestConsensus::default());
+//! # let consensus: Arc<dyn FullConsensus<hanzo_evm_ethereum_primitives::EthPrimitives>> = Arc::new(TestConsensus::default());
 //! # let headers_downloader = ReverseHeadersDownloaderBuilder::default().build(
 //! #    Arc::new(TestHeadersClient::default()),
 //! #    consensus.clone()
@@ -75,9 +75,9 @@
 //! - `test-utils`: Export utilities for testing
 
 #![doc(
-    html_logo_url = "https://raw.githubusercontent.com/paradigmxyz/reth/main/assets/reth-docs.png",
+    html_logo_url = "https://raw.githubusercontent.com/hanzoai/evm/main/assets/evm-docs.png",
     html_favicon_url = "https://avatars0.githubusercontent.com/u/97369466?s=256",
-    issue_tracker_base_url = "https://github.com/paradigmxyz/reth/issues/"
+    issue_tracker_base_url = "https://github.com/hanzoai/evm/issues/"
 )]
 #![cfg_attr(docsrs, feature(doc_cfg))]
 #![cfg_attr(not(test), warn(unused_crate_dependencies))]
@@ -95,4 +95,4 @@ pub mod stages;
 pub mod sets;
 
 // re-export the stages API
-pub use reth_stages_api::*;
+pub use hanzo_evm_stages_api::*;

@@ -2,7 +2,7 @@ use jsonrpsee::server::middleware::rpc::RpcService;
 use tower::Layer;
 
 /// A Helper alias trait for the RPC middleware supported by the server.
-pub trait RethRpcMiddleware:
+pub trait EvmRpcMiddleware:
     Layer<
         RpcService,
         Service: jsonrpsee::server::middleware::rpc::RpcServiceT<
@@ -19,7 +19,7 @@ pub trait RethRpcMiddleware:
 {
 }
 
-impl<T> RethRpcMiddleware for T where
+impl<T> EvmRpcMiddleware for T where
     T: Layer<
             RpcService,
             Service: jsonrpsee::server::middleware::rpc::RpcServiceT<

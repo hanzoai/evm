@@ -3,9 +3,9 @@
 use crate::{args::error::ReceiptsLogError, primitives::EthereumHardfork};
 use alloy_primitives::{Address, BlockNumber};
 use clap::{builder::RangedU64ValueParser, Args};
-use reth_chainspec::EthereumHardforks;
-use reth_config::config::PruneConfig;
-use reth_prune_types::{
+use hanzo_evm_chainspec::EthereumHardforks;
+use hanzo_evm_config::config::PruneConfig;
+use hanzo_evm_prune_types::{
     PruneMode, PruneModes, ReceiptsLogPruneConfig, MINIMUM_DISTANCE, MINIMUM_UNWIND_SAFE_DISTANCE,
 };
 use std::{collections::BTreeMap, ops::Not, sync::OnceLock};
@@ -407,7 +407,7 @@ mod tests {
     #[test]
     fn pruning_args_sanity_check() {
         let args = CommandParser::<PruningArgs>::parse_from([
-            "reth",
+            "evm",
             "--prune.receiptslogfilter",
             "0x0000000000000000000000000000000000000003:before:5000000",
         ])
@@ -423,7 +423,7 @@ mod tests {
     #[test]
     fn parse_receiptslogfilter() {
         let default_args = PruningArgs::default();
-        let args = CommandParser::<PruningArgs>::parse_from(["reth"]).args;
+        let args = CommandParser::<PruningArgs>::parse_from(["evm"]).args;
         assert_eq!(args, default_args);
     }
 

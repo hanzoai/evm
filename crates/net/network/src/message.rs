@@ -7,16 +7,16 @@ use crate::types::{Receipts69, Receipts70};
 use alloy_consensus::{BlockHeader, ReceiptWithBloom};
 use alloy_primitives::{Bytes, B256};
 use futures::FutureExt;
-use reth_eth_wire::{
+use hanzo_evm_eth_wire::{
     message::RequestPair, BlockBodies, BlockHeaders, BlockRangeUpdate, EthMessage,
     EthNetworkPrimitives, GetBlockBodies, GetBlockHeaders, NetworkPrimitives, NewBlock,
     NewBlockHashes, NewBlockPayload, NewPooledTransactionHashes, NodeData, PooledTransactions,
     Receipts, SharedTransactions, Transactions,
 };
-use reth_eth_wire_types::RawCapabilityMessage;
-use reth_network_api::PeerRequest;
-use reth_network_p2p::error::{RequestError, RequestResult};
-use reth_primitives_traits::Block;
+use hanzo_evm_eth_wire_types::RawCapabilityMessage;
+use hanzo_evm_network_api::PeerRequest;
+use hanzo_evm_network_p2p::error::{RequestError, RequestResult};
+use hanzo_evm_primitives_traits::Block;
 use std::{
     sync::Arc,
     task::{ready, Context, Poll},
@@ -25,7 +25,7 @@ use tokio::sync::oneshot;
 
 /// Internal form of a `NewBlock` message
 #[derive(Debug, Clone)]
-pub struct NewBlockMessage<P = NewBlock<reth_ethereum_primitives::Block>> {
+pub struct NewBlockMessage<P = NewBlock<hanzo_evm_ethereum_primitives::Block>> {
     /// Hash of the block
     pub hash: B256,
     /// Raw received message

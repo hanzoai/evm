@@ -1,4 +1,4 @@
-use reth_prune_types::{PruneInterruptReason, PruneProgress};
+use hanzo_evm_prune_types::{PruneInterruptReason, PruneProgress};
 use std::{
     num::NonZeroUsize,
     time::{Duration, Instant},

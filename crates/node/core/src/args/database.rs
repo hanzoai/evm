@@ -8,11 +8,11 @@ use clap::{
     error::ErrorKind,
     value_parser, Arg, Args, Command, Error,
 };
-use reth_db::{
+use hanzo_evm_db::{
     mdbx::{MaxReadTransactionDuration, SyncMode},
     ClientVersion,
 };
-use reth_storage_errors::db::LogLevel;
+use hanzo_evm_storage_errors::db::LogLevel;
 
 /// Parameters for database configuration
 #[derive(Debug, Args, PartialEq, Eq, Default, Clone, Copy)]
@@ -64,7 +64,7 @@ pub struct DatabaseArgs {
 
 impl DatabaseArgs {
     /// Returns default database arguments with configured log level and client version.
-    pub fn database_args(&self) -> reth_db::mdbx::DatabaseArguments {
+    pub fn database_args(&self) -> hanzo_evm_db::mdbx::DatabaseArguments {
         self.get_database_args(default_client_version())
     }
 
@@ -73,14 +73,14 @@ impl DatabaseArgs {
     pub fn get_database_args(
         &self,
         client_version: ClientVersion,
-    ) -> reth_db::mdbx::DatabaseArguments {
+    ) -> hanzo_evm_db::mdbx::DatabaseArguments {
         let max_read_transaction_duration = match self.read_transaction_timeout {
             None => None, // if not specified, use default value
             Some(0) => Some(MaxReadTransactionDuration::Unbounded), // if 0, disable timeout
             Some(secs) => Some(MaxReadTransactionDuration::Set(Duration::from_secs(secs))),
         };
 
-        reth_db::mdbx::DatabaseArguments::new(client_version)
+        hanzo_evm_db::mdbx::DatabaseArguments::new(client_version)
             .with_log_level(self.log_level)
             .with_exclusive(self.exclusive)
             .with_max_read_transaction_duration(max_read_transaction_duration)
@@ -207,7 +207,7 @@ fn parse_byte_size(s: &str) -> Result<usize, String> {
 mod tests {
     use super::*;
     use clap::Parser;
-    use reth_db::mdbx::{GIGABYTE, KILOBYTE, MEGABYTE, TERABYTE};
+    use hanzo_evm_db::mdbx::{GIGABYTE, KILOBYTE, MEGABYTE, TERABYTE};
 
     /// A helper type to parse Args more easily
     #[derive(Parser)]
@@ -219,14 +219,14 @@ mod tests {
     #[test]
     fn test_default_database_args() {
         let default_args = DatabaseArgs::default();
-        let args = CommandParser::<DatabaseArgs>::parse_from(["reth"]).args;
+        let args = CommandParser::<DatabaseArgs>::parse_from(["evm"]).args;
         assert_eq!(args, default_args);
     }
 
     #[test]
     fn test_command_parser_with_valid_max_size() {
         let cmd = CommandParser::<DatabaseArgs>::try_parse_from([
-            "reth",
+            "evm",
             "--db.max-size",
             "4398046511104",
         ])
@@ -237,14 +237,14 @@ mod tests {
     #[test]
     fn test_command_parser_with_invalid_max_size() {
         let result =
-            CommandParser::<DatabaseArgs>::try_parse_from(["reth", "--db.max-size", "invalid"]);
+            CommandParser::<DatabaseArgs>::try_parse_from(["evm", "--db.max-size", "invalid"]);
         assert!(result.is_err());
     }
 
     #[test]
     fn test_command_parser_with_valid_growth_step() {
         let cmd = CommandParser::<DatabaseArgs>::try_parse_from([
-            "reth",
+            "evm",
             "--db.growth-step",
             "4294967296",
         ])
@@ -255,14 +255,14 @@ mod tests {
     #[test]
     fn test_command_parser_with_invalid_growth_step() {
         let result =
-            CommandParser::<DatabaseArgs>::try_parse_from(["reth", "--db.growth-step", "invalid"]);
+            CommandParser::<DatabaseArgs>::try_parse_from(["evm", "--db.growth-step", "invalid"]);
         assert!(result.is_err());
     }
 
     #[test]
     fn test_command_parser_with_valid_max_size_and_growth_step_from_str() {
         let cmd = CommandParser::<DatabaseArgs>::try_parse_from([
-            "reth",
+            "evm",
             "--db.max-size",
             "2TB",
             "--db.growth-step",
@@ -273,7 +273,7 @@ mod tests {
         assert_eq!(cmd.args.growth_step, Some(GIGABYTE));
 
         let cmd = CommandParser::<DatabaseArgs>::try_parse_from([
-            "reth",
+            "evm",
             "--db.max-size",
             "12MB",
             "--db.growth-step",
@@ -285,7 +285,7 @@ mod tests {
 
         // with spaces
         let cmd = CommandParser::<DatabaseArgs>::try_parse_from([
-            "reth",
+            "evm",
             "--db.max-size",
             "12 MB",
             "--db.growth-step",
@@ -296,7 +296,7 @@ mod tests {
         assert_eq!(cmd.args.growth_step, Some(KILOBYTE * 2));
 
         let cmd = CommandParser::<DatabaseArgs>::try_parse_from([
-            "reth",
+            "evm",
             "--db.max-size",
             "1073741824",
             "--db.growth-step",
@@ -310,32 +310,32 @@ mod tests {
     #[test]
     fn test_command_parser_max_size_and_growth_step_from_str_invalid_unit() {
         let result =
-            CommandParser::<DatabaseArgs>::try_parse_from(["reth", "--db.growth-step", "1 PB"]);
+            CommandParser::<DatabaseArgs>::try_parse_from(["evm", "--db.growth-step", "1 PB"]);
         assert!(result.is_err());
 
         let result =
-            CommandParser::<DatabaseArgs>::try_parse_from(["reth", "--db.max-size", "2PB"]);
+            CommandParser::<DatabaseArgs>::try_parse_from(["evm", "--db.max-size", "2PB"]);
         assert!(result.is_err());
     }
 
     #[test]
     fn test_command_parser_with_valid_page_size_from_str() {
-        let cmd = CommandParser::<DatabaseArgs>::try_parse_from(["reth", "--db.page-size", "8KB"])
+        let cmd = CommandParser::<DatabaseArgs>::try_parse_from(["evm", "--db.page-size", "8KB"])
             .unwrap();
         assert_eq!(cmd.args.page_size, Some(KILOBYTE * 8));
 
-        let cmd = CommandParser::<DatabaseArgs>::try_parse_from(["reth", "--db.page-size", "1MB"])
+        let cmd = CommandParser::<DatabaseArgs>::try_parse_from(["evm", "--db.page-size", "1MB"])
             .unwrap();
         assert_eq!(cmd.args.page_size, Some(MEGABYTE));
 
         // Test with spaces
         let cmd =
-            CommandParser::<DatabaseArgs>::try_parse_from(["reth", "--db.page-size", "16 KB"])
+            CommandParser::<DatabaseArgs>::try_parse_from(["evm", "--db.page-size", "16 KB"])
                 .unwrap();
         assert_eq!(cmd.args.page_size, Some(KILOBYTE * 16));
 
         // Test with just a number (bytes)
-        let cmd = CommandParser::<DatabaseArgs>::try_parse_from(["reth", "--db.page-size", "4096"])
+        let cmd = CommandParser::<DatabaseArgs>::try_parse_from(["evm", "--db.page-size", "4096"])
             .unwrap();
         assert_eq!(cmd.args.page_size, Some(KILOBYTE * 4));
     }
@@ -344,12 +344,12 @@ mod tests {
     fn test_command_parser_with_invalid_page_size() {
         // Invalid text
         let result =
-            CommandParser::<DatabaseArgs>::try_parse_from(["reth", "--db.page-size", "invalid"]);
+            CommandParser::<DatabaseArgs>::try_parse_from(["evm", "--db.page-size", "invalid"]);
         assert!(result.is_err());
 
         // Invalid unit
         let result =
-            CommandParser::<DatabaseArgs>::try_parse_from(["reth", "--db.page-size", "7 ZB"]);
+            CommandParser::<DatabaseArgs>::try_parse_from(["evm", "--db.page-size", "7 ZB"]);
         assert!(result.is_err());
     }
 
@@ -386,7 +386,7 @@ mod tests {
     #[test]
     fn test_command_parser_with_valid_log_level() {
         let cmd =
-            CommandParser::<DatabaseArgs>::try_parse_from(["reth", "--db.log-level", "Debug"])
+            CommandParser::<DatabaseArgs>::try_parse_from(["evm", "--db.log-level", "Debug"])
                 .unwrap();
         assert_eq!(cmd.args.log_level, Some(LogLevel::Debug));
     }
@@ -394,26 +394,26 @@ mod tests {
     #[test]
     fn test_command_parser_with_invalid_log_level() {
         let result =
-            CommandParser::<DatabaseArgs>::try_parse_from(["reth", "--db.log-level", "invalid"]);
+            CommandParser::<DatabaseArgs>::try_parse_from(["evm", "--db.log-level", "invalid"]);
         assert!(result.is_err());
     }
 
     #[test]
     fn test_command_parser_without_log_level() {
-        let cmd = CommandParser::<DatabaseArgs>::try_parse_from(["reth"]).unwrap();
+        let cmd = CommandParser::<DatabaseArgs>::try_parse_from(["evm"]).unwrap();
         assert_eq!(cmd.args.log_level, None);
     }
 
     #[test]
     fn test_command_parser_with_valid_default_sync_mode() {
-        let cmd = CommandParser::<DatabaseArgs>::try_parse_from(["reth"]).unwrap();
+        let cmd = CommandParser::<DatabaseArgs>::try_parse_from(["evm"]).unwrap();
         assert!(cmd.args.sync_mode.is_none());
     }
 
     #[test]
     fn test_command_parser_with_valid_sync_mode_durable() {
         let cmd =
-            CommandParser::<DatabaseArgs>::try_parse_from(["reth", "--db.sync-mode", "durable"])
+            CommandParser::<DatabaseArgs>::try_parse_from(["evm", "--db.sync-mode", "durable"])
                 .unwrap();
         assert!(matches!(cmd.args.sync_mode, Some(SyncMode::Durable)));
     }
@@ -421,7 +421,7 @@ mod tests {
     #[test]
     fn test_command_parser_with_valid_sync_mode_safe_no_sync() {
         let cmd = CommandParser::<DatabaseArgs>::try_parse_from([
-            "reth",
+            "evm",
             "--db.sync-mode",
             "safe-no-sync",
         ])
@@ -432,7 +432,7 @@ mod tests {
     #[test]
     fn test_command_parser_with_invalid_sync_mode() {
         let result =
-            CommandParser::<DatabaseArgs>::try_parse_from(["reth", "--db.sync-mode", "ultra-fast"]);
+            CommandParser::<DatabaseArgs>::try_parse_from(["evm", "--db.sync-mode", "ultra-fast"]);
         assert!(result.is_err());
     }
 }

@@ -1,8 +1,8 @@
 //! Traits and default implementations related to retrieval of blinded trie nodes.
 
 use alloy_primitives::{Bytes, B256};
-use reth_execution_errors::SparseTrieError;
-use reth_trie_common::{Nibbles, TrieMask};
+use hanzo_evm_execution_errors::SparseTrieError;
+use hanzo_evm_trie_common::{Nibbles, TrieMask};
 
 /// Factory for instantiating trie node providers.
 #[auto_impl::auto_impl(&)]

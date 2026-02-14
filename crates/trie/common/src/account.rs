@@ -11,7 +11,7 @@ mod tests {
     use std::collections::BTreeMap;
 
     use alloy_trie::EMPTY_ROOT_HASH;
-    use reth_primitives_traits::Account;
+    use hanzo_evm_primitives_traits::Account;
 
     #[test]
     fn test_from_genesis_account_with_default_values() {

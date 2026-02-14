@@ -1,7 +1,7 @@
-//! reth data directories.
+//! evm data directories.
 
 use crate::{args::DatadirArgs, utils::parse_path};
-use reth_chainspec::Chain;
+use hanzo_evm_chainspec::Chain;
 use std::{
     env::VarError,
     fmt::{Debug, Display, Formatter},
@@ -14,42 +14,42 @@ pub fn config_path_prefix(chain: Chain) -> String {
     chain.to_string()
 }
 
-/// Returns the path to the reth data directory.
+/// Returns the path to the evm data directory.
 ///
 /// Refer to [`dirs_next::data_dir`] for cross-platform behavior.
 pub fn data_dir() -> Option<PathBuf> {
-    dirs_next::data_dir().map(|root| root.join("reth"))
+    dirs_next::data_dir().map(|root| root.join("evm"))
 }
 
-/// Returns the path to the reth database.
+/// Returns the path to the evm database.
 ///
 /// Refer to [`dirs_next::data_dir`] for cross-platform behavior.
 pub fn database_path() -> Option<PathBuf> {
     data_dir().map(|root| root.join("db"))
 }
 
-/// Returns the path to the reth configuration directory.
+/// Returns the path to the evm configuration directory.
 ///
 /// Refer to [`dirs_next::config_dir`] for cross-platform behavior.
 pub fn config_dir() -> Option<PathBuf> {
-    dirs_next::config_dir().map(|root| root.join("reth"))
+    dirs_next::config_dir().map(|root| root.join("evm"))
 }
 
-/// Returns the path to the reth cache directory.
+/// Returns the path to the evm cache directory.
 ///
 /// Refer to [`dirs_next::cache_dir`] for cross-platform behavior.
 pub fn cache_dir() -> Option<PathBuf> {
-    dirs_next::cache_dir().map(|root| root.join("reth"))
+    dirs_next::cache_dir().map(|root| root.join("evm"))
 }
 
-/// Returns the path to the reth logs directory.
+/// Returns the path to the evm logs directory.
 ///
 /// Refer to [`dirs_next::cache_dir`] for cross-platform behavior.
 pub fn logs_dir() -> Option<PathBuf> {
     cache_dir().map(|root| root.join("logs"))
 }
 
-/// Returns the path to the reth data dir.
+/// Returns the path to the evm data dir.
 ///
 /// The data dir should contain a subdirectory for each chain, and those chain directories will
 /// include all information for that chain, such as the p2p secret.
@@ -63,7 +63,7 @@ impl XdgPath for DataDirPath {
     }
 }
 
-/// Returns the path to the reth logs directory.
+/// Returns the path to the evm logs directory.
 ///
 /// Refer to [`dirs_next::cache_dir`] for cross-platform behavior.
 #[derive(Clone, Copy, Debug, Default, Eq, PartialEq)]
@@ -92,7 +92,7 @@ pub trait XdgPath {
 /// # Example
 ///
 /// ```
-/// use reth_node_core::dirs::{DataDirPath, PlatformPath};
+/// use hanzo_evm_node_core::dirs::{DataDirPath, PlatformPath};
 /// use std::str::FromStr;
 ///
 /// // Resolves to the platform-specific database path
@@ -256,7 +256,7 @@ impl<D> From<PathBuf> for MaybePlatformPath<D> {
     }
 }
 
-/// Wrapper type around `PlatformPath` that includes a `Chain`, used for separating reth data for
+/// Wrapper type around `PlatformPath` that includes a `Chain`, used for separating evm data for
 /// different networks.
 ///
 /// If the chain is either mainnet, sepolia, or holesky, then the path will be:
@@ -275,7 +275,7 @@ impl<D> ChainPath<D> {
         Self(path, chain, datadir_args)
     }
 
-    /// Returns the path to the reth data directory for this chain.
+    /// Returns the path to the evm data directory for this chain.
     ///
     /// `<DIR>/<CHAIN_ID>`
     pub fn data_dir(&self) -> &Path {
@@ -325,7 +325,7 @@ impl<D> ChainPath<D> {
         }
     }
 
-    /// Returns the path to the reth p2p secret key for this chain.
+    /// Returns the path to the evm p2p secret key for this chain.
     ///
     /// `<DIR>/<CHAIN_ID>/discovery-secret`
     pub fn p2p_secret(&self) -> PathBuf {
@@ -356,9 +356,9 @@ impl<D> ChainPath<D> {
 
     /// Returns the path to the config file for this chain.
     ///
-    /// `<DIR>/<CHAIN_ID>/reth.toml`
+    /// `<DIR>/<CHAIN_ID>/evm.toml`
     pub fn config(&self) -> PathBuf {
-        self.data_dir().join("reth.toml")
+        self.data_dir().join("evm.toml")
     }
 
     /// Returns the path to the jwtsecret file for this chain.
@@ -407,10 +407,10 @@ mod tests {
     fn test_maybe_data_dir_path() {
         let path = MaybePlatformPath::<DataDirPath>::default();
         let path = path.unwrap_or_chain_default(Chain::mainnet(), DatadirArgs::default());
-        assert!(path.as_ref().ends_with("reth/mainnet"), "{path:?}");
+        assert!(path.as_ref().ends_with("evm/mainnet"), "{path:?}");
 
         let db_path = path.db();
-        assert!(db_path.ends_with("reth/mainnet/db"), "{db_path:?}");
+        assert!(db_path.ends_with("evm/mainnet/db"), "{db_path:?}");
 
         let path = MaybePlatformPath::<DataDirPath>::from_str("my/path/to/datadir").unwrap();
         let path = path.unwrap_or_chain_default(Chain::mainnet(), DatadirArgs::default());
@@ -421,10 +421,10 @@ mod tests {
     fn test_maybe_testnet_datadir_path() {
         let path = MaybePlatformPath::<DataDirPath>::default();
         let path = path.unwrap_or_chain_default(Chain::holesky(), DatadirArgs::default());
-        assert!(path.as_ref().ends_with("reth/holesky"), "{path:?}");
+        assert!(path.as_ref().ends_with("evm/holesky"), "{path:?}");
 
         let path = MaybePlatformPath::<DataDirPath>::default();
         let path = path.unwrap_or_chain_default(Chain::sepolia(), DatadirArgs::default());
-        assert!(path.as_ref().ends_with("reth/sepolia"), "{path:?}");
+        assert!(path.as_ref().ends_with("evm/sepolia"), "{path:?}");
     }
 }

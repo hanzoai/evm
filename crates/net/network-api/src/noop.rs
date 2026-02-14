@@ -15,13 +15,13 @@ use crate::{
 };
 use alloy_rpc_types_admin::EthProtocolInfo;
 use enr::{secp256k1::SecretKey, Enr};
-use reth_eth_wire_types::{
+use hanzo_evm_eth_wire_types::{
     DisconnectReason, EthNetworkPrimitives, NetworkPrimitives, ProtocolVersion,
 };
-use reth_network_p2p::{sync::NetworkSyncUpdater, NoopFullBlockClient};
-use reth_network_peers::NodeRecord;
-use reth_network_types::{PeerKind, Reputation, ReputationChangeKind};
-use reth_tokio_util::{EventSender, EventStream};
+use hanzo_evm_network_p2p::{sync::NetworkSyncUpdater, NoopFullBlockClient};
+use hanzo_evm_network_peers::NodeRecord;
+use hanzo_evm_network_types::{PeerKind, Reputation, ReputationChangeKind};
+use hanzo_evm_tokio_util::{EventSender, EventStream};
 use tokio::sync::{mpsc, oneshot};
 use tokio_stream::wrappers::UnboundedReceiverStream;
 
@@ -72,7 +72,7 @@ where
     async fn network_status(&self) -> Result<NetworkStatus, NetworkError> {
         #[expect(deprecated)]
         Ok(NetworkStatus {
-            client_version: "reth-test".to_string(),
+            client_version: "evm-test".to_string(),
             protocol_version: ProtocolVersion::V5 as u64,
             eth_protocol_info: EthProtocolInfo {
                 network: 1,
@@ -184,11 +184,11 @@ impl<Net> NetworkSyncUpdater for NoopNetwork<Net>
 where
     Net: fmt::Debug + Send + Sync + 'static,
 {
-    fn update_status(&self, _head: reth_ethereum_forks::Head) {}
+    fn update_status(&self, _head: hanzo_evm_ethereum_forks::Head) {}
 
-    fn update_sync_state(&self, _state: reth_network_p2p::sync::SyncState) {}
+    fn update_sync_state(&self, _state: hanzo_evm_network_p2p::sync::SyncState) {}
 
-    fn update_block_range(&self, _: reth_eth_wire_types::BlockRangeUpdate) {}
+    fn update_block_range(&self, _: hanzo_evm_eth_wire_types::BlockRangeUpdate) {}
 }
 
 impl<Net> NetworkEventListenerProvider for NoopNetwork<Net>

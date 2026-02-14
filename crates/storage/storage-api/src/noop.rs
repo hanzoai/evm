@@ -22,19 +22,19 @@ use core::{
     marker::PhantomData,
     ops::{RangeBounds, RangeInclusive},
 };
-use reth_chainspec::{ChainInfo, ChainSpecProvider, EthChainSpec, MAINNET};
+use hanzo_evm_chainspec::{ChainInfo, ChainSpecProvider, EthChainSpec, MAINNET};
 #[cfg(feature = "db-api")]
-use reth_db_api::mock::{DatabaseMock, TxMock};
-use reth_db_models::{AccountBeforeTx, StoredBlockBodyIndices};
-use reth_ethereum_primitives::EthPrimitives;
-use reth_execution_types::ExecutionOutcome;
-use reth_primitives_traits::{Account, Bytecode, NodePrimitives, RecoveredBlock, SealedHeader};
+use hanzo_evm_db_api::mock::{DatabaseMock, TxMock};
+use hanzo_evm_db_models::{AccountBeforeTx, StoredBlockBodyIndices};
+use hanzo_evm_ethereum_primitives::EthPrimitives;
+use hanzo_evm_execution_types::ExecutionOutcome;
+use hanzo_evm_primitives_traits::{Account, Bytecode, NodePrimitives, RecoveredBlock, SealedHeader};
 #[cfg(feature = "db-api")]
-use reth_prune_types::PruneModes;
-use reth_prune_types::{PruneCheckpoint, PruneSegment};
-use reth_stages_types::{StageCheckpoint, StageId};
-use reth_storage_errors::provider::{ProviderError, ProviderResult};
-use reth_trie_common::{
+use hanzo_evm_prune_types::PruneModes;
+use hanzo_evm_prune_types::{PruneCheckpoint, PruneSegment};
+use hanzo_evm_stages_types::{StageCheckpoint, StageId};
+use hanzo_evm_storage_errors::provider::{ProviderError, ProviderResult};
+use hanzo_evm_trie_common::{
     updates::TrieUpdates, AccountProof, HashedPostState, HashedStorage, MultiProof,
     MultiProofTargets, StorageMultiProof, StorageProof, TrieInput,
 };
@@ -42,7 +42,7 @@ use reth_trie_common::{
 /// Supports various api interfaces for testing purposes.
 #[derive(Debug)]
 #[non_exhaustive]
-pub struct NoopProvider<ChainSpec = reth_chainspec::ChainSpec, N = EthPrimitives> {
+pub struct NoopProvider<ChainSpec = hanzo_evm_chainspec::ChainSpec, N = EthPrimitives> {
     chain_spec: Arc<ChainSpec>,
     #[cfg(feature = "db-api")]
     tx: TxMock,
@@ -414,7 +414,7 @@ impl<C: Send + Sync, N: NodePrimitives> StorageChangeSetReader for NoopProvider<
         &self,
         _block_number: BlockNumber,
     ) -> ProviderResult<
-        Vec<(reth_db_api::models::BlockNumberAddress, reth_primitives_traits::StorageEntry)>,
+        Vec<(hanzo_evm_db_api::models::BlockNumberAddress, hanzo_evm_primitives_traits::StorageEntry)>,
     > {
         Ok(Vec::default())
     }
@@ -424,7 +424,7 @@ impl<C: Send + Sync, N: NodePrimitives> StorageChangeSetReader for NoopProvider<
         _block_number: BlockNumber,
         _address: Address,
         _storage_key: B256,
-    ) -> ProviderResult<Option<reth_primitives_traits::StorageEntry>> {
+    ) -> ProviderResult<Option<hanzo_evm_primitives_traits::StorageEntry>> {
         Ok(None)
     }
 
@@ -432,7 +432,7 @@ impl<C: Send + Sync, N: NodePrimitives> StorageChangeSetReader for NoopProvider<
         &self,
         _range: impl core::ops::RangeBounds<BlockNumber>,
     ) -> ProviderResult<
-        Vec<(reth_db_api::models::BlockNumberAddress, reth_primitives_traits::StorageEntry)>,
+        Vec<(hanzo_evm_db_api::models::BlockNumberAddress, hanzo_evm_primitives_traits::StorageEntry)>,
     > {
         Ok(Vec::default())
     }
@@ -673,7 +673,7 @@ impl<ChainSpec: Send + Sync, N: NodePrimitives> DBProvider for NoopProvider<Chai
     }
 
     fn commit(self) -> ProviderResult<()> {
-        use reth_db_api::transaction::DbTx;
+        use hanzo_evm_db_api::transaction::DbTx;
 
         Ok(self.tx.commit()?)
     }

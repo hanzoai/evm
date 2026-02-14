@@ -1,5 +1,5 @@
 [package]
-name = "reth-network-p2p"
+name = "hanzo-evm-network-p2p"
 version.workspace = true
 edition.workspace = true
 rust-version.workspace = true
@@ -12,14 +12,14 @@ description = "traits and commonly used types for p2p and network communication"
 workspace = true
 
 [dependencies]
-# reth
-reth-ethereum-primitives.workspace = true
-reth-primitives-traits.workspace = true
-reth-eth-wire-types.workspace = true
-reth-consensus.workspace = true
-reth-network-peers.workspace = true
-reth-network-types.workspace = true
-reth-storage-errors.workspace = true
+# evm
+hanzo-evm-ethereum-primitives.workspace = true
+hanzo-evm-primitives-traits.workspace = true
+hanzo-evm-eth-wire-types.workspace = true
+hanzo-evm-consensus.workspace = true
+hanzo-evm-network-peers.workspace = true
+hanzo-evm-network-types.workspace = true
+hanzo-evm-storage-errors.workspace = true
 
 # ethereum
 alloy-consensus.workspace = true
@@ -37,7 +37,7 @@ derive_more.workspace = true
 parking_lot = { workspace = true, optional = true }
 
 [dev-dependencies]
-reth-consensus = { workspace = true, features = ["test-utils"] }
+hanzo-evm-consensus = { workspace = true, features = ["test-utils"] }
 
 parking_lot.workspace = true
 tokio = { workspace = true, features = ["full"] }
@@ -45,22 +45,22 @@ tokio = { workspace = true, features = ["full"] }
 [features]
 default = ["std"]
 test-utils = [
-    "reth-consensus/test-utils",
+    "hanzo-evm-consensus/test-utils",
     "parking_lot",
-    "reth-network-types/test-utils",
-    "reth-ethereum-primitives/test-utils",
-    "reth-primitives-traits/test-utils",
+    "hanzo-evm-network-types/test-utils",
+    "hanzo-evm-ethereum-primitives/test-utils",
+    "hanzo-evm-primitives-traits/test-utils",
     "alloy-primitives/rand",
 ]
 std = [
-    "reth-consensus/std",
-    "reth-ethereum-primitives/std",
+    "hanzo-evm-consensus/std",
+    "hanzo-evm-ethereum-primitives/std",
     "alloy-eips/std",
     "alloy-primitives/std",
-    "reth-primitives-traits/std",
+    "hanzo-evm-primitives-traits/std",
     "alloy-consensus/std",
     "derive_more/std",
-    "reth-network-peers/std",
-    "reth-storage-errors/std",
+    "hanzo-evm-network-peers/std",
+    "hanzo-evm-storage-errors/std",
     "tracing/std",
 ]

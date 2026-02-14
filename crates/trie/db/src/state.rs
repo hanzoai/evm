@@ -2,14 +2,14 @@ use crate::{
     load_prefix_sets_with_provider, DatabaseHashedCursorFactory, DatabaseTrieCursorFactory,
 };
 use alloy_primitives::{map::B256Map, BlockNumber, B256};
-use reth_db_api::{
+use hanzo_evm_db_api::{
     models::{AccountBeforeTx, BlockNumberAddress},
     transaction::DbTx,
 };
-use reth_execution_errors::StateRootError;
-use reth_storage_api::{BlockNumReader, ChangeSetReader, DBProvider, StorageChangeSetReader};
-use reth_storage_errors::provider::ProviderError;
-use reth_trie::{
+use hanzo_evm_execution_errors::StateRootError;
+use hanzo_evm_storage_api::{BlockNumReader, ChangeSetReader, DBProvider, StorageChangeSetReader};
+use hanzo_evm_storage_errors::provider::ProviderError;
+use hanzo_evm_trie::{
     hashed_cursor::HashedPostStateCursorFactory, trie_cursor::InMemoryTrieCursorFactory,
     updates::TrieUpdates, HashedPostStateSorted, HashedStorageSorted, KeccakKeyHasher, KeyHasher,
     StateRoot, StateRootProgress, TrieInputSorted,
@@ -79,11 +79,11 @@ pub trait DatabaseStateRoot<'a, TX>: Sized {
     ///
     /// ```
     /// use alloy_primitives::U256;
-    /// use reth_db::test_utils::create_test_rw_db;
-    /// use reth_db_api::database::Database;
-    /// use reth_primitives_traits::Account;
-    /// use reth_trie::{updates::TrieUpdates, HashedPostState, StateRoot};
-    /// use reth_trie_db::DatabaseStateRoot;
+    /// use hanzo_evm_db::test_utils::create_test_rw_db;
+    /// use hanzo_evm_db_api::database::Database;
+    /// use hanzo_evm_primitives_traits::Account;
+    /// use hanzo_evm_trie::{updates::TrieUpdates, HashedPostState, StateRoot};
+    /// use hanzo_evm_trie_db::DatabaseStateRoot;
     ///
     /// // Initialize the database
     /// let db = create_test_rw_db();
@@ -310,16 +310,16 @@ impl DatabaseHashedPostState for HashedPostStateSorted {
 mod tests {
     use super::*;
     use alloy_primitives::{hex, map::HashMap, Address, B256, U256};
-    use reth_db::test_utils::create_test_rw_db;
-    use reth_db_api::{
+    use hanzo_evm_db::test_utils::create_test_rw_db;
+    use hanzo_evm_db_api::{
         database::Database,
         models::{AccountBeforeTx, BlockNumberAddress},
         tables,
         transaction::DbTxMut,
     };
-    use reth_primitives_traits::{Account, StorageEntry};
-    use reth_provider::test_utils::create_test_provider_factory;
-    use reth_trie::{HashedPostState, HashedStorage, KeccakKeyHasher};
+    use hanzo_evm_primitives_traits::{Account, StorageEntry};
+    use hanzo_evm_provider::test_utils::create_test_provider_factory;
+    use hanzo_evm_trie::{HashedPostState, HashedStorage, KeccakKeyHasher};
     use revm::state::AccountInfo;
     use revm_database::BundleState;
 

@@ -36,39 +36,39 @@ jobs:
       - uses: Swatinem/rust-cache@v2
         with:
           cache-on-failure: true
-      - name: Build reth
+      - name: Build evm
         run: |
-          cargo install --features asm-keccak,jemalloc --path bin/reth
+          cargo install --features asm-keccak,jemalloc --path bin/evm
       - name: Run headers stage
         run: |
-          reth stage run headers --from ${{ env.FROM_BLOCK }} --to ${{ env.TO_BLOCK }} --commit --checkpoints
+          evm stage run headers --from ${{ env.FROM_BLOCK }} --to ${{ env.TO_BLOCK }} --commit --checkpoints
       - name: Run bodies stage
         run: |
-          reth stage run bodies --from ${{ env.FROM_BLOCK }} --to ${{ env.TO_BLOCK }} --commit --checkpoints
+          evm stage run bodies --from ${{ env.FROM_BLOCK }} --to ${{ env.TO_BLOCK }} --commit --checkpoints
       - name: Run senders stage
         run: |
-          reth stage run senders --from ${{ env.FROM_BLOCK }} --to ${{ env.TO_BLOCK }} --commit --checkpoints
+          evm stage run senders --from ${{ env.FROM_BLOCK }} --to ${{ env.TO_BLOCK }} --commit --checkpoints
       - name: Run execution stage
         run: |
-          reth stage run execution --from ${{ env.FROM_BLOCK }} --to ${{ env.TO_BLOCK }} --commit --checkpoints
+          evm stage run execution --from ${{ env.FROM_BLOCK }} --to ${{ env.TO_BLOCK }} --commit --checkpoints
       - name: Run account-hashing stage
         run: |
-          reth stage run account-hashing --from ${{ env.FROM_BLOCK }} --to ${{ env.TO_BLOCK }} --commit --checkpoints
+          evm stage run account-hashing --from ${{ env.FROM_BLOCK }} --to ${{ env.TO_BLOCK }} --commit --checkpoints
       - name: Run storage hashing stage
         run: |
-          reth stage run storage-hashing --from ${{ env.FROM_BLOCK }} --to ${{ env.TO_BLOCK }} --commit --checkpoints
+          evm stage run storage-hashing --from ${{ env.FROM_BLOCK }} --to ${{ env.TO_BLOCK }} --commit --checkpoints
       - name: Run hashing stage
         run: |
-          reth stage run hashing --from ${{ env.FROM_BLOCK }} --to ${{ env.TO_BLOCK }} --commit --checkpoints
+          evm stage run hashing --from ${{ env.FROM_BLOCK }} --to ${{ env.TO_BLOCK }} --commit --checkpoints
       - name: Run merkle stage
         run: |
-          reth stage run merkle --from ${{ env.FROM_BLOCK }} --to ${{ env.TO_BLOCK }} --commit --checkpoints
+          evm stage run merkle --from ${{ env.FROM_BLOCK }} --to ${{ env.TO_BLOCK }} --commit --checkpoints
       - name: Run transaction lookup stage
         run: |
-          reth stage run tx-lookup --from ${{ env.FROM_BLOCK }} --to ${{ env.TO_BLOCK }} --commit --checkpoints
+          evm stage run tx-lookup --from ${{ env.FROM_BLOCK }} --to ${{ env.TO_BLOCK }} --commit --checkpoints
       - name: Run account history stage
         run: |
-          reth stage run account-history --from ${{ env.FROM_BLOCK }} --to ${{ env.TO_BLOCK }} --commit --checkpoints
+          evm stage run account-history --from ${{ env.FROM_BLOCK }} --to ${{ env.TO_BLOCK }} --commit --checkpoints
       - name: Run storage history stage
         run: |
-          reth stage run storage-history --from ${{ env.FROM_BLOCK }} --to ${{ env.TO_BLOCK }} --commit --checkpoints
+          evm stage run storage-history --from ${{ env.FROM_BLOCK }} --to ${{ env.TO_BLOCK }} --commit --checkpoints

@@ -8,7 +8,7 @@ use alloy_consensus::{
 use alloy_eips::eip2718::{Eip2718Error, Eip2718Result, Encodable2718, IsTyped2718};
 use alloy_primitives::{Bloom, Log, B256};
 use alloy_rlp::{BufMut, Decodable, Encodable, Header, RlpDecodable, RlpEncodable};
-use reth_primitives_traits::{proofs::ordered_trie_root_with_encoder, InMemorySize};
+use hanzo_evm_primitives_traits::{proofs::ordered_trie_root_with_encoder, InMemorySize};
 
 /// Helper trait alias with requirements for transaction type generic to be used within [`Receipt`].
 pub trait TxTy:
@@ -50,7 +50,7 @@ pub type RpcReceipt<T = TxType> = EthereumReceipt<T, alloy_rpc_types_eth::Log>;
 #[derive(Clone, Debug, PartialEq, Eq, Default, RlpEncodable, RlpDecodable)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 #[cfg_attr(feature = "arbitrary", derive(arbitrary::Arbitrary))]
-#[cfg_attr(feature = "reth-codec", reth_codecs::add_arbitrary_tests(compact, rlp))]
+#[cfg_attr(feature = "hanzo-evm-codec", hanzo_evm_codecs::add_arbitrary_tests(compact, rlp))]
 #[cfg_attr(feature = "serde", serde(rename_all = "camelCase"))]
 pub struct EthereumReceipt<T = TxType, L = Log> {
     /// Receipt type.
@@ -319,7 +319,7 @@ pub(super) mod serde_bincode_compat {
     /// Intended to use with the [`serde_with::serde_as`] macro in the following way:
     /// ```rust
     /// use alloy_consensus::TxType;
-    /// use reth_ethereum_primitives::{serde_bincode_compat, Receipt};
+    /// use hanzo_evm_ethereum_primitives::{serde_bincode_compat, Receipt};
     /// use serde::{de::DeserializeOwned, Deserialize, Serialize};
     /// use serde_with::serde_as;
     ///
@@ -397,7 +397,7 @@ pub(super) mod serde_bincode_compat {
         }
     }
 
-    impl<T> reth_primitives_traits::serde_bincode_compat::SerdeBincodeCompat for super::Receipt<T>
+    impl<T> hanzo_evm_primitives_traits::serde_bincode_compat::SerdeBincodeCompat for super::Receipt<T>
     where
         T: Copy + Serialize + TryFrom<u8, Error = Eip2718Error> + Debug + 'static,
     {
@@ -442,10 +442,10 @@ pub(super) mod serde_bincode_compat {
     }
 }
 
-#[cfg(feature = "reth-codec")]
+#[cfg(feature = "hanzo-evm-codec")]
 mod compact {
     use super::*;
-    use reth_codecs::{
+    use hanzo_evm_codecs::{
         Compact,
         __private::{modular_bitfield::prelude::*, Buf},
     };
@@ -488,11 +488,11 @@ mod compact {
     impl<T: Compact> Compact for Receipt<T> {
         fn to_compact<B>(&self, buf: &mut B) -> usize
         where
-            B: reth_codecs::__private::bytes::BufMut + AsMut<[u8]>,
+            B: hanzo_evm_codecs::__private::bytes::BufMut + AsMut<[u8]>,
         {
             let mut flags = ReceiptFlags::default();
             let mut total_length = 0;
-            let mut buffer = reth_codecs::__private::bytes::BytesMut::new();
+            let mut buffer = hanzo_evm_codecs::__private::bytes::BytesMut::new();
 
             let tx_type_len = self.tx_type.to_compact(&mut buffer);
             flags.set_tx_type_len(tx_type_len as u8);
@@ -511,7 +511,7 @@ mod compact {
             total_length += flags.len() + buffer.len();
             buf.put_slice(&flags);
             if zstd {
-                reth_zstd_compressors::with_receipt_compressor(|compressor| {
+                hanzo_evm_zstd_compressors::with_receipt_compressor(|compressor| {
                     let compressed = compressor.compress(&buffer).expect("Failed to compress.");
                     buf.put(compressed.as_slice());
                 });
@@ -524,7 +524,7 @@ mod compact {
         fn from_compact(buf: &[u8], _len: usize) -> (Self, &[u8]) {
             let (flags, mut buf) = ReceiptFlags::from(buf);
             if flags.__zstd() != 0 {
-                reth_zstd_compressors::with_receipt_decompressor(|decompressor| {
+                hanzo_evm_zstd_compressors::with_receipt_decompressor(|decompressor| {
                     let decompressed = decompressor.decompress(buf);
                     let original_buf = buf;
                     let mut buf: &[u8] = decompressed;
@@ -555,7 +555,7 @@ mod compact {
     }
 }
 
-#[cfg(feature = "reth-codec")]
+#[cfg(feature = "hanzo-evm-codec")]
 pub use compact::*;
 
 #[cfg(test)]
@@ -567,8 +567,8 @@ mod tests {
         address, b256, bloom, bytes, hex_literal::hex, Address, Bytes, Log, LogData,
     };
     use alloy_rlp::Decodable;
-    use reth_codecs::Compact;
-    use reth_primitives_traits::proofs::{
+    use hanzo_evm_codecs::Compact;
+    use hanzo_evm_primitives_traits::proofs::{
         calculate_receipt_root, calculate_transaction_root, calculate_withdrawals_root,
     };
 
@@ -578,9 +578,9 @@ mod tests {
     pub(crate) type Block<T = TransactionSigned> = alloy_consensus::Block<T>;
 
     #[test]
-    #[cfg(feature = "reth-codec")]
+    #[cfg(feature = "hanzo-evm-codec")]
     fn test_decode_receipt() {
-        reth_codecs::test_utils::test_decode::<Receipt<TxType>>(&hex!(
+        hanzo_evm_codecs::test_utils::test_decode::<Receipt<TxType>>(&hex!(
             "c428b52ffd23fc42696156b10200f034792b6a94c3850215c2fef7aea361a0c31b79d9a32652eefc0d4e2e730036061cff7344b6fc6132b50cda0ed810a991ae58ef013150c12b2522533cb3b3a8b19b7786a8b5ff1d3cdc84225e22b02def168c8858df"
         ));
     }
@@ -780,7 +780,7 @@ mod tests {
         );
     }
 
-    // Ensures that reth and alloy receipts encode to the same JSON
+    // Ensures that evm and alloy receipts encode to the same JSON
     #[test]
     #[cfg(feature = "rpc")]
     fn test_receipt_serde() {

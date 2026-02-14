@@ -11,7 +11,7 @@
 //! Only a couple of era files are downloaded from `https://mainnet.era.nimbus.team/` for mainnet
 //! and `https://hoodi.era.nimbus.team/` for hoodi to keep the tests efficient.
 
-use reth_era::{
+use hanzo_evm_era::{
     common::file_ops::{EraFileFormat, StreamReader, StreamWriter},
     era::{
         file::{EraFile, EraReader, EraWriter},

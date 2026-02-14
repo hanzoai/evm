@@ -1,9 +1,9 @@
 //! L1 `eth` API types.
 
 use alloy_network::Ethereum;
-use reth_evm_ethereum::EthEvmConfig;
-use reth_rpc_convert::RpcConverter;
-use reth_rpc_eth_types::receipt::EthReceiptConverter;
+use hanzo_evm_eth_execution::EthEvmConfig;
+use hanzo_evm_rpc_convert::RpcConverter;
+use hanzo_evm_rpc_eth_types::receipt::EthReceiptConverter;
 
 /// An [`RpcConverter`] with its generics set to Ethereum specific.
 pub type EthRpcConverter<ChainSpec> =
@@ -15,14 +15,14 @@ mod tests {
     use super::*;
     use alloy_consensus::{Transaction, TxType};
     use alloy_rpc_types_eth::TransactionRequest;
-    use reth_chainspec::MAINNET;
-    use reth_rpc_eth_types::simulate::resolve_transaction;
+    use hanzo_evm_chainspec::MAINNET;
+    use hanzo_evm_rpc_eth_types::simulate::resolve_transaction;
     use revm::database::CacheDB;
 
     #[test]
     fn test_resolve_transaction_empty_request() {
         let builder = EthRpcConverter::new(EthReceiptConverter::new(MAINNET.clone()));
-        let mut db = CacheDB::<reth_revm::db::EmptyDBTyped<reth_errors::ProviderError>>::default();
+        let mut db = CacheDB::<hanzo_evm_revm::db::EmptyDBTyped<hanzo_evm_errors::ProviderError>>::default();
         let tx = TransactionRequest::default();
         let result = resolve_transaction(tx, 21000, 0, 1, &mut db, &builder).unwrap();
 
@@ -35,7 +35,7 @@ mod tests {
 
     #[test]
     fn test_resolve_transaction_legacy() {
-        let mut db = CacheDB::<reth_revm::db::EmptyDBTyped<reth_errors::ProviderError>>::default();
+        let mut db = CacheDB::<hanzo_evm_revm::db::EmptyDBTyped<hanzo_evm_errors::ProviderError>>::default();
         let builder = EthRpcConverter::new(EthReceiptConverter::new(MAINNET.clone()));
 
         let tx = TransactionRequest { gas_price: Some(100), ..Default::default() };
@@ -51,7 +51,7 @@ mod tests {
 
     #[test]
     fn test_resolve_transaction_partial_eip1559() {
-        let mut db = CacheDB::<reth_revm::db::EmptyDBTyped<reth_errors::ProviderError>>::default();
+        let mut db = CacheDB::<hanzo_evm_revm::db::EmptyDBTyped<hanzo_evm_errors::ProviderError>>::default();
         let rpc_converter = EthRpcConverter::new(EthReceiptConverter::new(MAINNET.clone()));
 
         let tx = TransactionRequest {

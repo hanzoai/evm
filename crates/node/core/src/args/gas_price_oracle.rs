@@ -1,7 +1,7 @@
 use alloy_primitives::U256;
 use clap::Args;
-use reth_rpc_eth_types::GasPriceOracleConfig;
-use reth_rpc_server_types::constants::gas_oracle::{
+use hanzo_evm_rpc_eth_types::GasPriceOracleConfig;
+use hanzo_evm_rpc_server_types::constants::gas_oracle::{
     DEFAULT_GAS_PRICE_BLOCKS, DEFAULT_GAS_PRICE_PERCENTILE, DEFAULT_IGNORE_GAS_PRICE,
     DEFAULT_MAX_GAS_PRICE,
 };
@@ -71,7 +71,7 @@ mod tests {
 
     #[test]
     fn test_parse_gpo_args() {
-        let args = CommandParser::<GasPriceOracleArgs>::parse_from(["reth"]).args;
+        let args = CommandParser::<GasPriceOracleArgs>::parse_from(["evm"]).args;
         assert_eq!(
             args,
             GasPriceOracleArgs {
@@ -87,7 +87,7 @@ mod tests {
     #[test]
     fn gpo_args_default_sanity_test() {
         let default_args = GasPriceOracleArgs::default();
-        let args = CommandParser::<GasPriceOracleArgs>::parse_from(["reth"]).args;
+        let args = CommandParser::<GasPriceOracleArgs>::parse_from(["evm"]).args;
         assert_eq!(args, default_args);
     }
 }

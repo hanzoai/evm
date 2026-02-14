@@ -2,17 +2,17 @@
 use alloy_consensus::TxLegacy;
 use alloy_primitives::{Signature, U256};
 use futures::StreamExt;
-use reth_ethereum_primitives::TransactionSigned;
-use reth_network::{
+use hanzo_evm_ethereum_primitives::TransactionSigned;
+use hanzo_evm_network::{
     test_utils::{NetworkEventStream, Testnet},
     transactions::config::{
         TransactionIngressPolicy, TransactionPropagationKind, TransactionsManagerConfig,
     },
     NetworkEvent, NetworkEventListenerProvider, Peers,
 };
-use reth_network_api::{events::PeerEvent, PeerKind, PeersInfo};
-use reth_provider::test_utils::{ExtendedAccount, MockEthProvider};
-use reth_transaction_pool::{
+use hanzo_evm_network_api::{events::PeerEvent, PeerKind, PeersInfo};
+use hanzo_evm_provider::test_utils::{ExtendedAccount, MockEthProvider};
+use hanzo_evm_transaction_pool::{
     test_utils::TransactionGenerator, AddedTransactionOutcome, PoolTransaction, TransactionPool,
 };
 use std::sync::Arc;
@@ -20,7 +20,7 @@ use tokio::join;
 
 #[tokio::test(flavor = "multi_thread")]
 async fn test_tx_gossip() {
-    reth_tracing::init_test_tracing();
+    hanzo_evm_tracing::init_test_tracing();
 
     let provider = MockEthProvider::default().with_genesis_block();
     let net = Testnet::create_with(2, provider.clone()).await;
@@ -59,7 +59,7 @@ async fn test_tx_gossip() {
 
 #[tokio::test(flavor = "multi_thread")]
 async fn test_tx_propagation_policy_trusted_only() {
-    reth_tracing::init_test_tracing();
+    hanzo_evm_tracing::init_test_tracing();
 
     let provider = MockEthProvider::default().with_genesis_block();
 
@@ -127,7 +127,7 @@ async fn test_tx_propagation_policy_trusted_only() {
 
 #[tokio::test(flavor = "multi_thread")]
 async fn test_tx_ingress_policy_trusted_only() {
-    reth_tracing::init_test_tracing();
+    hanzo_evm_tracing::init_test_tracing();
 
     let provider = MockEthProvider::default().with_genesis_block();
 
@@ -194,7 +194,7 @@ async fn test_tx_ingress_policy_trusted_only() {
 
 #[tokio::test(flavor = "multi_thread")]
 async fn test_4844_tx_gossip_penalization() {
-    reth_tracing::init_test_tracing();
+    hanzo_evm_tracing::init_test_tracing();
     let provider = MockEthProvider::default().with_genesis_block();
     let net = Testnet::create_with(2, provider.clone()).await;
 
@@ -245,7 +245,7 @@ async fn test_4844_tx_gossip_penalization() {
 
 #[tokio::test(flavor = "multi_thread")]
 async fn test_sending_invalid_transactions() {
-    reth_tracing::init_test_tracing();
+    hanzo_evm_tracing::init_test_tracing();
     let provider = MockEthProvider::default().with_genesis_block();
     let net = Testnet::create_with(2, provider.clone()).await;
     // install request handlers

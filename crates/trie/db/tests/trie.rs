@@ -7,17 +7,17 @@ use alloy_primitives::{
 use alloy_rlp::Encodable;
 use proptest::{prelude::ProptestConfig, proptest};
 use proptest_arbitrary_interop::arb;
-use reth_db::{tables, test_utils::TempDatabase, DatabaseEnv};
-use reth_db_api::{
+use hanzo_evm_db::{tables, test_utils::TempDatabase, DatabaseEnv};
+use hanzo_evm_db_api::{
     cursor::{DbCursorRO, DbCursorRW, DbDupCursorRO},
     transaction::{DbTx, DbTxMut},
 };
-use reth_primitives_traits::{Account, StorageEntry};
-use reth_provider::{
+use hanzo_evm_primitives_traits::{Account, StorageEntry};
+use hanzo_evm_provider::{
     providers::ProviderNodeTypes, test_utils::create_test_provider_factory, DatabaseProviderRW,
     StorageTrieWriter, TrieWriter,
 };
-use reth_trie::{
+use hanzo_evm_trie::{
     prefix_set::{PrefixSetMut, TriePrefixSets},
     test_utils::{state_root, state_root_prehashed, storage_root, storage_root_prehashed},
     triehash::KeccakHasher,
@@ -25,7 +25,7 @@ use reth_trie::{
     BranchNodeCompact, HashBuilder, IntermediateStateRootState, Nibbles, StateRoot,
     StateRootProgress, StorageRoot, TrieMask,
 };
-use reth_trie_db::{DatabaseStateRoot, DatabaseStorageRoot};
+use hanzo_evm_trie_db::{DatabaseStateRoot, DatabaseStorageRoot};
 use std::{collections::BTreeMap, ops::Mul, str::FromStr, sync::Arc};
 
 fn insert_account(

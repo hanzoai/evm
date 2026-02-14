@@ -1,17 +1,17 @@
 use crate::metrics::PersistenceMetrics;
 use alloy_eips::BlockNumHash;
 use crossbeam_channel::Sender as CrossbeamSender;
-use reth_chain_state::ExecutedBlock;
-use reth_errors::ProviderError;
-use reth_ethereum_primitives::EthPrimitives;
-use reth_primitives_traits::NodePrimitives;
-use reth_provider::{
+use hanzo_evm_chain_state::ExecutedBlock;
+use hanzo_evm_errors::ProviderError;
+use hanzo_evm_ethereum_primitives::EthPrimitives;
+use hanzo_evm_primitives_traits::NodePrimitives;
+use hanzo_evm_provider::{
     providers::ProviderNodeTypes, BlockExecutionWriter, BlockHashReader, ChainStateBlockWriter,
     DBProvider, DatabaseProviderFactory, ProviderFactory, SaveBlocksMode,
 };
-use reth_prune::{PrunerError, PrunerWithFactory};
-use reth_stages_api::{MetricEvent, MetricEventsSender};
-use reth_tasks::spawn_os_thread;
+use hanzo_evm_prune::{PrunerError, PrunerWithFactory};
+use hanzo_evm_stages_api::{MetricEvent, MetricEventsSender};
+use hanzo_evm_tasks::spawn_os_thread;
 use std::{
     sync::{
         mpsc::{Receiver, SendError, Sender},
@@ -23,7 +23,7 @@ use std::{
 use thiserror::Error;
 use tracing::{debug, error, instrument};
 
-/// Writes parts of reth's in memory tree state to the database and static files.
+/// Writes parts of evm's in memory tree state to the database and static files.
 ///
 /// This is meant to be a spawned service that listens for various incoming persistence operations,
 /// performing those actions on disk, and returning the result in a channel.
@@ -354,10 +354,10 @@ impl Drop for ServiceGuard {
 mod tests {
     use super::*;
     use alloy_primitives::B256;
-    use reth_chain_state::test_utils::TestBlockBuilder;
-    use reth_exex_types::FinishedExExHeight;
-    use reth_provider::test_utils::create_test_provider_factory;
-    use reth_prune::Pruner;
+    use hanzo_evm_chain_state::test_utils::TestBlockBuilder;
+    use hanzo_evm_exex_types::FinishedExExHeight;
+    use hanzo_evm_provider::test_utils::create_test_provider_factory;
+    use hanzo_evm_prune::Pruner;
     use tokio::sync::mpsc::unbounded_channel;
 
     fn default_persistence_handle() -> PersistenceHandle<EthPrimitives> {
@@ -375,7 +375,7 @@ mod tests {
 
     #[test]
     fn test_save_blocks_empty() {
-        reth_tracing::init_test_tracing();
+        hanzo_evm_tracing::init_test_tracing();
         let handle = default_persistence_handle();
 
         let blocks = vec![];
@@ -389,7 +389,7 @@ mod tests {
 
     #[test]
     fn test_save_blocks_single_block() {
-        reth_tracing::init_test_tracing();
+        hanzo_evm_tracing::init_test_tracing();
         let handle = default_persistence_handle();
         let block_number = 0;
         let mut test_block_builder = TestBlockBuilder::eth();
@@ -412,7 +412,7 @@ mod tests {
 
     #[test]
     fn test_save_blocks_multiple_blocks() {
-        reth_tracing::init_test_tracing();
+        hanzo_evm_tracing::init_test_tracing();
         let handle = default_persistence_handle();
 
         let mut test_block_builder = TestBlockBuilder::eth();
@@ -427,7 +427,7 @@ mod tests {
 
     #[test]
     fn test_save_blocks_multiple_calls() {
-        reth_tracing::init_test_tracing();
+        hanzo_evm_tracing::init_test_tracing();
         let handle = default_persistence_handle();
 
         let ranges = [0..1, 1..2, 2..4, 4..5];

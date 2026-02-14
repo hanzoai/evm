@@ -6,7 +6,7 @@ use alloy_primitives::{
     map::{AddressMap, Entry},
     Address, Bytes, B256, U256,
 };
-use reth_primitives_traits::crypto::secp256k1::public_key_to_address;
+use hanzo_evm_primitives_traits::crypto::secp256k1::public_key_to_address;
 use secp256k1::{
     rand::{thread_rng, RngCore},
     Keypair, Secp256k1,
@@ -19,7 +19,7 @@ use std::{collections::BTreeMap, fmt};
 /// # Example
 /// ```
 /// # use alloy_primitives::{Address, U256, hex, Bytes};
-/// # use reth_testing_utils::GenesisAllocator;
+/// # use hanzo_evm_testing_utils::GenesisAllocator;
 /// # use std::str::FromStr;
 /// let mut allocator = GenesisAllocator::default();
 ///

@@ -1,5 +1,5 @@
 [package]
-name = "reth-cli-runner"
+name = "hanzo-evm-cli-runner"
 version.workspace = true
 edition.workspace = true
 rust-version.workspace = true
@@ -11,8 +11,8 @@ repository.workspace = true
 workspace = true
 
 [dependencies]
-# reth
-reth-tasks.workspace = true
+# evm
+hanzo-evm-tasks.workspace = true
 
 # async
 tokio = { workspace = true, features = ["macros", "rt-multi-thread", "signal"] }

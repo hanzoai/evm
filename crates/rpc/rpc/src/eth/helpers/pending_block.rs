@@ -1,12 +1,12 @@
 //! Support for building a pending block with transactions from local view of mempool.
 
 use crate::EthApi;
-use reth_rpc_convert::RpcConvert;
-use reth_rpc_eth_api::{
+use hanzo_evm_rpc_convert::RpcConvert;
+use hanzo_evm_rpc_eth_api::{
     helpers::{pending_block::PendingEnvBuilder, LoadPendingBlock},
     FromEvmError, RpcNodeCore,
 };
-use reth_rpc_eth_types::{builder::config::PendingBlockKind, EthApiError, PendingBlock};
+use hanzo_evm_rpc_eth_types::{builder::config::PendingBlockKind, EthApiError, PendingBlock};
 
 impl<N, Rpc> LoadPendingBlock for EthApi<N, Rpc>
 where

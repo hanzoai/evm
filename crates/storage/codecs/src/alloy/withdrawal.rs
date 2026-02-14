@@ -4,7 +4,7 @@ use crate::Compact;
 use alloc::vec::Vec;
 use alloy_eips::eip4895::{Withdrawal as AlloyWithdrawal, Withdrawals};
 use alloy_primitives::Address;
-use reth_codecs_derive::add_arbitrary_tests;
+use hanzo_evm_codecs_derive::add_arbitrary_tests;
 
 /// Withdrawal acts as bridge which simplifies Compact implementation for `AlloyWithdrawal`.
 ///
@@ -14,7 +14,7 @@ use reth_codecs_derive::add_arbitrary_tests;
     any(test, feature = "test-utils"),
     derive(arbitrary::Arbitrary, serde::Serialize, serde::Deserialize)
 )]
-#[reth_codecs(crate = "crate")]
+#[hanzo_evm_codecs(crate = "crate")]
 #[cfg_attr(feature = "test-utils", allow(unreachable_pub), visibility::make(pub))]
 #[add_arbitrary_tests(crate, compact)]
 pub(crate) struct Withdrawal {

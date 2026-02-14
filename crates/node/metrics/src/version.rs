@@ -1,4 +1,4 @@
-//! This exposes reth's version information over prometheus.
+//! This exposes evm's version information over prometheus.
 use metrics::gauge;
 
 /// Contains version information for the application.
@@ -19,7 +19,7 @@ pub struct VersionInfo {
 }
 
 impl VersionInfo {
-    /// This exposes reth's version information over prometheus.
+    /// This exposes evm's version information over prometheus.
     pub fn register_version_metrics(&self) {
         let labels: [(&str, &str); 6] = [
             ("version", self.version),

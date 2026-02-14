@@ -11,9 +11,9 @@ use crate::{
     },
     NetworkHandle, NetworkManager,
 };
-use reth_eth_wire::{EthNetworkPrimitives, NetworkPrimitives};
-use reth_network_api::test_utils::PeersHandleProvider;
-use reth_transaction_pool::TransactionPool;
+use hanzo_evm_eth_wire::{EthNetworkPrimitives, NetworkPrimitives};
+use hanzo_evm_network_api::test_utils::PeersHandleProvider;
+use hanzo_evm_transaction_pool::TransactionPool;
 use tokio::sync::mpsc;
 
 /// We set the max channel capacity of the `EthRequestHandler` to 256

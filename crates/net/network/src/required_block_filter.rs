@@ -5,8 +5,8 @@
 
 use alloy_eips::BlockNumHash;
 use futures::StreamExt;
-use reth_eth_wire_types::{GetBlockHeaders, HeadersDirection};
-use reth_network_api::{
+use hanzo_evm_eth_wire_types::{GetBlockHeaders, HeadersDirection};
+use hanzo_evm_network_api::{
     NetworkEvent, NetworkEventListenerProvider, PeerRequest, Peers, ReputationChangeKind,
 };
 use tokio::sync::oneshot;
@@ -82,8 +82,8 @@ where
     /// Checks if a peer has the required blocks and bans them if not.
     async fn check_peer_blocks(
         network: N,
-        peer_id: reth_network_api::PeerId,
-        messages: reth_network_api::PeerRequestSender<PeerRequest<N::Primitives>>,
+        peer_id: hanzo_evm_network_api::PeerId,
+        messages: hanzo_evm_network_api::PeerRequestSender<PeerRequest<N::Primitives>>,
         block_num_hashes: Vec<BlockNumHash>,
         latest_peer_block: u64,
     ) {
@@ -161,7 +161,7 @@ mod tests {
     use super::*;
     use alloy_eips::BlockNumHash;
     use alloy_primitives::{b256, B256};
-    use reth_network_api::noop::NoopNetwork;
+    use hanzo_evm_network_api::noop::NoopNetwork;
 
     #[test]
     fn test_required_block_filter_creation() {

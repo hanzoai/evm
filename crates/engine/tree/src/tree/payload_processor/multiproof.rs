@@ -7,16 +7,16 @@ use alloy_primitives::{keccak256, map::HashSet, B256};
 use crossbeam_channel::{unbounded, Receiver as CrossbeamReceiver, Sender as CrossbeamSender};
 use derive_more::derive::Deref;
 use metrics::{Gauge, Histogram};
-use reth_metrics::Metrics;
-use reth_provider::AccountReader;
-use reth_revm::state::EvmState;
-use reth_trie::{
+use hanzo_evm_metrics::Metrics;
+use hanzo_evm_provider::AccountReader;
+use hanzo_evm_revm::state::EvmState;
+use hanzo_evm_trie::{
     added_removed_keys::MultiAddedRemovedKeys, proof_v2, HashedPostState, HashedStorage,
     MultiProofTargets,
 };
 #[cfg(test)]
-use reth_trie_parallel::stats::ParallelTrieTracker;
-use reth_trie_parallel::{
+use hanzo_evm_trie_parallel::stats::ParallelTrieTracker;
+use hanzo_evm_trie_parallel::{
     proof::ParallelProof,
     proof_task::{
         AccountMultiproofInput, ProofResult, ProofResultContext, ProofResultMessage,
@@ -83,7 +83,7 @@ impl SparseTrieUpdate {
 
     /// Construct update from multiproof.
     #[cfg(test)]
-    pub(super) fn from_multiproof(multiproof: reth_trie::MultiProof) -> alloy_rlp::Result<Self> {
+    pub(super) fn from_multiproof(multiproof: hanzo_evm_trie::MultiProof) -> alloy_rlp::Result<Self> {
         let stats = ParallelTrieTracker::default().finish();
         Ok(Self {
             state: HashedPostState::default(),
@@ -656,7 +656,7 @@ pub(crate) struct MultiProofTaskMetrics {
 ///   - Sends results directly via `proof_result_tx` (bypasses control channel)
 ///
 /// [`EmptyProof`]: MultiProofMessage::EmptyProof
-/// [`ProofWorkerHandle`]: reth_trie_parallel::proof_task::ProofWorkerHandle
+/// [`ProofWorkerHandle`]: hanzo_evm_trie_parallel::proof_task::ProofWorkerHandle
 ///
 /// ## Dual-Channel Design Rationale
 ///
@@ -1530,14 +1530,14 @@ mod tests {
     use super::*;
     use alloy_eip7928::{AccountChanges, BalanceChange};
     use alloy_primitives::Address;
-    use reth_provider::{
+    use hanzo_evm_provider::{
         providers::OverlayStateProviderFactory, test_utils::create_test_provider_factory,
         BlockNumReader, BlockReader, ChangeSetReader, DatabaseProviderFactory, LatestStateProvider,
         PruneCheckpointReader, StageCheckpointReader, StateProviderBox, StorageChangeSetReader,
     };
-    use reth_trie::MultiProof;
-    use reth_trie_db::ChangesetCache;
-    use reth_trie_parallel::proof_task::{ProofTaskCtx, ProofWorkerHandle};
+    use hanzo_evm_trie::MultiProof;
+    use hanzo_evm_trie_db::ChangesetCache;
+    use hanzo_evm_trie_parallel::proof_task::{ProofTaskCtx, ProofWorkerHandle};
     use revm_primitives::{B256, U256};
     use std::sync::{Arc, OnceLock};
     use tokio::runtime::{Handle, Runtime};

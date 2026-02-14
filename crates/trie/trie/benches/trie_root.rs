@@ -4,8 +4,8 @@ use alloy_primitives::B256;
 use criterion::{criterion_group, criterion_main, Criterion};
 use proptest::{prelude::*, strategy::ValueTree, test_runner::TestRunner};
 use proptest_arbitrary_interop::arb;
-use reth_ethereum_primitives::Receipt;
-use reth_trie::triehash::KeccakHasher;
+use hanzo_evm_ethereum_primitives::Receipt;
+use hanzo_evm_trie::triehash::KeccakHasher;
 use std::hint::black_box;
 
 /// Benchmarks different implementations of the root calculation.
@@ -48,7 +48,7 @@ mod implementations {
     use alloy_eips::eip2718::Encodable2718;
     use alloy_rlp::Encodable;
     use alloy_trie::root::adjust_index_for_rlp;
-    use reth_trie_common::{HashBuilder, Nibbles};
+    use hanzo_evm_trie_common::{HashBuilder, Nibbles};
 
     pub fn trie_hash_ordered_trie_root(receipts: &[ReceiptWithBloom<Receipt>]) -> B256 {
         triehash::ordered_trie_root::<KeccakHasher, _>(

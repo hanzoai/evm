@@ -1,10 +1,10 @@
 //! Network component for the node builder.
 
 use crate::{BuilderContext, FullNodeTypes};
-use reth_network::types::NetPrimitivesFor;
-use reth_network_api::FullNetwork;
-use reth_node_api::PrimitivesTy;
-use reth_transaction_pool::TransactionPool;
+use hanzo_evm_network::types::NetPrimitivesFor;
+use hanzo_evm_network_api::FullNetwork;
+use hanzo_evm_node_api::PrimitivesTy;
+use hanzo_evm_transaction_pool::TransactionPool;
 use std::future::Future;
 
 /// A type that knows how to build the network implementation.

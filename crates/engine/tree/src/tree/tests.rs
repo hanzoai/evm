@@ -7,7 +7,7 @@ use crate::{
         PersistTarget, TreeConfig,
     },
 };
-use reth_trie_db::ChangesetCache;
+use hanzo_evm_trie_db::ChangesetCache;
 
 use alloy_eips::eip1898::BlockWithParent;
 use alloy_primitives::{
@@ -19,16 +19,16 @@ use alloy_rpc_types_engine::{
     ExecutionData, ExecutionPayloadSidecar, ExecutionPayloadV1, ForkchoiceState,
 };
 use assert_matches::assert_matches;
-use reth_chain_state::{test_utils::TestBlockBuilder, BlockState, ComputedTrieData};
-use reth_chainspec::{ChainSpec, HOLESKY, MAINNET};
-use reth_engine_primitives::{EngineApiValidator, ForkchoiceStatus, NoopInvalidBlockHook};
-use reth_ethereum_consensus::EthBeaconConsensus;
-use reth_ethereum_engine_primitives::EthEngineTypes;
-use reth_ethereum_primitives::{Block, EthPrimitives};
-use reth_evm_ethereum::MockEvmConfig;
-use reth_primitives_traits::Block as _;
-use reth_provider::test_utils::MockEthProvider;
-use reth_tasks::spawn_os_thread;
+use hanzo_evm_chain_state::{test_utils::TestBlockBuilder, BlockState, ComputedTrieData};
+use hanzo_evm_chainspec::{ChainSpec, HOLESKY, MAINNET};
+use hanzo_evm_engine_primitives::{EngineApiValidator, ForkchoiceStatus, NoopInvalidBlockHook};
+use hanzo_evm_ethereum_consensus::EthBeaconConsensus;
+use hanzo_evm_ethereum_engine_primitives::EthEngineTypes;
+use hanzo_evm_ethereum_primitives::{Block, EthPrimitives};
+use hanzo_evm_eth_execution::MockEvmConfig;
+use hanzo_evm_primitives_traits::Block as _;
+use hanzo_evm_provider::test_utils::MockEthProvider;
+use hanzo_evm_tasks::spawn_os_thread;
 use std::{
     collections::BTreeMap,
     str::FromStr,
@@ -43,18 +43,18 @@ use tokio::sync::oneshot;
 #[derive(Debug, Clone)]
 struct MockEngineValidator;
 
-impl reth_engine_primitives::PayloadValidator<EthEngineTypes> for MockEngineValidator {
+impl hanzo_evm_engine_primitives::PayloadValidator<EthEngineTypes> for MockEngineValidator {
     type Block = Block;
 
     fn convert_payload_to_block(
         &self,
         payload: ExecutionData,
     ) -> Result<
-        reth_primitives_traits::SealedBlock<Self::Block>,
-        reth_payload_primitives::NewPayloadError,
+        hanzo_evm_primitives_traits::SealedBlock<Self::Block>,
+        hanzo_evm_payload_primitives::NewPayloadError,
     > {
-        let block = reth_ethereum_primitives::Block::try_from(payload.payload).map_err(|e| {
-            reth_payload_primitives::NewPayloadError::Other(format!("{e:?}").into())
+        let block = hanzo_evm_ethereum_primitives::Block::try_from(payload.payload).map_err(|e| {
+            hanzo_evm_payload_primitives::NewPayloadError::Other(format!("{e:?}").into())
         })?;
         Ok(block.seal_slow())
     }
@@ -63,22 +63,22 @@ impl reth_engine_primitives::PayloadValidator<EthEngineTypes> for MockEngineVali
 impl EngineApiValidator<EthEngineTypes> for MockEngineValidator {
     fn validate_version_specific_fields(
         &self,
-        _version: reth_payload_primitives::EngineApiMessageVersion,
-        _payload_or_attrs: reth_payload_primitives::PayloadOrAttributes<
+        _version: hanzo_evm_payload_primitives::EngineApiMessageVersion,
+        _payload_or_attrs: hanzo_evm_payload_primitives::PayloadOrAttributes<
             '_,
             alloy_rpc_types_engine::ExecutionData,
             alloy_rpc_types_engine::PayloadAttributes,
         >,
-    ) -> Result<(), reth_payload_primitives::EngineObjectValidationError> {
+    ) -> Result<(), hanzo_evm_payload_primitives::EngineObjectValidationError> {
         // Mock implementation - always valid
         Ok(())
     }
 
     fn ensure_well_formed_attributes(
         &self,
-        _version: reth_payload_primitives::EngineApiMessageVersion,
+        _version: hanzo_evm_payload_primitives::EngineApiMessageVersion,
         _attributes: &alloy_rpc_types_engine::PayloadAttributes,
-    ) -> Result<(), reth_payload_primitives::EngineObjectValidationError> {
+    ) -> Result<(), hanzo_evm_payload_primitives::EngineObjectValidationError> {
         // Mock implementation - always valid
         Ok(())
     }
@@ -193,12 +193,12 @@ impl TestHarness {
         let (to_payload_service, _payload_command_rx) = unbounded_channel();
         let payload_builder = PayloadBuilderHandle::new(to_payload_service);
 
-        let evm_config = MockEvmConfig::default();
+        let hanzo_evm_config = MockEvmConfig::default();
         let changeset_cache = ChangesetCache::new();
         let engine_validator = BasicEngineValidator::new(
             provider.clone(),
             consensus.clone(),
-            evm_config.clone(),
+            hanzo_evm_config.clone(),
             payload_validator,
             TreeConfig::default(),
             Box::new(NoopInvalidBlockHook::default()),
@@ -218,7 +218,7 @@ impl TestHarness {
             // always assume enough parallelism for tests
             TreeConfig::default().with_legacy_state_root(false).with_has_enough_parallelism(true),
             EngineApiKind::Ethereum,
-            evm_config,
+            hanzo_evm_config,
             changeset_cache,
         );
 
@@ -341,7 +341,7 @@ impl TestHarness {
         }
     }
 
-    fn persist_blocks(&self, blocks: Vec<RecoveredBlock<reth_ethereum_primitives::Block>>) {
+    fn persist_blocks(&self, blocks: Vec<RecoveredBlock<hanzo_evm_ethereum_primitives::Block>>) {
         let mut block_data: Vec<(B256, Block)> = Vec::with_capacity(blocks.len());
 
         for block in &blocks {
@@ -393,13 +393,13 @@ impl ValidatorTestHarness {
         let consensus = Arc::new(EthBeaconConsensus::new(chain_spec));
         let provider = harness.provider.clone();
         let payload_validator = MockEngineValidator;
-        let evm_config = MockEvmConfig::default();
+        let hanzo_evm_config = MockEvmConfig::default();
         let changeset_cache = ChangesetCache::new();
 
         let validator = BasicEngineValidator::new(
             provider,
             consensus,
-            evm_config,
+            hanzo_evm_config,
             payload_validator,
             TreeConfig::default(),
             Box::new(NoopInvalidBlockHook::default()),
@@ -692,7 +692,7 @@ async fn test_holesky_payload() {
 
 #[tokio::test]
 async fn test_tree_state_on_new_head_reorg() {
-    reth_tracing::init_test_tracing();
+    hanzo_evm_tracing::init_test_tracing();
     let chain_spec = MAINNET.clone();
 
     // Set persistence_threshold to 1
@@ -811,7 +811,7 @@ async fn test_tree_state_on_new_head_reorg() {
 
 #[test]
 fn test_tree_state_on_new_head_deep_fork() {
-    reth_tracing::init_test_tracing();
+    hanzo_evm_tracing::init_test_tracing();
 
     let chain_spec = MAINNET.clone();
     let mut test_harness = TestHarness::new(chain_spec);
@@ -966,7 +966,7 @@ async fn test_engine_tree_fcu_missing_head() {
 
 #[tokio::test]
 async fn test_engine_tree_live_sync_transition_required_blocks_requested() {
-    reth_tracing::init_test_tracing();
+    hanzo_evm_tracing::init_test_tracing();
 
     let chain_spec = MAINNET.clone();
     let mut test_harness = TestHarness::new(chain_spec.clone());
@@ -1042,7 +1042,7 @@ async fn test_fcu_with_canonical_ancestor_updates_latest_block() {
     // Test for issue where FCU with canonical ancestor doesn't update Latest block state
     // This was causing "nonce too low" errors when discard_reorged_transactions is enabled
 
-    reth_tracing::init_test_tracing();
+    hanzo_evm_tracing::init_test_tracing();
     let chain_spec = MAINNET.clone();
 
     // Create test harness
@@ -1122,7 +1122,7 @@ async fn test_fcu_with_canonical_ancestor_updates_latest_block() {
 /// Test that verifies the happy path where a new payload extends the canonical chain
 #[test]
 fn test_on_new_payload_canonical_insertion() {
-    reth_tracing::init_test_tracing();
+    hanzo_evm_tracing::init_test_tracing();
 
     // Use test data similar to test_disconnected_payload
     let s = include_str!("../../test-data/holesky/1.rlp");
@@ -1159,7 +1159,7 @@ fn test_on_new_payload_canonical_insertion() {
 /// Test that ensures payloads are rejected when linking to a known-invalid ancestor
 #[test]
 fn test_on_new_payload_invalid_ancestor() {
-    reth_tracing::init_test_tracing();
+    hanzo_evm_tracing::init_test_tracing();
 
     // Use Holesky test data
     let mut test_harness = TestHarness::new(HOLESKY.clone());
@@ -1223,7 +1223,7 @@ fn test_on_new_payload_invalid_ancestor() {
 /// Test that confirms payloads received during backfill sync are buffered and reported as syncing
 #[test]
 fn test_on_new_payload_backfill_buffering() {
-    reth_tracing::init_test_tracing();
+    hanzo_evm_tracing::init_test_tracing();
 
     // Use a test data file similar to test_holesky_payload
     let s = include_str!("../../test-data/holesky/1.rlp");
@@ -1266,7 +1266,7 @@ fn test_on_new_payload_backfill_buffering() {
 /// Test that captures the Engine-API rule where malformed payloads report latestValidHash = None
 #[test]
 fn test_on_new_payload_malformed_payload() {
-    reth_tracing::init_test_tracing();
+    hanzo_evm_tracing::init_test_tracing();
 
     let mut test_harness = TestHarness::new(HOLESKY.clone());
 
@@ -1314,7 +1314,7 @@ fn test_on_new_payload_malformed_payload() {
 /// `Parallel`, `Synchronous`
 #[test]
 fn test_state_root_strategy_paths() {
-    reth_tracing::init_test_tracing();
+    hanzo_evm_tracing::init_test_tracing();
 
     let mut test_harness = TestHarness::new(MAINNET.clone());
 
@@ -1388,7 +1388,7 @@ fn test_state_root_strategy_paths() {
 /// Test `Synchronous` strategy when persistence is active
 #[test]
 fn test_validate_block_synchronous_strategy_during_persistence() {
-    reth_tracing::init_test_tracing();
+    hanzo_evm_tracing::init_test_tracing();
 
     let mut test_harness = ValidatorTestHarness::new(MAINNET.clone());
 
@@ -1415,7 +1415,7 @@ fn test_validate_block_synchronous_strategy_during_persistence() {
 /// blocks with proper result validation
 #[test]
 fn test_validate_block_multiple_scenarios() {
-    reth_tracing::init_test_tracing();
+    hanzo_evm_tracing::init_test_tracing();
 
     // Test multiple scenarios to ensure comprehensive coverage
     let mut test_harness = ValidatorTestHarness::new(MAINNET.clone());
@@ -1453,7 +1453,7 @@ mod check_invalid_ancestors_tests {
     /// Test that `find_invalid_ancestor` returns None when no invalid ancestors exist
     #[test]
     fn test_find_invalid_ancestor_no_invalid() {
-        reth_tracing::init_test_tracing();
+        hanzo_evm_tracing::init_test_tracing();
 
         let mut test_harness = TestHarness::new(HOLESKY.clone());
 
@@ -1476,7 +1476,7 @@ mod check_invalid_ancestors_tests {
     /// Test that `find_invalid_ancestor` detects an invalid parent
     #[test]
     fn test_find_invalid_ancestor_with_invalid_parent() {
-        reth_tracing::init_test_tracing();
+        hanzo_evm_tracing::init_test_tracing();
 
         let mut test_harness = TestHarness::new(HOLESKY.clone());
 
@@ -1526,7 +1526,7 @@ mod check_invalid_ancestors_tests {
     /// Test genesis block handling (`parent_hash` = `B256::ZERO`)
     #[test]
     fn test_genesis_block_handling() {
-        reth_tracing::init_test_tracing();
+        hanzo_evm_tracing::init_test_tracing();
 
         let mut test_harness = TestHarness::new(HOLESKY.clone());
 
@@ -1550,7 +1550,7 @@ mod check_invalid_ancestors_tests {
     /// Test malformed payload with invalid ancestor scenario
     #[test]
     fn test_malformed_payload_with_invalid_ancestor() {
-        reth_tracing::init_test_tracing();
+        hanzo_evm_tracing::init_test_tracing();
 
         let mut test_harness = TestHarness::new(HOLESKY.clone());
 
@@ -1607,7 +1607,7 @@ mod payload_execution_tests {
     /// Test `try_insert_payload` with different `InsertPayloadOk` variants
     #[test]
     fn test_try_insert_payload_variants() {
-        reth_tracing::init_test_tracing();
+        hanzo_evm_tracing::init_test_tracing();
 
         let mut test_harness = TestHarness::new(HOLESKY.clone());
 
@@ -1629,7 +1629,7 @@ mod payload_execution_tests {
     /// Test `try_buffer_payload` with validation errors
     #[test]
     fn test_buffer_payload_validation_errors() {
-        reth_tracing::init_test_tracing();
+        hanzo_evm_tracing::init_test_tracing();
 
         let mut test_harness = TestHarness::new(HOLESKY.clone());
 
@@ -1649,7 +1649,7 @@ mod payload_execution_tests {
     /// Test `try_buffer_payload` with valid payload
     #[test]
     fn test_buffer_payload_valid_payload() {
-        reth_tracing::init_test_tracing();
+        hanzo_evm_tracing::init_test_tracing();
 
         let mut test_harness = TestHarness::new(HOLESKY.clone());
 
@@ -1863,7 +1863,7 @@ mod forkchoice_updated_tests {
     /// Test the complete `on_forkchoice_updated` flow with all helper methods
     #[tokio::test]
     async fn test_on_forkchoice_updated_integration() {
-        reth_tracing::init_test_tracing();
+        hanzo_evm_tracing::init_test_tracing();
 
         let chain_spec = MAINNET.clone();
         let mut test_harness = TestHarness::new(chain_spec);

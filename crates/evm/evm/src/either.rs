@@ -4,8 +4,8 @@ use crate::{execute::Executor, Database, OnStateHook};
 
 // re-export Either
 pub use futures_util::future::Either;
-use reth_execution_types::{BlockExecutionOutput, BlockExecutionResult};
-use reth_primitives_traits::{NodePrimitives, RecoveredBlock};
+use hanzo_evm_execution_types::{BlockExecutionOutput, BlockExecutionResult};
+use hanzo_evm_primitives_traits::{NodePrimitives, RecoveredBlock};
 
 impl<A, B, DB> Executor<DB> for Either<A, B>
 where

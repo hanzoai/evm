@@ -1,8 +1,8 @@
 use crate::{DatabaseHashedCursorFactory, DatabaseTrieCursorFactory};
 use alloy_primitives::{keccak256, map::HashMap, Address, B256};
-use reth_db_api::transaction::DbTx;
-use reth_execution_errors::StateProofError;
-use reth_trie::{
+use hanzo_evm_db_api::transaction::DbTx;
+use hanzo_evm_execution_errors::StateProofError;
+use hanzo_evm_trie::{
     hashed_cursor::HashedPostStateCursorFactory,
     proof::{Proof, StorageProof},
     trie_cursor::InMemoryTrieCursorFactory,
@@ -85,7 +85,7 @@ pub trait DatabaseStorageProof<'a, TX> {
         address: Address,
         slot: B256,
         storage: HashedStorage,
-    ) -> Result<reth_trie::StorageProof, StateProofError>;
+    ) -> Result<hanzo_evm_trie::StorageProof, StateProofError>;
 
     /// Generates the storage multiproof for target slots based on [`TrieInput`].
     fn overlay_storage_multiproof(
@@ -112,7 +112,7 @@ impl<'a, TX: DbTx> DatabaseStorageProof<'a, TX>
         address: Address,
         slot: B256,
         storage: HashedStorage,
-    ) -> Result<reth_trie::StorageProof, StateProofError> {
+    ) -> Result<hanzo_evm_trie::StorageProof, StateProofError> {
         let hashed_address = keccak256(address);
         let prefix_set = storage.construct_prefix_set();
         let state_sorted = HashedPostStateSorted::new(

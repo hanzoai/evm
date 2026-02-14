@@ -93,11 +93,11 @@ use alloy_primitives::{
     Address, TxHash, B256,
 };
 use parking_lot::{Mutex, RwLock, RwLockReadGuard, RwLockWriteGuard};
-use reth_eth_wire_types::HandleMempoolData;
-use reth_execution_types::ChangedAccount;
+use hanzo_evm_eth_wire_types::HandleMempoolData;
+use hanzo_evm_execution_types::ChangedAccount;
 
 use alloy_eips::{eip7594::BlobTransactionSidecarVariant, Typed2718};
-use reth_primitives_traits::Recovered;
+use hanzo_evm_primitives_traits::Recovered;
 use rustc_hash::FxHashMap;
 use std::{
     fmt,
@@ -129,9 +129,9 @@ pub(crate) mod state;
 pub mod txpool;
 mod update;
 
-/// Bound on number of pending transactions from `reth_network::TransactionsManager` to buffer.
+/// Bound on number of pending transactions from `hanzo_evm_network::TransactionsManager` to buffer.
 pub const PENDING_TX_LISTENER_BUFFER_SIZE: usize = 2048;
-/// Bound on number of new transactions from `reth_network::TransactionsManager` to buffer.
+/// Bound on number of new transactions from `hanzo_evm_network::TransactionsManager` to buffer.
 pub const NEW_TX_LISTENER_BUFFER_SIZE: usize = 1024;
 
 const BLOB_SIDECAR_LISTENER_BUFFER_SIZE: usize = 512;

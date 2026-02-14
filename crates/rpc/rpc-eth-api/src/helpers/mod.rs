@@ -12,7 +12,7 @@
 //! Default implementation of the `Eth` traits, is done w.r.t. L1.
 //!
 //! [`EthApiServer`](crate::EthApiServer), is implemented for any type that implements
-//! all the `Eth` traits, e.g. `reth_rpc::EthApi`.
+//! all the `Eth` traits, e.g. `hanzo_evm_rpc::EthApi`.
 
 pub mod block;
 pub mod blocking_task;

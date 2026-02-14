@@ -12,32 +12,32 @@ use alloy_rpc_types_engine::{
     ForkchoiceState, PayloadStatus, PayloadStatusEnum, PayloadValidationError,
 };
 use error::{InsertBlockError, InsertBlockFatalError};
-use reth_chain_state::{
+use hanzo_evm_chain_state::{
     CanonicalInMemoryState, ComputedTrieData, ExecutedBlock, MemoryOverlayStateProvider,
     NewCanonicalChain,
 };
-use reth_consensus::{Consensus, FullConsensus};
-use reth_engine_primitives::{
+use hanzo_evm_consensus::{Consensus, FullConsensus};
+use hanzo_evm_engine_primitives::{
     BeaconEngineMessage, BeaconOnNewPayloadError, ConsensusEngineEvent, ExecutionPayload,
     ForkchoiceStateTracker, OnForkChoiceUpdated,
 };
-use reth_errors::{ConsensusError, ProviderResult};
-use reth_evm::ConfigureEvm;
-use reth_payload_builder::PayloadBuilderHandle;
-use reth_payload_primitives::{
+use hanzo_evm_errors::{ConsensusError, ProviderResult};
+use hanzo_evm_execution::ConfigureEvm;
+use hanzo_evm_payload_builder::PayloadBuilderHandle;
+use hanzo_evm_payload_primitives::{
     BuiltPayload, EngineApiMessageVersion, NewPayloadError, PayloadBuilderAttributes, PayloadTypes,
 };
-use reth_primitives_traits::{NodePrimitives, RecoveredBlock, SealedBlock, SealedHeader};
-use reth_provider::{
+use hanzo_evm_primitives_traits::{NodePrimitives, RecoveredBlock, SealedBlock, SealedHeader};
+use hanzo_evm_provider::{
     BlockExecutionOutput, BlockExecutionResult, BlockReader, ChangeSetReader,
     DatabaseProviderFactory, HashedPostStateProvider, ProviderError, StageCheckpointReader,
     StateProviderBox, StateProviderFactory, StateReader, StorageChangeSetReader,
     TransactionVariant,
 };
-use reth_revm::database::StateProviderDatabase;
-use reth_stages_api::ControlFlow;
-use reth_tasks::spawn_os_thread;
-use reth_trie_db::ChangesetCache;
+use hanzo_evm_revm::database::StateProviderDatabase;
+use hanzo_evm_stages_api::ControlFlow;
+use hanzo_evm_tasks::spawn_os_thread;
+use hanzo_evm_trie_db::ChangesetCache;
 use state::TreeState;
 use std::{fmt::Debug, ops, sync::Arc, time::Instant};
 
@@ -70,7 +70,7 @@ pub use metrics::EngineApiMetrics;
 pub use payload_processor::*;
 pub use payload_validator::{BasicEngineValidator, EngineValidator};
 pub use persistence_state::PersistenceState;
-pub use reth_engine_primitives::TreeConfig;
+pub use hanzo_evm_engine_primitives::TreeConfig;
 
 pub mod state;
 
@@ -267,7 +267,7 @@ where
     /// The engine API variant of this handler
     engine_kind: EngineApiKind,
     /// The EVM configuration.
-    evm_config: C,
+    hanzo_evm_config: C,
     /// Changeset cache for in-memory trie changesets
     changeset_cache: ChangesetCache,
 }
@@ -293,7 +293,7 @@ where
             .field("config", &self.config)
             .field("metrics", &self.metrics)
             .field("engine_kind", &self.engine_kind)
-            .field("evm_config", &self.evm_config)
+            .field("hanzo_evm_config", &self.hanzo_evm_config)
             .field("changeset_cache", &self.changeset_cache)
             .finish()
     }
@@ -331,7 +331,7 @@ where
         payload_builder: PayloadBuilderHandle<T>,
         config: TreeConfig,
         engine_kind: EngineApiKind,
-        evm_config: C,
+        hanzo_evm_config: C,
         changeset_cache: ChangesetCache,
     ) -> Self {
         let (incoming_tx, incoming) = crossbeam_channel::unbounded();
@@ -352,7 +352,7 @@ where
             metrics: Default::default(),
             incoming_tx,
             engine_kind,
-            evm_config,
+            hanzo_evm_config,
             changeset_cache,
         }
     }
@@ -372,7 +372,7 @@ where
         canonical_in_memory_state: CanonicalInMemoryState<N>,
         config: TreeConfig,
         kind: EngineApiKind,
-        evm_config: C,
+        hanzo_evm_config: C,
         changeset_cache: ChangesetCache,
     ) -> (Sender<FromEngine<EngineApiRequest<T, N>, N::Block>>, UnboundedReceiver<EngineApiEvent<N>>)
     {
@@ -404,7 +404,7 @@ where
             payload_builder,
             config,
             kind,
-            evm_config,
+            hanzo_evm_config,
             changeset_cache,
         );
         let incoming = task.incoming_tx.clone();
@@ -536,7 +536,7 @@ where
     /// When the Consensus layer receives a new block via the consensus gossip protocol,
     /// the transactions in the block are sent to the execution layer in the form of a
     /// [`PayloadTypes::ExecutionData`], for example
-    /// [`ExecutionData`](reth_payload_primitives::PayloadTypes::ExecutionData). The
+    /// [`ExecutionData`](hanzo_evm_payload_primitives::PayloadTypes::ExecutionData). The
     /// Execution layer executes the transactions and validates the state in the block header,
     /// then passes validation data back to Consensus layer, that adds the block to the head of
     /// its own blockchain and attests to it. The block is then broadcast over the consensus p2p
@@ -1901,7 +1901,7 @@ where
             "computing block trie updates",
         );
         let db_provider = self.provider.database_provider_ro()?;
-        let trie_updates = reth_trie_db::compute_block_trie_updates(
+        let trie_updates = hanzo_evm_trie_db::compute_block_trie_updates(
             &self.changeset_cache,
             &db_provider,
             block.number(),

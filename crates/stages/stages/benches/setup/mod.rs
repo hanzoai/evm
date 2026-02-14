@@ -1,21 +1,21 @@
 #![expect(unreachable_pub)]
 use alloy_primitives::{Address, B256};
 use itertools::concat;
-use reth_db::{test_utils::TempDatabase, Database, DatabaseEnv};
-use reth_primitives_traits::{Account, SealedBlock, SealedHeader};
-use reth_provider::{
+use hanzo_evm_db::{test_utils::TempDatabase, Database, DatabaseEnv};
+use hanzo_evm_primitives_traits::{Account, SealedBlock, SealedHeader};
+use hanzo_evm_provider::{
     test_utils::MockNodeTypesWithDB, DBProvider, DatabaseProvider, DatabaseProviderFactory,
     TrieWriter,
 };
-use reth_stages::{
+use hanzo_evm_stages::{
     stages::{AccountHashingStage, StorageHashingStage},
     test_utils::{StorageKind, TestStageDB},
 };
-use reth_testing_utils::generators::{
+use hanzo_evm_testing_utils::generators::{
     self, random_block_range, random_changeset_range, random_contract_account_range,
     random_eoa_accounts, BlockRangeParams,
 };
-use reth_trie::StateRoot;
+use hanzo_evm_trie::StateRoot;
 use std::{collections::BTreeMap, fs, path::Path};
 use tokio::runtime::Handle;
 
@@ -23,8 +23,8 @@ mod constants;
 
 mod account_hashing;
 pub use account_hashing::*;
-use reth_stages_api::{ExecInput, Stage, UnwindInput};
-use reth_trie_db::DatabaseStateRoot;
+use hanzo_evm_stages_api::{ExecInput, Stage, UnwindInput};
+use hanzo_evm_trie_db::DatabaseStateRoot;
 
 pub(crate) type StageRange = (ExecInput, UnwindInput);
 

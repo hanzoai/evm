@@ -1,5 +1,5 @@
 [package]
-name = "reth-invalid-block-hooks"
+name = "hanzo-evm-invalid-block-hooks"
 version.workspace = true
 edition.workspace = true
 rust-version.workspace = true
@@ -11,18 +11,18 @@ repository.workspace = true
 workspace = true
 
 [dependencies]
-# reth
+# evm
 revm.workspace = true
 revm-bytecode.workspace = true
 revm-database.workspace = true
-reth-engine-primitives.workspace = true
-reth-evm.workspace = true
-reth-primitives-traits.workspace = true
-reth-provider.workspace = true
-reth-revm = { workspace = true, features = ["serde"] }
-reth-rpc-api = { workspace = true, features = ["client"] }
-reth-tracing.workspace = true
-reth-trie.workspace = true
+hanzo-evm-engine-primitives.workspace = true
+hanzo-evm-execution.workspace = true
+hanzo-evm-primitives-traits.workspace = true
+hanzo-evm-provider.workspace = true
+hanzo-evm-revm = { workspace = true, features = ["serde"] }
+hanzo-evm-rpc-api = { workspace = true, features = ["client"] }
+hanzo-evm-tracing.workspace = true
+hanzo-evm-trie.workspace = true
 
 # alloy
 alloy-primitives.workspace = true
@@ -42,10 +42,10 @@ serde_json.workspace = true
 
 [dev-dependencies]
 alloy-eips.workspace = true
-reth-chainspec.workspace = true
-reth-ethereum-primitives.workspace = true
-reth-evm-ethereum.workspace = true
-reth-provider = { workspace = true, features = ["test-utils"] }
-reth-revm = { workspace = true, features = ["test-utils"] }
-reth-testing-utils.workspace = true
+hanzo-evm-chainspec.workspace = true
+hanzo-evm-ethereum-primitives.workspace = true
+hanzo-evm-eth-execution.workspace = true
+hanzo-evm-provider = { workspace = true, features = ["test-utils"] }
+hanzo-evm-revm = { workspace = true, features = ["test-utils"] }
+hanzo-evm-testing-utils.workspace = true
 tempfile.workspace = true

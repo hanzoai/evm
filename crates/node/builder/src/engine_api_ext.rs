@@ -4,7 +4,7 @@
 
 use crate::rpc::EngineApiBuilder;
 use eyre::Result;
-use reth_node_api::{AddOnsContext, FullNodeComponents};
+use hanzo_evm_node_api::{AddOnsContext, FullNodeComponents};
 
 /// Provides access to an `EngineApi` instance with a callback
 #[derive(Debug)]

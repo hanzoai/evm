@@ -1,6 +1,6 @@
 use alloy_eips::eip1898::BlockWithParent;
 use alloy_primitives::B256;
-use reth_metrics::{
+use hanzo_evm_metrics::{
     metrics::{Counter, Gauge},
     Metrics,
 };
@@ -106,7 +106,7 @@ struct InvalidHeaderCacheMetrics {
 mod tests {
     use super::*;
     use alloy_consensus::Header;
-    use reth_primitives_traits::SealedHeader;
+    use hanzo_evm_primitives_traits::SealedHeader;
 
     #[test]
     fn test_hit_eviction() {

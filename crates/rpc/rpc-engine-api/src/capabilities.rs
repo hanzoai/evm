@@ -10,7 +10,7 @@ use tracing::warn;
 const CRITICAL_METHOD_PREFIXES: &[&str] =
     &["engine_forkchoiceUpdated", "engine_getPayload", "engine_newPayload"];
 
-/// All Engine API capabilities supported by Reth (Ethereum mainnet).
+/// All Engine API capabilities supported by Hanzo EVM (Ethereum mainnet).
 ///
 /// See <https://github.com/ethereum/execution-apis/tree/main/src/engine> for updates.
 pub const CAPABILITIES: &[&str] = &[
@@ -101,7 +101,7 @@ impl EngineCapabilities {
             warn!(
                 target: "rpc::engine",
                 missing = ?critical_missing_in_el,
-                "CL supports Engine API methods that Reth doesn't. Consider upgrading Reth."
+                "CL supports Engine API methods that Hanzo EVM doesn't. Consider upgrading Reth."
             );
         }
 
@@ -109,7 +109,7 @@ impl EngineCapabilities {
             warn!(
                 target: "rpc::engine",
                 missing = ?critical_missing_in_cl,
-                "Reth supports Engine API methods that CL doesn't. Consider upgrading your consensus client."
+                "Hanzo EVM supports Engine API methods that CL doesn't. Consider upgrading your consensus client."
             );
         }
     }

@@ -3,12 +3,12 @@ use crate::{
     PrunerError,
 };
 use alloy_primitives::BlockNumber;
-use reth_provider::{BlockReader, PruneCheckpointReader, StaticFileProviderFactory};
-use reth_prune_types::{
+use hanzo_evm_provider::{BlockReader, PruneCheckpointReader, StaticFileProviderFactory};
+use hanzo_evm_prune_types::{
     PruneInterruptReason, PruneMode, PrunePurpose, PruneSegment, SegmentOutput,
     SegmentOutputCheckpoint,
 };
-use reth_static_file_types::StaticFileSegment;
+use hanzo_evm_static_file_types::StaticFileSegment;
 use tracing::{debug, instrument};
 
 /// Segment responsible for pruning transactions in static files.
@@ -132,14 +132,14 @@ mod tests {
     use super::*;
     use crate::Pruner;
     use alloy_primitives::BlockNumber;
-    use reth_exex_types::FinishedExExHeight;
-    use reth_provider::{
+    use hanzo_evm_exex_types::FinishedExExHeight;
+    use hanzo_evm_provider::{
         test_utils::{create_test_provider_factory, MockNodeTypesWithDB},
         DBProvider, DatabaseProviderFactory, ProviderFactory, PruneCheckpointWriter,
         StaticFileWriter,
     };
-    use reth_prune_types::{PruneMode, PruneProgress, PruneSegment};
-    use reth_static_file_types::{
+    use hanzo_evm_prune_types::{PruneMode, PruneProgress, PruneSegment};
+    use hanzo_evm_static_file_types::{
         SegmentHeader, SegmentRangeInclusive, StaticFileSegment, DEFAULT_BLOCKS_PER_STATIC_FILE,
     };
 
@@ -245,7 +245,7 @@ mod tests {
             provider
                 .save_prune_checkpoint(
                     PruneSegment::TransactionLookup,
-                    reth_prune_types::PruneCheckpoint {
+                    hanzo_evm_prune_types::PruneCheckpoint {
                         block_number: Some(checkpoint_block),
                         tx_number: None,
                         prune_mode: test_case.tx_lookup_mode.unwrap(),

@@ -1,5 +1,5 @@
 use alloy_primitives::keccak256;
-use reth_network_peers::{NodeRecord, PeerId};
+use hanzo_evm_network_peers::{NodeRecord, PeerId};
 
 /// The key type for the table.
 #[derive(Debug, Copy, Clone, Eq, PartialEq)]

@@ -12,19 +12,19 @@ use alloy_consensus::BlockHeader;
 use alloy_eips::BlockHashOrNumber;
 use alloy_primitives::{BlockNumber, B256, U256};
 use eyre::eyre;
-use reth_chainspec::{ChainSpec, EthChainSpec, MAINNET};
-use reth_config::config::PruneConfig;
-use reth_engine_local::MiningMode;
-use reth_ethereum_forks::{EthereumHardforks, Head};
-use reth_network_p2p::headers::client::HeadersClient;
-use reth_primitives_traits::SealedHeader;
-use reth_stages_types::StageId;
-use reth_storage_api::{
+use hanzo_evm_chainspec::{ChainSpec, EthChainSpec, MAINNET};
+use hanzo_evm_config::config::PruneConfig;
+use hanzo_evm_engine_local::MiningMode;
+use hanzo_evm_ethereum_forks::{EthereumHardforks, Head};
+use hanzo_evm_network_p2p::headers::client::HeadersClient;
+use hanzo_evm_primitives_traits::SealedHeader;
+use hanzo_evm_stages_types::StageId;
+use hanzo_evm_storage_api::{
     BlockHashReader, DatabaseProviderFactory, HeaderProvider, StageCheckpointReader,
     StorageSettings,
 };
-use reth_storage_errors::provider::ProviderResult;
-use reth_transaction_pool::TransactionPool;
+use hanzo_evm_storage_errors::provider::ProviderResult;
+use hanzo_evm_transaction_pool::TransactionPool;
 use serde::{de::DeserializeOwned, Serialize};
 use std::{
     fs,
@@ -34,7 +34,7 @@ use std::{
 use tracing::*;
 
 use crate::args::{EraArgs, MetricArgs};
-pub use reth_engine_primitives::{
+pub use hanzo_evm_engine_primitives::{
     DEFAULT_MEMORY_BLOCK_BUFFER_TARGET, DEFAULT_PERSISTENCE_THRESHOLD, DEFAULT_RESERVED_CPU_CORES,
 };
 
@@ -46,11 +46,11 @@ pub const DEFAULT_CROSS_BLOCK_CACHE_SIZE_MB: usize = 4 * 1024;
 ///
 /// # Example
 /// ```rust
-/// # use reth_node_core::{
+/// # use hanzo_evm_node_core::{
 /// #     node_config::NodeConfig,
 /// #     args::RpcServerArgs,
 /// # };
-/// # use reth_rpc_server_types::RpcModuleSelection;
+/// # use hanzo_evm_rpc_server_types::RpcModuleSelection;
 /// # use tokio::runtime::Handle;
 ///
 /// async fn t() {
@@ -69,11 +69,11 @@ pub const DEFAULT_CROSS_BLOCK_CACHE_SIZE_MB: usize = 4 * 1024;
 ///
 /// # Example
 /// ```rust
-/// # use reth_node_core::{
+/// # use hanzo_evm_node_core::{
 /// #     node_config::NodeConfig,
 /// #     args::RpcServerArgs,
 /// # };
-/// # use reth_rpc_server_types::RpcModuleSelection;
+/// # use hanzo_evm_rpc_server_types::RpcModuleSelection;
 /// # use tokio::runtime::Handle;
 ///
 /// async fn t() {
@@ -420,7 +420,7 @@ impl<ChainSpec> NodeConfig<ChainSpec> {
     ) -> eyre::Result<Option<BlockNumber>>
     where
         Provider: HeaderProvider,
-        Client: HeadersClient<Header: reth_primitives_traits::BlockHeader>,
+        Client: HeadersClient<Header: hanzo_evm_primitives_traits::BlockHeader>,
     {
         let max_block = if let Some(block) = self.debug.max_block {
             Some(block)
@@ -475,13 +475,13 @@ impl<ChainSpec> NodeConfig<ChainSpec> {
     ) -> ProviderResult<u64>
     where
         Provider: HeaderProvider,
-        Client: HeadersClient<Header: reth_primitives_traits::BlockHeader>,
+        Client: HeadersClient<Header: hanzo_evm_primitives_traits::BlockHeader>,
     {
         let header = provider.header_by_hash_or_number(tip.into())?;
 
         // try to look up the header in the database
         if let Some(header) = header {
-            info!(target: "reth::cli", ?tip, "Successfully looked up tip block in the database");
+            info!(target: "evm::cli", ?tip, "Successfully looked up tip block in the database");
             return Ok(header.number())
         }
 
@@ -497,20 +497,20 @@ impl<ChainSpec> NodeConfig<ChainSpec> {
         tip: BlockHashOrNumber,
     ) -> SealedHeader<Client::Header>
     where
-        Client: HeadersClient<Header: reth_primitives_traits::BlockHeader>,
+        Client: HeadersClient<Header: hanzo_evm_primitives_traits::BlockHeader>,
     {
-        info!(target: "reth::cli", ?tip, "Fetching tip block from the network.");
+        info!(target: "evm::cli", ?tip, "Fetching tip block from the network.");
         let mut fetch_failures = 0;
         loop {
             match get_single_header(&client, tip).await {
                 Ok(tip_header) => {
-                    info!(target: "reth::cli", ?tip, "Successfully fetched tip");
+                    info!(target: "evm::cli", ?tip, "Successfully fetched tip");
                     return tip_header
                 }
                 Err(error) => {
                     fetch_failures += 1;
                     if fetch_failures % 20 == 0 {
-                        error!(target: "reth::cli", ?fetch_failures, %error, "Failed to fetch the tip. Retrying...");
+                        error!(target: "evm::cli", ?fetch_failures, %error, "Failed to fetch the tip. Retrying...");
                     }
                 }
             }

@@ -1,8 +1,8 @@
 participants:
   - el_type: geth
     cl_type: lighthouse
-  - el_type: reth
-    el_image: "ghcr.io/paradigmxyz/reth:kurtosis-ci"
+  - el_type: evm
+    el_image: "ghcr.io/hanzoai/reth:kurtosis-ci"
     cl_type: teku
 additional_services:
   - assertoor

@@ -3,41 +3,41 @@
 use crate::{
     common::{Attached, LaunchContextWith, WithConfigs},
     hooks::NodeHooks,
-    rpc::{EngineShutdown, EngineValidatorAddOn, EngineValidatorBuilder, RethRpcAddOns, RpcHandle},
+    rpc::{EngineShutdown, EngineValidatorAddOn, EngineValidatorBuilder, EvmRpcAddOns, RpcHandle},
     setup::build_networked_pipeline,
     AddOns, AddOnsContext, FullNode, LaunchContext, LaunchNode, NodeAdapter,
     NodeBuilderWithComponents, NodeComponents, NodeComponentsBuilder, NodeHandle, NodeTypesAdapter,
 };
 use alloy_consensus::BlockHeader;
 use futures::{stream_select, FutureExt, StreamExt};
-use reth_chainspec::{EthChainSpec, EthereumHardforks};
-use reth_engine_service::service::{ChainEvent, EngineService};
-use reth_engine_tree::{
+use hanzo_evm_chainspec::{EthChainSpec, EthereumHardforks};
+use hanzo_evm_engine_service::service::{ChainEvent, EngineService};
+use hanzo_evm_engine_tree::{
     chain::FromOrchestrator,
     engine::{EngineApiRequest, EngineRequestHandler},
     tree::TreeConfig,
 };
-use reth_engine_util::EngineMessageStreamExt;
-use reth_exex::ExExManagerHandle;
-use reth_network::{types::BlockRangeUpdate, NetworkSyncUpdater, SyncState};
-use reth_network_api::BlockDownloaderProvider;
-use reth_node_api::{
+use hanzo_evm_engine_util::EngineMessageStreamExt;
+use hanzo_evm_exex::ExExManagerHandle;
+use hanzo_evm_network::{types::BlockRangeUpdate, NetworkSyncUpdater, SyncState};
+use hanzo_evm_network_api::BlockDownloaderProvider;
+use hanzo_evm_node_api::{
     BuiltPayload, ConsensusEngineHandle, FullNodeTypes, NodeTypes, NodeTypesWithDBAdapter,
 };
-use reth_node_core::{
+use hanzo_evm_node_core::{
     dirs::{ChainPath, DataDirPath},
     exit::NodeExitFuture,
     primitives::Head,
 };
-use reth_node_events::node;
-use reth_provider::{
+use hanzo_evm_node_events::node;
+use hanzo_evm_provider::{
     providers::{BlockchainProvider, NodeTypesForProvider},
     BlockNumReader, StorageSettingsCache,
 };
-use reth_tasks::TaskExecutor;
-use reth_tokio_util::EventSender;
-use reth_tracing::tracing::{debug, error, info};
-use reth_trie_db::ChangesetCache;
+use hanzo_evm_tasks::TaskExecutor;
+use hanzo_evm_tokio_util::EventSender;
+use hanzo_evm_tracing::tracing::{debug, error, info};
+use hanzo_evm_trie_db::ChangesetCache;
 use std::{future::Future, pin::Pin, sync::Arc};
 use tokio::sync::{mpsc::unbounded_channel, oneshot};
 use tokio_stream::wrappers::UnboundedReceiverStream;
@@ -75,7 +75,7 @@ impl EngineNodeLauncher {
             >,
         >,
         CB: NodeComponentsBuilder<T>,
-        AO: RethRpcAddOns<NodeAdapter<T, CB::Components>>
+        AO: EvmRpcAddOns<NodeAdapter<T, CB::Components>>
             + EngineValidatorAddOn<NodeAdapter<T, CB::Components>>,
     {
         let Self { ctx, engine_tree_config } = self;
@@ -104,17 +104,17 @@ impl EngineNodeLauncher {
             // Create the provider factory with changeset cache
             .with_provider_factory::<_, <CB::Components as NodeComponents<T>>::Evm>(changeset_cache.clone()).await?
             .inspect(|_| {
-                info!(target: "reth::cli", "Database opened");
+                info!(target: "evm::cli", "Database opened");
             })
             .with_prometheus_server().await?
             .inspect(|this| {
-                debug!(target: "reth::cli", chain=%this.chain_id(), genesis=?this.genesis_hash(), "Initializing genesis");
+                debug!(target: "evm::cli", chain=%this.chain_id(), genesis=?this.genesis_hash(), "Initializing genesis");
             })
             .with_genesis()?
             .inspect(|this: &LaunchContextWith<Attached<WithConfigs<<T::Types as NodeTypes>::ChainSpec>, _>>| {
-                info!(target: "reth::cli", "\n{}", this.chain_spec().display_hardforks());
+                info!(target: "evm::cli", "\n{}", this.chain_spec().display_hardforks());
                 let settings = this.provider_factory().cached_storage_settings();
-                info!(target: "reth::cli", ?settings, "Loaded storage settings");
+                info!(target: "evm::cli", ?settings, "Loaded storage settings");
             })
             .with_metrics_task()
             // passing FullNodeTypes as type parameter here so that we can build
@@ -141,7 +141,7 @@ impl EngineNodeLauncher {
 
         let static_file_producer = ctx.static_file_producer();
         let static_file_producer_events = static_file_producer.lock().events();
-        info!(target: "reth::cli", "StaticFileProducer initialized");
+        info!(target: "evm::cli", "StaticFileProducer initialized");
 
         let consensus = Arc::new(ctx.components().consensus().clone());
 
@@ -155,7 +155,7 @@ impl EngineNodeLauncher {
             ctx.prune_config(),
             max_block,
             static_file_producer,
-            ctx.components().evm_config().clone(),
+            ctx.components().hanzo_evm_config().clone(),
             maybe_exex_manager_handle.clone().unwrap_or_else(ExExManagerHandle::empty),
             ctx.era_import_source(),
         )?;
@@ -172,7 +172,7 @@ impl EngineNodeLauncher {
         }
         let pruner = pruner_builder.build_with_provider_factory(ctx.provider_factory().clone());
         let pruner_events = pruner.events();
-        info!(target: "reth::cli", prune_config=?ctx.prune_config(), "Pruner initialized");
+        info!(target: "evm::cli", prune_config=?ctx.prune_config(), "Pruner initialized");
 
         let event_sender = EventSender::default();
 
@@ -202,7 +202,7 @@ impl EngineNodeLauncher {
             .maybe_skip_new_payload(node_config.debug.skip_new_payload)
             .maybe_reorg(
                 ctx.blockchain_db().clone(),
-                ctx.components().evm_config().clone(),
+                ctx.components().hanzo_evm_config().clone(),
                 || async {
                     // Create a separate cache for reorg validator (not shared with main engine)
                     let reorg_cache = ChangesetCache::new();
@@ -233,11 +233,11 @@ impl EngineNodeLauncher {
             engine_validator,
             engine_tree_config,
             ctx.sync_metrics_tx(),
-            ctx.components().evm_config().clone(),
+            ctx.components().hanzo_evm_config().clone(),
             changeset_cache,
         );
 
-        info!(target: "reth::cli", "Consensus engine initialized");
+        info!(target: "evm::cli", "Consensus engine initialized");
 
         #[allow(clippy::needless_continue)]
         let events = stream_select!(
@@ -285,10 +285,10 @@ impl EngineNodeLauncher {
         let terminate_after_backfill = ctx.terminate_after_initial_backfill();
         let startup_sync_state_idle = ctx.node_config().debug.startup_sync_state_idle;
 
-        info!(target: "reth::cli", "Starting consensus engine");
+        info!(target: "evm::cli", "Starting consensus engine");
         let consensus_engine = async move {
             if let Some(initial_target) = initial_target {
-                debug!(target: "reth::cli", %initial_target,  "start backfill sync");
+                debug!(target: "evm::cli", %initial_target,  "start backfill sync");
                 // network_handle's sync state is already initialized at Syncing
                 engine_service.orchestrator_mut().start_backfill_sync(initial_target);
             } else if startup_sync_state_idle {
@@ -307,11 +307,11 @@ impl EngineNodeLauncher {
 
                     event = engine_service.next() => {
                         let Some(event) = event else { break };
-                        debug!(target: "reth::cli", "Event: {event}");
+                        debug!(target: "evm::cli", "Event: {event}");
                         match event {
                             ChainEvent::BackfillSyncFinished => {
                                 if terminate_after_backfill {
-                                    debug!(target: "reth::cli", "Terminating after initial backfill");
+                                    debug!(target: "evm::cli", "Terminating after initial backfill");
                                     break
                                 }
                                 if startup_sync_state_idle {
@@ -322,7 +322,7 @@ impl EngineNodeLauncher {
                                 network_handle.update_sync_state(SyncState::Syncing);
                             }
                             ChainEvent::FatalError => {
-                                error!(target: "reth::cli", "Fatal error in consensus engine");
+                                error!(target: "evm::cli", "Fatal error in consensus engine");
                                 res = Err(eyre::eyre!("Fatal error in consensus engine"));
                                 break
                             }
@@ -354,13 +354,13 @@ impl EngineNodeLauncher {
                     }
                     payload = built_payloads.select_next_some() => {
                         if let Some(executed_block) = payload.executed_block() {
-                            debug!(target: "reth::cli", block=?executed_block.recovered_block.num_hash(),  "inserting built payload");
+                            debug!(target: "evm::cli", block=?executed_block.recovered_block.num_hash(),  "inserting built payload");
                             engine_service.orchestrator_mut().handler_mut().handler_mut().on_event(EngineApiRequest::InsertExecutedBlock(executed_block.into_executed_payload()).into());
                         }
                     }
                     shutdown_req = &mut shutdown_rx => {
                         if let Ok(req) = shutdown_req {
-                            debug!(target: "reth::cli", "received engine shutdown request");
+                            debug!(target: "evm::cli", "received engine shutdown request");
                             engine_service.orchestrator_mut().handler_mut().handler_mut().on_event(
                                 FromOrchestrator::Terminate { tx: req.done_tx }.into()
                             );
@@ -376,7 +376,7 @@ impl EngineNodeLauncher {
         let engine_events_for_ethstats = engine_events.new_listener();
 
         let full_node = FullNode {
-            evm_config: ctx.components().evm_config().clone(),
+            hanzo_evm_config: ctx.components().hanzo_evm_config().clone(),
             pool: ctx.components().pool().clone(),
             network: ctx.components().network().clone(),
             provider: ctx.node_adapter().provider.clone(),
@@ -418,7 +418,7 @@ where
         >,
     >,
     CB: NodeComponentsBuilder<T> + 'static,
-    AO: RethRpcAddOns<NodeAdapter<T, CB::Components>>
+    AO: EvmRpcAddOns<NodeAdapter<T, CB::Components>>
         + EngineValidatorAddOn<NodeAdapter<T, CB::Components>>
         + 'static,
 {

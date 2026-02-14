@@ -6,8 +6,8 @@
 //!
 //! # Key Components
 //!
-//! * `WitnessDatabase`: An implementation of [`reth_revm::Database`] that uses a
-//!   [`reth_trie_sparse::SparseStateTrie`] populated from witness data, along with provided
+//! * `WitnessDatabase`: An implementation of [`hanzo_evm_revm::Database`] that uses a
+//!   [`hanzo_evm_trie_sparse::SparseStateTrie`] populated from witness data, along with provided
 //!   bytecode and ancestor block hashes, to serve state reads during execution.
 //! * `stateless_validation`: The core function that orchestrates the stateless validation process.
 //!   It takes a block, its execution witness, ancestor headers, and chain specification, then
@@ -25,9 +25,9 @@
 //! blocks.
 
 #![doc(
-    html_logo_url = "https://raw.githubusercontent.com/paradigmxyz/reth/main/assets/reth-docs.png",
+    html_logo_url = "https://raw.githubusercontent.com/hanzoai/evm/main/assets/evm-docs.png",
     html_favicon_url = "https://avatars0.githubusercontent.com/u/97369466?s=256",
-    issue_tracker_base_url = "https://github.com/paradigmxyz/reth/issues/"
+    issue_tracker_base_url = "https://github.com/hanzoai/evm/issues/"
 )]
 #![cfg_attr(docsrs, feature(doc_cfg))]
 #![cfg_attr(not(test), warn(unused_crate_dependencies))]
@@ -58,7 +58,7 @@ pub use alloy_rpc_types_debug::ExecutionWitness;
 
 pub use alloy_genesis::Genesis;
 
-use reth_ethereum_primitives::Block;
+use hanzo_evm_ethereum_primitives::Block;
 
 /// `StatelessInput` is a convenience structure for serializing the input needed
 /// for the stateless validation function.
@@ -67,7 +67,7 @@ use reth_ethereum_primitives::Block;
 pub struct StatelessInput {
     /// The block being executed in the stateless validation function
     #[serde_as(
-        as = "reth_primitives_traits::serde_bincode_compat::Block<reth_ethereum_primitives::TransactionSigned, alloy_consensus::Header>"
+        as = "hanzo_evm_primitives_traits::serde_bincode_compat::Block<hanzo_evm_ethereum_primitives::TransactionSigned, alloy_consensus::Header>"
     )]
     pub block: Block,
     /// `ExecutionWitness` for the stateless validation function

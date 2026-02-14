@@ -1,5 +1,5 @@
 [package]
-name = "reth-engine-tree"
+name = "hanzo-evm-engine-tree"
 version.workspace = true
 edition.workspace = true
 rust-version.workspace = true
@@ -11,31 +11,31 @@ repository.workspace = true
 workspace = true
 
 [dependencies]
-# reth
-reth-chain-state = { workspace = true, features = ["rayon"] }
-reth-chainspec = { workspace = true, optional = true }
-reth-consensus.workspace = true
-reth-db.workspace = true
-reth-engine-primitives = { workspace = true, features = ["std"] }
-reth-errors.workspace = true
-reth-execution-types.workspace = true
-reth-evm = { workspace = true, features = ["metrics"] }
-reth-network-p2p.workspace = true
-reth-payload-builder.workspace = true
-reth-payload-primitives.workspace = true
-reth-primitives-traits = { workspace = true, features = ["rayon", "dashmap"] }
-reth-ethereum-primitives.workspace = true
-reth-provider.workspace = true
-reth-prune.workspace = true
-reth-revm = { workspace = true, features = ["optional-balance-check"] }
-reth-stages-api.workspace = true
-reth-tasks.workspace = true
-reth-trie-parallel.workspace = true
-reth-trie-sparse = { workspace = true, features = ["std", "metrics"] }
-reth-trie-sparse-parallel = { workspace = true, features = ["std"] }
-reth-trie.workspace = true
-reth-trie-common.workspace = true
-reth-trie-db.workspace = true
+# evm
+hanzo-evm-chain-state = { workspace = true, features = ["rayon"] }
+hanzo-evm-chainspec = { workspace = true, optional = true }
+hanzo-evm-consensus.workspace = true
+hanzo-evm-db.workspace = true
+hanzo-evm-engine-primitives = { workspace = true, features = ["std"] }
+hanzo-evm-errors.workspace = true
+hanzo-evm-execution-types.workspace = true
+hanzo-evm-execution = { workspace = true, features = ["metrics"] }
+hanzo-evm-network-p2p.workspace = true
+hanzo-evm-payload-builder.workspace = true
+hanzo-evm-payload-primitives.workspace = true
+hanzo-evm-primitives-traits = { workspace = true, features = ["rayon", "dashmap"] }
+hanzo-evm-ethereum-primitives.workspace = true
+hanzo-evm-provider.workspace = true
+hanzo-evm-prune.workspace = true
+hanzo-evm-revm = { workspace = true, features = ["optional-balance-check"] }
+hanzo-evm-stages-api.workspace = true
+hanzo-evm-tasks.workspace = true
+hanzo-evm-trie-parallel.workspace = true
+hanzo-evm-trie-sparse = { workspace = true, features = ["std", "metrics"] }
+hanzo-evm-trie-sparse-parallel = { workspace = true, features = ["std"] }
+hanzo-evm-trie.workspace = true
+hanzo-evm-trie-common.workspace = true
+hanzo-evm-trie-db.workspace = true
 
 # alloy
 alloy-evm.workspace = true
@@ -59,7 +59,7 @@ smallvec.workspace = true
 
 # metrics
 metrics.workspace = true
-reth-metrics = { workspace = true, features = ["common"] }
+hanzo-evm-metrics = { workspace = true, features = ["common"] }
 
 # misc
 schnellru.workspace = true
@@ -70,30 +70,30 @@ parking_lot.workspace = true
 crossbeam-channel.workspace = true
 
 # optional deps for test-utils
-reth-prune-types = { workspace = true, optional = true }
-reth-stages = { workspace = true, optional = true }
-reth-static-file = { workspace = true, optional = true }
-reth-tracing = { workspace = true, optional = true }
+hanzo-evm-prune-types = { workspace = true, optional = true }
+hanzo-evm-stages = { workspace = true, optional = true }
+hanzo-evm-static-file = { workspace = true, optional = true }
+hanzo-evm-tracing = { workspace = true, optional = true }
 
 [dev-dependencies]
-# reth
-reth-evm-ethereum = { workspace = true, features = ["test-utils"] }
-reth-chain-state = { workspace = true, features = ["test-utils"] }
-reth-chainspec.workspace = true
-reth-db-common.workspace = true
-reth-ethereum-consensus.workspace = true
+# evm
+hanzo-evm-eth-execution = { workspace = true, features = ["test-utils"] }
+hanzo-evm-chain-state = { workspace = true, features = ["test-utils"] }
+hanzo-evm-chainspec.workspace = true
+hanzo-evm-db-common.workspace = true
+hanzo-evm-ethereum-consensus.workspace = true
 metrics-util = { workspace = true, features = ["debugging"] }
-reth-ethereum-engine-primitives.workspace = true
-reth-evm = { workspace = true, features = ["test-utils"] }
-reth-exex-types.workspace = true
-reth-network-p2p = { workspace = true, features = ["test-utils"] }
-reth-prune-types.workspace = true
-reth-stages = { workspace = true, features = ["test-utils"] }
-reth-static-file.workspace = true
-reth-testing-utils.workspace = true
-reth-tracing.workspace = true
-reth-node-ethereum.workspace = true
-reth-e2e-test-utils.workspace = true
+hanzo-evm-ethereum-engine-primitives.workspace = true
+hanzo-evm-execution = { workspace = true, features = ["test-utils"] }
+hanzo-evm-exex-types.workspace = true
+hanzo-evm-network-p2p = { workspace = true, features = ["test-utils"] }
+hanzo-evm-prune-types.workspace = true
+hanzo-evm-stages = { workspace = true, features = ["test-utils"] }
+hanzo-evm-static-file.workspace = true
+hanzo-evm-testing-utils.workspace = true
+hanzo-evm-tracing.workspace = true
+hanzo-evm-node-ethereum.workspace = true
+hanzo-evm-e2e-test-utils.workspace = true
 
 # revm
 revm-state.workspace = true
@@ -117,31 +117,31 @@ harness = false
 
 [features]
 test-utils = [
-    "reth-chain-state/test-utils",
-    "reth-chainspec/test-utils",
-    "reth-consensus/test-utils",
-    "reth-db/test-utils",
-    "reth-evm/test-utils",
-    "reth-network-p2p/test-utils",
-    "reth-payload-builder/test-utils",
-    "reth-primitives-traits/test-utils",
-    "reth-provider/test-utils",
-    "reth-prune-types",
-    "reth-prune-types?/test-utils",
-    "reth-revm/test-utils",
-    "reth-stages-api/test-utils",
-    "reth-stages/test-utils",
-    "reth-static-file",
-    "reth-tracing",
-    "reth-trie/test-utils",
-    "reth-trie-common/test-utils",
-    "reth-trie-db/test-utils",
-    "reth-trie-sparse/test-utils",
-    "reth-prune-types?/test-utils",
-    "reth-trie-parallel/test-utils",
-    "reth-ethereum-primitives/test-utils",
-    "reth-node-ethereum/test-utils",
-    "reth-evm-ethereum/test-utils",
+    "hanzo-evm-chain-state/test-utils",
+    "hanzo-evm-chainspec/test-utils",
+    "hanzo-evm-consensus/test-utils",
+    "hanzo-evm-db/test-utils",
+    "hanzo-evm-execution/test-utils",
+    "hanzo-evm-network-p2p/test-utils",
+    "hanzo-evm-payload-builder/test-utils",
+    "hanzo-evm-primitives-traits/test-utils",
+    "hanzo-evm-provider/test-utils",
+    "hanzo-evm-prune-types",
+    "hanzo-evm-prune-types?/test-utils",
+    "hanzo-evm-revm/test-utils",
+    "hanzo-evm-stages-api/test-utils",
+    "hanzo-evm-stages/test-utils",
+    "hanzo-evm-static-file",
+    "hanzo-evm-tracing",
+    "hanzo-evm-trie/test-utils",
+    "hanzo-evm-trie-common/test-utils",
+    "hanzo-evm-trie-db/test-utils",
+    "hanzo-evm-trie-sparse/test-utils",
+    "hanzo-evm-prune-types?/test-utils",
+    "hanzo-evm-trie-parallel/test-utils",
+    "hanzo-evm-ethereum-primitives/test-utils",
+    "hanzo-evm-node-ethereum/test-utils",
+    "hanzo-evm-eth-execution/test-utils",
 ]
 
 [[test]]

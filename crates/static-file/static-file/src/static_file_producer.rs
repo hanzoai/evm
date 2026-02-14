@@ -4,18 +4,18 @@ use crate::{segments, segments::Segment, StaticFileProducerEvent};
 use alloy_primitives::BlockNumber;
 use parking_lot::Mutex;
 use rayon::prelude::*;
-use reth_codecs::Compact;
-use reth_db_api::table::Value;
-use reth_primitives_traits::NodePrimitives;
-use reth_provider::{
+use hanzo_evm_codecs::Compact;
+use hanzo_evm_db_api::table::Value;
+use hanzo_evm_primitives_traits::NodePrimitives;
+use hanzo_evm_provider::{
     providers::StaticFileWriter, BlockReader, ChainStateBlockReader, DBProvider,
     DatabaseProviderFactory, StageCheckpointReader, StaticFileProviderFactory,
 };
-use reth_prune_types::PruneModes;
-use reth_stages_types::StageId;
-use reth_static_file_types::{HighestStaticFiles, StaticFileTargets};
-use reth_storage_errors::provider::ProviderResult;
-use reth_tokio_util::{EventSender, EventStream};
+use hanzo_evm_prune_types::PruneModes;
+use hanzo_evm_stages_types::StageId;
+use hanzo_evm_static_file_types::{HighestStaticFiles, StaticFileTargets};
+use hanzo_evm_storage_errors::provider::ProviderResult;
+use hanzo_evm_tokio_util::{EventSender, EventStream};
 use std::{
     ops::{Deref, RangeInclusive},
     sync::Arc,
@@ -97,7 +97,7 @@ where
                 >,
             > + StageCheckpointReader
                           + BlockReader
-                          + reth_provider::ChangeSetReader,
+                          + hanzo_evm_provider::ChangeSetReader,
         >,
 {
     /// Listen for events on the `static_file_producer`.
@@ -108,7 +108,7 @@ where
     /// Run the `static_file_producer`.
     ///
     /// For each [Some] target in [`StaticFileTargets`], initializes a corresponding [Segment] and
-    /// runs it with the provided block range using [`reth_provider::providers::StaticFileProvider`]
+    /// runs it with the provided block range using [`hanzo_evm_provider::providers::StaticFileProvider`]
     /// and a read-only database transaction from [`DatabaseProviderFactory`]. All segments are run
     /// in parallel.
     ///
@@ -168,7 +168,7 @@ where
     }
 
     /// Copies data from database to static files according to
-    /// [stage checkpoints](reth_stages_types::StageCheckpoint).
+    /// [stage checkpoints](hanzo_evm_stages_types::StageCheckpoint).
     ///
     /// Returns highest block numbers for all static file segments.
     pub fn copy_to_static_files(&self) -> ProviderResult<HighestStaticFiles> {
@@ -185,7 +185,7 @@ where
 
     /// Returns a static file targets at the provided finalized block numbers per segment.
     /// The target is determined by the check against highest `static_files` using
-    /// [`reth_provider::providers::StaticFileProvider::get_highest_static_files`].
+    /// [`hanzo_evm_provider::providers::StaticFileProvider::get_highest_static_files`].
     pub fn get_static_file_targets(
         &self,
         finalized_block_numbers: HighestStaticFiles,
@@ -237,14 +237,14 @@ mod tests {
     };
     use alloy_primitives::B256;
     use assert_matches::assert_matches;
-    use reth_provider::{
+    use hanzo_evm_provider::{
         providers::StaticFileWriter, test_utils::MockNodeTypesWithDB, ProviderError,
         ProviderFactory, StaticFileProviderFactory,
     };
-    use reth_prune_types::PruneModes;
-    use reth_stages::test_utils::{StorageKind, TestStageDB};
-    use reth_static_file_types::{HighestStaticFiles, StaticFileSegment};
-    use reth_testing_utils::generators::{
+    use hanzo_evm_prune_types::PruneModes;
+    use hanzo_evm_stages::test_utils::{StorageKind, TestStageDB};
+    use hanzo_evm_static_file_types::{HighestStaticFiles, StaticFileSegment};
+    use hanzo_evm_testing_utils::generators::{
         self, random_block_range, random_receipt, BlockRangeParams,
     };
     use std::{sync::mpsc::channel, time::Duration};

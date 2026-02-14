@@ -2,15 +2,15 @@
 
 use alloy_eips::{eip2124::Head, BlockNumHash};
 use futures::future;
-use reth_chain_state::ForkChoiceSubscriptions;
-use reth_chainspec::EthChainSpec;
-use reth_exex::{
+use hanzo_evm_chain_state::ForkChoiceSubscriptions;
+use hanzo_evm_chainspec::EthChainSpec;
+use hanzo_evm_exex::{
     ExExContext, ExExHandle, ExExManager, ExExManagerHandle, ExExNotificationSource, Wal,
     DEFAULT_EXEX_MANAGER_CAPACITY, DEFAULT_WAL_BLOCKS_WARNING,
 };
-use reth_node_api::{FullNodeComponents, NodeTypes, PrimitivesTy};
-use reth_provider::CanonStateSubscriptions;
-use reth_tracing::tracing::{debug, info};
+use hanzo_evm_node_api::{FullNodeComponents, NodeTypes, PrimitivesTy};
+use hanzo_evm_provider::CanonStateSubscriptions;
+use hanzo_evm_tracing::tracing::{debug, info};
 use std::{fmt, fmt::Debug};
 use tracing::Instrument;
 
@@ -68,7 +68,7 @@ impl<Node: FullNodeComponents + Clone> ExExLauncher<Node> {
             return Ok(None)
         }
 
-        info!(target: "reth::cli", "Loading ExEx Write-Ahead Log...");
+        info!(target: "evm::cli", "Loading ExEx Write-Ahead Log...");
         let exex_wal = Wal::new(
             config_container
                 .config
@@ -87,7 +87,7 @@ impl<Node: FullNodeComponents + Clone> ExExLauncher<Node> {
                 id.clone(),
                 head,
                 components.provider().clone(),
-                components.evm_config().clone(),
+                components.hanzo_evm_config().clone(),
                 exex_wal.handle(),
             );
             exex_handles.push(handle);
@@ -96,7 +96,7 @@ impl<Node: FullNodeComponents + Clone> ExExLauncher<Node> {
             let context = ExExContext {
                 head,
                 config: config_container.config.clone(),
-                reth_config: config_container.toml_config.clone(),
+                hanzo_evm_config: config_container.toml_config.clone(),
                 components: components.clone(),
                 events,
                 notifications,
@@ -104,8 +104,8 @@ impl<Node: FullNodeComponents + Clone> ExExLauncher<Node> {
 
             let executor = components.task_executor().clone();
             exexes.push(async move {
-                debug!(target: "reth::cli", id, "spawning exex");
-                let span = reth_tracing::tracing::info_span!("exex", id);
+                debug!(target: "evm::cli", id, "spawning exex");
+                let span = hanzo_evm_tracing::tracing::info_span!("exex", id);
 
                 // init the exex
                 let exex = exex.launch(context).instrument(span.clone()).await?;
@@ -114,7 +114,7 @@ impl<Node: FullNodeComponents + Clone> ExExLauncher<Node> {
                 executor.spawn_critical(
                     "exex",
                     async move {
-                        info!(target: "reth::cli", "ExEx started");
+                        info!(target: "evm::cli", "ExEx started");
                         match exex.await {
                             Ok(_) => panic!("ExEx {id} finished. ExExes should run indefinitely"),
                             Err(err) => panic!("ExEx {id} crashed: {err}"),
@@ -130,7 +130,7 @@ impl<Node: FullNodeComponents + Clone> ExExLauncher<Node> {
         future::try_join_all(exexes).await?;
 
         // spawn exex manager
-        debug!(target: "reth::cli", "spawning exex manager");
+        debug!(target: "evm::cli", "spawning exex manager");
         let exex_manager = ExExManager::new(
             components.provider().clone(),
             exex_handles,
@@ -159,7 +159,7 @@ impl<Node: FullNodeComponents + Clone> ExExLauncher<Node> {
             },
         );
 
-        info!(target: "reth::cli", "ExEx Manager started");
+        info!(target: "evm::cli", "ExEx Manager started");
 
         Ok(Some(exex_manager_handle))
     }

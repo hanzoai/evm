@@ -5,9 +5,9 @@ use crate::mock::{KeyVisit, KeyVisitType};
 use super::{HashedCursor, HashedCursorFactory, HashedStorageCursor};
 use alloy_primitives::{map::B256Map, B256, U256};
 use parking_lot::{Mutex, MutexGuard};
-use reth_primitives_traits::Account;
-use reth_storage_errors::db::DatabaseError;
-use reth_trie_common::HashedPostState;
+use hanzo_evm_primitives_traits::Account;
+use hanzo_evm_storage_errors::db::DatabaseError;
+use hanzo_evm_trie_common::HashedPostState;
 use tracing::instrument;
 
 /// Mock hashed cursor factory.

@@ -1,5 +1,5 @@
 [package]
-name = "reth-engine-local"
+name = "hanzo-evm-engine-local"
 version.workspace = true
 edition.workspace = true
 rust-version.workspace = true
@@ -9,15 +9,15 @@ repository.workspace = true
 exclude.workspace = true
 
 [dependencies]
-# reth
-reth-chainspec.workspace = true
-reth-engine-primitives = { workspace = true, features = ["std"] }
-reth-ethereum-engine-primitives.workspace = true
-reth-payload-builder.workspace = true
-reth-payload-primitives.workspace = true
-reth-primitives-traits.workspace = true
-reth-storage-api.workspace = true
-reth-transaction-pool.workspace = true
+# evm
+hanzo-evm-chainspec.workspace = true
+hanzo-evm-engine-primitives = { workspace = true, features = ["std"] }
+hanzo-evm-ethereum-engine-primitives.workspace = true
+hanzo-evm-payload-builder.workspace = true
+hanzo-evm-payload-primitives.workspace = true
+hanzo-evm-primitives-traits.workspace = true
+hanzo-evm-storage-api.workspace = true
+hanzo-evm-transaction-pool.workspace = true
 
 # alloy
 alloy-consensus.workspace = true
@@ -40,6 +40,6 @@ workspace = true
 [features]
 op = [
     "dep:op-alloy-rpc-types-engine",
-    "reth-payload-primitives/op",
-    "reth-primitives-traits/op",
+    "hanzo-evm-payload-primitives/op",
+    "hanzo-evm-primitives-traits/op",
 ]

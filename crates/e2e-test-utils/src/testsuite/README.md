@@ -36,7 +36,7 @@ harness = true
 cargo nextest run --workspace \
   --exclude 'example-*' \
   --exclude 'exex-subscription' \
-  --exclude 'reth-bench' \
+  --exclude 'evm-bench' \
   --exclude 'ef-tests' \
   --exclude 'reth' \
   -E 'binary(e2e_testsuite)'
@@ -64,7 +64,7 @@ cargo nextest run --workspace -E 'binary(e2e_testsuite) and test(test_name)'
 Tests use the framework components from this directory:
 
 ```rust
-use reth_e2e_test_utils::{setup_import, Environment, TestBuilder};
+use evm_e2e_test_utils::{setup_import, Environment, TestBuilder};
 
 #[tokio::test]
 async fn test_example() -> eyre::Result<()> {
@@ -127,7 +127,7 @@ The e2e test framework provides a rich set of actions organized into several cat
 Mines a single block with specified transactions and verifies successful creation.
 
 ```rust
-use reth_e2e_test_utils::testsuite::actions::AssertMineBlock;
+use evm_e2e_test_utils::testsuite::actions::AssertMineBlock;
 
 let action = AssertMineBlock::new(
     node_idx,           // Node index to mine on
@@ -141,7 +141,7 @@ let action = AssertMineBlock::new(
 Produces a sequence of blocks using the available clients.
 
 ```rust
-use reth_e2e_test_utils::testsuite::actions::ProduceBlocks;
+use evm_e2e_test_utils::testsuite::actions::ProduceBlocks;
 
 let action = ProduceBlocks::new(num_blocks); // Number of blocks to produce
 ```
@@ -150,7 +150,7 @@ let action = ProduceBlocks::new(num_blocks); // Number of blocks to produce
 Produces blocks locally without broadcasting to other nodes.
 
 ```rust
-use reth_e2e_test_utils::testsuite::actions::ProduceBlocksLocally;
+use evm_e2e_test_utils::testsuite::actions::ProduceBlocksLocally;
 
 let action = ProduceBlocksLocally::new(num_blocks);
 ```
@@ -159,7 +159,7 @@ let action = ProduceBlocksLocally::new(num_blocks);
 Produces a sequence of blocks where some blocks are intentionally invalid.
 
 ```rust
-use reth_e2e_test_utils::testsuite::actions::ProduceInvalidBlocks;
+use evm_e2e_test_utils::testsuite::actions::ProduceInvalidBlocks;
 
 let action = ProduceInvalidBlocks::new(
     num_blocks,        // Total number of blocks
@@ -174,7 +174,7 @@ let action = ProduceInvalidBlocks::with_invalid_at(num_blocks, invalid_index);
 Selects the next block producer based on round-robin selection.
 
 ```rust
-use reth_e2e_test_utils::testsuite::actions::PickNextBlockProducer;
+use evm_e2e_test_utils::testsuite::actions::PickNextBlockProducer;
 
 let action = PickNextBlockProducer::new();
 ```
@@ -183,7 +183,7 @@ let action = PickNextBlockProducer::new();
 Generates and stores payload attributes for the next block.
 
 ```rust
-use reth_e2e_test_utils::testsuite::actions::GeneratePayloadAttributes;
+use evm_e2e_test_utils::testsuite::actions::GeneratePayloadAttributes;
 
 let action = GeneratePayloadAttributes::new();
 ```
@@ -192,7 +192,7 @@ let action = GeneratePayloadAttributes::new();
 Generates the next execution payload using stored attributes.
 
 ```rust
-use reth_e2e_test_utils::testsuite::actions::GenerateNextPayload;
+use evm_e2e_test_utils::testsuite::actions::GenerateNextPayload;
 
 let action = GenerateNextPayload::new();
 ```
@@ -201,7 +201,7 @@ let action = GenerateNextPayload::new();
 Broadcasts the latest fork choice state to all clients.
 
 ```rust
-use reth_e2e_test_utils::testsuite::actions::BroadcastLatestForkchoice;
+use evm_e2e_test_utils::testsuite::actions::BroadcastLatestForkchoice;
 
 let action = BroadcastLatestForkchoice::new();
 ```
@@ -210,7 +210,7 @@ let action = BroadcastLatestForkchoice::new();
 Broadcasts the next new payload to nodes.
 
 ```rust
-use reth_e2e_test_utils::testsuite::actions::BroadcastNextNewPayload;
+use evm_e2e_test_utils::testsuite::actions::BroadcastNextNewPayload;
 
 // Broadcast to all nodes
 let action = BroadcastNextNewPayload::new();
@@ -223,7 +223,7 @@ let action = BroadcastNextNewPayload::with_active_node();
 Verifies that a broadcasted payload has been accepted by nodes.
 
 ```rust
-use reth_e2e_test_utils::testsuite::actions::CheckPayloadAccepted;
+use evm_e2e_test_utils::testsuite::actions::CheckPayloadAccepted;
 
 let action = CheckPayloadAccepted::new();
 ```
@@ -232,7 +232,7 @@ let action = CheckPayloadAccepted::new();
 Syncs environment state with the node's canonical chain via RPC.
 
 ```rust
-use reth_e2e_test_utils::testsuite::actions::UpdateBlockInfo;
+use evm_e2e_test_utils::testsuite::actions::UpdateBlockInfo;
 
 let action = UpdateBlockInfo::new();
 ```
@@ -241,7 +241,7 @@ let action = UpdateBlockInfo::new();
 Updates environment state using the locally produced payload.
 
 ```rust
-use reth_e2e_test_utils::testsuite::actions::UpdateBlockInfoToLatestPayload;
+use evm_e2e_test_utils::testsuite::actions::UpdateBlockInfoToLatestPayload;
 
 let action = UpdateBlockInfoToLatestPayload::new();
 ```
@@ -250,7 +250,7 @@ let action = UpdateBlockInfoToLatestPayload::new();
 Makes the current latest block canonical by broadcasting a forkchoice update.
 
 ```rust
-use reth_e2e_test_utils::testsuite::actions::MakeCanonical;
+use evm_e2e_test_utils::testsuite::actions::MakeCanonical;
 
 // Broadcast to all nodes
 let action = MakeCanonical::new();
@@ -263,7 +263,7 @@ let action = MakeCanonical::with_active_node();
 Captures the current block and tags it with a name for later reference.
 
 ```rust
-use reth_e2e_test_utils::testsuite::actions::CaptureBlock;
+use evm_e2e_test_utils::testsuite::actions::CaptureBlock;
 
 let action = CaptureBlock::new("block_tag");
 ```
@@ -274,7 +274,7 @@ let action = CaptureBlock::new("block_tag");
 Creates a fork from a specified block and produces blocks on top.
 
 ```rust
-use reth_e2e_test_utils::testsuite::actions::CreateFork;
+use evm_e2e_test_utils::testsuite::actions::CreateFork;
 
 // Create fork from block number
 let action = CreateFork::new(fork_base_block, num_blocks);
@@ -287,7 +287,7 @@ let action = CreateFork::new_from_tag("block_tag", num_blocks);
 Sets the fork base block in the environment.
 
 ```rust
-use reth_e2e_test_utils::testsuite::actions::SetForkBase;
+use evm_e2e_test_utils::testsuite::actions::SetForkBase;
 
 let action = SetForkBase::new(fork_base_block);
 ```
@@ -296,7 +296,7 @@ let action = SetForkBase::new(fork_base_block);
 Sets the fork base from existing block information.
 
 ```rust
-use reth_e2e_test_utils::testsuite::actions::SetForkBaseFromBlockInfo;
+use evm_e2e_test_utils::testsuite::actions::SetForkBaseFromBlockInfo;
 
 let action = SetForkBaseFromBlockInfo::new(block_info);
 ```
@@ -305,7 +305,7 @@ let action = SetForkBaseFromBlockInfo::new(block_info);
 Validates that a fork was created correctly.
 
 ```rust
-use reth_e2e_test_utils::testsuite::actions::ValidateFork;
+use evm_e2e_test_utils::testsuite::actions::ValidateFork;
 
 let action = ValidateFork::new(fork_base_number);
 ```
@@ -316,7 +316,7 @@ let action = ValidateFork::new(fork_base_number);
 Performs a reorg by setting a new head block as canonical.
 
 ```rust
-use reth_e2e_test_utils::testsuite::actions::ReorgTo;
+use evm_e2e_test_utils::testsuite::actions::ReorgTo;
 
 // Reorg to specific block hash
 let action = ReorgTo::new(target_hash);
@@ -329,7 +329,7 @@ let action = ReorgTo::new_from_tag("block_tag");
 Sets the reorg target block in the environment.
 
 ```rust
-use reth_e2e_test_utils::testsuite::actions::SetReorgTarget;
+use evm_e2e_test_utils::testsuite::actions::SetReorgTarget;
 
 let action = SetReorgTarget::new(target_block_info);
 ```
@@ -340,7 +340,7 @@ let action = SetReorgTarget::new(target_block_info);
 Selects which node should be active for subsequent operations.
 
 ```rust
-use reth_e2e_test_utils::testsuite::actions::SelectActiveNode;
+use evm_e2e_test_utils::testsuite::actions::SelectActiveNode;
 
 let action = SelectActiveNode::new(node_idx);
 ```
@@ -349,7 +349,7 @@ let action = SelectActiveNode::new(node_idx);
 Compares chain tips between two nodes.
 
 ```rust
-use reth_e2e_test_utils::testsuite::actions::CompareNodeChainTips;
+use evm_e2e_test_utils::testsuite::actions::CompareNodeChainTips;
 
 // Expect nodes to have the same chain tip
 let action = CompareNodeChainTips::expect_same(node_a, node_b);
@@ -362,7 +362,7 @@ let action = CompareNodeChainTips::expect_different(node_a, node_b);
 Captures a block with a tag, associating it with a specific node.
 
 ```rust
-use reth_e2e_test_utils::testsuite::actions::CaptureBlockOnNode;
+use evm_e2e_test_utils::testsuite::actions::CaptureBlockOnNode;
 
 let action = CaptureBlockOnNode::new("tag_name", node_idx);
 ```
@@ -371,7 +371,7 @@ let action = CaptureBlockOnNode::new("tag_name", node_idx);
 Validates that a block tag exists and optionally came from a specific node.
 
 ```rust
-use reth_e2e_test_utils::testsuite::actions::ValidateBlockTag;
+use evm_e2e_test_utils::testsuite::actions::ValidateBlockTag;
 
 // Just validate tag exists
 let action = ValidateBlockTag::exists("tag_name");
@@ -384,7 +384,7 @@ let action = ValidateBlockTag::from_node("tag_name", node_idx);
 Waits for two nodes to sync and have the same chain tip.
 
 ```rust
-use reth_e2e_test_utils::testsuite::actions::WaitForSync;
+use evm_e2e_test_utils::testsuite::actions::WaitForSync;
 
 // With default timeouts (30s timeout, 1s poll interval)
 let action = WaitForSync::new(node_a, node_b);
@@ -399,7 +399,7 @@ let action = WaitForSync::new(node_a, node_b)
 Asserts that the current chain tip is at a specific block number.
 
 ```rust
-use reth_e2e_test_utils::testsuite::actions::AssertChainTip;
+use evm_e2e_test_utils::testsuite::actions::AssertChainTip;
 
 let action = AssertChainTip::new(expected_block_number);
 ```
@@ -410,7 +410,7 @@ let action = AssertChainTip::new(expected_block_number);
 Sends a newPayload request to a specific node.
 
 ```rust
-use reth_e2e_test_utils::testsuite::actions::{SendNewPayload, ExpectedPayloadStatus};
+use evm_e2e_test_utils::testsuite::actions::{SendNewPayload, ExpectedPayloadStatus};
 
 let action = SendNewPayload::new(
     node_idx,                    // Target node index
@@ -424,7 +424,7 @@ let action = SendNewPayload::new(
 Sends multiple blocks to a node in a specific order.
 
 ```rust
-use reth_e2e_test_utils::testsuite::actions::SendNewPayloads;
+use evm_e2e_test_utils::testsuite::actions::SendNewPayloads;
 
 let action = SendNewPayloads::new()
     .with_target_node(node_idx)
@@ -453,7 +453,7 @@ let action = SendNewPayloads::new()
 Runs RPC compatibility tests from execution-apis test data.
 
 ```rust
-use reth_rpc_e2e_tests::rpc_compat::RunRpcCompatTests;
+use evm_rpc_e2e_tests::rpc_compat::RunRpcCompatTests;
 
 // Test specific RPC methods
 let action = RunRpcCompatTests::new(
@@ -470,7 +470,7 @@ let action = RunRpcCompatTests::new(methods, test_data_path)
 Initializes the chain from execution-apis test data.
 
 ```rust
-use reth_rpc_e2e_tests::rpc_compat::InitializeFromExecutionApis;
+use evm_rpc_e2e_tests::rpc_compat::InitializeFromExecutionApis;
 
 // With default paths
 let action = InitializeFromExecutionApis::new();
@@ -487,7 +487,7 @@ let action = InitializeFromExecutionApis::new()
 Sends a custom forkchoice update with specific finalized, safe, and head blocks.
 
 ```rust
-use reth_e2e_test_utils::testsuite::actions::{SendForkchoiceUpdate, BlockReference};
+use evm_e2e_test_utils::testsuite::actions::{SendForkchoiceUpdate, BlockReference};
 
 let action = SendForkchoiceUpdate::new(
     BlockReference::Hash(finalized_hash),
@@ -514,7 +514,7 @@ let action = SendForkchoiceUpdate::new(
 Finalizes a specific block with a given head.
 
 ```rust
-use reth_e2e_test_utils::testsuite::actions::FinalizeBlock;
+use evm_e2e_test_utils::testsuite::actions::FinalizeBlock;
 
 let action = FinalizeBlock::new(BlockReference::Hash(block_hash));
 
@@ -533,7 +533,7 @@ let action = FinalizeBlock::new(BlockReference::Tag("block_tag"))
 Tests forkchoice update to a tagged block with expected status.
 
 ```rust
-use reth_e2e_test_utils::testsuite::actions::TestFcuToTag;
+use evm_e2e_test_utils::testsuite::actions::TestFcuToTag;
 
 let action = TestFcuToTag::new("block_tag", PayloadStatusEnum::Valid);
 ```
@@ -542,7 +542,7 @@ let action = TestFcuToTag::new("block_tag", PayloadStatusEnum::Valid);
 Expects a specific FCU status when targeting a tagged block.
 
 ```rust
-use reth_e2e_test_utils::testsuite::actions::ExpectFcuStatus;
+use evm_e2e_test_utils::testsuite::actions::ExpectFcuStatus;
 
 // Expect valid status
 let action = ExpectFcuStatus::valid("block_tag");
@@ -561,7 +561,7 @@ let action = ExpectFcuStatus::accepted("block_tag");
 Validates that a tagged block remains canonical.
 
 ```rust
-use reth_e2e_test_utils::testsuite::actions::ValidateCanonicalTag;
+use evm_e2e_test_utils::testsuite::actions::ValidateCanonicalTag;
 
 let action = ValidateCanonicalTag::new("block_tag");
 ```
@@ -572,7 +572,7 @@ let action = ValidateCanonicalTag::new("block_tag");
 Used to reference blocks in various actions:
 
 ```rust
-use reth_e2e_test_utils::testsuite::actions::BlockReference;
+use evm_e2e_test_utils::testsuite::actions::BlockReference;
 
 // Direct block hash
 let reference = BlockReference::Hash(block_hash);
@@ -588,7 +588,7 @@ let reference = BlockReference::Latest;
 Used to specify fork base in fork creation:
 
 ```rust
-use reth_e2e_test_utils::testsuite::actions::ForkBase;
+use evm_e2e_test_utils::testsuite::actions::ForkBase;
 
 // Block number
 let fork_base = ForkBase::Number(block_number);
@@ -601,7 +601,7 @@ let fork_base = ForkBase::Tag("block_tag".to_string());
 Used to specify reorg targets:
 
 ```rust
-use reth_e2e_test_utils::testsuite::actions::ReorgTarget;
+use evm_e2e_test_utils::testsuite::actions::ReorgTarget;
 
 // Direct block hash
 let target = ReorgTarget::Hash(block_hash);
@@ -616,7 +616,7 @@ let target = ReorgTarget::Tag("block_tag".to_string());
 Used to specify expected payload status in engine API actions:
 
 ```rust
-use reth_e2e_test_utils::testsuite::actions::ExpectedPayloadStatus;
+use evm_e2e_test_utils::testsuite::actions::ExpectedPayloadStatus;
 
 // Expect valid payload
 let status = ExpectedPayloadStatus::Valid;
@@ -633,7 +633,7 @@ let status = ExpectedPayloadStatus::SyncingOrAccepted;
 #### Basic Block Production Test
 
 ```rust
-use reth_e2e_test_utils::testsuite::{
+use evm_e2e_test_utils::testsuite::{
     actions::{ProduceBlocks, MakeCanonical, AssertChainTip},
     setup::{NetworkSetup, Setup},
     TestBuilder,
@@ -659,7 +659,7 @@ async fn test_basic_block_production() -> eyre::Result<()> {
 #### Fork and Reorg Test
 
 ```rust
-use reth_e2e_test_utils::testsuite::{
+use evm_e2e_test_utils::testsuite::{
     actions::{ProduceBlocks, CreateFork, CaptureBlock, ReorgTo, MakeCanonical},
     setup::{NetworkSetup, Setup},
     TestBuilder,
@@ -687,7 +687,7 @@ async fn test_fork_and_reorg() -> eyre::Result<()> {
 #### Multi-Node Test
 
 ```rust
-use reth_e2e_test_utils::testsuite::{
+use evm_e2e_test_utils::testsuite::{
     actions::{SelectActiveNode, ProduceBlocks, CompareNodeChainTips, CaptureBlockOnNode},
     setup::{NetworkSetup, Setup},
     TestBuilder,
@@ -715,7 +715,7 @@ async fn test_multi_node_coordination() -> eyre::Result<()> {
 #### Engine API Test
 
 ```rust
-use reth_e2e_test_utils::testsuite::{
+use evm_e2e_test_utils::testsuite::{
     actions::{SendNewPayload, ExpectedPayloadStatus},
     setup::{NetworkSetup, Setup},
     TestBuilder,
@@ -744,12 +744,12 @@ async fn test_engine_api() -> eyre::Result<()> {
 #### RPC Compatibility Test
 
 ```rust
-use reth_e2e_test_utils::testsuite::{
+use evm_e2e_test_utils::testsuite::{
     actions::{MakeCanonical, UpdateBlockInfo},
     setup::{NetworkSetup, Setup},
     TestBuilder,
 };
-use reth_rpc_e2e_tests::rpc_compat::{InitializeFromExecutionApis, RunRpcCompatTests};
+use evm_rpc_e2e_tests::rpc_compat::{InitializeFromExecutionApis, RunRpcCompatTests};
 
 #[tokio::test]
 async fn test_rpc_compatibility() -> eyre::Result<()> {

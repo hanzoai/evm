@@ -5,12 +5,12 @@ use alloy_rpc_types_eth::{
 };
 use alloy_serde::JsonStorageKey;
 use jsonrpsee::core::RpcResult as Result;
-use reth_primitives_traits::TxTy;
-use reth_rpc_api::{EngineEthApiServer, EthApiServer};
-use reth_rpc_convert::RpcTxReq;
+use hanzo_evm_primitives_traits::TxTy;
+use hanzo_evm_rpc_api::{EngineEthApiServer, EthApiServer};
+use hanzo_evm_rpc_convert::RpcTxReq;
 /// Re-export for convenience
-pub use reth_rpc_engine_api::EngineApi;
-use reth_rpc_eth_api::{
+pub use hanzo_evm_rpc_engine_api::EngineApi;
+use hanzo_evm_rpc_eth_api::{
     EngineEthFilter, FullEthApiTypes, QueryLimits, RpcBlock, RpcHeader, RpcReceipt, RpcTransaction,
 };
 use tracing_futures::Instrument;

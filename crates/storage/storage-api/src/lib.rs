@@ -1,9 +1,9 @@
 //! Collection of traits and types for common storage access.
 
 #![doc(
-    html_logo_url = "https://raw.githubusercontent.com/paradigmxyz/reth/main/assets/reth-docs.png",
+    html_logo_url = "https://raw.githubusercontent.com/hanzoai/evm/main/assets/evm-docs.png",
     html_favicon_url = "https://avatars0.githubusercontent.com/u/97369466?s=256",
-    issue_tracker_base_url = "https://github.com/paradigmxyz/reth/issues/"
+    issue_tracker_base_url = "https://github.com/hanzoai/evm/issues/"
 )]
 #![cfg_attr(not(test), warn(unused_crate_dependencies))]
 #![cfg_attr(docsrs, feature(doc_cfg))]
@@ -12,7 +12,7 @@
 extern crate alloc;
 
 // Re-export used error types.
-pub use reth_storage_errors as errors;
+pub use hanzo_evm_storage_errors as errors;
 mod account;
 pub use account::*;
 
@@ -101,7 +101,7 @@ pub mod metadata;
 #[cfg(feature = "db-api")]
 pub use metadata::{MetadataProvider, MetadataWriter, StorageSettingsCache};
 #[cfg(feature = "db-api")]
-pub use reth_db_api::models::StorageSettings;
+pub use hanzo_evm_db_api::models::StorageSettings;
 
 mod full;
 pub use full::*;

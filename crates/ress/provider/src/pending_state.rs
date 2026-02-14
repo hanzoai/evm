@@ -5,16 +5,16 @@ use alloy_primitives::{
 };
 use futures::StreamExt;
 use parking_lot::RwLock;
-use reth_chain_state::ExecutedBlock;
-use reth_ethereum_primitives::EthPrimitives;
-use reth_node_api::{ConsensusEngineEvent, NodePrimitives};
-use reth_primitives_traits::{Bytecode, RecoveredBlock};
-use reth_storage_api::BlockNumReader;
-use reth_tokio_util::EventStream;
+use hanzo_evm_chain_state::ExecutedBlock;
+use hanzo_evm_ethereum_primitives::EthPrimitives;
+use hanzo_evm_node_api::{ConsensusEngineEvent, NodePrimitives};
+use hanzo_evm_primitives_traits::{Bytecode, RecoveredBlock};
+use hanzo_evm_storage_api::BlockNumReader;
+use hanzo_evm_tokio_util::EventStream;
 use std::{collections::BTreeMap, sync::Arc};
 use tracing::*;
 
-/// Pending state for [`crate::RethRessProtocolProvider`].
+/// Pending state for [`crate::EvmRessProtocolProvider`].
 #[derive(Clone, Default, Debug)]
 pub struct PendingState<N: NodePrimitives>(Arc<RwLock<PendingStateInner<N>>>);
 
@@ -103,12 +103,12 @@ pub async fn maintain_pending_state<P>(
         match event {
             ConsensusEngineEvent::CanonicalBlockAdded(block, _) |
             ConsensusEngineEvent::ForkBlockAdded(block, _) => {
-                trace!(target: "reth::ress_provider", block = ? block.recovered_block().num_hash(), "Insert block into pending state");
+                trace!(target: "evm::ress_provider", block = ? block.recovered_block().num_hash(), "Insert block into pending state");
                 pending_state.insert_block(block);
             }
             ConsensusEngineEvent::InvalidBlock(block) => {
                 if let Ok(block) = block.try_recover() {
-                    trace!(target: "reth::ress_provider", block = ?block.num_hash(), "Insert invalid block into pending state");
+                    trace!(target: "evm::ress_provider", block = ?block.num_hash(), "Insert invalid block into pending state");
                     pending_state.insert_invalid_block(Arc::new(block));
                 }
             }
@@ -117,7 +117,7 @@ pub async fn maintain_pending_state<P>(
                     let target = state.finalized_block_hash;
                     if let Ok(Some(block_number)) = provider.block_number(target) {
                         let count = pending_state.remove_before(block_number);
-                        trace!(target: "reth::ress_provider", block_number, count, "Removing blocks before finalized");
+                        trace!(target: "evm::ress_provider", block_number, count, "Removing blocks before finalized");
                     }
                 }
             }

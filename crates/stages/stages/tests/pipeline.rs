@@ -4,43 +4,43 @@ use alloy_consensus::{constants::ETH_TO_WEI, Header, TxEip1559, TxReceipt};
 use alloy_eips::eip1559::INITIAL_BASE_FEE;
 use alloy_genesis::{Genesis, GenesisAccount};
 use alloy_primitives::{bytes, Address, Bytes, TxKind, B256, U256};
-use reth_chainspec::{ChainSpecBuilder, ChainSpecProvider, MAINNET};
-use reth_config::config::StageConfig;
-use reth_consensus::noop::NoopConsensus;
-use reth_db_api::{cursor::DbCursorRO, models::BlockNumberAddress, transaction::DbTx};
-use reth_db_common::init::init_genesis;
-use reth_downloaders::{
+use hanzo_evm_chainspec::{ChainSpecBuilder, ChainSpecProvider, MAINNET};
+use hanzo_evm_config::config::StageConfig;
+use hanzo_evm_consensus::noop::NoopConsensus;
+use hanzo_evm_db_api::{cursor::DbCursorRO, models::BlockNumberAddress, transaction::DbTx};
+use hanzo_evm_db_common::init::init_genesis;
+use hanzo_evm_downloaders::{
     bodies::bodies::BodiesDownloaderBuilder, file_client::FileClient,
     headers::reverse_headers::ReverseHeadersDownloaderBuilder,
 };
-use reth_ethereum_primitives::{Block, BlockBody, Transaction};
-use reth_evm::{execute::Executor, ConfigureEvm};
-use reth_evm_ethereum::EthEvmConfig;
-use reth_network_p2p::{
+use hanzo_evm_ethereum_primitives::{Block, BlockBody, Transaction};
+use hanzo_evm_execution::{execute::Executor, ConfigureEvm};
+use hanzo_evm_eth_execution::EthEvmConfig;
+use hanzo_evm_network_p2p::{
     bodies::downloader::BodyDownloader,
     headers::downloader::{HeaderDownloader, SyncTarget},
 };
-use reth_primitives_traits::{
+use hanzo_evm_primitives_traits::{
     crypto::secp256k1::public_key_to_address,
     proofs::{calculate_receipt_root, calculate_transaction_root},
     RecoveredBlock, SealedBlock,
 };
-use reth_provider::{
+use hanzo_evm_provider::{
     test_utils::create_test_provider_factory_with_chain_spec, BlockNumReader, DBProvider,
     DatabaseProviderFactory, HeaderProvider, OriginalValuesKnown, StageCheckpointReader,
     StateWriter, StaticFileProviderFactory,
 };
-use reth_prune_types::PruneModes;
-use reth_revm::database::StateProviderDatabase;
-use reth_stages::sets::DefaultStages;
-use reth_stages_api::{Pipeline, StageId};
-use reth_static_file::StaticFileProducer;
-use reth_storage_api::{
+use hanzo_evm_prune_types::PruneModes;
+use hanzo_evm_revm::database::StateProviderDatabase;
+use hanzo_evm_stages::sets::DefaultStages;
+use hanzo_evm_stages_api::{Pipeline, StageId};
+use hanzo_evm_static_file::StaticFileProducer;
+use hanzo_evm_storage_api::{
     ChangeSetReader, StateProvider, StorageChangeSetReader, StorageSettingsCache,
 };
-use reth_testing_utils::generators::{self, generate_key, sign_tx_with_key_pair};
-use reth_trie::{HashedPostState, KeccakKeyHasher, StateRoot};
-use reth_trie_db::DatabaseStateRoot;
+use hanzo_evm_testing_utils::generators::{self, generate_key, sign_tx_with_key_pair};
+use hanzo_evm_trie::{HashedPostState, KeccakKeyHasher, StateRoot};
+use hanzo_evm_trie_db::DatabaseStateRoot;
 use std::sync::Arc;
 use tokio::sync::watch;
 
@@ -70,8 +70,8 @@ fn create_file_client_from_blocks(blocks: Vec<SealedBlock<Block>>) -> Arc<FileCl
 ///
 /// Queries static files when changesets are configured to be stored there, otherwise queries MDBX.
 fn assert_changesets_queryable(
-    provider_factory: &reth_provider::ProviderFactory<
-        reth_provider::test_utils::MockNodeTypesWithDB,
+    provider_factory: &hanzo_evm_provider::ProviderFactory<
+        hanzo_evm_provider::test_utils::MockNodeTypesWithDB,
     >,
     block_range: std::ops::RangeInclusive<u64>,
 ) -> eyre::Result<()> {
@@ -92,7 +92,7 @@ fn assert_changesets_queryable(
     } else {
         let storage_changesets: Vec<_> = provider
             .tx_ref()
-            .cursor_dup_read::<reth_db::tables::StorageChangeSets>()?
+            .cursor_dup_read::<hanzo_evm_db::tables::StorageChangeSets>()?
             .walk_range(BlockNumberAddress::range(block_range.clone()))?
             .collect::<Result<Vec<_>, _>>()?;
         assert!(
@@ -116,7 +116,7 @@ fn assert_changesets_queryable(
     } else {
         let account_changesets: Vec<_> = provider
             .tx_ref()
-            .cursor_read::<reth_db::tables::AccountChangeSets>()?
+            .cursor_read::<hanzo_evm_db::tables::AccountChangeSets>()?
             .walk_range(block_range.clone())?
             .collect::<Result<Vec<_>, _>>()?;
         assert!(
@@ -132,11 +132,11 @@ fn assert_changesets_queryable(
 /// Builds downloaders from a `FileClient`.
 fn build_downloaders_from_file_client(
     file_client: Arc<FileClient<Block>>,
-    genesis: reth_primitives_traits::SealedHeader<Header>,
+    genesis: hanzo_evm_primitives_traits::SealedHeader<Header>,
     stages_config: StageConfig,
     consensus: Arc<NoopConsensus>,
-    provider_factory: reth_provider::ProviderFactory<
-        reth_provider::test_utils::MockNodeTypesWithDB,
+    provider_factory: hanzo_evm_provider::ProviderFactory<
+        hanzo_evm_provider::test_utils::MockNodeTypesWithDB,
     >,
 ) -> (impl HeaderDownloader<Header = Header>, impl BodyDownloader<Block = Block>) {
     let tip = file_client.tip().expect("file client should have tip");
@@ -159,21 +159,21 @@ fn build_downloaders_from_file_client(
 
 /// Builds a pipeline with `DefaultStages`.
 fn build_pipeline<H, B>(
-    provider_factory: reth_provider::ProviderFactory<
-        reth_provider::test_utils::MockNodeTypesWithDB,
+    provider_factory: hanzo_evm_provider::ProviderFactory<
+        hanzo_evm_provider::test_utils::MockNodeTypesWithDB,
     >,
     header_downloader: H,
     body_downloader: B,
     max_block: u64,
     tip: B256,
-) -> Pipeline<reth_provider::test_utils::MockNodeTypesWithDB>
+) -> Pipeline<hanzo_evm_provider::test_utils::MockNodeTypesWithDB>
 where
     H: HeaderDownloader<Header = Header> + 'static,
     B: BodyDownloader<Block = Block> + 'static,
 {
     let consensus = NoopConsensus::arc();
     let stages_config = StageConfig::default();
-    let evm_config = EthEvmConfig::new(provider_factory.chain_spec());
+    let hanzo_evm_config = EthEvmConfig::new(provider_factory.chain_spec());
 
     let (tip_tx, tip_rx) = watch::channel(B256::ZERO);
     let static_file_producer =
@@ -185,7 +185,7 @@ where
         consensus,
         header_downloader,
         body_downloader,
-        evm_config,
+        hanzo_evm_config,
         stages_config,
         PruneModes::default(),
         None,
@@ -214,7 +214,7 @@ where
 /// This exercises both account and storage hashing/history stages.
 #[tokio::test(flavor = "multi_thread")]
 async fn test_pipeline() -> eyre::Result<()> {
-    reth_tracing::init_test_tracing();
+    hanzo_evm_tracing::init_test_tracing();
 
     // Generate a keypair for signing transactions
     let mut rng = generators::rng();
@@ -256,7 +256,7 @@ async fn test_pipeline() -> eyre::Result<()> {
     init_genesis(&provider_factory).expect("init genesis");
 
     let genesis = provider_factory.sealed_header(0)?.expect("genesis should exist");
-    let evm_config = EthEvmConfig::new(chain_spec.clone());
+    let hanzo_evm_config = EthEvmConfig::new(chain_spec.clone());
 
     // Build blocks by actually executing transactions to get correct state roots
     let num_blocks = 5u64;
@@ -334,7 +334,7 @@ async fn test_pipeline() -> eyre::Result<()> {
         let output = {
             let state_provider = provider.latest();
             let db = StateProviderDatabase::new(&*state_provider);
-            let executor = evm_config.batch_executor(db);
+            let executor = hanzo_evm_config.batch_executor(db);
             executor.execute(&block_with_senders)?
         };
 

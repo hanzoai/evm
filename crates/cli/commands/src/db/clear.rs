@@ -1,17 +1,17 @@
 use clap::{Parser, Subcommand};
-use reth_db::static_file::iter_static_files;
-use reth_db_api::{
+use hanzo_evm_db::static_file::iter_static_files;
+use hanzo_evm_db_api::{
     database::Database,
     table::Table,
     transaction::{DbTx, DbTxMut},
     TableViewer, Tables,
 };
-use reth_db_common::DbTool;
-use reth_node_builder::NodeTypesWithDB;
-use reth_provider::StaticFileProviderFactory;
-use reth_static_file_types::StaticFileSegment;
+use hanzo_evm_db_common::DbTool;
+use hanzo_evm_node_builder::NodeTypesWithDB;
+use hanzo_evm_provider::StaticFileProviderFactory;
+use hanzo_evm_static_file_types::StaticFileSegment;
 
-/// The arguments for the `reth db clear` command
+/// The arguments for the `evm db clear` command
 #[derive(Parser, Debug)]
 pub struct Command {
     #[command(subcommand)]

@@ -3,15 +3,15 @@ use crate::{
     segments::{self, PruneInput, Segment},
     PrunerError,
 };
-use reth_db_api::{tables, transaction::DbTxMut};
-use reth_provider::{
+use hanzo_evm_db_api::{tables, transaction::DbTxMut};
+use hanzo_evm_provider::{
     BlockReader, DBProvider, EitherWriterDestination, StaticFileProviderFactory,
     StorageSettingsCache, TransactionsProvider,
 };
-use reth_prune_types::{
+use hanzo_evm_prune_types::{
     PruneMode, PruneProgress, PrunePurpose, PruneSegment, SegmentOutput, SegmentOutputCheckpoint,
 };
-use reth_static_file_types::StaticFileSegment;
+use hanzo_evm_static_file_types::StaticFileSegment;
 use tracing::{debug, instrument, trace};
 
 #[derive(Debug)]
@@ -141,12 +141,12 @@ mod tests {
         FoldWhile::{Continue, Done},
         Itertools,
     };
-    use reth_db_api::tables;
-    use reth_primitives_traits::SignerRecoverable;
-    use reth_provider::{DBProvider, DatabaseProviderFactory, PruneCheckpointReader};
-    use reth_prune_types::{PruneCheckpoint, PruneMode, PruneProgress, PruneSegment};
-    use reth_stages::test_utils::{StorageKind, TestStageDB};
-    use reth_testing_utils::generators::{self, random_block_range, BlockRangeParams};
+    use hanzo_evm_db_api::tables;
+    use hanzo_evm_primitives_traits::SignerRecoverable;
+    use hanzo_evm_provider::{DBProvider, DatabaseProviderFactory, PruneCheckpointReader};
+    use hanzo_evm_prune_types::{PruneCheckpoint, PruneMode, PruneProgress, PruneSegment};
+    use hanzo_evm_stages::test_utils::{StorageKind, TestStageDB};
+    use hanzo_evm_testing_utils::generators::{self, random_block_range, BlockRangeParams};
     use std::ops::Sub;
 
     #[test]
@@ -276,7 +276,7 @@ mod tests {
             6,
             (
                 PruneProgress::HasMoreData(
-                    reth_prune_types::PruneInterruptReason::DeletedEntriesLimitReached,
+                    hanzo_evm_prune_types::PruneInterruptReason::DeletedEntriesLimitReached,
                 ),
                 10,
             ),

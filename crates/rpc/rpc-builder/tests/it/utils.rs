@@ -1,26 +1,26 @@
 use alloy_rpc_types_engine::{ClientCode, ClientVersionV1};
-use reth_chainspec::MAINNET;
-use reth_consensus::noop::NoopConsensus;
-use reth_engine_primitives::ConsensusEngineHandle;
-use reth_ethereum_engine_primitives::EthEngineTypes;
-use reth_ethereum_primitives::EthPrimitives;
-use reth_tokio_util::EventSender;
+use hanzo_evm_chainspec::MAINNET;
+use hanzo_evm_consensus::noop::NoopConsensus;
+use hanzo_evm_engine_primitives::ConsensusEngineHandle;
+use hanzo_evm_ethereum_engine_primitives::EthEngineTypes;
+use hanzo_evm_ethereum_primitives::EthPrimitives;
+use hanzo_evm_tokio_util::EventSender;
 use std::net::{Ipv4Addr, SocketAddr, SocketAddrV4};
 
-use reth_evm_ethereum::EthEvmConfig;
-use reth_network_api::noop::NoopNetwork;
-use reth_node_ethereum::EthereumEngineValidator;
-use reth_payload_builder::test_utils::spawn_test_payload_service;
-use reth_provider::test_utils::NoopProvider;
-use reth_rpc_builder::{
+use hanzo_evm_eth_execution::EthEvmConfig;
+use hanzo_evm_network_api::noop::NoopNetwork;
+use hanzo_evm_node_ethereum::EthereumEngineValidator;
+use hanzo_evm_payload_builder::test_utils::spawn_test_payload_service;
+use hanzo_evm_provider::test_utils::NoopProvider;
+use hanzo_evm_rpc_builder::{
     auth::{AuthRpcModule, AuthServerConfig, AuthServerHandle},
     RpcModuleBuilder, RpcServerConfig, RpcServerHandle, TransportRpcModuleConfig,
 };
-use reth_rpc_engine_api::{capabilities::EngineCapabilities, EngineApi};
-use reth_rpc_layer::JwtSecret;
-use reth_rpc_server_types::RpcModuleSelection;
-use reth_tasks::TokioTaskExecutor;
-use reth_transaction_pool::{
+use hanzo_evm_rpc_engine_api::{capabilities::EngineCapabilities, EngineApi};
+use hanzo_evm_rpc_layer::JwtSecret;
+use hanzo_evm_rpc_server_types::RpcModuleSelection;
+use hanzo_evm_tasks::TokioTaskExecutor;
+use hanzo_evm_transaction_pool::{
     noop::NoopTransactionPool,
     test_utils::{TestPool, TestPoolBuilder},
 };
@@ -38,7 +38,7 @@ pub async fn launch_auth(secret: JwtSecret) -> AuthServerHandle {
     let beacon_engine_handle = ConsensusEngineHandle::<EthEngineTypes>::new(tx);
     let client = ClientVersionV1 {
         code: ClientCode::RH,
-        name: "Reth".to_string(),
+        name: "Hanzo EVM".to_string(),
         version: "v0.2.0-beta.5".to_string(),
         commit: "defa64b2".to_string(),
     };
@@ -135,6 +135,6 @@ pub fn test_rpc_builder(
         .with_pool(TestPoolBuilder::default().into())
         .with_network(NoopNetwork::default())
         .with_executor(Box::new(TokioTaskExecutor::default()))
-        .with_evm_config(EthEvmConfig::mainnet())
+        .with_hanzo_evm_config(EthEvmConfig::mainnet())
         .with_consensus(NoopConsensus::default())
 }

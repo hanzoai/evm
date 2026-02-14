@@ -6,9 +6,9 @@ use alloy_rpc_types_engine::{
 use jsonrpsee_types::error::{
     INTERNAL_ERROR_CODE, INVALID_PARAMS_CODE, INVALID_PARAMS_MSG, SERVER_ERROR_MSG,
 };
-use reth_engine_primitives::{BeaconForkChoiceUpdateError, BeaconOnNewPayloadError};
-use reth_payload_builder_primitives::PayloadBuilderError;
-use reth_payload_primitives::EngineObjectValidationError;
+use hanzo_evm_engine_primitives::{BeaconForkChoiceUpdateError, BeaconOnNewPayloadError};
+use hanzo_evm_payload_builder_primitives::PayloadBuilderError;
+use hanzo_evm_payload_primitives::EngineObjectValidationError;
 use thiserror::Error;
 
 /// The Engine API result type

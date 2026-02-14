@@ -1,5 +1,5 @@
 use alloy_primitives::{BlockNumber, B256};
-use reth_provider::{BlockNumReader, ProviderError};
+use hanzo_evm_provider::{BlockNumReader, ProviderError};
 use std::cmp::Ordering;
 
 /// Errors that can occur in Parlia consensus
@@ -55,8 +55,8 @@ mod tests {
     use std::collections::HashMap;
 
     use alloy_primitives::hex;
-    use reth_chainspec::ChainInfo;
-    use reth_provider::BlockHashReader;
+    use hanzo_evm_chainspec::ChainInfo;
+    use hanzo_evm_provider::BlockHashReader;
 
     use super::*;
 

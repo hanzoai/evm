@@ -6,11 +6,11 @@
 use alloy_eips::eip7840::BlobParams;
 use alloy_genesis::Genesis;
 use alloy_primitives::{B256, U256};
-use reth_chainspec::{
+use hanzo_evm_chainspec::{
     hardfork, BaseFeeParams, Chain, ChainSpec, DepositContract, EthChainSpec, EthereumHardfork,
     EthereumHardforks, ForkCondition, Hardfork, Hardforks,
 };
-use reth_network_peers::NodeRecord;
+use hanzo_evm_network_peers::NodeRecord;
 use serde::{Deserialize, Serialize};
 
 // Define custom hardfork variants using Reth's `hardfork!` macro.
@@ -79,15 +79,15 @@ impl Hardforks for CustomChainSpec {
         self.inner.forks_iter()
     }
 
-    fn fork_id(&self, head: &reth_chainspec::Head) -> reth_chainspec::ForkId {
+    fn fork_id(&self, head: &hanzo_evm_chainspec::Head) -> hanzo_evm_chainspec::ForkId {
         self.inner.fork_id(head)
     }
 
-    fn latest_fork_id(&self) -> reth_chainspec::ForkId {
+    fn latest_fork_id(&self) -> hanzo_evm_chainspec::ForkId {
         self.inner.latest_fork_id()
     }
 
-    fn fork_filter(&self, head: reth_chainspec::Head) -> reth_chainspec::ForkFilter {
+    fn fork_filter(&self, head: hanzo_evm_chainspec::Head) -> hanzo_evm_chainspec::ForkFilter {
         self.inner.fork_filter(head)
     }
 }

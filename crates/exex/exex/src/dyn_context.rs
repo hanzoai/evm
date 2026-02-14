@@ -1,12 +1,12 @@
 //! Mirrored version of [`ExExContext`](`crate::ExExContext`)
-//! without generic abstraction over [Node](`reth_node_api::FullNodeComponents`)
+//! without generic abstraction over [Node](`hanzo_evm_node_api::FullNodeComponents`)
 
 use alloy_eips::BlockNumHash;
-use reth_chainspec::EthChainSpec;
-use reth_ethereum_primitives::EthPrimitives;
-use reth_node_api::{FullNodeComponents, HeaderTy, NodePrimitives, NodeTypes, PrimitivesTy};
-use reth_node_core::node_config::NodeConfig;
-use reth_provider::BlockReader;
+use hanzo_evm_chainspec::EthChainSpec;
+use hanzo_evm_ethereum_primitives::EthPrimitives;
+use hanzo_evm_node_api::{FullNodeComponents, HeaderTy, NodePrimitives, NodeTypes, PrimitivesTy};
+use hanzo_evm_node_core::node_config::NodeConfig;
+use hanzo_evm_provider::BlockReader;
 use std::fmt::Debug;
 use tokio::sync::mpsc;
 
@@ -20,7 +20,7 @@ pub struct ExExContextDyn<N: NodePrimitives = EthPrimitives> {
     /// The config of the node
     pub config: NodeConfig<Box<dyn EthChainSpec<Header = N::BlockHeader> + 'static>>,
     /// The loaded node config
-    pub reth_config: reth_config::Config,
+    pub hanzo_evm_config: hanzo_evm_config::Config,
     /// Channel used to send [`ExExEvent`]s to the rest of the node.
     ///
     /// # Important
@@ -43,7 +43,7 @@ impl<N: NodePrimitives> Debug for ExExContextDyn<N> {
         f.debug_struct("ExExContext")
             .field("head", &self.head)
             .field("config", &self.config)
-            .field("reth_config", &self.reth_config)
+            .field("hanzo_evm_config", &self.hanzo_evm_config)
             .field("events", &self.events)
             .field("notifications", &"...")
             .finish()
@@ -64,7 +64,7 @@ where
         Self {
             head: ctx.head,
             config,
-            reth_config: ctx.reth_config,
+            hanzo_evm_config: ctx.hanzo_evm_config,
             events: ctx.events,
             notifications,
         }

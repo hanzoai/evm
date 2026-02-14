@@ -2,12 +2,12 @@
 
 use std::io;
 
-use reth_rpc_builder::{
+use hanzo_evm_rpc_builder::{
     error::{RpcError, ServerKind, WsHttpSamePortError},
     RpcServerConfig, TransportRpcModuleConfig,
 };
-use reth_rpc_server_types::RethRpcModule;
-use reth_tokio_util::EventSender;
+use hanzo_evm_rpc_server_types::EvmRpcModule;
+use hanzo_evm_tokio_util::EventSender;
 
 use crate::utils::{
     launch_http, launch_http_ws_same_port, launch_ws, test_address, test_rpc_builder,
@@ -24,12 +24,12 @@ fn is_addr_in_use_kind(err: &RpcError, kind: ServerKind) -> bool {
 
 #[tokio::test(flavor = "multi_thread")]
 async fn test_http_addr_in_use() {
-    let handle = launch_http(vec![RethRpcModule::Admin]).await;
+    let handle = launch_http(vec![EvmRpcModule::Admin]).await;
     let addr = handle.http_local_addr().unwrap();
     let builder = test_rpc_builder();
     let eth_api = builder.bootstrap_eth_api();
     let server = builder.build(
-        TransportRpcModuleConfig::set_http(vec![RethRpcModule::Admin]),
+        TransportRpcModuleConfig::set_http(vec![EvmRpcModule::Admin]),
         eth_api,
         EventSender::new(1),
     );
@@ -41,12 +41,12 @@ async fn test_http_addr_in_use() {
 
 #[tokio::test(flavor = "multi_thread")]
 async fn test_ws_addr_in_use() {
-    let handle = launch_ws(vec![RethRpcModule::Admin]).await;
+    let handle = launch_ws(vec![EvmRpcModule::Admin]).await;
     let addr = handle.ws_local_addr().unwrap();
     let builder = test_rpc_builder();
     let eth_api = builder.bootstrap_eth_api();
     let server = builder.build(
-        TransportRpcModuleConfig::set_ws(vec![RethRpcModule::Admin]),
+        TransportRpcModuleConfig::set_ws(vec![EvmRpcModule::Admin]),
         eth_api,
         EventSender::new(1),
     );
@@ -57,7 +57,7 @@ async fn test_ws_addr_in_use() {
 
 #[tokio::test(flavor = "multi_thread")]
 async fn test_launch_same_port() {
-    let handle = launch_http_ws_same_port(vec![RethRpcModule::Admin]).await;
+    let handle = launch_http_ws_same_port(vec![EvmRpcModule::Admin]).await;
     let ws_addr = handle.ws_local_addr().unwrap();
     let http_addr = handle.http_local_addr().unwrap();
     assert_eq!(ws_addr, http_addr);
@@ -68,8 +68,8 @@ async fn test_launch_same_port_different_modules() {
     let builder = test_rpc_builder();
     let eth_api = builder.bootstrap_eth_api();
     let server = builder.build(
-        TransportRpcModuleConfig::set_ws(vec![RethRpcModule::Admin])
-            .with_http(vec![RethRpcModule::Eth]),
+        TransportRpcModuleConfig::set_ws(vec![EvmRpcModule::Admin])
+            .with_http(vec![EvmRpcModule::Eth]),
         eth_api,
         EventSender::new(1),
     );
@@ -92,8 +92,8 @@ async fn test_launch_same_port_same_cors() {
     let builder = test_rpc_builder();
     let eth_api = builder.bootstrap_eth_api();
     let server = builder.build(
-        TransportRpcModuleConfig::set_ws(vec![RethRpcModule::Eth])
-            .with_http(vec![RethRpcModule::Eth]),
+        TransportRpcModuleConfig::set_ws(vec![EvmRpcModule::Eth])
+            .with_http(vec![EvmRpcModule::Eth]),
         eth_api,
         EventSender::new(1),
     );
@@ -114,8 +114,8 @@ async fn test_launch_same_port_different_cors() {
     let builder = test_rpc_builder();
     let eth_api = builder.bootstrap_eth_api();
     let server = builder.build(
-        TransportRpcModuleConfig::set_ws(vec![RethRpcModule::Eth])
-            .with_http(vec![RethRpcModule::Eth]),
+        TransportRpcModuleConfig::set_ws(vec![EvmRpcModule::Eth])
+            .with_http(vec![EvmRpcModule::Eth]),
         eth_api,
         EventSender::new(1),
     );

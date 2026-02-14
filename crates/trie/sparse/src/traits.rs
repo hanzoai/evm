@@ -8,8 +8,8 @@ use alloy_primitives::{
     B256,
 };
 use alloy_trie::BranchNodeCompact;
-use reth_execution_errors::SparseTrieResult;
-use reth_trie_common::{BranchNodeMasks, Nibbles, ProofTrieNode, TrieNode};
+use hanzo_evm_execution_errors::SparseTrieResult;
+use hanzo_evm_trie_common::{BranchNodeMasks, Nibbles, ProofTrieNode, TrieNode};
 
 use crate::provider::TrieNodeProvider;
 

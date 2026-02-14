@@ -9,8 +9,8 @@
 use alloy_eips::Encodable2718;
 use alloy_primitives::{Bloom, B256};
 use crossbeam_channel::Receiver;
-use reth_primitives_traits::Receipt;
-use reth_trie_common::ordered_root::OrderedTrieRootEncodedBuilder;
+use hanzo_evm_primitives_traits::Receipt;
+use hanzo_evm_trie_common::ordered_root::OrderedTrieRootEncodedBuilder;
 use tokio::sync::oneshot;
 
 /// Receipt with index, ready to be sent to the background task for encoding and trie building.
@@ -117,7 +117,7 @@ mod tests {
     use alloy_consensus::{proofs::calculate_receipt_root, TxReceipt};
     use alloy_primitives::{b256, hex, Address, Bytes, Log};
     use crossbeam_channel::bounded;
-    use reth_ethereum_primitives::{Receipt, TxType};
+    use hanzo_evm_ethereum_primitives::{Receipt, TxType};
 
     #[tokio::test]
     async fn test_receipt_root_task_empty() {
@@ -131,7 +131,7 @@ mod tests {
         let (root, bloom) = result_rx.await.unwrap();
 
         // Empty trie root
-        assert_eq!(root, reth_trie_common::EMPTY_ROOT_HASH);
+        assert_eq!(root, hanzo_evm_trie_common::EMPTY_ROOT_HASH);
         assert_eq!(bloom, Bloom::ZERO);
     }
 

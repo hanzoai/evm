@@ -1,4 +1,4 @@
-use reth_network_peers::PeerId;
+use hanzo_evm_network_peers::PeerId;
 use std::fmt::Debug;
 
 /// Generic download client for peer penalization

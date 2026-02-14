@@ -16,8 +16,8 @@ use alloy_consensus::EMPTY_ROOT_HASH;
 use alloy_primitives::{keccak256, Address, B256};
 use alloy_rlp::{BufMut, Encodable};
 use alloy_trie::proof::AddedRemovedKeys;
-use reth_execution_errors::{StateRootError, StorageRootError};
-use reth_primitives_traits::Account;
+use hanzo_evm_execution_errors::{StateRootError, StorageRootError};
+use hanzo_evm_primitives_traits::Account;
 use tracing::{debug, instrument, trace, Span};
 
 /// The default updates after which root algorithms should return intermediate progress rather than

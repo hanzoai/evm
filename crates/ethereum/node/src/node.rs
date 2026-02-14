@@ -5,23 +5,23 @@ use crate::{EthEngineTypes, EthEvmConfig};
 use alloy_eips::{eip7840::BlobParams, merge::EPOCH_SLOTS};
 use alloy_network::Ethereum;
 use alloy_rpc_types_engine::ExecutionData;
-use reth_chainspec::{ChainSpec, EthChainSpec, EthereumHardforks, Hardforks};
-use reth_engine_local::LocalPayloadAttributesBuilder;
-use reth_engine_primitives::EngineTypes;
-use reth_ethereum_consensus::EthBeaconConsensus;
-use reth_ethereum_engine_primitives::{
+use hanzo_evm_chainspec::{ChainSpec, EthChainSpec, EthereumHardforks, Hardforks};
+use hanzo_evm_engine_local::LocalPayloadAttributesBuilder;
+use hanzo_evm_engine_primitives::EngineTypes;
+use hanzo_evm_ethereum_consensus::EthBeaconConsensus;
+use hanzo_evm_ethereum_engine_primitives::{
     EthBuiltPayload, EthPayloadAttributes, EthPayloadBuilderAttributes,
 };
-use reth_ethereum_primitives::{EthPrimitives, TransactionSigned};
-use reth_evm::{
+use hanzo_evm_ethereum_primitives::{EthPrimitives, TransactionSigned};
+use hanzo_evm_execution::{
     eth::spec::EthExecutorSpec, ConfigureEvm, EvmFactory, EvmFactoryFor, NextBlockEnvAttributes,
 };
-use reth_network::{primitives::BasicNetworkPrimitives, NetworkHandle, PeersInfo};
-use reth_node_api::{
+use hanzo_evm_network::{primitives::BasicNetworkPrimitives, NetworkHandle, PeersInfo};
+use hanzo_evm_node_api::{
     AddOnsContext, FullNodeComponents, HeaderTy, NodeAddOns, NodePrimitives,
     PayloadAttributesBuilder, PrimitivesTy, TxTy,
 };
-use reth_node_builder::{
+use hanzo_evm_node_builder::{
     components::{
         BasicPayloadServiceBuilder, ComponentsBuilder, ConsensusBuilder, ExecutorBuilder,
         NetworkBuilder, PoolBuilder, TxPoolBuilder,
@@ -30,29 +30,29 @@ use reth_node_builder::{
     rpc::{
         BasicEngineApiBuilder, BasicEngineValidatorBuilder, EngineApiBuilder, EngineValidatorAddOn,
         EngineValidatorBuilder, EthApiBuilder, EthApiCtx, Identity, PayloadValidatorBuilder,
-        RethRpcAddOns, RpcAddOns, RpcHandle,
+        EvmRpcAddOns, RpcAddOns, RpcHandle,
     },
     BuilderContext, DebugNode, Node, NodeAdapter,
 };
-use reth_payload_primitives::PayloadTypes;
-use reth_provider::{providers::ProviderFactoryBuilder, EthStorage};
-use reth_rpc::{
+use hanzo_evm_payload_primitives::PayloadTypes;
+use hanzo_evm_provider::{providers::ProviderFactoryBuilder, EthStorage};
+use hanzo_evm_rpc::{
     eth::core::{EthApiFor, EthRpcConverterFor},
     TestingApi, ValidationApi,
 };
-use reth_rpc_api::servers::{BlockSubmissionValidationApiServer, TestingApiServer};
-use reth_rpc_builder::{config::RethRpcServerConfig, middleware::RethRpcMiddleware};
-use reth_rpc_eth_api::{
+use hanzo_evm_rpc_api::servers::{BlockSubmissionValidationApiServer, TestingApiServer};
+use hanzo_evm_rpc_builder::{config::EvmRpcServerConfig, middleware::EvmRpcMiddleware};
+use hanzo_evm_rpc_eth_api::{
     helpers::{
         config::{EthConfigApiServer, EthConfigHandler},
         pending_block::BuildPendingEnv,
     },
     RpcConvert, RpcTypes, SignableTxRequest,
 };
-use reth_rpc_eth_types::{error::FromEvmError, EthApiError};
-use reth_rpc_server_types::RethRpcModule;
-use reth_tracing::tracing::{debug, info};
-use reth_transaction_pool::{
+use hanzo_evm_rpc_eth_types::{error::FromEvmError, EthApiError};
+use hanzo_evm_rpc_server_types::EvmRpcModule;
+use hanzo_evm_tracing::tracing::{debug, info};
+use hanzo_evm_transaction_pool::{
     blobstore::DiskFileBlobStore, EthTransactionPool, PoolPooledTx, PoolTransaction,
     TransactionPool, TransactionValidationTaskExecutor,
 };
@@ -101,11 +101,11 @@ impl EthereumNode {
     /// # Open a Providerfactory in read-only mode from a datadir
     ///
     /// See also: [`ProviderFactoryBuilder`] and
-    /// [`ReadOnlyConfig`](reth_provider::providers::ReadOnlyConfig).
+    /// [`ReadOnlyConfig`](hanzo_evm_provider::providers::ReadOnlyConfig).
     ///
     /// ```no_run
-    /// use reth_chainspec::MAINNET;
-    /// use reth_node_ethereum::EthereumNode;
+    /// use hanzo_evm_chainspec::MAINNET;
+    /// use hanzo_evm_node_ethereum::EthereumNode;
     ///
     /// let factory = EthereumNode::provider_factory_builder()
     ///     .open_read_only(MAINNET.clone(), "datadir")
@@ -115,10 +115,10 @@ impl EthereumNode {
     /// # Open a Providerfactory manually with all required components
     ///
     /// ```no_run
-    /// use reth_chainspec::ChainSpecBuilder;
-    /// use reth_db::open_db_read_only;
-    /// use reth_node_ethereum::EthereumNode;
-    /// use reth_provider::providers::{RocksDBProvider, StaticFileProvider};
+    /// use hanzo_evm_chainspec::ChainSpecBuilder;
+    /// use hanzo_evm_db::open_db_read_only;
+    /// use hanzo_evm_node_ethereum::EthereumNode;
+    /// use hanzo_evm_provider::providers::{RocksDBProvider, StaticFileProvider};
     ///
     /// let factory = EthereumNode::provider_factory_builder()
     ///     .db(open_db_read_only("db", Default::default()).unwrap())
@@ -139,7 +139,7 @@ impl NodeTypes for EthereumNode {
     type Payload = EthEngineTypes;
 }
 
-/// Builds [`EthApi`](reth_rpc::EthApi) for Ethereum.
+/// Builds [`EthApi`](hanzo_evm_rpc::EthApi) for Ethereum.
 #[derive(Debug)]
 pub struct EthereumEthApiBuilder<NetworkT = Ethereum>(PhantomData<NetworkT>);
 
@@ -282,51 +282,51 @@ where
     EVB: EngineValidatorBuilder<N>,
     EthApiError: FromEvmError<N::Evm>,
     EvmFactoryFor<N::Evm>: EvmFactory<Tx = TxEnv>,
-    RpcMiddleware: RethRpcMiddleware,
+    RpcMiddleware: EvmRpcMiddleware,
 {
     type Handle = RpcHandle<N, EthB::EthApi>;
 
     async fn launch_add_ons(
         self,
-        ctx: reth_node_api::AddOnsContext<'_, N>,
+        ctx: hanzo_evm_node_api::AddOnsContext<'_, N>,
     ) -> eyre::Result<Self::Handle> {
         let validation_api = ValidationApi::<_, _, <N::Types as NodeTypes>::Payload>::new(
             ctx.node.provider().clone(),
             Arc::new(ctx.node.consensus().clone()),
-            ctx.node.evm_config().clone(),
+            ctx.node.hanzo_evm_config().clone(),
             ctx.config.rpc.flashbots_config(),
             Box::new(ctx.node.task_executor().clone()),
             Arc::new(EthereumEngineValidator::new(ctx.config.chain.clone())),
         );
 
         let eth_config =
-            EthConfigHandler::new(ctx.node.provider().clone(), ctx.node.evm_config().clone());
+            EthConfigHandler::new(ctx.node.provider().clone(), ctx.node.hanzo_evm_config().clone());
 
         let testing_skip_invalid_transactions = ctx.config.rpc.testing_skip_invalid_transactions;
 
         self.inner
             .launch_add_ons_with(ctx, move |container| {
                 container.modules.merge_if_module_configured(
-                    RethRpcModule::Flashbots,
+                    EvmRpcModule::Flashbots,
                     validation_api.into_rpc(),
                 )?;
 
                 container
                     .modules
-                    .merge_if_module_configured(RethRpcModule::Eth, eth_config.into_rpc())?;
+                    .merge_if_module_configured(EvmRpcModule::Eth, eth_config.into_rpc())?;
 
                 // testing_buildBlockV1: only wire when the hidden testing module is explicitly
                 // requested on any transport. Default stays disabled to honor security guidance.
                 let mut testing_api = TestingApi::new(
                     container.registry.eth_api().clone(),
-                    container.registry.evm_config().clone(),
+                    container.registry.hanzo_evm_config().clone(),
                 );
                 if testing_skip_invalid_transactions {
                     testing_api = testing_api.with_skip_invalid_transactions();
                 }
                 container
                     .modules
-                    .merge_if_module_configured(RethRpcModule::Testing, testing_api.into_rpc())?;
+                    .merge_if_module_configured(EvmRpcModule::Testing, testing_api.into_rpc())?;
 
                 Ok(())
             })
@@ -334,7 +334,7 @@ where
     }
 }
 
-impl<N, EthB, PVB, EB, EVB, RpcMiddleware> RethRpcAddOns<N>
+impl<N, EthB, PVB, EB, EVB, RpcMiddleware> EvmRpcAddOns<N>
     for EthereumAddOns<N, EthB, PVB, EB, EVB, RpcMiddleware>
 where
     N: FullNodeComponents<
@@ -351,11 +351,11 @@ where
     EVB: EngineValidatorBuilder<N>,
     EthApiError: FromEvmError<N::Evm>,
     EvmFactoryFor<N::Evm>: EvmFactory<Tx = TxEnv>,
-    RpcMiddleware: RethRpcMiddleware,
+    RpcMiddleware: EvmRpcMiddleware,
 {
     type EthApi = EthB::EthApi;
 
-    fn hooks_mut(&mut self) -> &mut reth_node_builder::rpc::RpcHooks<N, Self::EthApi> {
+    fn hooks_mut(&mut self) -> &mut hanzo_evm_node_builder::rpc::RpcHooks<N, Self::EthApi> {
         self.inner.hooks_mut()
     }
 }
@@ -414,7 +414,7 @@ where
 impl<N: FullNodeComponents<Types = Self>> DebugNode<N> for EthereumNode {
     type RpcBlock = alloy_rpc_types_eth::Block;
 
-    fn rpc_to_primitive_block(rpc_block: Self::RpcBlock) -> reth_ethereum_primitives::Block {
+    fn rpc_to_primitive_block(rpc_block: Self::RpcBlock) -> hanzo_evm_ethereum_primitives::Block {
         rpc_block.into_consensus().convert_transactions()
     }
 
@@ -469,7 +469,7 @@ where
     async fn build_pool(
         self,
         ctx: &BuilderContext<Node>,
-        evm_config: Evm,
+        hanzo_evm_config: Evm,
     ) -> eyre::Result<Self::Pool> {
         let pool_config = ctx.pool_config();
 
@@ -494,10 +494,10 @@ where
         };
 
         let blob_store =
-            reth_node_builder::components::create_blob_store_with_cache(ctx, blob_cache_size)?;
+            hanzo_evm_node_builder::components::create_blob_store_with_cache(ctx, blob_cache_size)?;
 
         let validator =
-            TransactionValidationTaskExecutor::eth_builder(ctx.provider().clone(), evm_config)
+            TransactionValidationTaskExecutor::eth_builder(ctx.provider().clone(), hanzo_evm_config)
                 .set_eip4844(!blobs_disabled)
                 .kzg_settings(ctx.kzg_settings()?)
                 .with_max_tx_input_bytes(ctx.config().txpool.max_tx_input_bytes)
@@ -515,7 +515,7 @@ where
             let kzg_settings = validator.validator().kzg_settings().clone();
             ctx.task_executor().spawn_blocking(async move {
                 let _ = kzg_settings.get();
-                debug!(target: "reth::cli", "Initialized KZG settings");
+                debug!(target: "evm::cli", "Initialized KZG settings");
             });
         }
 
@@ -523,8 +523,8 @@ where
             .with_validator(validator)
             .build_and_spawn_maintenance_task(blob_store, pool_config)?;
 
-        info!(target: "reth::cli", "Transaction pool initialized");
-        debug!(target: "reth::cli", "Spawned txpool maintenance task");
+        info!(target: "evm::cli", "Transaction pool initialized");
+        debug!(target: "evm::cli", "Spawned txpool maintenance task");
 
         Ok(transaction_pool)
     }
@@ -553,7 +553,7 @@ where
     ) -> eyre::Result<Self::Network> {
         let network = ctx.network_builder().await?;
         let handle = ctx.start_network(network, pool);
-        info!(target: "reth::cli", enode=%handle.local_node_record(), "P2P networking initialized");
+        info!(target: "evm::cli", enode=%handle.local_node_record(), "P2P networking initialized");
         Ok(handle)
     }
 }

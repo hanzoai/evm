@@ -10,10 +10,10 @@ use crate::{
 use alloy_consensus::BlockHeader;
 use alloy_primitives::{Sealable, B256};
 use core::marker::PhantomData;
-use reth_consensus::Consensus;
-use reth_eth_wire_types::{EthNetworkPrimitives, HeadersDirection, NetworkPrimitives};
-use reth_network_peers::{PeerId, WithPeerId};
-use reth_primitives_traits::{SealedBlock, SealedHeader};
+use hanzo_evm_consensus::Consensus;
+use hanzo_evm_eth_wire_types::{EthNetworkPrimitives, HeadersDirection, NetworkPrimitives};
+use hanzo_evm_network_peers::{PeerId, WithPeerId};
+use hanzo_evm_primitives_traits::{SealedBlock, SealedHeader};
 use std::{
     cmp::Reverse,
     collections::{HashMap, VecDeque},
@@ -49,7 +49,7 @@ where
     /// Returns a client with Test consensus
     #[cfg(any(test, feature = "test-utils"))]
     pub fn test_client(client: Client) -> Self {
-        Self::new(client, Arc::new(reth_consensus::test_utils::TestConsensus::default()))
+        Self::new(client, Arc::new(hanzo_evm_consensus::test_utils::TestConsensus::default()))
     }
 }
 
@@ -748,7 +748,7 @@ impl<Net> Default for NoopFullBlockClient<Net> {
 
 #[cfg(test)]
 mod tests {
-    use reth_ethereum_primitives::BlockBody;
+    use hanzo_evm_ethereum_primitives::BlockBody;
 
     use super::*;
     use crate::{error::RequestError, test_utils::TestFullBlockClient};
@@ -860,7 +860,7 @@ mod tests {
     }
 
     impl BlockClient for FailingBodiesClient {
-        type Block = reth_ethereum_primitives::Block;
+        type Block = hanzo_evm_ethereum_primitives::Block;
     }
 
     #[tokio::test]
@@ -925,7 +925,7 @@ mod tests {
         let range_length: usize = 3;
         let (header, _) = insert_headers_into_client(&client, 0..range_length);
 
-        let test_consensus = reth_consensus::test_utils::TestConsensus::default();
+        let test_consensus = hanzo_evm_consensus::test_utils::TestConsensus::default();
         test_consensus.set_fail_validation(true);
         test_consensus.set_fail_body_against_header(false);
         let client = FullBlockClient::new(client, Arc::new(test_consensus));

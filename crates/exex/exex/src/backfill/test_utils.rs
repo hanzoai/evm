@@ -3,21 +3,21 @@ use std::sync::Arc;
 use alloy_consensus::{constants::ETH_TO_WEI, BlockHeader, Header, TxEip2930};
 use alloy_genesis::{Genesis, GenesisAccount};
 use alloy_primitives::{b256, Address, TxKind, U256};
-use reth_chainspec::{ChainSpec, ChainSpecBuilder, EthereumHardfork, MAINNET, MIN_TRANSACTION_GAS};
-use reth_ethereum_primitives::{Block, BlockBody, Receipt, Transaction};
-use reth_evm::{
+use hanzo_evm_chainspec::{ChainSpec, ChainSpecBuilder, EthereumHardfork, MAINNET, MIN_TRANSACTION_GAS};
+use hanzo_evm_ethereum_primitives::{Block, BlockBody, Receipt, Transaction};
+use hanzo_evm_execution::{
     execute::{BlockExecutionOutput, Executor},
     ConfigureEvm,
 };
-use reth_evm_ethereum::EthEvmConfig;
-use reth_node_api::NodePrimitives;
-use reth_primitives_traits::{Block as _, RecoveredBlock};
-use reth_provider::{
+use hanzo_evm_eth_execution::EthEvmConfig;
+use hanzo_evm_node_api::NodePrimitives;
+use hanzo_evm_primitives_traits::{Block as _, RecoveredBlock};
+use hanzo_evm_provider::{
     providers::ProviderNodeTypes, BlockWriter as _, ExecutionOutcome, LatestStateProvider,
     ProviderFactory,
 };
-use reth_revm::database::StateProviderDatabase;
-use reth_testing_utils::generators::sign_tx_with_key_pair;
+use hanzo_evm_revm::database::StateProviderDatabase;
+use hanzo_evm_testing_utils::generators::sign_tx_with_key_pair;
 use secp256k1::Keypair;
 
 pub(crate) fn to_execution_outcome(
@@ -54,14 +54,14 @@ pub(crate) fn chain_spec(address: Address) -> Arc<ChainSpec> {
 pub(crate) fn execute_block_and_commit_to_database<N>(
     provider_factory: &ProviderFactory<N>,
     chain_spec: Arc<ChainSpec>,
-    block: &RecoveredBlock<reth_ethereum_primitives::Block>,
+    block: &RecoveredBlock<hanzo_evm_ethereum_primitives::Block>,
 ) -> eyre::Result<BlockExecutionOutput<Receipt>>
 where
     N: ProviderNodeTypes<
         Primitives: NodePrimitives<
-            Block = reth_ethereum_primitives::Block,
-            BlockBody = reth_ethereum_primitives::BlockBody,
-            Receipt = reth_ethereum_primitives::Receipt,
+            Block = hanzo_evm_ethereum_primitives::Block,
+            BlockBody = hanzo_evm_ethereum_primitives::BlockBody,
+            Receipt = hanzo_evm_ethereum_primitives::Receipt,
         >,
     >,
 {
@@ -92,8 +92,8 @@ fn blocks(
     chain_spec: Arc<ChainSpec>,
     key_pair: Keypair,
 ) -> eyre::Result<(
-    RecoveredBlock<reth_ethereum_primitives::Block>,
-    RecoveredBlock<reth_ethereum_primitives::Block>,
+    RecoveredBlock<hanzo_evm_ethereum_primitives::Block>,
+    RecoveredBlock<hanzo_evm_ethereum_primitives::Block>,
 )> {
     // First block has a transaction that transfers some ETH to zero address
     let block1 = Block {
@@ -165,14 +165,14 @@ pub(crate) fn blocks_and_execution_outputs<N>(
     chain_spec: Arc<ChainSpec>,
     key_pair: Keypair,
 ) -> eyre::Result<
-    Vec<(RecoveredBlock<reth_ethereum_primitives::Block>, BlockExecutionOutput<Receipt>)>,
+    Vec<(RecoveredBlock<hanzo_evm_ethereum_primitives::Block>, BlockExecutionOutput<Receipt>)>,
 >
 where
     N: ProviderNodeTypes<
         Primitives: NodePrimitives<
-            Block = reth_ethereum_primitives::Block,
-            BlockBody = reth_ethereum_primitives::BlockBody,
-            Receipt = reth_ethereum_primitives::Receipt,
+            Block = hanzo_evm_ethereum_primitives::Block,
+            BlockBody = hanzo_evm_ethereum_primitives::BlockBody,
+            Receipt = hanzo_evm_ethereum_primitives::Receipt,
         >,
     >,
 {
@@ -190,21 +190,21 @@ pub(crate) fn blocks_and_execution_outcome<N>(
     provider_factory: ProviderFactory<N>,
     chain_spec: Arc<ChainSpec>,
     key_pair: Keypair,
-) -> eyre::Result<(Vec<RecoveredBlock<reth_ethereum_primitives::Block>>, ExecutionOutcome)>
+) -> eyre::Result<(Vec<RecoveredBlock<hanzo_evm_ethereum_primitives::Block>>, ExecutionOutcome)>
 where
     N: ProviderNodeTypes,
     N::Primitives: NodePrimitives<
-        Block = reth_ethereum_primitives::Block,
-        Receipt = reth_ethereum_primitives::Receipt,
+        Block = hanzo_evm_ethereum_primitives::Block,
+        Receipt = hanzo_evm_ethereum_primitives::Receipt,
     >,
 {
     let (block1, block2) = blocks(chain_spec.clone(), key_pair)?;
 
     let provider = provider_factory.provider()?;
 
-    let evm_config = EthEvmConfig::new(chain_spec);
+    let hanzo_evm_config = EthEvmConfig::new(chain_spec);
     let executor =
-        evm_config.batch_executor(StateProviderDatabase::new(LatestStateProvider::new(provider)));
+        hanzo_evm_config.batch_executor(StateProviderDatabase::new(LatestStateProvider::new(provider)));
 
     let mut execution_outcome = executor.execute_batch(vec![&block1, &block2])?;
     execution_outcome.state_mut().reverts.sort();

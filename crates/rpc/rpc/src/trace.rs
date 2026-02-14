@@ -17,19 +17,19 @@ use alloy_rpc_types_trace::{
 };
 use async_trait::async_trait;
 use jsonrpsee::core::RpcResult;
-use reth_chainspec::{ChainSpecProvider, EthereumHardforks};
-use reth_evm::ConfigureEvm;
-use reth_primitives_traits::{BlockBody, BlockHeader};
-use reth_rpc_api::TraceApiServer;
-use reth_rpc_convert::RpcTxReq;
-use reth_rpc_eth_api::{
+use hanzo_evm_chainspec::{ChainSpecProvider, EthereumHardforks};
+use hanzo_evm_execution::ConfigureEvm;
+use hanzo_evm_primitives_traits::{BlockBody, BlockHeader};
+use hanzo_evm_rpc_api::TraceApiServer;
+use hanzo_evm_rpc_convert::RpcTxReq;
+use hanzo_evm_rpc_eth_api::{
     helpers::{Call, LoadPendingBlock, LoadTransaction, Trace, TraceExt},
     FromEthApiError, RpcNodeCore,
 };
-use reth_rpc_eth_types::{error::EthApiError, utils::recover_raw_transaction, EthConfig};
-use reth_storage_api::{BlockNumReader, BlockReader};
-use reth_tasks::pool::BlockingTaskGuard;
-use reth_transaction_pool::{PoolPooledTx, PoolTransaction, TransactionPool};
+use hanzo_evm_rpc_eth_types::{error::EthApiError, utils::recover_raw_transaction, EthConfig};
+use hanzo_evm_storage_api::{BlockNumReader, BlockReader};
+use hanzo_evm_tasks::pool::BlockingTaskGuard;
+use hanzo_evm_transaction_pool::{PoolPooledTx, PoolTransaction, TransactionPool};
 use revm::DatabaseCommit;
 use revm_inspectors::{
     opcode::OpcodeGasInspector,
@@ -122,7 +122,7 @@ where
             .map(<Eth::Pool as TransactionPool>::Transaction::pooled_into_consensus);
 
         let (evm_env, at) = self.eth_api().evm_env_at(block_id.unwrap_or_default()).await?;
-        let tx_env = self.eth_api().evm_config().tx_env(tx);
+        let tx_env = self.eth_api().hanzo_evm_config().tx_env(tx);
 
         let config = TracingInspectorConfig::from_parity_config(&trace_types);
 
@@ -693,7 +693,7 @@ where
     /// This is similar to `eth_getLogs` but for traces.
     ///
     /// # Limitations
-    /// This currently requires block filter fields, since reth does not have address indices yet.
+    /// This currently requires block filter fields, since evm does not have address indices yet.
     async fn trace_filter(&self, filter: TraceFilter) -> RpcResult<Vec<LocalizedTransactionTrace>> {
         let _permit = self.inner.blocking_task_guard.clone().acquire_many_owned(2).await;
         Ok(Self::trace_filter(self, filter).await.map_err(Into::into)?)

@@ -1,9 +1,9 @@
 use super::{HashedCursor, HashedCursorFactory, HashedStorageCursor};
 use crate::forward_cursor::ForwardInMemoryCursor;
 use alloy_primitives::{B256, U256};
-use reth_primitives_traits::Account;
-use reth_storage_errors::db::DatabaseError;
-use reth_trie_common::HashedPostStateSorted;
+use hanzo_evm_primitives_traits::Account;
+use hanzo_evm_storage_errors::db::DatabaseError;
+use hanzo_evm_trie_common::HashedPostStateSorted;
 
 /// The hashed cursor factory for the post state.
 #[derive(Clone, Debug)]
@@ -462,7 +462,7 @@ mod tests {
                 post_state_nodes in sorted_post_state_nodes_strategy(),
                 op_choices in prop::collection::vec(any::<u8>(), 10..500),
             ) {
-                reth_tracing::init_test_tracing();
+                hanzo_evm_tracing::init_test_tracing();
                 use tracing::debug;
 
                 debug!("Starting proptest!");
@@ -488,7 +488,7 @@ mod tests {
 
                 // Create a HashedPostStateSorted with the storage data
                 let hashed_address = B256::ZERO;
-                let storage_sorted = reth_trie_common::HashedStorageSorted {
+                let storage_sorted = hanzo_evm_trie_common::HashedStorageSorted {
                     storage_slots: post_state_nodes,
                     wiped: false,
                 };

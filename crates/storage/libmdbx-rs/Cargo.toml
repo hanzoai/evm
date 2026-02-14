@@ -1,5 +1,5 @@
 [package]
-name = "reth-libmdbx"
+name = "hanzo-evm-libmdbx"
 description = "Idiomatic and safe MDBX wrapper"
 version.workspace = true
 edition.workspace = true
@@ -12,7 +12,7 @@ repository.workspace = true
 workspace = true
 
 [dependencies]
-reth-mdbx-sys.workspace = true
+hanzo-evm-mdbx-sys.workspace = true
 
 bitflags.workspace = true
 byteorder.workspace = true

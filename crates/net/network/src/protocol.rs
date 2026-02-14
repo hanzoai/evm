@@ -4,10 +4,10 @@
 
 use alloy_primitives::bytes::BytesMut;
 use futures::Stream;
-use reth_eth_wire::{
+use hanzo_evm_eth_wire::{
     capability::SharedCapabilities, multiplex::ProtocolConnection, protocol::Protocol,
 };
-use reth_network_api::{Direction, PeerId};
+use hanzo_evm_network_api::{Direction, PeerId};
 use std::{
     fmt,
     net::SocketAddr,

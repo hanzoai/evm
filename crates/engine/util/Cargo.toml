@@ -1,5 +1,5 @@
 [package]
-name = "reth-engine-util"
+name = "hanzo-evm-engine-util"
 version.workspace = true
 edition.workspace = true
 rust-version.workspace = true
@@ -11,17 +11,17 @@ repository.workspace = true
 workspace = true
 
 [dependencies]
-# reth
-reth-primitives-traits.workspace = true
-reth-errors.workspace = true
-reth-chainspec.workspace = true
-reth-fs-util.workspace = true
-reth-engine-primitives = { workspace = true, features = ["std"] }
-reth-engine-tree.workspace = true
-reth-evm.workspace = true
-reth-revm.workspace = true
-reth-storage-api.workspace = true
-reth-payload-primitives.workspace = true
+# evm
+hanzo-evm-primitives-traits.workspace = true
+hanzo-evm-errors.workspace = true
+hanzo-evm-chainspec.workspace = true
+hanzo-evm-fs-util.workspace = true
+hanzo-evm-engine-primitives = { workspace = true, features = ["std"] }
+hanzo-evm-engine-tree.workspace = true
+hanzo-evm-execution.workspace = true
+hanzo-evm-revm.workspace = true
+hanzo-evm-storage-api.workspace = true
+hanzo-evm-payload-primitives.workspace = true
 
 # alloy
 alloy-rpc-types-engine.workspace = true

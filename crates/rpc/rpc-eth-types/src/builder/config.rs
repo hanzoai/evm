@@ -7,7 +7,7 @@ use crate::{
     RPC_DEFAULT_GAS_CAP,
 };
 use reqwest::Url;
-use reth_rpc_server_types::constants::{
+use hanzo_evm_rpc_server_types::constants::{
     default_max_tracing_requests, DEFAULT_ETH_PROOF_WINDOW, DEFAULT_MAX_BLOCKING_IO_REQUEST,
     DEFAULT_MAX_BLOCKS_PER_FILTER, DEFAULT_MAX_LOGS_PER_RESPONSE, DEFAULT_MAX_SIMULATE_BLOCKS,
     DEFAULT_MAX_TRACE_FILTER_BLOCKS, DEFAULT_PROOF_PERMITS,

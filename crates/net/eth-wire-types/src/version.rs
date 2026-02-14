@@ -6,7 +6,7 @@ use alloy_rlp::{Decodable, Encodable, Error as RlpError};
 use bytes::BufMut;
 use core::{fmt, str::FromStr};
 use derive_more::Display;
-use reth_codecs_derive::add_arbitrary_tests;
+use hanzo_evm_codecs_derive::add_arbitrary_tests;
 
 /// Error thrown when failed to parse a valid [`EthVersion`].
 #[derive(Debug, Clone, PartialEq, Eq, thiserror::Error)]
@@ -88,7 +88,7 @@ impl Decodable for EthVersion {
 ///
 /// # Example
 /// ```
-/// use reth_eth_wire_types::EthVersion;
+/// use hanzo_evm_eth_wire_types::EthVersion;
 ///
 /// let version = EthVersion::try_from("67").unwrap();
 /// assert_eq!(version, EthVersion::Eth67);
@@ -113,7 +113,7 @@ impl TryFrom<&str> for EthVersion {
 ///
 /// # Example
 /// ```
-/// use reth_eth_wire_types::EthVersion;
+/// use hanzo_evm_eth_wire_types::EthVersion;
 ///
 /// let version = EthVersion::try_from(67).unwrap();
 /// assert_eq!(version, EthVersion::Eth67);

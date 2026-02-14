@@ -1,11 +1,11 @@
 //! Payload service component for the node builder.
 
 use crate::{BuilderContext, FullNodeTypes};
-use reth_basic_payload_builder::{BasicPayloadJobGenerator, BasicPayloadJobGeneratorConfig};
-use reth_chain_state::CanonStateSubscriptions;
-use reth_node_api::{NodeTypes, PayloadBuilderFor};
-use reth_payload_builder::{PayloadBuilderHandle, PayloadBuilderService, PayloadServiceCommand};
-use reth_transaction_pool::TransactionPool;
+use hanzo_evm_basic_payload_builder::{BasicPayloadJobGenerator, BasicPayloadJobGeneratorConfig};
+use hanzo_evm_chain_state::CanonStateSubscriptions;
+use hanzo_evm_node_api::{NodeTypes, PayloadBuilderFor};
+use hanzo_evm_payload_builder::{PayloadBuilderHandle, PayloadBuilderService, PayloadServiceCommand};
+use hanzo_evm_transaction_pool::TransactionPool;
 use std::future::Future;
 use tokio::sync::{broadcast, mpsc};
 use tracing::warn;
@@ -22,7 +22,7 @@ pub trait PayloadServiceBuilder<Node: FullNodeTypes, Pool: TransactionPool, EvmC
         self,
         ctx: &BuilderContext<Node>,
         pool: Pool,
-        evm_config: EvmConfig,
+        hanzo_evm_config: EvmConfig,
     ) -> impl Future<Output = eyre::Result<PayloadBuilderHandle<<Node::Types as NodeTypes>::Payload>>>
            + Send;
 }
@@ -39,10 +39,10 @@ where
         self,
         ctx: &BuilderContext<Node>,
         pool: Pool,
-        evm_config: EvmConfig,
+        hanzo_evm_config: EvmConfig,
     ) -> impl Future<Output = eyre::Result<PayloadBuilderHandle<<Node::Types as NodeTypes>::Payload>>>
     {
-        self(ctx, pool, evm_config)
+        self(ctx, pool, hanzo_evm_config)
     }
 }
 
@@ -60,7 +60,7 @@ pub trait PayloadBuilderBuilder<Node: FullNodeTypes, Pool: TransactionPool, EvmC
         self,
         ctx: &BuilderContext<Node>,
         pool: Pool,
-        evm_config: EvmConfig,
+        hanzo_evm_config: EvmConfig,
     ) -> impl Future<Output = eyre::Result<Self::PayloadBuilder>> + Send;
 }
 
@@ -87,9 +87,9 @@ where
         self,
         ctx: &BuilderContext<Node>,
         pool: Pool,
-        evm_config: EvmConfig,
+        hanzo_evm_config: EvmConfig,
     ) -> eyre::Result<PayloadBuilderHandle<<Node::Types as NodeTypes>::Payload>> {
-        let payload_builder = self.0.build_payload_builder(ctx, pool, evm_config).await?;
+        let payload_builder = self.0.build_payload_builder(ctx, pool, hanzo_evm_config).await?;
 
         let conf = ctx.config().builder.clone();
 
@@ -129,7 +129,7 @@ where
         self,
         ctx: &BuilderContext<Node>,
         _pool: Pool,
-        _evm_config: Evm,
+        _hanzo_evm_config: Evm,
     ) -> eyre::Result<PayloadBuilderHandle<<Node::Types as NodeTypes>::Payload>> {
         let (tx, mut rx) = mpsc::unbounded_channel();
 

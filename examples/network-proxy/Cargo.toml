@@ -6,8 +6,8 @@ edition.workspace = true
 license.workspace = true
 
 [dependencies]
-reth-ethereum = { workspace = true, features = ["network"] }
-reth-tracing.workspace = true
+hanzo-evm-ethereum = { workspace = true, features = ["network"] }
+hanzo-evm-tracing.workspace = true
 futures.workspace = true
 tokio.workspace = true
 eyre.workspace = true

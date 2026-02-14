@@ -1,6 +1,6 @@
 //! Executor for mixed I/O and CPU workloads.
 
-use reth_trie_parallel::root::get_tokio_runtime_handle;
+use hanzo_evm_trie_parallel::root::get_tokio_runtime_handle;
 use tokio::{runtime::Handle, task::JoinHandle};
 
 /// An executor for mixed I/O and CPU workloads.

@@ -19,15 +19,15 @@ use futures_util::{
     future::{BoxFuture, Fuse, FusedFuture},
     FutureExt, Stream, StreamExt,
 };
-use reth_chain_state::CanonStateNotification;
-use reth_chainspec::{ChainSpecProvider, EthChainSpec, EthereumHardforks};
-use reth_execution_types::ChangedAccount;
-use reth_fs_util::FsPathError;
-use reth_primitives_traits::{
+use hanzo_evm_chain_state::CanonStateNotification;
+use hanzo_evm_chainspec::{ChainSpecProvider, EthChainSpec, EthereumHardforks};
+use hanzo_evm_execution_types::ChangedAccount;
+use hanzo_evm_fs_util::FsPathError;
+use hanzo_evm_primitives_traits::{
     transaction::signed::SignedTransaction, NodePrimitives, SealedHeader,
 };
-use reth_storage_api::{errors::provider::ProviderError, BlockReaderIdExt, StateProviderFactory};
-use reth_tasks::TaskSpawner;
+use hanzo_evm_storage_api::{errors::provider::ProviderError, BlockReaderIdExt, StateProviderFactory};
+use hanzo_evm_tasks::TaskSpawner;
 use serde::{Deserialize, Serialize};
 use std::{
     borrow::Borrow,
@@ -712,7 +712,7 @@ where
     }
 
     debug!(target: "txpool", txs_file =?file_path, "Check local persistent storage for saved transactions");
-    let data = reth_fs_util::read(file_path)?;
+    let data = hanzo_evm_fs_util::read(file_path)?;
 
     if data.is_empty() {
         return Ok(())
@@ -756,7 +756,7 @@ where
     .await;
 
     info!(target: "txpool", txs_file =?file_path, num_txs=%inserted.len(), "Successfully reinserted local transactions from file");
-    reth_fs_util::remove_file(file_path)?;
+    hanzo_evm_fs_util::remove_file(file_path)?;
     Ok(())
 }
 
@@ -791,7 +791,7 @@ where
     info!(target: "txpool", txs_file =?file_path, num_txs=%local_transactions.len(), "Saving current local transactions");
     let parent_dir = file_path.parent().map(std::fs::create_dir_all).transpose();
 
-    match parent_dir.map(|_| reth_fs_util::write(file_path, json_data)) {
+    match parent_dir.map(|_| hanzo_evm_fs_util::write(file_path, json_data)) {
         Ok(_) => {
             info!(target: "txpool", txs_file=?file_path, "Wrote local transactions to file");
         }
@@ -831,7 +831,7 @@ pub enum TransactionsBackupError {
 /// Task which manages saving local transactions to the persistent file in case of shutdown.
 /// Reloads the transactions from the file on the boot up and inserts them into the pool.
 pub async fn backup_local_transactions_task<P>(
-    shutdown: reth_tasks::shutdown::GracefulShutdown,
+    shutdown: hanzo_evm_tasks::shutdown::GracefulShutdown,
     pool: P,
     config: LocalTransactionBackupConfig,
 ) where
@@ -863,11 +863,11 @@ mod tests {
     };
     use alloy_eips::eip2718::Decodable2718;
     use alloy_primitives::{hex, U256};
-    use reth_ethereum_primitives::PooledTransactionVariant;
-    use reth_evm_ethereum::EthEvmConfig;
-    use reth_fs_util as fs;
-    use reth_provider::test_utils::{ExtendedAccount, MockEthProvider};
-    use reth_tasks::TaskManager;
+    use hanzo_evm_ethereum_primitives::PooledTransactionVariant;
+    use hanzo_evm_eth_execution::EthEvmConfig;
+    use hanzo_evm_fs_util as fs;
+    use hanzo_evm_provider::test_utils::{ExtendedAccount, MockEthProvider};
+    use hanzo_evm_tasks::TaskManager;
 
     #[test]
     fn changed_acc_entry() {

@@ -10,8 +10,8 @@ use alloy_rlp::{
     RlpEncodableWrapper,
 };
 use enr::Enr;
-use reth_ethereum_forks::{EnrForkIdEntry, ForkId};
-use reth_network_peers::{pk2id, NodeRecord, PeerId};
+use hanzo_evm_ethereum_forks::{EnrForkIdEntry, ForkId};
+use hanzo_evm_network_peers::{pk2id, NodeRecord, PeerId};
 use secp256k1::{
     ecdsa::{RecoverableSignature, RecoveryId},
     SecretKey, SECP256K1,
@@ -595,7 +595,7 @@ mod tests {
     use assert_matches::assert_matches;
     use enr::EnrPublicKey;
     use rand_08::{thread_rng as rng, Rng, RngCore};
-    use reth_ethereum_forks::ForkHash;
+    use hanzo_evm_ethereum_forks::ForkHash;
 
     #[test]
     fn test_endpoint_ipv_v4() {

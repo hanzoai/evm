@@ -12,8 +12,8 @@ pub struct StoredSubNode {
     pub node: Option<BranchNodeCompact>,
 }
 
-#[cfg(any(test, feature = "reth-codec"))]
-impl reth_codecs::Compact for StoredSubNode {
+#[cfg(any(test, feature = "hanzo-evm-codec"))]
+impl hanzo_evm_codecs::Compact for StoredSubNode {
     fn to_compact<B>(&self, buf: &mut B) -> usize
     where
         B: bytes::BufMut + AsMut<[u8]>,
@@ -71,7 +71,7 @@ mod tests {
     use super::*;
     use crate::TrieMask;
     use alloy_primitives::B256;
-    use reth_codecs::Compact;
+    use hanzo_evm_codecs::Compact;
 
     #[test]
     fn subnode_roundtrip() {

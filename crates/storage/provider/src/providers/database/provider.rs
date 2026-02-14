@@ -33,9 +33,9 @@ use alloy_primitives::{
 use itertools::Itertools;
 use parking_lot::RwLock;
 use rayon::slice::ParallelSliceMut;
-use reth_chain_state::{ComputedTrieData, ExecutedBlock};
-use reth_chainspec::{ChainInfo, ChainSpecProvider, EthChainSpec};
-use reth_db_api::{
+use hanzo_evm_chain_state::{ComputedTrieData, ExecutedBlock};
+use hanzo_evm_chainspec::{ChainInfo, ChainSpecProvider, EthChainSpec};
+use hanzo_evm_db_api::{
     cursor::{DbCursorRO, DbCursorRW, DbDupCursorRO, DbDupCursorRW},
     database::Database,
     models::{
@@ -48,27 +48,27 @@ use reth_db_api::{
     transaction::{DbTx, DbTxMut},
     BlockNumberList, PlainAccountState, PlainStorageState,
 };
-use reth_execution_types::{BlockExecutionOutput, BlockExecutionResult, Chain, ExecutionOutcome};
-use reth_node_types::{BlockTy, BodyTy, HeaderTy, NodeTypes, ReceiptTy, TxTy};
-use reth_primitives_traits::{
+use hanzo_evm_execution_types::{BlockExecutionOutput, BlockExecutionResult, Chain, ExecutionOutcome};
+use hanzo_evm_node_types::{BlockTy, BodyTy, HeaderTy, NodeTypes, ReceiptTy, TxTy};
+use hanzo_evm_primitives_traits::{
     Account, Block as _, BlockBody as _, Bytecode, RecoveredBlock, SealedHeader, StorageEntry,
 };
-use reth_prune_types::{
+use hanzo_evm_prune_types::{
     PruneCheckpoint, PruneMode, PruneModes, PruneSegment, MINIMUM_UNWIND_SAFE_DISTANCE,
 };
-use reth_stages_types::{StageCheckpoint, StageId};
-use reth_static_file_types::StaticFileSegment;
-use reth_storage_api::{
+use hanzo_evm_stages_types::{StageCheckpoint, StageId};
+use hanzo_evm_static_file_types::StaticFileSegment;
+use hanzo_evm_storage_api::{
     BlockBodyIndicesProvider, BlockBodyReader, MetadataProvider, MetadataWriter,
     NodePrimitivesProvider, StateProvider, StateWriteConfig, StorageChangeSetReader,
     StorageSettingsCache, TryIntoHistoricalStateProvider, WriteStateInput,
 };
-use reth_storage_errors::provider::{ProviderResult, StaticFileWriterError};
-use reth_trie::{
+use hanzo_evm_storage_errors::provider::{ProviderResult, StaticFileWriterError};
+use hanzo_evm_trie::{
     updates::{StorageTrieUpdatesSorted, TrieUpdatesSorted},
     HashedPostStateSorted, StoredNibbles,
 };
-use reth_trie_db::{ChangesetCache, DatabaseStorageTrieCursor};
+use hanzo_evm_trie_db::{ChangesetCache, DatabaseStorageTrieCursor};
 use revm_database::states::{
     PlainStateReverts, PlainStorageChangeset, PlainStorageRevert, StateChangeset,
 };
@@ -692,7 +692,7 @@ impl<TX: DbTx + DbTxMut + 'static, N: NodeTypesForProvider> DatabaseProvider<TX,
         #[cfg(all(unix, feature = "rocksdb"))]
         if rocksdb_enabled {
             timings.rocksdb = rocksdb_result.ok_or_else(|| {
-                ProviderError::Database(reth_db_api::DatabaseError::Other(
+                ProviderError::Database(hanzo_evm_db_api::DatabaseError::Other(
                     "RocksDB thread panicked".into(),
                 ))
             })??;
@@ -795,7 +795,7 @@ impl<TX: DbTx + DbTxMut + 'static, N: NodeTypesForProvider> DatabaseProvider<TX,
         // Unwind accounts/storages trie tables using the revert.
         // Get the database tip block number
         let db_tip_block = self
-            .get_stage_checkpoint(reth_stages_types::StageId::Finish)?
+            .get_stage_checkpoint(hanzo_evm_stages_types::StageId::Finish)?
             .as_ref()
             .map(|chk| chk.block_number)
             .ok_or_else(|| ProviderError::InsufficientChangesets {
@@ -3628,9 +3628,9 @@ mod tests {
         BlockWriter,
     };
     use alloy_primitives::map::B256Map;
-    use reth_ethereum_primitives::Receipt;
-    use reth_testing_utils::generators::{self, random_block, BlockParams};
-    use reth_trie::{Nibbles, StoredNibblesSubKey};
+    use hanzo_evm_ethereum_primitives::Receipt;
+    use hanzo_evm_testing_utils::generators::{self, random_block, BlockParams};
+    use hanzo_evm_trie::{Nibbles, StoredNibblesSubKey};
 
     #[test]
     fn test_receipts_by_block_range_empty_range() {
@@ -3641,7 +3641,7 @@ mod tests {
         let start = 10u64;
         let end = 9u64;
         let result = provider.receipts_by_block_range(start..=end).unwrap();
-        assert_eq!(result, Vec::<Vec<reth_ethereum_primitives::Receipt>>::new());
+        assert_eq!(result, Vec::<Vec<hanzo_evm_ethereum_primitives::Receipt>>::new());
     }
 
     #[test]
@@ -3876,7 +3876,7 @@ mod tests {
 
     #[test]
     fn test_write_trie_updates_sorted() {
-        use reth_trie::{
+        use hanzo_evm_trie::{
             updates::{StorageTrieUpdatesSorted, TrieUpdatesSorted},
             BranchNodeCompact, StorageTrieEntry,
         };
@@ -4046,7 +4046,7 @@ mod tests {
         let nibbles1 = StoredNibbles(Nibbles::from_nibbles([0x1, 0x2]));
         let entry1 = cursor.seek_exact(nibbles1).unwrap();
         assert!(entry1.is_some(), "Updated account node should exist");
-        let expected_mask = reth_trie::TrieMask::new(0b1111_1111_1111_1111);
+        let expected_mask = hanzo_evm_trie::TrieMask::new(0b1111_1111_1111_1111);
         assert_eq!(
             entry1.unwrap().1.state_mask,
             expected_mask,
@@ -4236,7 +4236,7 @@ mod tests {
 
     #[test]
     fn test_try_into_history_rejects_unexecuted_blocks() {
-        use reth_storage_api::TryIntoHistoricalStateProvider;
+        use hanzo_evm_storage_api::TryIntoHistoricalStateProvider;
 
         let factory = create_test_provider_factory();
 

@@ -7,22 +7,22 @@ use alloy_network::TransactionBuilder;
 use alloy_primitives::{TxKind, U256};
 use alloy_rpc_types_eth::{state::StateOverride, BlockId};
 use futures::Future;
-use reth_chainspec::MIN_TRANSACTION_GAS;
-use reth_errors::ProviderError;
-use reth_evm::{ConfigureEvm, Database, Evm, EvmEnvFor, EvmFor, TransactionEnv, TxEnvFor};
-use reth_revm::{
+use hanzo_evm_chainspec::MIN_TRANSACTION_GAS;
+use hanzo_evm_errors::ProviderError;
+use hanzo_evm_execution::{ConfigureEvm, Database, Evm, EvmEnvFor, EvmFor, TransactionEnv, TxEnvFor};
+use hanzo_evm_revm::{
     database::{EvmStateProvider, StateProviderDatabase},
     db::{bal::EvmDatabaseError, State},
 };
-use reth_rpc_convert::{RpcConvert, RpcTxReq};
-use reth_rpc_eth_types::{
+use hanzo_evm_rpc_convert::{RpcConvert, RpcTxReq};
+use hanzo_evm_rpc_eth_types::{
     error::{
         api::{FromEvmHalt, FromRevert},
         FromEvmError,
     },
     EthApiError, RpcInvalidTransactionError,
 };
-use reth_rpc_server_types::constants::gas_oracle::{CALL_STIPEND_GAS, ESTIMATE_GAS_ERROR_RATIO};
+use hanzo_evm_rpc_server_types::constants::gas_oracle::{CALL_STIPEND_GAS, ESTIMATE_GAS_ERROR_RATIO};
 use revm::{
     context::Block,
     context_interface::{result::ExecutionResult, Transaction},
@@ -54,7 +54,7 @@ pub trait EstimateCall: Call {
         S: EvmStateProvider,
     {
         // Disabled because eth_estimateGas is sometimes used with eoa senders
-        // See <https://github.com/paradigmxyz/reth/issues/1959>
+        // See <https://github.com/hanzoai/evm/issues/1959>
         evm_env.cfg_env.disable_eip3607 = true;
 
         // The basefee should be ignored for eth_estimateGas and similar
@@ -123,7 +123,7 @@ pub trait EstimateCall: Call {
         tx_env.set_gas_limit(tx_env.gas_limit().min(highest_gas_limit));
 
         // Create EVM instance once and reuse it throughout the entire estimation process
-        let mut evm = self.evm_config().evm_with_env(&mut db, evm_env);
+        let mut evm = self.hanzo_evm_config().evm_with_env(&mut db, evm_env);
 
         // For basic transfers, try using minimum gas before running full binary search
         if is_basic_transfer {

@@ -1,5 +1,5 @@
 use crate::StreamBackfillJob;
-use reth_evm::ConfigureEvm;
+use hanzo_evm_execution::ConfigureEvm;
 use std::{
     collections::BTreeMap,
     ops::RangeInclusive,
@@ -8,18 +8,18 @@ use std::{
 
 use alloy_consensus::BlockHeader;
 use alloy_primitives::BlockNumber;
-use reth_ethereum_primitives::Receipt;
-use reth_evm::execute::{BlockExecutionError, BlockExecutionOutput, Executor};
-use reth_node_api::{Block as _, BlockBody as _, NodePrimitives};
-use reth_primitives_traits::{format_gas_throughput, RecoveredBlock, SignedTransaction};
-use reth_provider::{
+use hanzo_evm_ethereum_primitives::Receipt;
+use hanzo_evm_execution::execute::{BlockExecutionError, BlockExecutionOutput, Executor};
+use hanzo_evm_node_api::{Block as _, BlockBody as _, NodePrimitives};
+use hanzo_evm_primitives_traits::{format_gas_throughput, RecoveredBlock, SignedTransaction};
+use hanzo_evm_provider::{
     BlockReader, Chain, ExecutionOutcome, HeaderProvider, ProviderError, StateProviderFactory,
     TransactionVariant,
 };
-use reth_prune_types::PruneModes;
-use reth_revm::database::StateProviderDatabase;
-use reth_stages_api::ExecutionStageThresholds;
-use reth_tracing::tracing::{debug, trace};
+use hanzo_evm_prune_types::PruneModes;
+use hanzo_evm_revm::database::StateProviderDatabase;
+use hanzo_evm_stages_api::ExecutionStageThresholds;
+use hanzo_evm_tracing::tracing::{debug, trace};
 
 pub(super) type BackfillJobResult<T> = Result<T, BlockExecutionError>;
 
@@ -30,7 +30,7 @@ pub(super) type BackfillJobResult<T> = Result<T, BlockExecutionError>;
 /// depending on the configured thresholds.
 #[derive(Debug)]
 pub struct BackfillJob<E, P> {
-    pub(crate) evm_config: E,
+    pub(crate) hanzo_evm_config: E,
     pub(crate) provider: P,
     pub(crate) prune_modes: PruneModes,
     pub(crate) thresholds: ExecutionStageThresholds,
@@ -76,7 +76,7 @@ where
             "Executing block range"
         );
 
-        let mut executor = self.evm_config.batch_executor(StateProviderDatabase::new(
+        let mut executor = self.hanzo_evm_config.batch_executor(StateProviderDatabase::new(
             self.provider
                 .history_by_block_number(self.range.start().saturating_sub(1))
                 .map_err(BlockExecutionError::other)?,
@@ -160,7 +160,7 @@ where
 /// iterator is advanced and yields ([`RecoveredBlock`], [`BlockExecutionOutput`])
 #[derive(Debug, Clone)]
 pub struct SingleBlockBackfillJob<E, P> {
-    pub(crate) evm_config: E,
+    pub(crate) hanzo_evm_config: E,
     pub(crate) provider: P,
     pub(crate) range: RangeInclusive<BlockNumber>,
     pub(crate) stream_parallelism: usize,
@@ -192,7 +192,7 @@ where
     ) -> StreamBackfillJob<
         E,
         P,
-        (RecoveredBlock<reth_ethereum_primitives::Block>, BlockExecutionOutput<Receipt>),
+        (RecoveredBlock<hanzo_evm_ethereum_primitives::Block>, BlockExecutionOutput<Receipt>),
     > {
         self.into()
     }
@@ -214,7 +214,7 @@ where
             .map_err(BlockExecutionError::other)?;
 
         // Configure the executor to use the previous block's state.
-        let executor = self.evm_config.batch_executor(StateProviderDatabase::new(
+        let executor = self.hanzo_evm_config.batch_executor(StateProviderDatabase::new(
             self.provider
                 .history_by_block_number(block_number.saturating_sub(1))
                 .map_err(BlockExecutionError::other)?,
@@ -231,7 +231,7 @@ where
 impl<E, P> From<BackfillJob<E, P>> for SingleBlockBackfillJob<E, P> {
     fn from(job: BackfillJob<E, P>) -> Self {
         Self {
-            evm_config: job.evm_config,
+            hanzo_evm_config: job.hanzo_evm_config,
             provider: job.provider,
             range: job.range,
             stream_parallelism: job.stream_parallelism,
@@ -248,17 +248,17 @@ mod tests {
         },
         BackfillJobFactory,
     };
-    use reth_db_common::init::init_genesis;
-    use reth_evm_ethereum::EthEvmConfig;
-    use reth_primitives_traits::crypto::secp256k1::public_key_to_address;
-    use reth_provider::{
+    use hanzo_evm_db_common::init::init_genesis;
+    use hanzo_evm_eth_execution::EthEvmConfig;
+    use hanzo_evm_primitives_traits::crypto::secp256k1::public_key_to_address;
+    use hanzo_evm_provider::{
         providers::BlockchainProvider, test_utils::create_test_provider_factory_with_chain_spec,
     };
-    use reth_testing_utils::generators;
+    use hanzo_evm_testing_utils::generators;
 
     #[test]
     fn test_backfill() -> eyre::Result<()> {
-        reth_tracing::init_test_tracing();
+        hanzo_evm_tracing::init_test_tracing();
 
         // Create a key pair for the sender
         let key_pair = generators::generate_key(&mut generators::rng());
@@ -294,7 +294,7 @@ mod tests {
 
     #[test]
     fn test_single_block_backfill() -> eyre::Result<()> {
-        reth_tracing::init_test_tracing();
+        hanzo_evm_tracing::init_test_tracing();
 
         // Create a key pair for the sender
         let key_pair = generators::generate_key(&mut generators::rng());
@@ -338,7 +338,7 @@ mod tests {
 
     #[test]
     fn test_backfill_with_batch_threshold() -> eyre::Result<()> {
-        reth_tracing::init_test_tracing();
+        hanzo_evm_tracing::init_test_tracing();
 
         // Create a key pair for the sender
         let key_pair = generators::generate_key(&mut generators::rng());

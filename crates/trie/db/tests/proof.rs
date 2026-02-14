@@ -3,11 +3,11 @@
 use alloy_consensus::EMPTY_ROOT_HASH;
 use alloy_primitives::{address, b256, keccak256, Address, Bytes, B256, U256};
 use alloy_rlp::EMPTY_STRING_CODE;
-use reth_chainspec::{Chain, ChainSpec, HOLESKY, MAINNET};
-use reth_primitives_traits::Account;
-use reth_provider::test_utils::{create_test_provider_factory, insert_genesis};
-use reth_trie::{proof::Proof, AccountProof, Nibbles, StorageProof};
-use reth_trie_db::DatabaseProof;
+use hanzo_evm_chainspec::{Chain, ChainSpec, HOLESKY, MAINNET};
+use hanzo_evm_primitives_traits::Account;
+use hanzo_evm_provider::test_utils::{create_test_provider_factory, insert_genesis};
+use hanzo_evm_trie::{proof::Proof, AccountProof, Nibbles, StorageProof};
+use hanzo_evm_trie_db::DatabaseProof;
 use std::{
     str::FromStr,
     sync::{Arc, LazyLock},

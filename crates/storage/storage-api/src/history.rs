@@ -1,10 +1,10 @@
 use alloy_primitives::{Address, BlockNumber, B256};
 use auto_impl::auto_impl;
 use core::ops::{RangeBounds, RangeInclusive};
-use reth_db_api::models::BlockNumberAddress;
-use reth_db_models::AccountBeforeTx;
-use reth_primitives_traits::StorageEntry;
-use reth_storage_errors::provider::ProviderResult;
+use hanzo_evm_db_api::models::BlockNumberAddress;
+use hanzo_evm_db_models::AccountBeforeTx;
+use hanzo_evm_primitives_traits::StorageEntry;
+use hanzo_evm_storage_errors::provider::ProviderResult;
 
 /// History Writer
 #[auto_impl(&, Box)]

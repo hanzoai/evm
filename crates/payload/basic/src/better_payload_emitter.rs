@@ -1,5 +1,5 @@
 use crate::{BuildArguments, BuildOutcome, HeaderForPayload, PayloadBuilder, PayloadConfig};
-use reth_payload_builder::PayloadBuilderError;
+use hanzo_evm_payload_builder::PayloadBuilderError;
 use std::sync::Arc;
 use tokio::sync::broadcast;
 

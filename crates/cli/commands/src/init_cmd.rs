@@ -3,9 +3,9 @@
 use crate::common::{AccessRights, CliNodeTypes, Environment, EnvironmentArgs};
 use alloy_consensus::BlockHeader;
 use clap::Parser;
-use reth_chainspec::{ChainSpecProvider, EthChainSpec, EthereumHardforks};
-use reth_cli::chainspec::ChainSpecParser;
-use reth_provider::BlockHashReader;
+use hanzo_evm_chainspec::{ChainSpecProvider, EthChainSpec, EthereumHardforks};
+use hanzo_evm_cli::chainspec::ChainSpecParser;
+use hanzo_evm_provider::BlockHashReader;
 use std::sync::Arc;
 use tracing::info;
 
@@ -19,7 +19,7 @@ pub struct InitCommand<C: ChainSpecParser> {
 impl<C: ChainSpecParser<ChainSpec: EthChainSpec + EthereumHardforks>> InitCommand<C> {
     /// Execute the `init` command
     pub async fn execute<N: CliNodeTypes<ChainSpec = C::ChainSpec>>(self) -> eyre::Result<()> {
-        info!(target: "reth::cli", "reth init starting");
+        info!(target: "evm::cli", "reth init starting");
 
         let Environment { provider_factory, .. } = self.env.init::<N>(AccessRights::RW)?;
 
@@ -28,7 +28,7 @@ impl<C: ChainSpecParser<ChainSpec: EthChainSpec + EthereumHardforks>> InitComman
             .block_hash(genesis_block_number)?
             .ok_or_else(|| eyre::eyre!("Genesis hash not found."))?;
 
-        info!(target: "reth::cli", hash = ?hash, "Genesis block written");
+        info!(target: "evm::cli", hash = ?hash, "Genesis block written");
         Ok(())
     }
 }

@@ -3,10 +3,10 @@ use alloy_primitives::{map::B256Map, B256};
 use alloy_rlp::Encodable;
 use core::cell::RefCell;
 use crossbeam_channel::Receiver as CrossbeamReceiver;
-use reth_execution_errors::trie::StateProofError;
-use reth_primitives_traits::{dashmap::DashMap, Account};
-use reth_storage_errors::db::DatabaseError;
-use reth_trie::{
+use hanzo_evm_execution_errors::trie::StateProofError;
+use hanzo_evm_primitives_traits::{dashmap::DashMap, Account};
+use hanzo_evm_storage_errors::db::DatabaseError;
+use hanzo_evm_trie::{
     hashed_cursor::HashedStorageCursor,
     proof_v2::{DeferredValueEncoder, LeafValueEncoder, StorageProofCalculator},
     trie_cursor::TrieStorageCursor,

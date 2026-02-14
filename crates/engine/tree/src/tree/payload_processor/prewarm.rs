@@ -28,15 +28,15 @@ use alloy_evm::Database;
 use alloy_primitives::{keccak256, map::B256Set, B256};
 use crossbeam_channel::{Receiver as CrossbeamReceiver, Sender as CrossbeamSender};
 use metrics::{Counter, Gauge, Histogram};
-use reth_evm::{execute::ExecutableTxFor, ConfigureEvm, Evm, EvmFor, RecoveredTx, SpecFor};
-use reth_metrics::Metrics;
-use reth_primitives_traits::NodePrimitives;
-use reth_provider::{
+use hanzo_evm_execution::{execute::ExecutableTxFor, ConfigureEvm, Evm, EvmFor, RecoveredTx, SpecFor};
+use hanzo_evm_metrics::Metrics;
+use hanzo_evm_primitives_traits::NodePrimitives;
+use hanzo_evm_provider::{
     AccountReader, BlockExecutionOutput, BlockReader, StateProvider, StateProviderFactory,
     StateReader,
 };
-use reth_revm::{database::StateProviderDatabase, state::EvmState};
-use reth_trie::MultiProofTargets;
+use hanzo_evm_revm::{database::StateProviderDatabase, state::EvmState};
+use hanzo_evm_trie::MultiProofTargets;
 use std::{
     ops::Range,
     sync::{
@@ -418,7 +418,7 @@ where
     /// The execution environment.
     pub env: ExecutionEnv<Evm>,
     /// The EVM configuration.
-    pub evm_config: Evm,
+    pub hanzo_evm_config: Evm,
     /// The saved cache.
     pub saved_cache: Option<SavedCache>,
     /// Provider to obtain the state
@@ -449,7 +449,7 @@ where
     ) -> Option<(EvmFor<Evm, impl Database>, PrewarmMetrics, Arc<AtomicBool>, bool)> {
         let Self {
             env,
-            evm_config,
+            hanzo_evm_config,
             saved_cache,
             provider,
             metrics,
@@ -496,7 +496,7 @@ where
 
         // create a new executor and disable nonce checks in the env
         let spec_id = *evm_env.spec_id();
-        let mut evm = evm_config.evm_with_env(state_provider, evm_env);
+        let mut evm = hanzo_evm_config.evm_with_env(state_provider, evm_env);
 
         if !precompile_cache_disabled {
             // Only cache pure precompiles to avoid issues with stateful precompiles
@@ -788,11 +788,11 @@ fn multiproof_targets_legacy_from_state(state: EvmState) -> (VersionedMultiProof
     (VersionedMultiProofTargets::Legacy(targets), storage_targets)
 }
 
-/// Returns V2 [`reth_trie_parallel::targets_v2::MultiProofTargetsV2`] and the total amount of
+/// Returns V2 [`hanzo_evm_trie_parallel::targets_v2::MultiProofTargetsV2`] and the total amount of
 /// storage targets, based on the given state.
 fn multiproof_targets_v2_from_state(state: EvmState) -> (VersionedMultiProofTargets, usize) {
-    use reth_trie::proof_v2;
-    use reth_trie_parallel::targets_v2::MultiProofTargetsV2;
+    use hanzo_evm_trie::proof_v2;
+    use hanzo_evm_trie_parallel::targets_v2::MultiProofTargetsV2;
 
     let mut targets = MultiProofTargetsV2::default();
     let mut storage_target_count = 0;

@@ -1,5 +1,5 @@
 [package]
-name = "reth-nippy-jar"
+name = "hanzo-evm-nippy-jar"
 version.workspace = true
 edition.workspace = true
 rust-version.workspace = true
@@ -12,11 +12,11 @@ description = "Immutable data store format"
 workspace = true
 
 [lib]
-name = "reth_nippy_jar"
+name = "hanzo_evm_nippy_jar"
 
 [dependencies]
-# reth
-reth-fs-util.workspace = true
+# evm
+hanzo-evm-fs-util.workspace = true
 
 # compression
 zstd = { workspace = true, features = ["experimental", "zdict_builder"] }

@@ -1,22 +1,22 @@
 [package]
-name = "reth-revm"
+name = "hanzo-evm-revm"
 version.workspace = true
 edition.workspace = true
 rust-version.workspace = true
 license.workspace = true
 homepage.workspace = true
 repository.workspace = true
-description = "reth specific revm utilities"
+description = "Hanzo EVM specific revm utilities"
 
 [lints]
 workspace = true
 
 [dependencies]
-# reth
-reth-primitives-traits.workspace = true
-reth-storage-errors.workspace = true
-reth-storage-api.workspace = true
-reth-trie = { workspace = true, optional = true }
+# evm
+hanzo-evm-primitives-traits.workspace = true
+hanzo-evm-storage-errors.workspace = true
+hanzo-evm-storage-api.workspace = true
+hanzo-evm-trie = { workspace = true, optional = true }
 
 # alloy
 alloy-primitives.workspace = true
@@ -25,35 +25,35 @@ alloy-primitives.workspace = true
 revm.workspace = true
 
 [dev-dependencies]
-reth-trie.workspace = true
-reth-ethereum-forks.workspace = true
+hanzo-evm-trie.workspace = true
+hanzo-evm-ethereum-forks.workspace = true
 alloy-consensus.workspace = true
 
 [features]
 default = ["std"]
 std = [
-    "reth-primitives-traits/std",
+    "hanzo-evm-primitives-traits/std",
     "alloy-primitives/std",
     "revm/std",
     "alloy-consensus/std",
-    "reth-ethereum-forks/std",
-    "reth-storage-api/std",
-    "reth-storage-errors/std",
+    "hanzo-evm-ethereum-forks/std",
+    "hanzo-evm-storage-api/std",
+    "hanzo-evm-storage-errors/std",
 ]
-witness = ["dep:reth-trie"]
+witness = ["dep:hanzo-evm-trie"]
 test-utils = [
-    "dep:reth-trie",
-    "reth-primitives-traits/test-utils",
-    "reth-trie?/test-utils",
+    "dep:hanzo-evm-trie",
+    "hanzo-evm-primitives-traits/test-utils",
+    "hanzo-evm-trie?/test-utils",
 ]
 serde = [
     "revm/serde",
     "alloy-primitives/serde",
     "alloy-consensus/serde",
-    "reth-trie?/serde",
-    "reth-ethereum-forks/serde",
-    "reth-primitives-traits/serde",
-    "reth-storage-api/serde",
+    "hanzo-evm-trie?/serde",
+    "hanzo-evm-ethereum-forks/serde",
+    "hanzo-evm-primitives-traits/serde",
+    "hanzo-evm-storage-api/serde",
 ]
 portable = ["revm/portable"]
 optional-balance-check = ["revm/optional_balance_check"]

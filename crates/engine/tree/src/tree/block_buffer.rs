@@ -1,7 +1,7 @@
 use crate::tree::metrics::BlockBufferMetrics;
 use alloy_consensus::BlockHeader;
 use alloy_primitives::{BlockHash, BlockNumber};
-use reth_primitives_traits::{Block, SealedBlock};
+use hanzo_evm_primitives_traits::{Block, SealedBlock};
 use std::collections::{BTreeMap, HashMap, HashSet, VecDeque};
 
 /// Contains the tree of pending blocks that cannot be executed due to missing parent.
@@ -186,7 +186,7 @@ mod tests {
     use super::*;
     use alloy_eips::BlockNumHash;
     use alloy_primitives::BlockHash;
-    use reth_testing_utils::generators::{self, random_block, BlockParams, Rng};
+    use hanzo_evm_testing_utils::generators::{self, random_block, BlockParams, Rng};
     use std::collections::HashMap;
 
     /// Create random block with specified number and parent hash.
@@ -194,7 +194,7 @@ mod tests {
         rng: &mut R,
         number: u64,
         parent: BlockHash,
-    ) -> SealedBlock<reth_ethereum_primitives::Block> {
+    ) -> SealedBlock<hanzo_evm_ethereum_primitives::Block> {
         random_block(rng, number, BlockParams { parent: Some(parent), ..Default::default() })
     }
 
@@ -215,7 +215,7 @@ mod tests {
     /// Assert that the block was removed from all buffer collections.
     fn assert_block_removal<B: Block>(
         buffer: &BlockBuffer<B>,
-        block: &SealedBlock<reth_ethereum_primitives::Block>,
+        block: &SealedBlock<hanzo_evm_ethereum_primitives::Block>,
     ) {
         assert!(!buffer.blocks.contains_key(&block.hash()));
         assert!(buffer

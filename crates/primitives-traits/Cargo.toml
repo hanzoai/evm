@@ -1,19 +1,19 @@
 [package]
-name = "reth-primitives-traits"
+name = "hanzo-evm-primitives-traits"
 version.workspace = true
 edition.workspace = true
 homepage.workspace = true
 license.workspace = true
 repository.workspace = true
 rust-version.workspace = true
-description = "Common types in reth."
+description = "Common types in Hanzo EVM."
 
 [lints]
 workspace = true
 
 [dependencies]
-# reth
-reth-codecs = { workspace = true, optional = true }
+# evm
+hanzo-evm-codecs = { workspace = true, optional = true }
 
 # ethereum
 alloy-consensus = { workspace = true, features = ["k256"] }
@@ -42,7 +42,7 @@ once_cell.workspace = true
 serde_with = { workspace = true, optional = true }
 thiserror.workspace = true
 
-# required by reth-codecs
+# required by hanzo-evm-codecs
 modular-bitfield = { workspace = true, optional = true }
 serde = { workspace = true, optional = true }
 
@@ -54,8 +54,8 @@ rayon = { workspace = true, optional = true }
 alloy-rpc-types-eth = { workspace = true, optional = true }
 
 [dev-dependencies]
-reth-codecs.workspace = true
-reth-chainspec = { workspace = true, features = ["arbitrary"] }
+hanzo-evm-codecs.workspace = true
+hanzo-evm-chainspec = { workspace = true, features = ["arbitrary"] }
 
 alloy-primitives = { workspace = true, features = ["arbitrary", "serde"] }
 alloy-consensus = { workspace = true, features = ["arbitrary", "serde"] }
@@ -90,7 +90,7 @@ std = [
     "alloy-trie/std",
     "op-alloy-consensus?/std",
     "serde_json/std",
-    "reth-chainspec/std",
+    "hanzo-evm-chainspec/std",
     "revm-bytecode/std",
     "revm-state/std",
     "alloy-rpc-types-eth?/std",
@@ -98,8 +98,8 @@ std = [
 secp256k1 = ["alloy-consensus/secp256k1"]
 test-utils = [
     "arbitrary",
-    "reth-codecs?/test-utils",
-    "reth-chainspec/test-utils",
+    "hanzo-evm-codecs?/test-utils",
+    "hanzo-evm-chainspec/test-utils",
 ]
 arbitrary = [
     "std",
@@ -110,12 +110,12 @@ arbitrary = [
     "dep:proptest-arbitrary-interop",
     "alloy-eips/arbitrary",
     "revm-primitives/arbitrary",
-    "reth-codecs?/arbitrary",
+    "hanzo-evm-codecs?/arbitrary",
     "secp256k1?/global-context",
     "secp256k1?/rand",
     "op-alloy-consensus?/arbitrary",
     "alloy-trie/arbitrary",
-    "reth-chainspec/arbitrary",
+    "hanzo-evm-chainspec/arbitrary",
     "alloy-rpc-types-eth?/arbitrary",
     "dashmap?/arbitrary",
 ]
@@ -136,7 +136,7 @@ serde = [
     "alloy-primitives/serde",
     "bytes/serde",
     "rand/serde",
-    "reth-codecs?/serde",
+    "hanzo-evm-codecs?/serde",
     "revm-primitives/serde",
     "revm-primitives/serde",
     "op-alloy-consensus?/serde",
@@ -148,14 +148,14 @@ serde = [
     "alloy-rpc-types-eth?/serde",
     "dashmap?/serde",
 ]
-reth-codec = [
-    "dep:reth-codecs",
+hanzo-evm-codec = [
+    "dep:hanzo-evm-codecs",
     "dep:modular-bitfield",
     "dep:byteorder",
 ]
 op = [
     "dep:op-alloy-consensus",
-    "reth-codecs?/op",
+    "hanzo-evm-codecs?/op",
 ]
 rayon = [
     "dep:rayon",

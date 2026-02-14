@@ -1,11 +1,11 @@
 //! Internal errors for the tree module.
 
 use alloy_consensus::BlockHeader;
-use reth_consensus::ConsensusError;
-use reth_errors::{BlockExecutionError, BlockValidationError, ProviderError};
-use reth_evm::execute::InternalBlockExecutionError;
-use reth_payload_primitives::NewPayloadError;
-use reth_primitives_traits::{Block, BlockBody, SealedBlock};
+use hanzo_evm_consensus::ConsensusError;
+use hanzo_evm_errors::{BlockExecutionError, BlockValidationError, ProviderError};
+use hanzo_evm_execution::execute::InternalBlockExecutionError;
+use hanzo_evm_payload_primitives::NewPayloadError;
+use hanzo_evm_primitives_traits::{Block, BlockBody, SealedBlock};
 
 /// This is an error that can come from advancing persistence.
 #[derive(Debug, thiserror::Error)]

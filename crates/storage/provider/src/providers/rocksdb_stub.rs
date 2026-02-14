@@ -7,9 +7,9 @@
 use alloy_primitives::BlockNumber;
 use metrics::Label;
 use parking_lot::Mutex;
-use reth_db_api::{database_metrics::DatabaseMetrics, models::StorageSettings};
-use reth_prune_types::PruneMode;
-use reth_storage_errors::{db::LogLevel, provider::ProviderResult};
+use hanzo_evm_db_api::{database_metrics::DatabaseMetrics, models::StorageSettings};
+use hanzo_evm_prune_types::PruneMode;
+use hanzo_evm_storage_errors::{db::LogLevel, provider::ProviderResult};
 use std::{path::Path, sync::Arc};
 
 /// Pending `RocksDB` batches type alias (stub - uses unit type).
@@ -123,7 +123,7 @@ impl RocksDBProvider {
     /// Creates an iterator over all entries in the specified table (stub implementation).
     ///
     /// Returns an empty iterator since there is no `RocksDB` when the feature is disabled.
-    pub const fn iter<T: reth_db_api::table::Table>(&self) -> ProviderResult<RocksDBIter<T>> {
+    pub const fn iter<T: hanzo_evm_db_api::table::Table>(&self) -> ProviderResult<RocksDBIter<T>> {
         Ok(RocksDBIter(std::marker::PhantomData))
     }
 }
@@ -153,7 +153,7 @@ impl RocksDBBuilder {
         self
     }
 
-    /// Registers the default tables used by reth for `RocksDB` storage (stub implementation).
+    /// Registers the default tables used by evm for `RocksDB` storage (stub implementation).
     pub const fn with_default_tables(self) -> Self {
         self
     }
@@ -199,9 +199,9 @@ pub struct RocksDBRawIter;
 
 /// A stub typed iterator for `RocksDB`.
 #[derive(Debug)]
-pub struct RocksDBIter<T: reth_db_api::table::Table>(std::marker::PhantomData<T>);
+pub struct RocksDBIter<T: hanzo_evm_db_api::table::Table>(std::marker::PhantomData<T>);
 
-impl<T: reth_db_api::table::Table> Iterator for RocksDBIter<T> {
+impl<T: hanzo_evm_db_api::table::Table> Iterator for RocksDBIter<T> {
     type Item = ProviderResult<(T::Key, T::Value)>;
 
     fn next(&mut self) -> Option<Self::Item> {

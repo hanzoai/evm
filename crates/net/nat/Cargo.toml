@@ -1,5 +1,5 @@
 [package]
-name = "reth-net-nat"
+name = "hanzo-evm-net-nat"
 version.workspace = true
 edition.workspace = true
 rust-version.workspace = true
@@ -21,7 +21,7 @@ if-addrs.workspace = true
 tracing.workspace = true
 
 [dev-dependencies]
-reth-tracing.workspace = true
+hanzo-evm-tracing.workspace = true
 tokio = { workspace = true, features = ["macros"] }
 
 [features]

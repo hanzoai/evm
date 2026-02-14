@@ -1,5 +1,5 @@
 [package]
-name = "reth-trie-sparse-parallel"
+name = "hanzo-evm-trie-sparse-parallel"
 version.workspace = true
 edition.workspace = true
 rust-version.workspace = true
@@ -12,10 +12,10 @@ description = "Parallel Sparse MPT implementation"
 workspace = true
 
 [dependencies]
-# reth
-reth-execution-errors.workspace = true
-reth-trie-common.workspace = true
-reth-trie-sparse.workspace = true
+# evm
+hanzo-evm-execution-errors.workspace = true
+hanzo-evm-trie-common.workspace = true
+hanzo-evm-trie-sparse.workspace = true
 tracing = { workspace = true, features = ["attributes"] }
 alloy-trie.workspace = true
 
@@ -24,7 +24,7 @@ alloy-primitives.workspace = true
 alloy-rlp.workspace = true
 
 # metrics
-reth-metrics = { workspace = true, optional = true }
+hanzo-evm-metrics = { workspace = true, optional = true }
 metrics = { workspace = true, optional = true }
 
 # misc
@@ -32,14 +32,14 @@ rayon = { workspace = true, optional = true }
 smallvec.workspace = true
 
 [dev-dependencies]
-# reth
-reth-primitives-traits.workspace = true
-reth-provider = { workspace = true, features = ["test-utils"] }
-reth-trie-common = { workspace = true, features = ["test-utils", "arbitrary"] }
-reth-trie-db.workspace = true
-reth-trie-sparse = { workspace = true, features = ["test-utils"] }
-reth-trie.workspace = true
-reth-tracing.workspace = true
+# evm
+hanzo-evm-primitives-traits.workspace = true
+hanzo-evm-provider = { workspace = true, features = ["test-utils"] }
+hanzo-evm-trie-common = { workspace = true, features = ["test-utils", "arbitrary"] }
+hanzo-evm-trie-db.workspace = true
+hanzo-evm-trie-sparse = { workspace = true, features = ["test-utils"] }
+hanzo-evm-trie.workspace = true
+hanzo-evm-tracing.workspace = true
 
 # misc
 arbitrary.workspace = true
@@ -58,14 +58,14 @@ std = [
     "alloy-primitives/std",
     "alloy-rlp/std",
     "alloy-trie/std",
-    "reth-execution-errors/std",
-    "reth-primitives-traits/std",
-    "reth-trie-common/std",
-    "reth-trie-sparse/std",
+    "hanzo-evm-execution-errors/std",
+    "hanzo-evm-primitives-traits/std",
+    "hanzo-evm-trie-common/std",
+    "hanzo-evm-trie-sparse/std",
     "tracing/std",
 ]
 metrics = [
-    "dep:reth-metrics",
+    "dep:hanzo-evm-metrics",
     "dep:metrics",
     "std",
 ]

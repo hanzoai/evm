@@ -1,5 +1,5 @@
 [package]
-name = "reth-tracing"
+name = "hanzo-evm-tracing"
 version.workspace = true
 edition.workspace = true
 rust-version.workspace = true
@@ -12,8 +12,8 @@ description = "tracing helpers"
 workspace = true
 
 [dependencies]
-# reth
-reth-tracing-otlp = { workspace = true, optional = true }
+# evm
+hanzo-evm-tracing-otlp = { workspace = true, optional = true }
 
 # obs
 tracing.workspace = true
@@ -32,6 +32,6 @@ rolling-file.workspace = true
 
 [features]
 default = ["otlp"]
-otlp = ["reth-tracing-otlp"]
-otlp-logs = ["reth-tracing-otlp/otlp-logs"]
+otlp = ["hanzo-evm-tracing-otlp"]
+otlp-logs = ["hanzo-evm-tracing-otlp/otlp-logs"]
 tracy = ["tracing-tracy", "tracy-client"]

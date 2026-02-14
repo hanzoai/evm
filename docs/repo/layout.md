@@ -181,13 +181,13 @@ These crates define primitive types or algorithms.
 
 Ethereum mainnet-specific implementations and primitives live in `crates/ethereum/`.
 
-- **reth-ethereum-engine-primitives** (`crates/ethereum/engine-primitives`)  
+- **evm-ethereum-engine-primitives** (`crates/ethereum/engine-primitives`)  
   Ethereum-specific types for engine API, consensus messages, and payload attributes.
 
-- **reth-ethereum-forks** (`crates/ethereum/hardforks`)  
+- **evm-ethereum-forks** (`crates/ethereum/hardforks`)  
   Mainnet-specific hardfork definitions, activation schedules, and feature flags.
 
-- **reth-ethereum-payload-builder** (`crates/ethereum/payload`)  
+- **evm-ethereum-payload-builder** (`crates/ethereum/payload`)  
   Ethereum-tailored payload builder implementing mainnet block production rules.
 
 ### Misc
@@ -198,7 +198,7 @@ Small utility crates.
 - [`metrics/common`](../../crates/metrics/src/common): Common metrics types (e.g. metered channels)
 - [`metrics`](https://github.com/metrics-rs/metrics): Reth use [metrics][metrics] for metrics collection, which is a lightweight metrics facade
 - [`metrics/metrics-derive`](https://github.com/rkrasiuk/metrics-derive): A derive-style API for creating metrics
-- [`metrics/reth-node-metrics`](../../crates/node/metrics/): The implementation of metrics server, recorder, hooks.
+- [`metrics/evm-node-metrics`](../../crates/node/metrics/): The implementation of metrics server, recorder, hooks.
 - [`tracing`](../../crates/tracing): A small utility crate to install a uniform [`tracing`][tracing] subscriber
 - [`fs-util`](../../crates/fs-util): Small filesystem utilities shared across the node.
 - [`tokio-util`](../../crates/tokio-util): Tokio-related utilities used by reth.

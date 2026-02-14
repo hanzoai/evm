@@ -37,7 +37,7 @@ impl<P: ConnectionProvider> Resolver for hickory_resolver::Resolver<P> {
 ///
 /// ```
 /// # fn t() {
-/// use reth_dns_discovery::resolver::DnsResolver;
+/// use hanzo_evm_dns_discovery::resolver::DnsResolver;
 /// let resolver = DnsResolver::from_system_conf().unwrap();
 /// # }
 /// ```

@@ -4,12 +4,12 @@ use crate::{engine::DownloadRequest, metrics::BlockDownloaderMetrics};
 use alloy_consensus::BlockHeader;
 use alloy_primitives::{map::B256Set, B256};
 use futures::FutureExt;
-use reth_consensus::Consensus;
-use reth_network_p2p::{
+use hanzo_evm_consensus::Consensus;
+use hanzo_evm_network_p2p::{
     full_block::{FetchFullBlockFuture, FetchFullBlockRangeFuture, FullBlockClient},
     BlockClient,
 };
-use reth_primitives_traits::{Block, SealedBlock};
+use hanzo_evm_primitives_traits::{Block, SealedBlock};
 use std::{
     cmp::{Ordering, Reverse},
     collections::{binary_heap::PeekMut, BinaryHeap, VecDeque},
@@ -308,15 +308,15 @@ mod tests {
     use alloy_consensus::Header;
     use alloy_eips::eip1559::ETHEREUM_BLOCK_GAS_LIMIT_30M;
     use assert_matches::assert_matches;
-    use reth_chainspec::{ChainSpecBuilder, MAINNET};
-    use reth_ethereum_consensus::EthBeaconConsensus;
-    use reth_network_p2p::test_utils::TestFullBlockClient;
-    use reth_primitives_traits::SealedHeader;
+    use hanzo_evm_chainspec::{ChainSpecBuilder, MAINNET};
+    use hanzo_evm_ethereum_consensus::EthBeaconConsensus;
+    use hanzo_evm_network_p2p::test_utils::TestFullBlockClient;
+    use hanzo_evm_primitives_traits::SealedHeader;
     use std::{future::poll_fn, sync::Arc};
 
     struct TestHarness {
         block_downloader:
-            BasicBlockDownloader<TestFullBlockClient, reth_ethereum_primitives::Block>,
+            BasicBlockDownloader<TestFullBlockClient, hanzo_evm_ethereum_primitives::Block>,
         client: TestFullBlockClient,
     }
 

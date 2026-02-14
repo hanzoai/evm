@@ -8,7 +8,7 @@ use alloy_primitives::B256;
 use alloy_rpc_types_engine::{ForkchoiceState, PayloadAttributes};
 use eyre::Result;
 use futures_util::future::BoxFuture;
-use reth_node_api::{EngineTypes, PayloadTypes};
+use hanzo_evm_node_api::{EngineTypes, PayloadTypes};
 use std::marker::PhantomData;
 use tracing::debug;
 

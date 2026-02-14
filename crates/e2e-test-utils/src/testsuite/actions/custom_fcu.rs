@@ -5,8 +5,8 @@ use alloy_primitives::B256;
 use alloy_rpc_types_engine::{ForkchoiceState, PayloadStatusEnum};
 use eyre::Result;
 use futures_util::future::BoxFuture;
-use reth_node_api::EngineTypes;
-use reth_rpc_api::clients::EngineApiClient;
+use hanzo_evm_node_api::EngineTypes;
+use hanzo_evm_rpc_api::clients::EngineApiClient;
 use std::marker::PhantomData;
 use tracing::debug;
 

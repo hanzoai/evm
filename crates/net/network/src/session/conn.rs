@@ -1,14 +1,14 @@
 //! Connection types for a session
 
 use futures::{Sink, Stream};
-use reth_ecies::stream::ECIESStream;
-use reth_eth_wire::{
+use hanzo_evm_ecies::stream::ECIESStream;
+use hanzo_evm_eth_wire::{
     errors::EthStreamError,
     message::EthBroadcastMessage,
     multiplex::{ProtocolProxy, RlpxSatelliteStream},
     EthMessage, EthNetworkPrimitives, EthStream, EthVersion, NetworkPrimitives, P2PStream,
 };
-use reth_eth_wire_types::RawCapabilityMessage;
+use hanzo_evm_eth_wire_types::RawCapabilityMessage;
 use std::{
     pin::Pin,
     task::{Context, Poll},

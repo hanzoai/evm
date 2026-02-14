@@ -1,13 +1,13 @@
 use alloy_primitives::{hex, BlockHash};
 use clap::Parser;
-use reth_db::{
+use hanzo_evm_db::{
     static_file::{
         AccountChangesetMask, ColumnSelectorOne, ColumnSelectorTwo, HeaderWithHashMask,
         ReceiptMask, TransactionMask, TransactionSenderMask,
     },
     RawDupSort,
 };
-use reth_db_api::{
+use hanzo_evm_db_api::{
     cursor::{DbCursorRO, DbDupCursorRO},
     database::Database,
     table::{Compress, Decompress, DupSort, Table},
@@ -15,16 +15,16 @@ use reth_db_api::{
     transaction::DbTx,
     RawKey, RawTable, Receipts, TableViewer, Transactions,
 };
-use reth_db_common::DbTool;
-use reth_node_api::{HeaderTy, ReceiptTy, TxTy};
-use reth_node_builder::NodeTypesWithDB;
-use reth_primitives_traits::ValueWithSubKey;
-use reth_provider::{providers::ProviderNodeTypes, ChangeSetReader, StaticFileProviderFactory};
-use reth_static_file_types::StaticFileSegment;
-use reth_storage_api::StorageChangeSetReader;
+use hanzo_evm_db_common::DbTool;
+use hanzo_evm_node_api::{HeaderTy, ReceiptTy, TxTy};
+use hanzo_evm_node_builder::NodeTypesWithDB;
+use hanzo_evm_primitives_traits::ValueWithSubKey;
+use hanzo_evm_provider::{providers::ProviderNodeTypes, ChangeSetReader, StaticFileProviderFactory};
+use hanzo_evm_static_file_types::StaticFileSegment;
+use hanzo_evm_storage_api::StorageChangeSetReader;
 use tracing::error;
 
-/// The arguments for the `reth db get` command
+/// The arguments for the `evm db get` command
 #[derive(Parser, Debug)]
 pub struct Command {
     #[command(subcommand)]
@@ -100,7 +100,7 @@ impl Command {
                         if let Some(entry) = entry {
                             println!("{}", serde_json::to_string_pretty(&entry)?);
                         } else {
-                            error!(target: "reth::cli", "No content for the given table key.");
+                            error!(target: "evm::cli", "No content for the given table key.");
                         }
                         return Ok(());
                     }
@@ -166,7 +166,7 @@ impl Command {
                     if let Some(account) = account {
                         println!("{}", serde_json::to_string_pretty(&account)?);
                     } else {
-                        error!(target: "reth::cli", "No content for the given table key.");
+                        error!(target: "evm::cli", "No content for the given table key.");
                     }
 
                     return Ok(())
@@ -228,7 +228,7 @@ impl Command {
                         }
                     }
                     None => {
-                        error!(target: "reth::cli", "No content for the given table key.");
+                        error!(target: "evm::cli", "No content for the given table key.");
                     }
                 };
             }
@@ -316,7 +316,7 @@ impl<N: ProviderNodeTypes> TableViewer<()> for GetValueViewer<'_, N> {
                     println!("{content}");
                 }
                 None => {
-                    error!(target: "reth::cli", "No content for the given table key.");
+                    error!(target: "evm::cli", "No content for the given table key.");
                 }
             };
         }
@@ -326,7 +326,7 @@ impl<N: ProviderNodeTypes> TableViewer<()> for GetValueViewer<'_, N> {
 
     fn view_dupsort<T: DupSort>(&self) -> Result<(), Self::Error>
     where
-        T::Value: reth_primitives_traits::ValueWithSubKey<SubKey = T::SubKey>,
+        T::Value: hanzo_evm_primitives_traits::ValueWithSubKey<SubKey = T::SubKey>,
     {
         // get a key for given table
         let key = table_key::<T>(&self.key)?;
@@ -411,7 +411,7 @@ impl<N: ProviderNodeTypes> TableViewer<()> for GetValueViewer<'_, N> {
                     println!("{content}");
                 }
                 None => {
-                    error!(target: "reth::cli", "No content for the given table subkey.");
+                    error!(target: "evm::cli", "No content for the given table subkey.");
                 }
             };
         }
@@ -433,7 +433,7 @@ mod tests {
     use super::*;
     use alloy_primitives::{address, B256};
     use clap::{Args, Parser};
-    use reth_db_api::{
+    use hanzo_evm_db_api::{
         models::{storage_sharded_key::StorageShardedKey, ShardedKey},
         AccountsHistory, HashedAccounts, Headers, StageCheckpoints, StoragesHistory,
     };

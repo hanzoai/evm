@@ -1,6 +1,6 @@
 //! Payload builder service metrics.
 
-use reth_metrics::{
+use hanzo_evm_metrics::{
     metrics::{Counter, Gauge},
     Metrics,
 };

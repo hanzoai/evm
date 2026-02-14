@@ -4,8 +4,8 @@ use crate::testsuite::Environment;
 use alloy_rpc_types_engine::{ForkchoiceState, ForkchoiceUpdated, PayloadStatusEnum};
 use eyre::Result;
 use futures_util::future::BoxFuture;
-use reth_node_api::EngineTypes;
-use reth_rpc_api::clients::EngineApiClient;
+use hanzo_evm_node_api::EngineTypes;
+use hanzo_evm_rpc_api::clients::EngineApiClient;
 use std::future::Future;
 use tracing::debug;
 
@@ -129,7 +129,7 @@ impl MakeCanonical {
 
 impl<Engine> Action<Engine> for MakeCanonical
 where
-    Engine: EngineTypes + reth_node_api::PayloadTypes,
+    Engine: EngineTypes + hanzo_evm_node_api::PayloadTypes,
     Engine::PayloadAttributes: From<alloy_rpc_types_engine::PayloadAttributes> + Clone,
     Engine::ExecutionPayloadEnvelopeV3:
         Into<alloy_rpc_types_engine::payload::ExecutionPayloadEnvelopeV3>,

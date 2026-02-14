@@ -1,17 +1,17 @@
 use alloy_primitives::{keccak256, Address};
 use clap::Parser;
 use human_bytes::human_bytes;
-use reth_codecs::Compact;
-use reth_db_api::{cursor::DbDupCursorRO, database::Database, tables, transaction::DbTx};
-use reth_db_common::DbTool;
-use reth_node_builder::NodeTypesWithDB;
+use hanzo_evm_codecs::Compact;
+use hanzo_evm_db_api::{cursor::DbDupCursorRO, database::Database, tables, transaction::DbTx};
+use hanzo_evm_db_common::DbTool;
+use hanzo_evm_node_builder::NodeTypesWithDB;
 use std::time::{Duration, Instant};
 use tracing::info;
 
 /// Log progress every 5 seconds
 const LOG_INTERVAL: Duration = Duration::from_secs(5);
 
-/// The arguments for the `reth db account-storage` command
+/// The arguments for the `evm db account-storage` command
 #[derive(Parser, Debug)]
 pub struct Command {
     /// The account address to check storage for
@@ -40,7 +40,7 @@ impl Command {
 
                 if last_log.elapsed() >= LOG_INTERVAL {
                     info!(
-                        target: "reth::cli",
+                        target: "evm::cli",
                         address = %address,
                         slots = count,
                         key = %storage_entry.key,

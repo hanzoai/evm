@@ -1,5 +1,5 @@
 [package]
-name = "reth-chainspec"
+name = "hanzo-evm-chainspec"
 version.workspace = true
 edition.workspace = true
 homepage.workspace = true
@@ -11,11 +11,11 @@ rust-version.workspace = true
 workspace = true
 
 [dependencies]
-# reth
-reth-ethereum-forks.workspace = true
-reth-network-peers.workspace = true
+# evm
+hanzo-evm-ethereum-forks.workspace = true
+hanzo-evm-network-peers.workspace = true
 alloy-trie = { workspace = true, features = ["ethereum"] }
-reth-primitives-traits.workspace = true
+hanzo-evm-primitives-traits.workspace = true
 
 # ethereum
 alloy-evm.workspace = true
@@ -44,24 +44,24 @@ std = [
     "alloy-genesis/std",
     "alloy-primitives/std",
     "alloy-trie/std",
-    "reth-primitives-traits/std",
+    "hanzo-evm-primitives-traits/std",
     "alloy-consensus/std",
     "alloy-rlp/std",
-    "reth-ethereum-forks/std",
+    "hanzo-evm-ethereum-forks/std",
     "derive_more/std",
-    "reth-network-peers/std",
+    "hanzo-evm-network-peers/std",
     "serde_json/std",
     "alloy-evm/std",
 ]
 arbitrary = [
     "alloy-chains/arbitrary",
-    "reth-ethereum-forks/arbitrary",
-    "reth-primitives-traits/arbitrary",
+    "hanzo-evm-ethereum-forks/arbitrary",
+    "hanzo-evm-primitives-traits/arbitrary",
     "alloy-consensus/arbitrary",
     "alloy-eips/arbitrary",
     "alloy-primitives/arbitrary",
     "alloy-trie/arbitrary",
 ]
 test-utils = [
-    "reth-primitives-traits/test-utils",
+    "hanzo-evm-primitives-traits/test-utils",
 ]

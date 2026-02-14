@@ -10,7 +10,7 @@ use nybbles::Nibbles;
 #[cfg_attr(
     feature = "arbitrary",
     derive(arbitrary::Arbitrary),
-    reth_codecs::add_arbitrary_tests(compact)
+    hanzo_evm_codecs::add_arbitrary_tests(compact)
 )]
 pub struct HashBuilderState {
     /// The current key.
@@ -62,8 +62,8 @@ impl From<HashBuilder> for HashBuilderState {
     }
 }
 
-#[cfg(any(test, feature = "reth-codec"))]
-impl reth_codecs::Compact for HashBuilderState {
+#[cfg(any(test, feature = "hanzo-evm-codec"))]
+impl hanzo_evm_codecs::Compact for HashBuilderState {
     fn to_compact<B>(&self, buf: &mut B) -> usize
     where
         B: bytes::BufMut + AsMut<[u8]>,
@@ -152,7 +152,7 @@ impl reth_codecs::Compact for HashBuilderState {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use reth_codecs::Compact;
+    use hanzo_evm_codecs::Compact;
 
     #[test]
     fn hash_builder_state_regression() {

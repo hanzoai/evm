@@ -5,7 +5,7 @@ use core::{
     ops::{Range, RangeInclusive},
     str::FromStr,
 };
-use reth_stages_types::StageId;
+use hanzo_evm_stages_types::StageId;
 use serde::{de::Visitor, ser::SerializeStruct, Deserialize, Deserializer, Serialize, Serializer};
 use strum::{EnumIs, EnumString};
 
@@ -688,7 +688,7 @@ impl From<SegmentRangeInclusive> for RangeInclusive<u64> {
 mod tests {
     use super::*;
     use alloy_primitives::Bytes;
-    use reth_nippy_jar::NippyJar;
+    use hanzo_evm_nippy_jar::NippyJar;
     use std::env::temp_dir;
 
     #[test]

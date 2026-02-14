@@ -6,11 +6,11 @@ use alloy_consensus::{transaction::Recovered, BlockHeader, TxReceipt};
 use alloy_eips::{eip1898::ForkBlock, eip2718::Encodable2718, BlockNumHash};
 use alloy_primitives::{Address, BlockHash, BlockNumber, Log, TxHash};
 use core::{fmt, ops::RangeInclusive};
-use reth_primitives_traits::{
+use hanzo_evm_primitives_traits::{
     transaction::signed::SignedTransaction, Block, BlockBody, IndexedTx, NodePrimitives,
     RecoveredBlock, SealedHeader,
 };
-use reth_trie_common::LazyTrieData;
+use hanzo_evm_trie_common::LazyTrieData;
 
 /// A chain of blocks and their final state.
 ///
@@ -24,7 +24,7 @@ use reth_trie_common::LazyTrieData;
 /// A chain of blocks should not be empty.
 #[derive(Clone, Debug, PartialEq, Eq)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
-pub struct Chain<N: NodePrimitives = reth_ethereum_primitives::EthPrimitives> {
+pub struct Chain<N: NodePrimitives = hanzo_evm_ethereum_primitives::EthPrimitives> {
     /// All blocks in this chain.
     blocks: BTreeMap<BlockNumber, RecoveredBlock<N::Block>>,
     /// The outcome of block execution for this chain.
@@ -344,11 +344,11 @@ impl<N: NodePrimitives> Chain<N> {
 
 /// Wrapper type for `blocks` display in `Chain`
 #[derive(Debug)]
-pub struct DisplayBlocksChain<'a, B: reth_primitives_traits::Block>(
+pub struct DisplayBlocksChain<'a, B: hanzo_evm_primitives_traits::Block>(
     pub &'a BTreeMap<BlockNumber, RecoveredBlock<B>>,
 );
 
-impl<B: reth_primitives_traits::Block> fmt::Display for DisplayBlocksChain<'_, B> {
+impl<B: hanzo_evm_primitives_traits::Block> fmt::Display for DisplayBlocksChain<'_, B> {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         let mut list = f.debug_list();
         let mut values = self.0.values().map(|block| block.num_hash());
@@ -448,7 +448,7 @@ impl<B: Block> IntoIterator for ChainBlocks<'_, B> {
 
 /// Used to hold receipts and their attachment.
 #[derive(Default, Clone, Debug, PartialEq, Eq)]
-pub struct BlockReceipts<T = reth_ethereum_primitives::Receipt> {
+pub struct BlockReceipts<T = hanzo_evm_ethereum_primitives::Receipt> {
     /// Block identifier
     pub block: BlockNumHash,
     /// Transaction identifier and receipt.
@@ -463,8 +463,8 @@ pub(super) mod serde_bincode_compat {
     use crate::{serde_bincode_compat, ExecutionOutcome};
     use alloc::{borrow::Cow, collections::BTreeMap, sync::Arc};
     use alloy_primitives::BlockNumber;
-    use reth_ethereum_primitives::EthPrimitives;
-    use reth_primitives_traits::{
+    use hanzo_evm_ethereum_primitives::EthPrimitives;
+    use hanzo_evm_primitives_traits::{
         serde_bincode_compat::{RecoveredBlock, SerdeBincodeCompat},
         Block, NodePrimitives,
     };
@@ -475,7 +475,7 @@ pub(super) mod serde_bincode_compat {
     ///
     /// Intended to use with the [`serde_with::serde_as`] macro in the following way:
     /// ```rust
-    /// use reth_execution_types::{serde_bincode_compat, Chain};
+    /// use hanzo_evm_execution_types::{serde_bincode_compat, Chain};
     /// use serde::{Deserialize, Serialize};
     /// use serde_with::serde_as;
     ///
@@ -498,25 +498,25 @@ pub(super) mod serde_bincode_compat {
         execution_outcome: serde_bincode_compat::ExecutionOutcome<'a, N::Receipt>,
         #[serde(default, rename = "trie_updates_legacy")]
         _trie_updates_legacy:
-            Option<reth_trie_common::serde_bincode_compat::updates::TrieUpdates<'a>>,
+            Option<hanzo_evm_trie_common::serde_bincode_compat::updates::TrieUpdates<'a>>,
         #[serde(default)]
         trie_updates: BTreeMap<
             BlockNumber,
-            reth_trie_common::serde_bincode_compat::updates::TrieUpdatesSorted<'a>,
+            hanzo_evm_trie_common::serde_bincode_compat::updates::TrieUpdatesSorted<'a>,
         >,
         #[serde(default)]
         hashed_state: BTreeMap<
             BlockNumber,
-            reth_trie_common::serde_bincode_compat::hashed_state::HashedPostStateSorted<'a>,
+            hanzo_evm_trie_common::serde_bincode_compat::hashed_state::HashedPostStateSorted<'a>,
         >,
     }
 
     #[derive(Debug)]
     struct RecoveredBlocks<
         'a,
-        B: reth_primitives_traits::Block<Header: SerdeBincodeCompat, Body: SerdeBincodeCompat>
+        B: hanzo_evm_primitives_traits::Block<Header: SerdeBincodeCompat, Body: SerdeBincodeCompat>
             + 'static,
-    >(Cow<'a, BTreeMap<BlockNumber, reth_primitives_traits::RecoveredBlock<B>>>);
+    >(Cow<'a, BTreeMap<BlockNumber, hanzo_evm_primitives_traits::RecoveredBlock<B>>>);
 
     impl<B> Serialize for RecoveredBlocks<'_, B>
     where
@@ -583,7 +583,7 @@ pub(super) mod serde_bincode_compat {
         >,
     {
         fn from(value: Chain<'a, N>) -> Self {
-            use reth_trie_common::LazyTrieData;
+            use hanzo_evm_trie_common::LazyTrieData;
 
             let hashed_state_map: BTreeMap<_, _> =
                 value.hashed_state.into_iter().map(|(k, v)| (k, Arc::new(v.into()))).collect();
@@ -638,7 +638,7 @@ pub(super) mod serde_bincode_compat {
         use super::super::{serde_bincode_compat, Chain};
         use arbitrary::Arbitrary;
         use rand::Rng;
-        use reth_primitives_traits::RecoveredBlock;
+        use hanzo_evm_primitives_traits::RecoveredBlock;
         use serde::{Deserialize, Serialize};
         use serde_with::serde_as;
 
@@ -676,12 +676,12 @@ mod tests {
     use super::*;
     use alloy_consensus::TxType;
     use alloy_primitives::{Address, B256};
-    use reth_ethereum_primitives::Receipt;
+    use hanzo_evm_ethereum_primitives::Receipt;
     use revm::{database::BundleState, primitives::HashMap, state::AccountInfo};
 
     #[test]
     fn chain_append() {
-        let block: RecoveredBlock<reth_ethereum_primitives::Block> = Default::default();
+        let block: RecoveredBlock<hanzo_evm_ethereum_primitives::Block> = Default::default();
         let block1_hash = B256::new([0x01; 32]);
         let block2_hash = B256::new([0x02; 32]);
         let block3_hash = B256::new([0x03; 32]);
@@ -745,13 +745,13 @@ mod tests {
             vec![],
         );
 
-        let mut block1: RecoveredBlock<reth_ethereum_primitives::Block> = Default::default();
+        let mut block1: RecoveredBlock<hanzo_evm_ethereum_primitives::Block> = Default::default();
         let block1_hash = B256::new([15; 32]);
         block1.set_block_number(1);
         block1.set_hash(block1_hash);
         block1.push_sender(Address::new([4; 20]));
 
-        let mut block2: RecoveredBlock<reth_ethereum_primitives::Block> = Default::default();
+        let mut block2: RecoveredBlock<hanzo_evm_ethereum_primitives::Block> = Default::default();
         let block2_hash = B256::new([16; 32]);
         block2.set_block_number(2);
         block2.set_hash(block2_hash);
@@ -775,7 +775,7 @@ mod tests {
     #[test]
     fn receipts_by_block_hash() {
         // Create a default RecoveredBlock object
-        let block: RecoveredBlock<reth_ethereum_primitives::Block> = Default::default();
+        let block: RecoveredBlock<hanzo_evm_ethereum_primitives::Block> = Default::default();
 
         // Define block hashes for block1 and block2
         let block1_hash = B256::new([0x01; 32]);

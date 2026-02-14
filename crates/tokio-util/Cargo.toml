@@ -1,12 +1,12 @@
 [package]
-name = "reth-tokio-util"
+name = "hanzo-evm-tokio-util"
 version.workspace = true
 edition.workspace = true
 rust-version.workspace = true
 license.workspace = true
 homepage.workspace = true
 repository.workspace = true
-description = "Additional utilities for working with Tokio in reth."
+description = "Additional utilities for working with Tokio in Hanzo EVM."
 
 [lints]
 workspace = true

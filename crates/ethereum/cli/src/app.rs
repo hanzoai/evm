@@ -4,20 +4,20 @@ use crate::{
 };
 use clap::Subcommand;
 use eyre::{eyre, Result};
-use reth_chainspec::{ChainSpec, EthChainSpec, Hardforks};
-use reth_cli::chainspec::ChainSpecParser;
-use reth_cli_commands::{
+use hanzo_evm_chainspec::{ChainSpec, EthChainSpec, Hardforks};
+use hanzo_evm_cli::chainspec::ChainSpecParser;
+use hanzo_evm_cli_commands::{
     common::{CliComponentsBuilder, CliNodeTypes, HeaderMut},
     launcher::{FnLauncher, Launcher},
 };
-use reth_cli_runner::CliRunner;
-use reth_db::DatabaseEnv;
-use reth_node_api::NodePrimitives;
-use reth_node_builder::{NodeBuilder, WithLaunchContext};
-use reth_node_ethereum::{consensus::EthBeaconConsensus, EthEvmConfig, EthereumNode};
-use reth_node_metrics::recorder::install_prometheus_recorder;
-use reth_rpc_server_types::RpcModuleValidator;
-use reth_tracing::{FileWorkerGuard, Layers};
+use hanzo_evm_cli_runner::CliRunner;
+use hanzo_evm_db::DatabaseEnv;
+use hanzo_evm_node_api::NodePrimitives;
+use hanzo_evm_node_builder::{NodeBuilder, WithLaunchContext};
+use hanzo_evm_node_ethereum::{consensus::EthBeaconConsensus, EthEvmConfig, EthereumNode};
+use hanzo_evm_node_metrics::recorder::install_prometheus_recorder;
+use hanzo_evm_rpc_server_types::RpcModuleValidator;
+use hanzo_evm_tracing::{FileWorkerGuard, Layers};
 use std::{fmt, sync::Arc};
 
 /// A wrapper around a parsed CLI that handles command execution.
@@ -63,7 +63,7 @@ where
     /// Execute the configured cli command.
     ///
     /// This accepts a closure that is used to launch the node via the
-    /// [`NodeCommand`](reth_cli_commands::node::NodeCommand).
+    /// [`NodeCommand`](hanzo_evm_cli_commands::node::NodeCommand).
     pub fn run(self, launcher: impl Launcher<C, Ext>) -> Result<()>
     where
         C: ChainSpecParser<ChainSpec = ChainSpec>,
@@ -80,7 +80,7 @@ where
     /// Execute the configured cli command with the provided [`CliComponentsBuilder`].
     ///
     /// This accepts a closure that is used to launch the node via the
-    /// [`NodeCommand`](reth_cli_commands::node::NodeCommand) and allows providing custom
+    /// [`NodeCommand`](hanzo_evm_cli_commands::node::NodeCommand) and allows providing custom
     /// components.
     pub fn run_with_components<N>(
         mut self,
@@ -196,11 +196,11 @@ mod tests {
     use super::*;
     use crate::chainspec::EthereumChainSpecParser;
     use clap::Parser;
-    use reth_cli_commands::node::NoArgs;
+    use hanzo_evm_cli_commands::node::NoArgs;
 
     #[test]
     fn test_cli_app_creation() {
-        let args = vec!["reth", "config"];
+        let args = vec!["evm", "config"];
         let cli = Cli::<EthereumChainSpecParser, NoArgs>::try_parse_from(args).unwrap();
         let app = cli.configure();
 
@@ -212,7 +212,7 @@ mod tests {
 
     #[test]
     fn test_set_runner() {
-        let args = vec!["reth", "config"];
+        let args = vec!["evm", "config"];
         let cli = Cli::<EthereumChainSpecParser, NoArgs>::try_parse_from(args).unwrap();
         let mut app = cli.configure();
 
@@ -225,7 +225,7 @@ mod tests {
 
     #[test]
     fn test_access_tracing_layers() {
-        let args = vec!["reth", "config"];
+        let args = vec!["evm", "config"];
         let cli = Cli::<EthereumChainSpecParser, NoArgs>::try_parse_from(args).unwrap();
         let mut app = cli.configure();
 

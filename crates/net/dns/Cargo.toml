@@ -1,5 +1,5 @@
 [package]
-name = "reth-dns-discovery"
+name = "hanzo-evm-dns-discovery"
 version.workspace = true
 edition.workspace = true
 rust-version.workspace = true
@@ -12,10 +12,10 @@ description = "Support for EIP-1459 Node Discovery via DNS"
 workspace = true
 
 [dependencies]
-# reth
-reth-ethereum-forks.workspace = true
-reth-network-peers = { workspace = true, features = ["secp256k1"] }
-reth-tokio-util = { workspace = true, features = ["time"] }
+# evm
+hanzo-evm-ethereum-forks.workspace = true
+hanzo-evm-network-peers = { workspace = true, features = ["secp256k1"] }
+hanzo-evm-tokio-util = { workspace = true, features = ["time"] }
 
 # ethereum
 alloy-primitives.workspace = true
@@ -40,12 +40,12 @@ serde = { workspace = true, optional = true }
 serde_with = { workspace = true, optional = true }
 
 [dev-dependencies]
-reth-chainspec.workspace = true
+hanzo-evm-chainspec.workspace = true
 alloy-rlp.workspace = true
 alloy-chains.workspace = true
 secp256k1 = { workspace = true, features = ["rand"] }
 tokio = { workspace = true, features = ["sync", "rt", "rt-multi-thread"] }
-reth-tracing.workspace = true
+hanzo-evm-tracing.workspace = true
 rand.workspace = true
 
 [features]
@@ -59,6 +59,6 @@ serde = [
     "rand/serde",
     "secp256k1/serde",
     "hickory-resolver/serde",
-    "reth-ethereum-forks/serde",
+    "hanzo-evm-ethereum-forks/serde",
     "dashmap/serde",
 ]

@@ -1,11 +1,11 @@
 #![allow(missing_docs)]
 
 use criterion::{black_box, criterion_group, criterion_main, Criterion};
-use reth_chain_state::{
+use hanzo_evm_chain_state::{
     test_utils::TestBlockBuilder, ExecutedBlock, MemoryOverlayStateProviderRef,
 };
-use reth_ethereum_primitives::EthPrimitives;
-use reth_storage_api::{noop::NoopProvider, BlockHashReader};
+use hanzo_evm_ethereum_primitives::EthPrimitives;
+use hanzo_evm_storage_api::{noop::NoopProvider, BlockHashReader};
 
 criterion_group!(benches, bench_canonical_hashes_range);
 criterion_main!(benches);

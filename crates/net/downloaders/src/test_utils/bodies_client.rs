@@ -1,11 +1,11 @@
 use alloy_primitives::{map::B256Map, B256};
-use reth_ethereum_primitives::BlockBody;
-use reth_network_p2p::{
+use hanzo_evm_ethereum_primitives::BlockBody;
+use hanzo_evm_network_p2p::{
     bodies::client::{BodiesClient, BodiesFut},
     download::DownloadClient,
     priority::Priority,
 };
-use reth_network_peers::PeerId;
+use hanzo_evm_network_peers::PeerId;
 use std::{
     fmt::Debug,
     ops::RangeInclusive,

@@ -1,5 +1,5 @@
 [package]
-name = "reth-node-core"
+name = "hanzo-evm-node-core"
 version.workspace = true
 edition.workspace = true
 rust-version.workspace = true
@@ -11,32 +11,32 @@ repository.workspace = true
 workspace = true
 
 [dependencies]
-# reth
-reth-chainspec.workspace = true
-reth-consensus.workspace = true
-reth-primitives-traits = { workspace = true, features = ["rayon"] }
-reth-cli-util.workspace = true
-reth-db = { workspace = true, features = ["mdbx"] }
-reth-storage-errors.workspace = true
-reth-storage-api = { workspace = true, features = ["std", "db-api"] }
-reth-network = { workspace = true, features = ["serde"] }
-reth-network-p2p.workspace = true
-reth-rpc-eth-types.workspace = true
-reth-rpc-server-types.workspace = true
-reth-rpc-convert.workspace = true
-reth-transaction-pool.workspace = true
-reth-tracing.workspace = true
-reth-config = { workspace = true, features = ["serde"] }
-reth-discv4.workspace = true
-reth-discv5.workspace = true
-reth-net-nat.workspace = true
-reth-net-banlist.workspace = true
-reth-network-peers.workspace = true
-reth-prune-types.workspace = true
-reth-stages-types.workspace = true
-reth-ethereum-forks.workspace = true
-reth-engine-local.workspace = true
-reth-engine-primitives.workspace = true
+# evm
+hanzo-evm-chainspec.workspace = true
+hanzo-evm-consensus.workspace = true
+hanzo-evm-primitives-traits = { workspace = true, features = ["rayon"] }
+hanzo-evm-cli-util.workspace = true
+hanzo-evm-db = { workspace = true, features = ["mdbx"] }
+hanzo-evm-storage-errors.workspace = true
+hanzo-evm-storage-api = { workspace = true, features = ["std", "db-api"] }
+hanzo-evm-network = { workspace = true, features = ["serde"] }
+hanzo-evm-network-p2p.workspace = true
+hanzo-evm-rpc-eth-types.workspace = true
+hanzo-evm-rpc-server-types.workspace = true
+hanzo-evm-rpc-convert.workspace = true
+hanzo-evm-transaction-pool.workspace = true
+hanzo-evm-tracing.workspace = true
+hanzo-evm-config = { workspace = true, features = ["serde"] }
+hanzo-evm-discv4.workspace = true
+hanzo-evm-discv5.workspace = true
+hanzo-evm-net-nat.workspace = true
+hanzo-evm-net-banlist.workspace = true
+hanzo-evm-network-peers.workspace = true
+hanzo-evm-prune-types.workspace = true
+hanzo-evm-stages-types.workspace = true
+hanzo-evm-ethereum-forks.workspace = true
+hanzo-evm-engine-local.workspace = true
+hanzo-evm-engine-primitives.workspace = true
 
 # ethereum
 alloy-primitives.workspace = true
@@ -62,7 +62,7 @@ shellexpand.workspace = true
 
 # obs
 tracing.workspace = true
-reth-tracing-otlp.workspace = true
+hanzo-evm-tracing-otlp.workspace = true
 
 # crypto
 secp256k1 = { workspace = true, features = ["global-context", "std", "recovery"] }
@@ -77,12 +77,12 @@ tokio.workspace = true
 
 [features]
 # Features for vergen to generate correct env vars
-jemalloc = ["reth-cli-util/jemalloc"]
+jemalloc = ["hanzo-evm-cli-util/jemalloc"]
 asm-keccak = ["alloy-primitives/asm-keccak"]
 keccak-cache-global = ["alloy-primitives/keccak-cache-global"]
-otlp = ["reth-tracing/otlp", "reth-tracing-otlp/otlp"]
-otlp-logs = ["reth-tracing/otlp-logs", "reth-tracing-otlp/otlp-logs"]
-tracy = ["reth-tracing/tracy"]
+otlp = ["hanzo-evm-tracing/otlp", "hanzo-evm-tracing-otlp/otlp"]
+otlp-logs = ["hanzo-evm-tracing/otlp-logs", "hanzo-evm-tracing-otlp/otlp-logs"]
+tracy = ["hanzo-evm-tracing/tracy"]
 
 min-error-logs = ["tracing/release_max_level_error"]
 min-warn-logs = ["tracing/release_max_level_warn"]
@@ -91,7 +91,7 @@ min-debug-logs = ["tracing/release_max_level_debug"]
 min-trace-logs = ["tracing/release_max_level_trace"]
 
 # Route supported tables to RocksDB instead of MDBX
-rocksdb = ["reth-storage-api/rocksdb"]
+rocksdb = ["hanzo-evm-storage-api/rocksdb"]
 
 # Marker feature for edge/unstable builds - enables rocksdb and sets v2 defaults
 edge = ["rocksdb"]

@@ -1,7 +1,7 @@
 use metrics::Histogram;
-use reth_eth_wire::DisconnectReason;
-use reth_ethereum_primitives::TxType;
-use reth_metrics::{
+use hanzo_evm_eth_wire::DisconnectReason;
+use hanzo_evm_ethereum_primitives::TxType;
+use hanzo_evm_metrics::{
     metrics::{Counter, Gauge},
     Metrics,
 };
@@ -127,7 +127,7 @@ pub struct TransactionsManagerMetrics {
     /// gaps).
     pub(crate) bad_imports: Counter,
     /// Number of inflight requests at which the
-    /// [`TransactionPool`](reth_transaction_pool::TransactionPool) is considered to be at
+    /// [`TransactionPool`](hanzo_evm_transaction_pool::TransactionPool) is considered to be at
     /// capacity. Note, this is not a limit to the number of inflight requests, but a health
     /// measure.
     pub(crate) capacity_pending_pool_imports: Counter,
@@ -195,7 +195,7 @@ pub struct TransactionsManagerMetrics {
 #[derive(Metrics)]
 #[metrics(scope = "network")]
 pub struct TransactionFetcherMetrics {
-    /// Currently active outgoing [`GetPooledTransactions`](reth_eth_wire::GetPooledTransactions)
+    /// Currently active outgoing [`GetPooledTransactions`](hanzo_evm_eth_wire::GetPooledTransactions)
     /// requests.
     pub(crate) inflight_transaction_requests: Gauge,
     /// Number of inflight requests at which the
@@ -204,7 +204,7 @@ pub struct TransactionFetcherMetrics {
     /// measure.
     pub(crate) capacity_inflight_requests: Counter,
     /// Hashes in currently active outgoing
-    /// [`GetPooledTransactions`](reth_eth_wire::GetPooledTransactions) requests.
+    /// [`GetPooledTransactions`](hanzo_evm_eth_wire::GetPooledTransactions) requests.
     pub(crate) hashes_inflight_transaction_requests: Gauge,
     /// How often we failed to send a request to the peer because the channel was full.
     pub(crate) egress_peer_channel_full: Counter,
@@ -213,7 +213,7 @@ pub struct TransactionFetcherMetrics {
     /// Total number of fetched transactions.
     pub(crate) fetched_transactions: Counter,
     /// Total number of transactions that were received in
-    /// [`PooledTransactions`](reth_eth_wire::PooledTransactions) responses, that weren't
+    /// [`PooledTransactions`](hanzo_evm_eth_wire::PooledTransactions) responses, that weren't
     /// requested.
     pub(crate) unsolicited_transactions: Counter,
     /* ================ SEARCH DURATION ================ */

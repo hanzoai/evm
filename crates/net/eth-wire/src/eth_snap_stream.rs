@@ -222,7 +222,7 @@ where
         // if "eth" before "snap", giving eth messages lower IDs than snap messages,
         // and eth message IDs are <= [`EthMessageID::max()`],
         // snap message IDs are > [`EthMessageID::max()`].
-        // See also <https://github.com/paradigmxyz/reth/blob/main/crates/net/eth-wire/src/capability.rs#L272-L283>.
+        // See also <https://github.com/hanzoai/evm/blob/main/crates/net/eth-wire/src/capability.rs#L272-L283>.
         if message_id <= EthMessageID::max(self.eth_version) {
             let mut buf = bytes.as_ref();
             match ProtocolMessage::decode_message(self.eth_version, &mut buf) {
@@ -293,7 +293,7 @@ mod tests {
     use alloy_eips::BlockHashOrNumber;
     use alloy_primitives::B256;
     use alloy_rlp::Encodable;
-    use reth_eth_wire_types::{
+    use hanzo_evm_eth_wire_types::{
         message::RequestPair, GetAccountRangeMessage, GetBlockHeaders, HeadersDirection,
     };
 

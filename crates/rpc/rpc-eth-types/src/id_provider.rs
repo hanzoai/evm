@@ -1,4 +1,4 @@
-//! Helper type for `reth_rpc_eth_api::EthPubSubApiServer` implementation.
+//! Helper type for `hanzo_evm_rpc_eth_api::EthPubSubApiServer` implementation.
 //!
 //! Generates IDs for tracking subscriptions.
 

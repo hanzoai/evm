@@ -2,8 +2,8 @@
 
 use alloy_primitives::B256;
 use parking_lot::Mutex;
-use reth_trie_sparse::SparseStateTrie;
-use reth_trie_sparse_parallel::ParallelSparseTrie;
+use hanzo_evm_trie_sparse::SparseStateTrie;
+use hanzo_evm_trie_sparse_parallel::ParallelSparseTrie;
 use std::sync::Arc;
 use tracing::debug;
 

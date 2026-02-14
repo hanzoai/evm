@@ -1,4 +1,4 @@
-use reth_fs_util::{self as fs, FsPathError};
+use hanzo_evm_fs_util::{self as fs, FsPathError};
 use secp256k1::{Error as SecretKeyBaseError, SecretKey};
 use std::{
     io,

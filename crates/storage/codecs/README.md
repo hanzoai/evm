@@ -1,19 +1,19 @@
-## reth-codecs
+## evm-codecs
 
 This crate has helpers to implement the main codec used internally to save data in the different storage types.
 
-Currently `Compact` is used when adding the derive macro `reth_codec`.
+Currently `Compact` is used when adding the derive macro `evm_codec`.
 
 This crate implements the main codec (`Compact`) for:
 * [primitive types](src/lib.rs)
-* [alloy types](src/alloy/mod.rs): uses bridge types alongside `reth_codec` from [derive](derive/src/lib.rs)
+* [alloy types](src/alloy/mod.rs): uses bridge types alongside `evm_codec` from [derive](derive/src/lib.rs)
 
-### reth-codecs-derive
+### evm-codecs-derive
 
 Provides derive macros that can be added and configured to stored data structs/enums
-* `#[reth_codec]`: Implements `Compact` as well as `#[derive_arbitrary(compact)]`
-* `#[reth_codec(rlp)]`: Implements `Compact` as well as `#[derive_arbitrary(compact, rlp)]`
-* `#[reth_codec(no_arbitrary)]`: Implements `Compact` without `derive_arbitrary`.
+* `#[evm_codec]`: Implements `Compact` as well as `#[derive_arbitrary(compact)]`
+* `#[evm_codec(rlp)]`: Implements `Compact` as well as `#[derive_arbitrary(compact, rlp)]`
+* `#[evm_codec(no_arbitrary)]`: Implements `Compact` without `derive_arbitrary`.
 
 * `#[derive_arbitrary]`: will derive arbitrary `Arbitrary` and `proptest::Arbitrary` with no generated tests.
 * `#[derive_arbitrary(rlp)]`: will derive arbitrary and generate rlp roundtrip proptests.

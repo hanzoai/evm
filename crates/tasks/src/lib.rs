@@ -1,13 +1,13 @@
-//! Reth task management.
+//! Hanzo EVM task management.
 //!
 //! # Feature Flags
 //!
 //! - `rayon`: Enable rayon thread pool for blocking tasks.
 
 #![doc(
-    html_logo_url = "https://raw.githubusercontent.com/paradigmxyz/reth/main/assets/reth-docs.png",
+    html_logo_url = "https://raw.githubusercontent.com/hanzoai/evm/main/assets/evm-docs.png",
     html_favicon_url = "https://avatars0.githubusercontent.com/u/97369466?s=256",
-    issue_tracker_base_url = "https://github.com/paradigmxyz/reth/issues/"
+    issue_tracker_base_url = "https://github.com/hanzoai/evm/issues/"
 )]
 #![cfg_attr(not(test), warn(unused_crate_dependencies))]
 #![cfg_attr(docsrs, feature(doc_cfg))]
@@ -106,7 +106,7 @@ where
 ///
 /// ```
 /// # async fn t() {
-/// use reth_tasks::{TaskSpawner, TokioTaskExecutor};
+/// use hanzo_evm_tasks::{TaskSpawner, TokioTaskExecutor};
 /// let executor = TokioTaskExecutor::default();
 ///
 /// let task = executor.spawn(Box::pin(async {
@@ -119,9 +119,9 @@ where
 /// Use the [`TaskExecutor`] that spawns task directly onto the tokio runtime via the [Handle].
 ///
 /// ```
-/// # use reth_tasks::TaskManager;
+/// # use hanzo_evm_tasks::TaskManager;
 /// fn t() {
-///  use reth_tasks::TaskSpawner;
+///  use hanzo_evm_tasks::TaskSpawner;
 /// let rt = tokio::runtime::Runtime::new().unwrap();
 /// let manager = TaskManager::new(rt.handle().clone());
 /// let executor = manager.executor();
@@ -189,7 +189,7 @@ impl TaskSpawner for TokioTaskExecutor {
     }
 }
 
-/// Many reth components require to spawn tasks for long-running jobs. For example `discovery`
+/// Many evm components require to spawn tasks for long-running jobs. For example `discovery`
 /// spawns tasks to handle egress and ingress of udp traffic or `network` that spawns session tasks
 /// that handle the traffic to and from a peer.
 ///
@@ -582,7 +582,7 @@ impl TaskExecutor {
     /// # Example
     ///
     /// ```no_run
-    /// # async fn t(executor: reth_tasks::TaskExecutor) {
+    /// # async fn t(executor: hanzo_evm_tasks::TaskExecutor) {
     ///
     /// executor.spawn_critical_with_graceful_shutdown_signal("grace", |shutdown| async move {
     ///     // await the shutdown signal
@@ -630,7 +630,7 @@ impl TaskExecutor {
     /// # Example
     ///
     /// ```no_run
-    /// # async fn t(executor: reth_tasks::TaskExecutor) {
+    /// # async fn t(executor: hanzo_evm_tasks::TaskExecutor) {
     ///
     /// executor.spawn_with_graceful_shutdown_signal(|shutdown| async move {
     ///     // await the shutdown signal

@@ -1,5 +1,5 @@
 [package]
-name = "reth-zstd-compressors"
+name = "hanzo-evm-zstd-compressors"
 version.workspace = true
 edition.workspace = true
 homepage.workspace = true

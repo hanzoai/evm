@@ -14,14 +14,14 @@ The example shows how to:
 ## Prerequisites
 
 - A reth database with some data (you can sync a node or use a pre-synced database)
-- Set the `RETH_DATADIR` environment variable to point to your reth data directory
+- Set the `EVM_DATADIR` environment variable to point to your reth data directory
 - Set the `CONTRACT_ADDRESS` environment variable to provide target contract address
 
 ## Usage
 
 ```bash
 # Set your reth data directory
-export RETH_DATADIR="/path/to/your/reth/datadir"
+export EVM_DATADIR="/path/to/your/reth/datadir"
 # Set target contract address
 export CONTRACT_ADDRESS="0x0..."
 

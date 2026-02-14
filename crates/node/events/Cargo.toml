@@ -1,5 +1,5 @@
 [package]
-name = "reth-node-events"
+name = "hanzo-evm-node-events"
 version.workspace = true
 edition.workspace = true
 rust-version.workspace = true
@@ -11,14 +11,14 @@ repository.workspace = true
 workspace = true
 
 [dependencies]
-# reth
-reth-storage-api = { workspace = true, features = ["std"] }
-reth-network-api.workspace = true
-reth-stages.workspace = true
-reth-prune-types.workspace = true
-reth-static-file-types.workspace = true
-reth-primitives-traits.workspace = true
-reth-engine-primitives.workspace = true
+# evm
+hanzo-evm-storage-api = { workspace = true, features = ["std"] }
+hanzo-evm-network-api.workspace = true
+hanzo-evm-stages.workspace = true
+hanzo-evm-prune-types.workspace = true
+hanzo-evm-static-file-types.workspace = true
+hanzo-evm-primitives-traits.workspace = true
+hanzo-evm-engine-primitives.workspace = true
 
 # ethereum
 alloy-primitives.workspace = true

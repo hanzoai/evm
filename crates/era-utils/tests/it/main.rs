@@ -3,7 +3,7 @@
 use alloy_primitives::bytes::Bytes;
 use futures_util::{stream, Stream, TryStreamExt};
 use reqwest::{Client, IntoUrl};
-use reth_era_downloader::HttpClient;
+use hanzo_evm_era_downloader::HttpClient;
 use tokio_util::either::Either;
 
 // Url where the ERA1 files are hosted

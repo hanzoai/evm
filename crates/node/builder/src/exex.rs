@@ -3,8 +3,8 @@
 use std::future::Future;
 
 use futures::{future::BoxFuture, FutureExt};
-use reth_exex::ExExContext;
-use reth_node_api::FullNodeComponents;
+use hanzo_evm_exex::ExExContext;
+use hanzo_evm_node_api::FullNodeComponents;
 
 /// A trait for launching an `ExEx`.
 pub trait LaunchExEx<Node: FullNodeComponents>: Send {

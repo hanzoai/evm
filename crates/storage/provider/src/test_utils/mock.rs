@@ -17,28 +17,28 @@ use alloy_primitives::{
     Address, BlockHash, BlockNumber, Bytes, StorageKey, StorageValue, TxHash, TxNumber, B256, U256,
 };
 use parking_lot::Mutex;
-use reth_chain_state::{CanonStateNotifications, CanonStateSubscriptions};
-use reth_chainspec::{ChainInfo, EthChainSpec};
-use reth_db::transaction::DbTx;
-use reth_db_api::{
+use hanzo_evm_chain_state::{CanonStateNotifications, CanonStateSubscriptions};
+use hanzo_evm_chainspec::{ChainInfo, EthChainSpec};
+use hanzo_evm_db::transaction::DbTx;
+use hanzo_evm_db_api::{
     mock::{DatabaseMock, TxMock},
     models::{AccountBeforeTx, StoredBlockBodyIndices},
 };
-use reth_ethereum_primitives::EthPrimitives;
-use reth_execution_types::ExecutionOutcome;
-use reth_primitives_traits::{
+use hanzo_evm_ethereum_primitives::EthPrimitives;
+use hanzo_evm_execution_types::ExecutionOutcome;
+use hanzo_evm_primitives_traits::{
     Account, Block, BlockBody, Bytecode, GotExpected, NodePrimitives, RecoveredBlock, SealedHeader,
     SignerRecoverable, StorageEntry,
 };
-use reth_prune_types::{PruneCheckpoint, PruneModes, PruneSegment};
-use reth_stages_types::{StageCheckpoint, StageId};
-use reth_storage_api::{
+use hanzo_evm_prune_types::{PruneCheckpoint, PruneModes, PruneSegment};
+use hanzo_evm_stages_types::{StageCheckpoint, StageId};
+use hanzo_evm_storage_api::{
     BlockBodyIndicesProvider, BytecodeReader, DBProvider, DatabaseProviderFactory,
     HashedPostStateProvider, NodePrimitivesProvider, StageCheckpointReader, StateProofProvider,
     StorageChangeSetReader, StorageRootProvider,
 };
-use reth_storage_errors::provider::{ConsistentViewError, ProviderError, ProviderResult};
-use reth_trie::{
+use hanzo_evm_storage_errors::provider::{ConsistentViewError, ProviderError, ProviderResult};
+use hanzo_evm_trie::{
     updates::TrieUpdates, AccountProof, HashedPostState, HashedStorage, MultiProof,
     MultiProofTargets, StorageMultiProof, StorageProof, TrieInput,
 };
@@ -52,7 +52,7 @@ use tokio::sync::broadcast;
 
 /// A mock implementation for Provider interfaces.
 #[derive(Debug)]
-pub struct MockEthProvider<T: NodePrimitives = EthPrimitives, ChainSpec = reth_chainspec::ChainSpec>
+pub struct MockEthProvider<T: NodePrimitives = EthPrimitives, ChainSpec = hanzo_evm_chainspec::ChainSpec>
 {
     ///local block store
     pub blocks: Arc<Mutex<B256Map<T::Block>>>,
@@ -91,7 +91,7 @@ where
     }
 }
 
-impl<T: NodePrimitives> MockEthProvider<T, reth_chainspec::ChainSpec> {
+impl<T: NodePrimitives> MockEthProvider<T, hanzo_evm_chainspec::ChainSpec> {
     /// Create a new, empty instance
     pub fn new() -> Self {
         Self {
@@ -99,7 +99,7 @@ impl<T: NodePrimitives> MockEthProvider<T, reth_chainspec::ChainSpec> {
             headers: Default::default(),
             receipts: Default::default(),
             accounts: Default::default(),
-            chain_spec: Arc::new(reth_chainspec::ChainSpecBuilder::mainnet().build()),
+            chain_spec: Arc::new(hanzo_evm_chainspec::ChainSpecBuilder::mainnet().build()),
             state_roots: Default::default(),
             block_body_indices: Default::default(),
             tx: Default::default(),
@@ -821,7 +821,7 @@ where
         _address: Address,
         slot: B256,
         _hashed_storage: HashedStorage,
-    ) -> ProviderResult<reth_trie::StorageProof> {
+    ) -> ProviderResult<hanzo_evm_trie::StorageProof> {
         Ok(StorageProof::new(slot))
     }
 
@@ -1011,7 +1011,7 @@ impl<T: NodePrimitives, ChainSpec: Send + Sync> StorageChangeSetReader
     fn storage_changeset(
         &self,
         _block_number: BlockNumber,
-    ) -> ProviderResult<Vec<(reth_db_api::models::BlockNumberAddress, StorageEntry)>> {
+    ) -> ProviderResult<Vec<(hanzo_evm_db_api::models::BlockNumberAddress, StorageEntry)>> {
         Ok(Vec::default())
     }
 
@@ -1027,7 +1027,7 @@ impl<T: NodePrimitives, ChainSpec: Send + Sync> StorageChangeSetReader
     fn storage_changesets_range(
         &self,
         _range: impl RangeBounds<BlockNumber>,
-    ) -> ProviderResult<Vec<(reth_db_api::models::BlockNumberAddress, StorageEntry)>> {
+    ) -> ProviderResult<Vec<(hanzo_evm_db_api::models::BlockNumberAddress, StorageEntry)>> {
         Ok(Vec::default())
     }
 
@@ -1066,7 +1066,7 @@ mod tests {
     use super::*;
     use alloy_consensus::Header;
     use alloy_primitives::BlockHash;
-    use reth_ethereum_primitives::Receipt;
+    use hanzo_evm_ethereum_primitives::Receipt;
 
     #[test]
     fn test_mock_provider_receipts() {

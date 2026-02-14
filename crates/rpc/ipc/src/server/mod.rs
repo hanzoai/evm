@@ -84,7 +84,7 @@ where
     ///
     /// ```
     /// use jsonrpsee::RpcModule;
-    /// use reth_ipc::server::Builder;
+    /// use hanzo_evm_ipc::server::Builder;
     /// async fn run_server() -> Result<(), Box<dyn core::error::Error + Send + Sync>> {
     ///     let server = Builder::default().build("/tmp/my-uds".into());
     ///     let mut module = RpcModule::new(());
@@ -682,7 +682,7 @@ impl<HttpMiddleware, RpcMiddleware> Builder<HttpMiddleware, RpcMiddleware> {
     ///
     /// ```rust
     /// use jsonrpsee::server::RandomStringIdProvider;
-    /// use reth_ipc::server::Builder;
+    /// use hanzo_evm_ipc::server::Builder;
     ///
     /// // static dispatch
     /// let builder1 = Builder::default().set_id_provider(RandomStringIdProvider::new(16));
@@ -706,7 +706,7 @@ impl<HttpMiddleware, RpcMiddleware> Builder<HttpMiddleware, RpcMiddleware> {
     /// #[tokio::main]
     /// async fn main() {
     ///     let builder = tower::ServiceBuilder::new();
-    ///     let server = reth_ipc::server::Builder::default()
+    ///     let server = hanzo_evm_ipc::server::Builder::default()
     ///         .set_http_middleware(builder)
     ///         .build("/tmp/my-uds".into());
     /// }
@@ -781,7 +781,7 @@ mod tests {
         types::Request,
         PendingSubscriptionSink, RpcModule, SubscriptionMessage,
     };
-    use reth_tracing::init_test_tracing;
+    use hanzo_evm_tracing::init_test_tracing;
     use std::pin::pin;
     use tokio::sync::broadcast;
     use tokio_stream::wrappers::BroadcastStream;
@@ -966,7 +966,7 @@ mod tests {
 
     #[tokio::test]
     async fn test_ipc_modules() {
-        reth_tracing::init_test_tracing();
+        hanzo_evm_tracing::init_test_tracing();
         let endpoint = &dummy_name();
         let server = Builder::default().build(endpoint.clone());
         let mut module = RpcModule::new(());
@@ -1082,7 +1082,7 @@ mod tests {
             }
         }
 
-        reth_tracing::init_test_tracing();
+        hanzo_evm_tracing::init_test_tracing();
         let endpoint = &dummy_name();
 
         let rpc_middleware = RpcServiceBuilder::new().layer_fn(ModifyRequestIf);

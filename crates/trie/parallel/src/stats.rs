@@ -1,5 +1,5 @@
 use derive_more::Deref;
-use reth_trie::stats::{TrieStats, TrieTracker};
+use hanzo_evm_trie::stats::{TrieStats, TrieTracker};
 
 /// Trie stats.
 #[derive(Deref, Clone, Copy, Debug)]

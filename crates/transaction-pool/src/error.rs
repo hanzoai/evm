@@ -4,7 +4,7 @@ use std::any::Any;
 
 use alloy_eips::eip4844::BlobTransactionValidationError;
 use alloy_primitives::{Address, TxHash, U256};
-use reth_primitives_traits::transaction::error::InvalidTransactionError;
+use hanzo_evm_primitives_traits::transaction::error::InvalidTransactionError;
 
 /// Transaction pool result type.
 pub type PoolResult<T> = Result<T, PoolError>;
@@ -253,7 +253,7 @@ pub enum InvalidPoolTransactionError {
     /// Thrown if the transaction's would require an account to be overdrawn
     #[error("transaction overdraws from account, balance: {balance}, cost: {cost}")]
     Overdraft {
-        /// Cost transaction is allowed to consume. See `reth_transaction_pool::PoolTransaction`.
+        /// Cost transaction is allowed to consume. See `hanzo_evm_transaction_pool::PoolTransaction`.
         cost: U256,
         /// Balance of account.
         balance: U256,

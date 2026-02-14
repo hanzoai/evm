@@ -1,4 +1,4 @@
-//! reth P2P networking.
+//! evm P2P networking.
 //!
 //! Ethereum's networking protocol is specified in [devp2p](https://github.com/ethereum/devp2p).
 //!
@@ -18,14 +18,14 @@
 //!        * Responds to incoming transaction related requests
 //!        * Requests missing transactions from the `Network`
 //!        * Broadcasts new transactions received from the
-//!          [`TransactionPool`](reth_transaction_pool::TransactionPool) over the `Network`
+//!          [`TransactionPool`](hanzo_evm_transaction_pool::TransactionPool) over the `Network`
 //!
 //!    - `ETH request Task`: is a spawned
 //!      [`EthRequestHandler`](crate::eth_requests::EthRequestHandler) future that:
 //!
 //!        * Responds to incoming ETH related requests: `Headers`, `Bodies`
 //!
-//!    - `Discovery Task`: is a spawned [`Discv4`](reth_discv4::Discv4) future that handles peer
+//!    - `Discovery Task`: is a spawned [`Discv4`](hanzo_evm_discv4::Discv4) future that handles peer
 //!      discovery and emits new peers to the `Network`
 //!
 //!    - [`NetworkManager`] task advances the state of the `Network`, which includes:
@@ -42,15 +42,15 @@
 //! ### Configure and launch a standalone network
 //!
 //! The [`NetworkConfig`] is used to configure the network.
-//! It requires an instance of [`BlockReader`](reth_storage_api::BlockReader).
+//! It requires an instance of [`BlockReader`](hanzo_evm_storage_api::BlockReader).
 //!
 //! ```
 //! # async fn launch() {
-//! use reth_network::{
+//! use hanzo_evm_network::{
 //!     config::rng_secret_key, EthNetworkPrimitives, NetworkConfig, NetworkManager,
 //! };
-//! use reth_network_peers::mainnet_nodes;
-//! use reth_storage_api::noop::NoopProvider;
+//! use hanzo_evm_network_peers::mainnet_nodes;
+//! use hanzo_evm_storage_api::noop::NoopProvider;
 //!
 //! // This block provider implementation is used for testing purposes.
 //! let client = NoopProvider::default();
@@ -75,12 +75,12 @@
 //! ### Configure all components of the Network with the [`NetworkBuilder`]
 //!
 //! ```
-//! use reth_network::{
+//! use hanzo_evm_network::{
 //!     config::rng_secret_key, EthNetworkPrimitives, NetworkConfig, NetworkManager,
 //! };
-//! use reth_network_peers::mainnet_nodes;
-//! use reth_storage_api::noop::NoopProvider;
-//! use reth_transaction_pool::TransactionPool;
+//! use hanzo_evm_network_peers::mainnet_nodes;
+//! use hanzo_evm_storage_api::noop::NoopProvider;
+//! use hanzo_evm_transaction_pool::TransactionPool;
 //! async fn launch<Pool: TransactionPool>(pool: Pool) {
 //!     // This block provider implementation is used for testing purposes.
 //!     let client = NoopProvider::default();
@@ -109,9 +109,9 @@
 //! - `test-utils`: Various utilities helpful for writing tests
 
 #![doc(
-    html_logo_url = "https://raw.githubusercontent.com/paradigmxyz/reth/main/assets/reth-docs.png",
+    html_logo_url = "https://raw.githubusercontent.com/hanzoai/evm/main/assets/evm-docs.png",
     html_favicon_url = "https://avatars0.githubusercontent.com/u/97369466?s=256",
-    issue_tracker_base_url = "https://github.com/paradigmxyz/reth/issues/"
+    issue_tracker_base_url = "https://github.com/hanzoai/evm/issues/"
 )]
 #![allow(unreachable_pub)]
 #![cfg_attr(not(test), warn(unused_crate_dependencies))]
@@ -146,14 +146,14 @@ mod state;
 mod swarm;
 mod trusted_peers_resolver;
 
-pub use reth_eth_wire::{DisconnectReason, HelloMessageWithProtocols};
-pub use reth_eth_wire_types::{primitives, EthNetworkPrimitives, NetworkPrimitives};
-pub use reth_network_api::{
+pub use hanzo_evm_eth_wire::{DisconnectReason, HelloMessageWithProtocols};
+pub use hanzo_evm_eth_wire_types::{primitives, EthNetworkPrimitives, NetworkPrimitives};
+pub use hanzo_evm_network_api::{
     events, BlockDownloaderProvider, DiscoveredEvent, DiscoveryEvent, NetworkEvent,
     NetworkEventListenerProvider, NetworkInfo, PeerRequest, PeerRequestSender, Peers, PeersInfo,
 };
-pub use reth_network_p2p::sync::{NetworkSyncUpdater, SyncState};
-pub use reth_network_types::{PeersConfig, SessionsConfig};
+pub use hanzo_evm_network_p2p::sync::{NetworkSyncUpdater, SyncState};
+pub use hanzo_evm_network_types::{PeersConfig, SessionsConfig};
 pub use session::{
     ActiveSessionHandle, ActiveSessionMessage, Direction, EthRlpxConnection, PeerInfo,
     PendingSessionEvent, PendingSessionHandle, PendingSessionHandshakeError, SessionCommand,
@@ -171,13 +171,13 @@ pub use network::{NetworkHandle, NetworkProtocols};
 pub use swarm::NetworkConnectionState;
 
 /// re-export p2p interfaces
-pub use reth_network_p2p as p2p;
+pub use hanzo_evm_network_p2p as p2p;
 
 /// re-export types crates
 pub mod types {
-    pub use reth_discv4::NatResolver;
-    pub use reth_eth_wire_types::*;
-    pub use reth_network_types::*;
+    pub use hanzo_evm_discv4::NatResolver;
+    pub use hanzo_evm_eth_wire_types::*;
+    pub use hanzo_evm_network_types::*;
 }
 
 use aquamarine as _;

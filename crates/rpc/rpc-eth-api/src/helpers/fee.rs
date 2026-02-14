@@ -7,13 +7,13 @@ use alloy_eips::eip7840::BlobParams;
 use alloy_primitives::U256;
 use alloy_rpc_types_eth::{BlockNumberOrTag, FeeHistory};
 use futures::Future;
-use reth_chainspec::{ChainSpecProvider, EthChainSpec};
-use reth_primitives_traits::BlockBody;
-use reth_rpc_eth_types::{
+use hanzo_evm_chainspec::{ChainSpecProvider, EthChainSpec};
+use hanzo_evm_primitives_traits::BlockBody;
+use hanzo_evm_rpc_eth_types::{
     fee_history::calculate_reward_percentiles_for_block, utils::checked_blob_gas_used_ratio,
     EthApiError, FeeHistoryCache, FeeHistoryEntry, GasPriceOracle, RpcInvalidTransactionError,
 };
-use reth_storage_api::{
+use hanzo_evm_storage_api::{
     BlockIdReader, BlockNumReader, BlockReaderIdExt, HeaderProvider, ProviderHeader,
 };
 use tracing::debug;

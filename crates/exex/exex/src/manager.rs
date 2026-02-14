@@ -6,14 +6,14 @@ use alloy_eips::BlockNumHash;
 use futures::StreamExt;
 use itertools::Itertools;
 use metrics::Gauge;
-use reth_chain_state::ForkChoiceStream;
-use reth_ethereum_primitives::EthPrimitives;
-use reth_evm::ConfigureEvm;
-use reth_metrics::{metrics::Counter, Metrics};
-use reth_node_api::NodePrimitives;
-use reth_primitives_traits::SealedHeader;
-use reth_provider::HeaderProvider;
-use reth_tracing::tracing::{debug, warn};
+use hanzo_evm_chain_state::ForkChoiceStream;
+use hanzo_evm_ethereum_primitives::EthPrimitives;
+use hanzo_evm_execution::ConfigureEvm;
+use hanzo_evm_metrics::{metrics::Counter, Metrics};
+use hanzo_evm_node_api::NodePrimitives;
+use hanzo_evm_primitives_traits::SealedHeader;
+use hanzo_evm_provider::HeaderProvider;
+use hanzo_evm_tracing::tracing::{debug, warn};
 use std::{
     collections::VecDeque,
     fmt::Debug,
@@ -101,13 +101,13 @@ impl<N: NodePrimitives> ExExHandle<N> {
         id: String,
         node_head: BlockNumHash,
         provider: P,
-        evm_config: E,
+        hanzo_evm_config: E,
         wal_handle: WalHandle<N>,
     ) -> (Self, UnboundedSender<ExExEvent>, ExExNotifications<P, E>) {
         let (notification_tx, notification_rx) = mpsc::channel(1);
         let (event_tx, event_rx) = mpsc::unbounded_channel();
         let notifications =
-            ExExNotifications::new(node_head, provider, evm_config, notification_rx, wal_handle);
+            ExExNotifications::new(node_head, provider, hanzo_evm_config, notification_rx, wal_handle);
 
         (
             Self {
@@ -686,14 +686,14 @@ mod tests {
     use alloy_primitives::B256;
     use futures::{StreamExt, TryStreamExt};
     use rand::Rng;
-    use reth_db_common::init::init_genesis;
-    use reth_evm_ethereum::EthEvmConfig;
-    use reth_primitives_traits::RecoveredBlock;
-    use reth_provider::{
+    use hanzo_evm_db_common::init::init_genesis;
+    use hanzo_evm_eth_execution::EthEvmConfig;
+    use hanzo_evm_primitives_traits::RecoveredBlock;
+    use hanzo_evm_provider::{
         providers::BlockchainProvider, test_utils::create_test_provider_factory, BlockReader,
         BlockWriter, Chain, DBProvider, DatabaseProviderFactory, TransactionVariant,
     };
-    use reth_testing_utils::generators::{self, random_block, BlockParams};
+    use hanzo_evm_testing_utils::generators::{self, random_block, BlockParams};
 
     fn empty_finalized_header_stream() -> ForkChoiceStream<SealedHeader> {
         let (tx, rx) = watch::channel(None);
@@ -790,7 +790,7 @@ mod tests {
             ExExManager::new((), vec![exex_handle], 10, wal, empty_finalized_header_stream());
 
         // Define the notification for testing
-        let mut block1: RecoveredBlock<reth_ethereum_primitives::Block> = Default::default();
+        let mut block1: RecoveredBlock<hanzo_evm_ethereum_primitives::Block> = Default::default();
         block1.set_hash(B256::new([0x01; 32]));
         block1.set_block_number(10);
 
@@ -808,7 +808,7 @@ mod tests {
         assert_eq!(exex_manager.next_id, 1);
 
         // Push another notification
-        let mut block2: RecoveredBlock<reth_ethereum_primitives::Block> = Default::default();
+        let mut block2: RecoveredBlock<hanzo_evm_ethereum_primitives::Block> = Default::default();
         block2.set_hash(B256::new([0x02; 32]));
         block2.set_block_number(20);
 
@@ -851,7 +851,7 @@ mod tests {
         );
 
         // Push some notifications to fill part of the buffer
-        let mut block1: RecoveredBlock<reth_ethereum_primitives::Block> = Default::default();
+        let mut block1: RecoveredBlock<hanzo_evm_ethereum_primitives::Block> = Default::default();
         block1.set_hash(B256::new([0x01; 32]));
         block1.set_block_number(10);
 
@@ -1140,11 +1140,11 @@ mod tests {
         assert_eq!(exex_handle.next_notification_id, 0);
 
         // Setup two blocks for the chain commit notification
-        let mut block1: RecoveredBlock<reth_ethereum_primitives::Block> = Default::default();
+        let mut block1: RecoveredBlock<hanzo_evm_ethereum_primitives::Block> = Default::default();
         block1.set_hash(B256::new([0x01; 32]));
         block1.set_block_number(10);
 
-        let mut block2: RecoveredBlock<reth_ethereum_primitives::Block> = Default::default();
+        let mut block2: RecoveredBlock<hanzo_evm_ethereum_primitives::Block> = Default::default();
         block2.set_hash(B256::new([0x02; 32]));
         block2.set_block_number(11);
 
@@ -1193,7 +1193,7 @@ mod tests {
         // Set finished_height to a value higher than the block tip
         exex_handle.finished_height = Some(BlockNumHash::new(15, B256::random()));
 
-        let mut block1: RecoveredBlock<reth_ethereum_primitives::Block> = Default::default();
+        let mut block1: RecoveredBlock<hanzo_evm_ethereum_primitives::Block> = Default::default();
         block1.set_hash(B256::new([0x01; 32]));
         block1.set_block_number(10);
 
@@ -1308,7 +1308,7 @@ mod tests {
 
     #[tokio::test]
     async fn test_exex_wal() -> eyre::Result<()> {
-        reth_tracing::init_test_tracing();
+        hanzo_evm_tracing::init_test_tracing();
 
         let mut rng = generators::rng();
 

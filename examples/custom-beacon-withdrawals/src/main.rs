@@ -12,7 +12,7 @@ use alloy_evm::{
     EthEvm, EthEvmFactory,
 };
 use alloy_sol_types::{sol, SolCall};
-use reth_ethereum::{
+use hanzo_evm_ethereum::{
     chainspec::ChainSpec,
     cli::interface::Cli,
     evm::{
@@ -27,7 +27,7 @@ use reth_ethereum::{
             primitives::{address, hardfork::SpecId, Address},
             DatabaseCommit,
         },
-        EthBlockAssembler, EthEvmConfig, RethReceiptBuilder,
+        EthBlockAssembler, EthEvmConfig, EvmReceiptBuilder,
     },
     node::{
         api::{ConfigureEngineEvm, ConfigureEvm, ExecutableTxIterator, FullNodeTypes, NodeTypes},
@@ -78,9 +78,9 @@ where
     type EVM = CustomEvmConfig;
 
     async fn build_evm(self, ctx: &BuilderContext<Node>) -> eyre::Result<Self::EVM> {
-        let evm_config = CustomEvmConfig { inner: EthEvmConfig::new(ctx.chain_spec()) };
+        let hanzo_evm_config = CustomEvmConfig { inner: EthEvmConfig::new(ctx.chain_spec()) };
 
-        Ok(evm_config)
+        Ok(hanzo_evm_config)
     }
 }
 
@@ -184,7 +184,7 @@ impl ConfigureEngineEvm<ExecutionData> for CustomEvmConfig {
 
 pub struct CustomBlockExecutor<'a, Evm> {
     /// Inner Ethereum execution strategy.
-    inner: EthBlockExecutor<'a, Evm, &'a Arc<ChainSpec>, &'a RethReceiptBuilder>,
+    inner: EthBlockExecutor<'a, Evm, &'a Arc<ChainSpec>, &'a EvmReceiptBuilder>,
 }
 
 impl<'db, DB, E> BlockExecutor for CustomBlockExecutor<'_, E>

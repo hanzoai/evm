@@ -1,6 +1,6 @@
 use crate::{error::StageError, StageCheckpoint, StageId};
 use alloy_primitives::{BlockNumber, TxNumber};
-use reth_provider::{BlockReader, ProviderError, StaticFileProviderFactory, StaticFileSegment};
+use hanzo_evm_provider::{BlockReader, ProviderError, StaticFileProviderFactory, StaticFileSegment};
 use std::{
     cmp::{max, min},
     future::{poll_fn, Future},
@@ -236,7 +236,7 @@ pub struct UnwindOutput {
 ///
 /// Stages are executed as part of a pipeline where they are executed serially.
 ///
-/// Stages receive [`DBProvider`](reth_provider::DBProvider).
+/// Stages receive [`DBProvider`](hanzo_evm_provider::DBProvider).
 #[auto_impl::auto_impl(Box)]
 pub trait Stage<Provider>: Send {
     /// Get the ID of the stage.
@@ -323,17 +323,17 @@ impl<Provider, S: Stage<Provider> + ?Sized> StageExt<Provider> for S {}
 
 #[cfg(test)]
 mod tests {
-    use reth_chainspec::MAINNET;
-    use reth_db::test_utils::{
+    use hanzo_evm_chainspec::MAINNET;
+    use hanzo_evm_db::test_utils::{
         create_test_rocksdb_dir, create_test_rw_db, create_test_static_files_dir,
     };
-    use reth_db_api::{models::StoredBlockBodyIndices, tables, transaction::DbTxMut};
-    use reth_provider::{
+    use hanzo_evm_db_api::{models::StoredBlockBodyIndices, tables, transaction::DbTxMut};
+    use hanzo_evm_provider::{
         providers::RocksDBProvider, test_utils::MockNodeTypesWithDB, ProviderFactory,
         StaticFileProviderBuilder, StaticFileProviderFactory, StaticFileSegment,
     };
-    use reth_stages_types::StageCheckpoint;
-    use reth_testing_utils::generators::{self, random_signed_tx};
+    use hanzo_evm_stages_types::StageCheckpoint;
+    use hanzo_evm_testing_utils::generators::{self, random_signed_tx};
 
     use crate::ExecInput;
 

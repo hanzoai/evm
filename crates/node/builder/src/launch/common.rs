@@ -38,53 +38,53 @@ use alloy_eips::eip2124::Head;
 use alloy_primitives::{BlockNumber, B256};
 use eyre::Context;
 use rayon::ThreadPoolBuilder;
-use reth_chainspec::{Chain, EthChainSpec, EthereumHardforks};
-use reth_config::{config::EtlConfig, PruneConfig};
-use reth_consensus::noop::NoopConsensus;
-use reth_db_api::{database::Database, database_metrics::DatabaseMetrics};
-use reth_db_common::init::{init_genesis_with_settings, InitStorageError};
-use reth_downloaders::{bodies::noop::NoopBodiesDownloader, headers::noop::NoopHeaderDownloader};
-use reth_engine_local::MiningMode;
-use reth_evm::{noop::NoopEvmConfig, ConfigureEvm};
-use reth_exex::ExExManagerHandle;
-use reth_fs_util as fs;
-use reth_network_p2p::headers::client::HeadersClient;
-use reth_node_api::{FullNodeTypes, NodeTypes, NodeTypesWithDB, NodeTypesWithDBAdapter};
-use reth_node_core::{
+use hanzo_evm_chainspec::{Chain, EthChainSpec, EthereumHardforks};
+use hanzo_evm_config::{config::EtlConfig, PruneConfig};
+use hanzo_evm_consensus::noop::NoopConsensus;
+use hanzo_evm_db_api::{database::Database, database_metrics::DatabaseMetrics};
+use hanzo_evm_db_common::init::{init_genesis_with_settings, InitStorageError};
+use hanzo_evm_downloaders::{bodies::noop::NoopBodiesDownloader, headers::noop::NoopHeaderDownloader};
+use hanzo_evm_engine_local::MiningMode;
+use hanzo_evm_execution::{noop::NoopEvmConfig, ConfigureEvm};
+use hanzo_evm_exex::ExExManagerHandle;
+use hanzo_evm_fs_util as fs;
+use hanzo_evm_network_p2p::headers::client::HeadersClient;
+use hanzo_evm_node_api::{FullNodeTypes, NodeTypes, NodeTypesWithDB, NodeTypesWithDBAdapter};
+use hanzo_evm_node_core::{
     args::DefaultEraHost,
     dirs::{ChainPath, DataDirPath},
     node_config::NodeConfig,
     primitives::BlockHeader,
     version::version_metadata,
 };
-use reth_node_metrics::{
+use hanzo_evm_node_metrics::{
     chain::ChainSpecInfo,
     hooks::Hooks,
     recorder::install_prometheus_recorder,
     server::{MetricServer, MetricServerConfig},
     version::VersionInfo,
 };
-use reth_provider::{
+use hanzo_evm_provider::{
     providers::{NodeTypesForProvider, ProviderNodeTypes, RocksDBProvider, StaticFileProvider},
     BlockHashReader, BlockNumReader, ProviderError, ProviderFactory, ProviderResult,
     RocksDBProviderFactory, StageCheckpointReader, StaticFileProviderBuilder,
     StaticFileProviderFactory,
 };
-use reth_prune::{PruneModes, PrunerBuilder};
-use reth_rpc_builder::config::RethRpcServerConfig;
-use reth_rpc_layer::JwtSecret;
-use reth_stages::{
+use hanzo_evm_prune::{PruneModes, PrunerBuilder};
+use hanzo_evm_rpc_builder::config::EvmRpcServerConfig;
+use hanzo_evm_rpc_layer::JwtSecret;
+use hanzo_evm_stages::{
     sets::DefaultStages, stages::EraImportSource, MetricEvent, PipelineBuilder, PipelineTarget,
     StageId,
 };
-use reth_static_file::StaticFileProducer;
-use reth_tasks::TaskExecutor;
-use reth_tracing::{
+use hanzo_evm_static_file::StaticFileProducer;
+use hanzo_evm_tasks::TaskExecutor;
+use hanzo_evm_tracing::{
     throttle,
     tracing::{debug, error, info, warn},
 };
-use reth_transaction_pool::TransactionPool;
-use reth_trie_db::ChangesetCache;
+use hanzo_evm_transaction_pool::TransactionPool;
+use hanzo_evm_trie_db::ChangesetCache;
 use std::{sync::Arc, thread::available_parallelism, time::Duration};
 use tokio::sync::{
     mpsc::{unbounded_channel, UnboundedSender},
@@ -92,8 +92,8 @@ use tokio::sync::{
 };
 
 use futures::{future::Either, stream, Stream, StreamExt};
-use reth_node_ethstats::EthStatsService;
-use reth_node_events::{cl::ConsensusLayerHealthEvents, node::NodeEvent};
+use hanzo_evm_node_ethstats::EthStatsService;
+use hanzo_evm_node_events::{cl::ConsensusLayerHealthEvents, node::NodeEvent};
 
 /// Reusable setup for launching a node.
 ///
@@ -132,40 +132,40 @@ impl LaunchContext {
         LaunchContextWith { inner: self, attachment }
     }
 
-    /// Loads the reth config with the configured `data_dir` and overrides settings according to the
+    /// Loads the evm config with the configured `data_dir` and overrides settings according to the
     /// `config`.
     ///
-    /// Attaches both the `NodeConfig` and the loaded `reth.toml` config to the launch context.
+    /// Attaches both the `NodeConfig` and the loaded `evm.toml` config to the launch context.
     pub fn with_loaded_toml_config<ChainSpec>(
         self,
         config: NodeConfig<ChainSpec>,
     ) -> eyre::Result<LaunchContextWith<WithConfigs<ChainSpec>>>
     where
-        ChainSpec: EthChainSpec + reth_chainspec::EthereumHardforks,
+        ChainSpec: EthChainSpec + hanzo_evm_chainspec::EthereumHardforks,
     {
         let toml_config = self.load_toml_config(&config)?;
         Ok(self.with(WithConfigs { config, toml_config }))
     }
 
-    /// Loads the reth config with the configured `data_dir` and overrides settings according to the
+    /// Loads the evm config with the configured `data_dir` and overrides settings according to the
     /// `config`.
     ///
     /// This is async because the trusted peers may have to be resolved.
     pub fn load_toml_config<ChainSpec>(
         &self,
         config: &NodeConfig<ChainSpec>,
-    ) -> eyre::Result<reth_config::Config>
+    ) -> eyre::Result<hanzo_evm_config::Config>
     where
-        ChainSpec: EthChainSpec + reth_chainspec::EthereumHardforks,
+        ChainSpec: EthChainSpec + hanzo_evm_chainspec::EthereumHardforks,
     {
         let config_path = config.config.clone().unwrap_or_else(|| self.data_dir.config());
 
-        let mut toml_config = reth_config::Config::from_path(&config_path)
+        let mut toml_config = hanzo_evm_config::Config::from_path(&config_path)
             .wrap_err_with(|| format!("Could not load config file {config_path:?}"))?;
 
         Self::save_pruning_config(&mut toml_config, config, &config_path)?;
 
-        info!(target: "reth::cli", path = ?config_path, "Configuration loaded");
+        info!(target: "evm::cli", path = ?config_path, "Configuration loaded");
 
         // Update the config with the command line arguments
         toml_config.peers.trusted_nodes_only = config.network.trusted_only;
@@ -180,27 +180,27 @@ impl LaunchContext {
     /// Save prune config to the toml file if node is a full node or has custom pruning CLI
     /// arguments. Also migrates deprecated prune config values to new defaults.
     fn save_pruning_config<ChainSpec>(
-        reth_config: &mut reth_config::Config,
+        hanzo_evm_config: &mut hanzo_evm_config::Config,
         config: &NodeConfig<ChainSpec>,
         config_path: impl AsRef<std::path::Path>,
     ) -> eyre::Result<()>
     where
-        ChainSpec: EthChainSpec + reth_chainspec::EthereumHardforks,
+        ChainSpec: EthChainSpec + hanzo_evm_chainspec::EthereumHardforks,
     {
-        let mut should_save = reth_config.prune.segments.migrate();
+        let mut should_save = hanzo_evm_config.prune.segments.migrate();
 
         if let Some(prune_config) = config.prune_config() {
-            if reth_config.prune != prune_config {
-                reth_config.set_prune_config(prune_config);
+            if hanzo_evm_config.prune != prune_config {
+                hanzo_evm_config.set_prune_config(prune_config);
                 should_save = true;
             }
-        } else if !reth_config.prune.is_default() {
-            warn!(target: "reth::cli", "Pruning configuration is present in the config file, but no CLI arguments are provided. Using config from file.");
+        } else if !hanzo_evm_config.prune.is_default() {
+            warn!(target: "evm::cli", "Pruning configuration is present in the config file, but no CLI arguments are provided. Using config from file.");
         }
 
         if should_save {
-            info!(target: "reth::cli", "Saving prune config to toml file");
-            reth_config.save(config_path.as_ref())?;
+            info!(target: "evm::cli", "Saving prune config to toml file");
+            hanzo_evm_config.save(config_path.as_ref())?;
         }
 
         Ok(())
@@ -304,7 +304,7 @@ impl<ChainSpec> LaunchContextWith<WithConfigs<ChainSpec>> {
     /// Resolves the trusted peers and adds them to the toml config.
     pub fn with_resolved_peers(mut self) -> eyre::Result<Self> {
         if !self.attachment.config.network.trusted_peers.is_empty() {
-            info!(target: "reth::cli", "Adding trusted nodes");
+            info!(target: "evm::cli", "Adding trusted nodes");
 
             self.attachment
                 .toml_config
@@ -354,7 +354,7 @@ impl<R, ChainSpec: EthChainSpec> LaunchContextWith<Attached<WithConfigs<ChainSpe
             if etl_path.exists() {
                 // Remove etl-path files on launch
                 if let Err(err) = fs::remove_dir_all(&etl_path) {
-                    warn!(target: "reth::cli", ?etl_path, %err, "Failed to remove ETL path on launch");
+                    warn!(target: "evm::cli", ?etl_path, %err, "Failed to remove ETL path on launch");
                 }
             }
             self.toml_config_mut().stages.etl.dir = Some(etl_path);
@@ -384,13 +384,13 @@ impl<R, ChainSpec: EthChainSpec> LaunchContextWith<Attached<WithConfigs<ChainSpe
         &mut self.left_mut().config
     }
 
-    /// Returns the attached toml config [`reth_config::Config`].
-    pub const fn toml_config(&self) -> &reth_config::Config {
+    /// Returns the attached toml config [`hanzo_evm_config::Config`].
+    pub const fn toml_config(&self) -> &hanzo_evm_config::Config {
         &self.left().toml_config
     }
 
-    /// Returns the attached toml config [`reth_config::Config`].
-    pub const fn toml_config_mut(&mut self) -> &mut reth_config::Config {
+    /// Returns the attached toml config [`hanzo_evm_config::Config`].
+    pub const fn toml_config_mut(&mut self) -> &mut hanzo_evm_config::Config {
         &mut self.left_mut().toml_config
     }
 
@@ -419,7 +419,7 @@ impl<R, ChainSpec: EthChainSpec> LaunchContextWith<Attached<WithConfigs<ChainSpe
     /// Any configuration set in CLI will take precedence over those set in toml
     pub fn prune_config(&self) -> PruneConfig
     where
-        ChainSpec: reth_chainspec::EthereumHardforks,
+        ChainSpec: hanzo_evm_chainspec::EthereumHardforks,
     {
         let Some(mut node_prune_config) = self.node_config().prune_config() else {
             // No CLI config is set, use the toml config.
@@ -434,7 +434,7 @@ impl<R, ChainSpec: EthChainSpec> LaunchContextWith<Attached<WithConfigs<ChainSpe
     /// Returns the configured [`PruneModes`], returning the default if no config was available.
     pub fn prune_modes(&self) -> PruneModes
     where
-        ChainSpec: reth_chainspec::EthereumHardforks,
+        ChainSpec: hanzo_evm_chainspec::EthereumHardforks,
     {
         self.prune_config().segments
     }
@@ -442,7 +442,7 @@ impl<R, ChainSpec: EthChainSpec> LaunchContextWith<Attached<WithConfigs<ChainSpe
     /// Returns an initialized [`PrunerBuilder`] based on the configured [`PruneConfig`]
     pub fn pruner_builder(&self) -> PrunerBuilder
     where
-        ChainSpec: reth_chainspec::EthereumHardforks,
+        ChainSpec: hanzo_evm_chainspec::EthereumHardforks,
     {
         PrunerBuilder::new(self.prune_config())
     }
@@ -532,7 +532,7 @@ where
 
             let unwind_target = PipelineTarget::Unwind(unwind_block);
 
-            info!(target: "reth::cli", %unwind_target, %inconsistency_source, "Executing unwind after consistency check.");
+            info!(target: "evm::cli", %unwind_target, %inconsistency_source, "Executing unwind after consistency check.");
 
             let (_tip_tx, tip_rx) = watch::channel(B256::ZERO);
 
@@ -566,7 +566,7 @@ where
                 }),
             );
             rx.await?.inspect_err(|err| {
-                error!(target: "reth::cli", %unwind_target, %inconsistency_source, %err, "failed to run unwind")
+                error!(target: "evm::cli", %unwind_target, %inconsistency_source, %err, "failed to run unwind")
             })?;
         }
 
@@ -676,8 +676,8 @@ where
         let with_metrics =
             WithMeteredProvider { provider_factory: self.right().clone(), metrics_sender };
 
-        debug!(target: "reth::cli", "Spawning stages metrics listener task");
-        let sync_metrics_listener = reth_stages::MetricsListener::new(metrics_receiver);
+        debug!(target: "evm::cli", "Spawning stages metrics listener task");
+        let sync_metrics_listener = hanzo_evm_stages::MetricsListener::new(metrics_receiver);
         self.task_executor().spawn_critical("stages metrics listener task", sync_metrics_listener);
 
         LaunchContextWith {
@@ -797,7 +797,7 @@ where
             self.configs().clone(),
         );
 
-        debug!(target: "reth::cli", "creating components");
+        debug!(target: "evm::cli", "creating components");
         let components = components_builder.build_components(&builder_ctx).await?;
 
         let blockchain_db = self.blockchain_db().clone();
@@ -808,7 +808,7 @@ where
             provider: blockchain_db,
         };
 
-        debug!(target: "reth::cli", "calling on_component_initialized hook");
+        debug!(target: "evm::cli", "calling on_component_initialized hook");
         on_component_initialized.on_event(node_adapter.clone())?;
 
         let components_container = WithComponents {
@@ -937,7 +937,7 @@ where
     /// This will return the pipeline target if:
     ///  * the pipeline was interrupted during its previous run
     ///  * a new stage was added
-    ///  * stage data was dropped manually through `reth stage drop ...`
+    ///  * stage data was dropped manually through `evm stage drop ...`
     ///
     /// # Returns
     ///
@@ -1072,7 +1072,7 @@ where
         &self,
     ) -> impl Stream<Item = NodeEvent<PrimitivesTy<T::Types>>> + 'static
     where
-        T::Provider: reth_provider::CanonChainTracker,
+        T::Provider: hanzo_evm_provider::CanonChainTracker,
     {
         if self.node_config().debug.tip.is_none() && !self.is_dev() {
             Either::Left(
@@ -1087,7 +1087,7 @@ where
     /// Spawns the [`EthStatsService`] service if configured.
     pub async fn spawn_ethstats<St>(&self, mut engine_events: St) -> eyre::Result<()>
     where
-        St: Stream<Item = reth_engine_primitives::ConsensusEngineEvent<PrimitivesTy<T::Types>>>
+        St: Stream<Item = hanzo_evm_engine_primitives::ConsensusEngineEvent<PrimitivesTy<T::Types>>>
             + Send
             + Unpin
             + 'static,
@@ -1098,7 +1098,7 @@ where
         let pool = self.components().pool().clone();
         let provider = self.node_adapter().provider.clone();
 
-        info!(target: "reth::cli", "Starting EthStats service at {}", url);
+        info!(target: "evm::cli", "Starting EthStats service at {}", url);
 
         let ethstats = EthStatsService::new(url, network, provider, pool).await?;
 
@@ -1107,7 +1107,7 @@ where
         let task_executor = self.task_executor().clone();
         task_executor.spawn(Box::pin(async move {
             while let Some(event) = engine_events.next().await {
-                use reth_engine_primitives::ConsensusEngineEvent;
+                use hanzo_evm_engine_primitives::ConsensusEngineEvent;
                 match event {
                     ConsensusEngineEvent::ForkBlockAdded(executed, duration) |
                     ConsensusEngineEvent::CanonicalBlockAdded(executed, duration) => {
@@ -1192,13 +1192,13 @@ impl<L, R> Attached<L, R> {
 }
 
 /// Helper container type to bundle the initial [`NodeConfig`] and the loaded settings from the
-/// reth.toml config
+/// evm.toml config
 #[derive(Debug)]
 pub struct WithConfigs<ChainSpec> {
     /// The configured, usually derived from the CLI.
     pub config: NodeConfig<ChainSpec>,
-    /// The loaded reth.toml config.
-    pub toml_config: reth_config::Config,
+    /// The loaded evm.toml config.
+    pub toml_config: hanzo_evm_config::Config,
 }
 
 impl<ChainSpec> Clone for WithConfigs<ChainSpec> {
@@ -1265,8 +1265,8 @@ pub fn metrics_hooks<N: NodeTypesWithDB>(provider_factory: &ProviderFactory<N>) 
 #[cfg(test)]
 mod tests {
     use super::{LaunchContext, NodeConfig};
-    use reth_config::Config;
-    use reth_node_core::args::PruningArgs;
+    use hanzo_evm_config::Config;
+    use hanzo_evm_node_core::args::PruningArgs;
 
     const EXTENSION: &str = "toml";
 
@@ -1280,7 +1280,7 @@ mod tests {
     #[test]
     fn test_save_prune_config() {
         with_tempdir("prune-store-test", |config_path| {
-            let mut reth_config = Config::default();
+            let mut hanzo_evm_config = Config::default();
             let node_config = NodeConfig {
                 pruning: PruningArgs {
                     full: true,
@@ -1309,12 +1309,12 @@ mod tests {
                 },
                 ..NodeConfig::test()
             };
-            LaunchContext::save_pruning_config(&mut reth_config, &node_config, config_path)
+            LaunchContext::save_pruning_config(&mut hanzo_evm_config, &node_config, config_path)
                 .unwrap();
 
             let loaded_config = Config::from_path(config_path).unwrap();
 
-            assert_eq!(reth_config, loaded_config);
+            assert_eq!(hanzo_evm_config, loaded_config);
         })
     }
 }

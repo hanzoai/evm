@@ -5,7 +5,7 @@ use crate::{
 };
 use alloy_primitives::{map::HashSet, B256};
 use alloy_trie::proof::AddedRemovedKeys;
-use reth_storage_errors::db::DatabaseError;
+use hanzo_evm_storage_errors::db::DatabaseError;
 use tracing::{instrument, trace};
 
 #[cfg(feature = "metrics")]

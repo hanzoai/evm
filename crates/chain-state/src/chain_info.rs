@@ -2,8 +2,8 @@ use alloy_consensus::BlockHeader;
 use alloy_eips::BlockNumHash;
 use alloy_primitives::BlockNumber;
 use parking_lot::RwLock;
-use reth_chainspec::ChainInfo;
-use reth_primitives_traits::{NodePrimitives, SealedHeader};
+use hanzo_evm_chainspec::ChainInfo;
+use hanzo_evm_primitives_traits::{NodePrimitives, SealedHeader};
 use std::{
     sync::{
         atomic::{AtomicU64, Ordering},
@@ -169,7 +169,7 @@ where
 
 /// Container type for all chain info fields
 #[derive(Debug)]
-struct ChainInfoInner<N: NodePrimitives = reth_ethereum_primitives::EthPrimitives> {
+struct ChainInfoInner<N: NodePrimitives = hanzo_evm_ethereum_primitives::EthPrimitives> {
     /// Timestamp when we received the last fork choice update.
     ///
     /// This is mainly used to track if we're connected to a beacon node.
@@ -191,8 +191,8 @@ struct ChainInfoInner<N: NodePrimitives = reth_ethereum_primitives::EthPrimitive
 mod tests {
     use super::*;
     use alloy_primitives::B256;
-    use reth_ethereum_primitives::EthPrimitives;
-    use reth_testing_utils::{generators, generators::random_header};
+    use hanzo_evm_ethereum_primitives::EthPrimitives;
+    use hanzo_evm_testing_utils::{generators, generators::random_header};
 
     #[test]
     fn test_chain_info() {

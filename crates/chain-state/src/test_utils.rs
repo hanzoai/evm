@@ -9,18 +9,18 @@ use alloy_signer::SignerSync;
 use alloy_signer_local::PrivateKeySigner;
 use core::marker::PhantomData;
 use rand::Rng;
-use reth_chainspec::{ChainSpec, EthereumHardfork, MIN_TRANSACTION_GAS};
-use reth_ethereum_primitives::{
+use hanzo_evm_chainspec::{ChainSpec, EthereumHardfork, MIN_TRANSACTION_GAS};
+use hanzo_evm_ethereum_primitives::{
     Block, BlockBody, EthPrimitives, Receipt, Transaction, TransactionSigned,
 };
-use reth_execution_types::{BlockExecutionOutput, BlockExecutionResult, Chain, ExecutionOutcome};
-use reth_primitives_traits::{
+use hanzo_evm_execution_types::{BlockExecutionOutput, BlockExecutionResult, Chain, ExecutionOutcome};
+use hanzo_evm_primitives_traits::{
     proofs::{calculate_receipt_root, calculate_transaction_root, calculate_withdrawals_root},
     Account, NodePrimitives, Recovered, RecoveredBlock, SealedBlock, SealedHeader,
     SignedTransaction,
 };
-use reth_storage_api::NodePrimitivesProvider;
-use reth_trie::root::state_root_unhashed;
+use hanzo_evm_storage_api::NodePrimitivesProvider;
+use hanzo_evm_trie::root::state_root_unhashed;
 use revm_database::BundleState;
 use revm_state::AccountInfo;
 use std::{
@@ -89,7 +89,7 @@ impl<N: NodePrimitives> TestBlockBuilder<N> {
         &mut self,
         number: BlockNumber,
         parent_hash: B256,
-    ) -> SealedBlock<reth_ethereum_primitives::Block> {
+    ) -> SealedBlock<hanzo_evm_ethereum_primitives::Block> {
         let mut rng = rand::rng();
 
         let mock_tx = |nonce: u64| -> Recovered<_> {
@@ -257,7 +257,7 @@ impl<N: NodePrimitives> TestBlockBuilder<N> {
     /// updated.
     pub fn get_execution_outcome(
         &mut self,
-        block: RecoveredBlock<reth_ethereum_primitives::Block>,
+        block: RecoveredBlock<hanzo_evm_ethereum_primitives::Block>,
     ) -> ExecutionOutcome {
         let num_txs = block.body().transactions.len() as u64;
         let single_cost = Self::single_tx_cost();
@@ -307,7 +307,7 @@ impl TestBlockBuilder {
 }
 /// A test `ChainEventSubscriptions`
 #[derive(Clone, Debug, Default)]
-pub struct TestCanonStateSubscriptions<N: NodePrimitives = reth_ethereum_primitives::EthPrimitives>
+pub struct TestCanonStateSubscriptions<N: NodePrimitives = hanzo_evm_ethereum_primitives::EthPrimitives>
 {
     canon_notif_tx: Arc<Mutex<Vec<Sender<CanonStateNotification<N>>>>>,
 }

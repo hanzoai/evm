@@ -5,12 +5,12 @@ use alloy_consensus::{constants::GWEI_TO_WEI, BlockHeader};
 use alloy_primitives::{BlockNumber, B256};
 use alloy_rpc_types_engine::ForkchoiceState;
 use futures::Stream;
-use reth_engine_primitives::{ConsensusEngineEvent, ForkchoiceStatus};
-use reth_network_api::PeersInfo;
-use reth_primitives_traits::{format_gas, format_gas_throughput, BlockBody, NodePrimitives};
-use reth_prune_types::PrunerEvent;
-use reth_stages::{EntitiesCheckpoint, ExecOutput, PipelineEvent, StageCheckpoint, StageId};
-use reth_static_file_types::StaticFileProducerEvent;
+use hanzo_evm_engine_primitives::{ConsensusEngineEvent, ForkchoiceStatus};
+use hanzo_evm_network_api::PeersInfo;
+use hanzo_evm_primitives_traits::{format_gas, format_gas_throughput, BlockBody, NodePrimitives};
+use hanzo_evm_prune_types::PrunerEvent;
+use hanzo_evm_stages::{EntitiesCheckpoint, ExecOutput, PipelineEvent, StageCheckpoint, StageId};
+use hanzo_evm_static_file_types::StaticFileProducerEvent;
 use std::{
     fmt::{Display, Formatter},
     future::Future,
@@ -283,7 +283,7 @@ impl NodeState {
                 ConsensusLayerHealthEvent::HaveNotReceivedUpdatesForAWhile(period) => {
                     warn!(
                         ?period,
-                        "Beacon client online, but no consensus updates received for a while. This may be because of a reth error, or an error in the beacon client! Please investigate reth and beacon client logs!"
+                        "Beacon client online, but no consensus updates received for a while. This may be because of a evm error, or an error in the beacon client! Please investigate evm and beacon client logs!"
                     )
                 }
             }
@@ -411,7 +411,7 @@ where
                 match (stage_progress, stage_eta) {
                     (Some(stage_progress), Some(stage_eta)) => {
                         info!(
-                            target: "reth::cli",
+                            target: "evm::cli",
                             connected_peers = this.state.num_connected_peers(),
                             stage = %stage_id,
                             checkpoint = checkpoint.block_number,
@@ -423,7 +423,7 @@ where
                     }
                     (Some(stage_progress), None) => {
                         info!(
-                            target: "reth::cli",
+                            target: "evm::cli",
                             connected_peers = this.state.num_connected_peers(),
                             stage = %stage_id,
                             checkpoint = checkpoint.block_number,
@@ -434,7 +434,7 @@ where
                     }
                     (None, Some(stage_eta)) => {
                         info!(
-                            target: "reth::cli",
+                            target: "evm::cli",
                             connected_peers = this.state.num_connected_peers(),
                             stage = %stage_id,
                             checkpoint = checkpoint.block_number,
@@ -445,7 +445,7 @@ where
                     }
                     (None, None) => {
                         info!(
-                            target: "reth::cli",
+                            target: "evm::cli",
                             connected_peers = this.state.num_connected_peers(),
                             stage = %stage_id,
                             checkpoint = checkpoint.block_number,
@@ -462,14 +462,14 @@ where
                 if now.saturating_sub(this.state.last_status_log_time.unwrap_or(0)) > 60 {
                     if let Some(latest_block) = this.state.latest_block {
                         info!(
-                            target: "reth::cli",
+                            target: "evm::cli",
                             connected_peers = this.state.num_connected_peers(),
                             %latest_block,
                             "Status"
                         );
                     } else {
                         info!(
-                            target: "reth::cli",
+                            target: "evm::cli",
                             connected_peers = this.state.num_connected_peers(),
                             "Status"
                         );
@@ -530,7 +530,7 @@ impl Eta {
                 current.processed.checked_sub(self.last_checkpoint.processed)
             else {
                 self.eta = None;
-                debug!(target: "reth::cli", %stage, ?current, ?self.last_checkpoint, "Failed to calculate the ETA: processed entities is less than the last checkpoint");
+                debug!(target: "evm::cli", %stage, ?current, ?self.last_checkpoint, "Failed to calculate the ETA: processed entities is less than the last checkpoint");
                 return
             };
             let elapsed = last_checkpoint_time.elapsed();
@@ -538,7 +538,7 @@ impl Eta {
 
             let Some(remaining) = current.total.checked_sub(current.processed) else {
                 self.eta = None;
-                debug!(target: "reth::cli", %stage, ?current, "Failed to calculate the ETA: total entities is less than processed entities");
+                debug!(target: "evm::cli", %stage, ?current, "Failed to calculate the ETA: total entities is less than processed entities");
                 return
             };
 

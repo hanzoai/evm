@@ -3,7 +3,7 @@ use alloy_consensus::BlockHeader;
 use alloy_eips::BlockNumberOrTag;
 use alloy_json_rpc::{Response, ResponsePayload};
 use reqwest::Client;
-use reth_tracing::tracing::{debug, warn};
+use hanzo_evm_tracing::tracing::{debug, warn};
 use serde::{de::DeserializeOwned, Serialize};
 use std::{sync::Arc, time::Duration};
 use tokio::{sync::mpsc, time::interval};
@@ -91,7 +91,7 @@ where
 impl<RpcBlock, PrimitiveBlock> BlockProvider for EtherscanBlockProvider<RpcBlock, PrimitiveBlock>
 where
     RpcBlock: Serialize + DeserializeOwned + 'static,
-    PrimitiveBlock: reth_primitives_traits::Block + 'static,
+    PrimitiveBlock: hanzo_evm_primitives_traits::Block + 'static,
 {
     type Block = PrimitiveBlock;
 

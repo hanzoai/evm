@@ -16,24 +16,24 @@ use alloy_eips::BlockHashOrNumber;
 use alloy_primitives::{Address, BlockHash, BlockNumber, TxHash, TxNumber, B256};
 use core::fmt;
 use parking_lot::RwLock;
-use reth_chainspec::ChainInfo;
-use reth_db::{init_db, mdbx::DatabaseArguments, DatabaseEnv};
-use reth_db_api::{database::Database, models::StoredBlockBodyIndices};
-use reth_errors::{RethError, RethResult};
-use reth_node_types::{
+use hanzo_evm_chainspec::ChainInfo;
+use hanzo_evm_db::{init_db, mdbx::DatabaseArguments, DatabaseEnv};
+use hanzo_evm_db_api::{database::Database, models::StoredBlockBodyIndices};
+use hanzo_evm_errors::{EvmError, EvmResult};
+use hanzo_evm_node_types::{
     BlockTy, HeaderTy, NodeTypesWithDB, NodeTypesWithDBAdapter, ReceiptTy, TxTy,
 };
-use reth_primitives_traits::{RecoveredBlock, SealedHeader};
-use reth_prune_types::{PruneCheckpoint, PruneModes, PruneSegment};
-use reth_stages_types::{PipelineTarget, StageCheckpoint, StageId};
-use reth_static_file_types::StaticFileSegment;
-use reth_storage_api::{
+use hanzo_evm_primitives_traits::{RecoveredBlock, SealedHeader};
+use hanzo_evm_prune_types::{PruneCheckpoint, PruneModes, PruneSegment};
+use hanzo_evm_stages_types::{PipelineTarget, StageCheckpoint, StageId};
+use hanzo_evm_static_file_types::StaticFileSegment;
+use hanzo_evm_storage_api::{
     BlockBodyIndicesProvider, NodePrimitivesProvider, StorageSettings, StorageSettingsCache,
     TryIntoHistoricalStateProvider,
 };
-use reth_storage_errors::provider::ProviderResult;
-use reth_trie::HashedPostState;
-use reth_trie_db::ChangesetCache;
+use hanzo_evm_storage_errors::provider::ProviderResult;
+use hanzo_evm_trie::HashedPostState;
+use hanzo_evm_trie_db::ChangesetCache;
 use revm_database::BundleState;
 use std::{
     ops::{RangeBounds, RangeInclusive},
@@ -48,7 +48,7 @@ pub use provider::{
 };
 
 use super::ProviderNodeTypes;
-use reth_trie::KeccakKeyHasher;
+use hanzo_evm_trie::KeccakKeyHasher;
 
 mod builder;
 pub use builder::{ProviderFactoryBuilder, ReadOnlyConfig};
@@ -208,14 +208,14 @@ impl<N: ProviderNodeTypes<DB = DatabaseEnv>> ProviderFactory<N> {
         args: DatabaseArguments,
         static_file_provider: StaticFileProvider<N::Primitives>,
         rocksdb_provider: RocksDBProvider,
-    ) -> RethResult<Self> {
+    ) -> EvmResult<Self> {
         Self::new(
-            init_db(path, args).map_err(RethError::msg)?,
+            init_db(path, args).map_err(EvmError::msg)?,
             chain_spec,
             static_file_provider,
             rocksdb_provider,
         )
-        .map_err(RethError::Provider)
+        .map_err(EvmError::Provider)
     }
 }
 
@@ -772,16 +772,16 @@ mod tests {
     };
     use alloy_primitives::{TxNumber, B256};
     use assert_matches::assert_matches;
-    use reth_chainspec::ChainSpecBuilder;
-    use reth_db::{
+    use hanzo_evm_chainspec::ChainSpecBuilder;
+    use hanzo_evm_db::{
         mdbx::DatabaseArguments,
         test_utils::{create_test_rocksdb_dir, create_test_static_files_dir, ERROR_TEMPDIR},
     };
-    use reth_db_api::tables;
-    use reth_primitives_traits::SignerRecoverable;
-    use reth_prune_types::{PruneMode, PruneModes};
-    use reth_storage_errors::provider::ProviderError;
-    use reth_testing_utils::generators::{self, random_block, random_header, BlockParams};
+    use hanzo_evm_db_api::tables;
+    use hanzo_evm_primitives_traits::SignerRecoverable;
+    use hanzo_evm_prune_types::{PruneMode, PruneModes};
+    use hanzo_evm_storage_errors::provider::ProviderError;
+    use hanzo_evm_testing_utils::generators::{self, random_block, random_header, BlockParams};
     use std::{ops::RangeInclusive, sync::Arc};
 
     #[test]

@@ -1,6 +1,6 @@
 use crate::Tables;
 use metrics::Histogram;
-use reth_metrics::{metrics::Counter, Metrics};
+use hanzo_evm_metrics::{metrics::Counter, Metrics};
 use rustc_hash::FxHashMap;
 use std::time::{Duration, Instant};
 use strum::{EnumCount, EnumIter, IntoEnumIterator};
@@ -127,7 +127,7 @@ impl DatabaseEnvMetrics {
         outcome: TransactionOutcome,
         open_duration: Duration,
         close_duration: Option<Duration>,
-        commit_latency: Option<reth_libmdbx::CommitLatency>,
+        commit_latency: Option<hanzo_evm_libmdbx::CommitLatency>,
     ) {
         self.transactions
             .get(&mode)
@@ -312,7 +312,7 @@ impl TransactionOutcomeMetrics {
         &self,
         open_duration: Duration,
         close_duration: Option<Duration>,
-        commit_latency: Option<reth_libmdbx::CommitLatency>,
+        commit_latency: Option<hanzo_evm_libmdbx::CommitLatency>,
     ) {
         self.open_duration_seconds.record(open_duration);
 

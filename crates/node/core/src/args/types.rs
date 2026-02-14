@@ -166,13 +166,13 @@ mod tests {
 
     #[test]
     fn parse_max_value() {
-        let cmd: NodeCommand = NodeCommand::try_parse_from(["reth", "--max-value", "max"]).unwrap();
+        let cmd: NodeCommand = NodeCommand::try_parse_from(["evm", "--max-value", "max"]).unwrap();
         assert_eq!(cmd.max_value, u64::MAX);
 
-        let cmd: NodeCommand = NodeCommand::try_parse_from(["reth", "--max-value", "42"]).unwrap();
+        let cmd: NodeCommand = NodeCommand::try_parse_from(["evm", "--max-value", "42"]).unwrap();
         assert_eq!(cmd.max_value, 42);
 
-        let result = NodeCommand::try_parse_from(["reth", "--max-value", "invalid"]);
+        let result = NodeCommand::try_parse_from(["evm", "--max-value", "invalid"]);
         assert!(result.is_err());
     }
 }

@@ -1,28 +1,28 @@
 //! Built-in [`StageSet`]s.
 //!
 //! The easiest set to use is [`DefaultStages`], which provides all stages required to run an
-//! instance of reth.
+//! instance of evm.
 //!
-//! It is also possible to run parts of reth standalone given the required data is present in
+//! It is also possible to run parts of evm standalone given the required data is present in
 //! the environment, such as [`ExecutionStages`] or [`HashingStages`].
 //!
 //!
 //! # Examples
 //!
 //! ```no_run
-//! # use reth_stages::Pipeline;
-//! # use reth_stages::sets::{OfflineStages};
-//! # use reth_chainspec::MAINNET;
-//! # use reth_prune_types::PruneModes;
-//! # use reth_evm_ethereum::EthEvmConfig;
-//! # use reth_evm::ConfigureEvm;
-//! # use reth_provider::StaticFileProviderFactory;
-//! # use reth_provider::test_utils::{create_test_provider_factory, MockNodeTypesWithDB};
-//! # use reth_static_file::StaticFileProducer;
-//! # use reth_config::config::StageConfig;
-//! # use reth_ethereum_primitives::EthPrimitives;
+//! # use hanzo_evm_stages::Pipeline;
+//! # use hanzo_evm_stages::sets::{OfflineStages};
+//! # use hanzo_evm_chainspec::MAINNET;
+//! # use hanzo_evm_prune_types::PruneModes;
+//! # use hanzo_evm_eth_execution::EthEvmConfig;
+//! # use hanzo_evm_execution::ConfigureEvm;
+//! # use hanzo_evm_provider::StaticFileProviderFactory;
+//! # use hanzo_evm_provider::test_utils::{create_test_provider_factory, MockNodeTypesWithDB};
+//! # use hanzo_evm_static_file::StaticFileProducer;
+//! # use hanzo_evm_config::config::StageConfig;
+//! # use hanzo_evm_ethereum_primitives::EthPrimitives;
 //! # use std::sync::Arc;
-//! # use reth_consensus::FullConsensus;
+//! # use hanzo_evm_consensus::FullConsensus;
 //!
 //! # fn create(exec: impl ConfigureEvm<Primitives = EthPrimitives> + 'static, consensus: impl FullConsensus<EthPrimitives> + 'static) {
 //!
@@ -46,18 +46,18 @@ use crate::{
     StageSet, StageSetBuilder,
 };
 use alloy_primitives::B256;
-use reth_config::config::StageConfig;
-use reth_consensus::FullConsensus;
-use reth_evm::ConfigureEvm;
-use reth_network_p2p::{bodies::downloader::BodyDownloader, headers::downloader::HeaderDownloader};
-use reth_primitives_traits::{Block, NodePrimitives};
-use reth_provider::HeaderSyncGapProvider;
-use reth_prune_types::{PruneMode, PruneModes};
-use reth_stages_api::Stage;
+use hanzo_evm_config::config::StageConfig;
+use hanzo_evm_consensus::FullConsensus;
+use hanzo_evm_execution::ConfigureEvm;
+use hanzo_evm_network_p2p::{bodies::downloader::BodyDownloader, headers::downloader::HeaderDownloader};
+use hanzo_evm_primitives_traits::{Block, NodePrimitives};
+use hanzo_evm_provider::HeaderSyncGapProvider;
+use hanzo_evm_prune_types::{PruneMode, PruneModes};
+use hanzo_evm_stages_api::Stage;
 use std::sync::Arc;
 use tokio::sync::watch;
 
-/// A set containing all stages to run a fully syncing instance of reth.
+/// A set containing all stages to run a fully syncing instance of evm.
 ///
 /// A combination of (in order)
 ///
@@ -91,7 +91,7 @@ where
     /// Configuration for the online stages
     online: OnlineStages<Provider, H, B>,
     /// Executor factory needs for execution stage
-    evm_config: E,
+    hanzo_evm_config: E,
     /// Consensus instance
     consensus: Arc<dyn FullConsensus<E::Primitives>>,
     /// Configuration for each stage in the pipeline
@@ -114,7 +114,7 @@ where
         consensus: Arc<dyn FullConsensus<E::Primitives>>,
         header_downloader: H,
         body_downloader: B,
-        evm_config: E,
+        hanzo_evm_config: E,
         stages_config: StageConfig,
         prune_modes: PruneModes,
         era_import_source: Option<EraImportSource>,
@@ -128,7 +128,7 @@ where
                 stages_config.clone(),
                 era_import_source,
             ),
-            evm_config,
+            hanzo_evm_config,
             consensus,
             stages_config,
             prune_modes,
@@ -145,7 +145,7 @@ where
     /// Appends the default offline stages and default finish stage to the given builder.
     pub fn add_offline_stages<Provider>(
         default_offline: StageSetBuilder<Provider>,
-        evm_config: E,
+        hanzo_evm_config: E,
         consensus: Arc<dyn FullConsensus<E::Primitives>>,
         stages_config: StageConfig,
         prune_modes: PruneModes,
@@ -155,7 +155,7 @@ where
     {
         StageSetBuilder::default()
             .add_set(default_offline)
-            .add_set(OfflineStages::new(evm_config, consensus, stages_config, prune_modes))
+            .add_set(OfflineStages::new(hanzo_evm_config, consensus, stages_config, prune_modes))
             .add_stage(FinishStage)
     }
 }
@@ -172,7 +172,7 @@ where
     fn builder(self) -> StageSetBuilder<Provider> {
         Self::add_offline_stages(
             self.online.builder(),
-            self.evm_config,
+            self.hanzo_evm_config,
             self.consensus,
             self.stages_config.clone(),
             self.prune_modes,
@@ -301,7 +301,7 @@ where
 #[non_exhaustive]
 pub struct OfflineStages<E: ConfigureEvm> {
     /// Executor factory needs for execution stage
-    evm_config: E,
+    hanzo_evm_config: E,
     /// Consensus instance for validating blocks.
     consensus: Arc<dyn FullConsensus<E::Primitives>>,
     /// Configuration for each stage in the pipeline
@@ -313,12 +313,12 @@ pub struct OfflineStages<E: ConfigureEvm> {
 impl<E: ConfigureEvm> OfflineStages<E> {
     /// Create a new set of offline stages with default values.
     pub const fn new(
-        evm_config: E,
+        hanzo_evm_config: E,
         consensus: Arc<dyn FullConsensus<E::Primitives>>,
         stages_config: StageConfig,
         prune_modes: PruneModes,
     ) -> Self {
-        Self { evm_config, consensus, stages_config, prune_modes }
+        Self { hanzo_evm_config, consensus, stages_config, prune_modes }
     }
 }
 
@@ -333,7 +333,7 @@ where
 {
     fn builder(self) -> StageSetBuilder<Provider> {
         ExecutionStages::new(
-            self.evm_config,
+            self.hanzo_evm_config,
             self.consensus,
             self.stages_config.clone(),
             self.prune_modes.sender_recovery,
@@ -362,7 +362,7 @@ where
 #[non_exhaustive]
 pub struct ExecutionStages<E: ConfigureEvm> {
     /// Executor factory that will create executors.
-    evm_config: E,
+    hanzo_evm_config: E,
     /// Consensus instance for validating blocks.
     consensus: Arc<dyn FullConsensus<E::Primitives>>,
     /// Configuration for each stage in the pipeline
@@ -379,7 +379,7 @@ impl<E: ConfigureEvm> ExecutionStages<E> {
         stages_config: StageConfig,
         sender_recovery_prune_mode: Option<PruneMode>,
     ) -> Self {
-        Self { evm_config: executor_provider, consensus, stages_config, sender_recovery_prune_mode }
+        Self { hanzo_evm_config: executor_provider, consensus, stages_config, sender_recovery_prune_mode }
     }
 }
 
@@ -396,7 +396,7 @@ where
                 self.sender_recovery_prune_mode,
             ))
             .add_stage(ExecutionStage::from_config(
-                self.evm_config,
+                self.hanzo_evm_config,
                 self.consensus,
                 self.stages_config.execution,
                 self.stages_config.execution_external_clean_threshold(),

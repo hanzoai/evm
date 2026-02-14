@@ -1,26 +1,26 @@
 [package]
-name = "reth-basic-payload-builder"
+name = "hanzo-evm-basic-payload-builder"
 version.workspace = true
 edition.workspace = true
 rust-version.workspace = true
 license.workspace = true
 homepage.workspace = true
 repository.workspace = true
-description = "A basic payload builder for reth that uses the txpool API to build payloads."
+description = "A basic payload builder for Hanzo EVM that uses the txpool API to build payloads."
 
 [lints]
 workspace = true
 
 [dependencies]
-# reth
-reth-primitives-traits.workspace = true
-reth-payload-builder.workspace = true
-reth-payload-builder-primitives.workspace = true
-reth-payload-primitives.workspace = true
-reth-tasks.workspace = true
-reth-revm.workspace = true
-reth-storage-api.workspace = true
-reth-chain-state.workspace = true
+# evm
+hanzo-evm-primitives-traits.workspace = true
+hanzo-evm-payload-builder.workspace = true
+hanzo-evm-payload-builder-primitives.workspace = true
+hanzo-evm-payload-primitives.workspace = true
+hanzo-evm-tasks.workspace = true
+hanzo-evm-revm.workspace = true
+hanzo-evm-storage-api.workspace = true
+hanzo-evm-chain-state.workspace = true
 
 # ethereum
 alloy-primitives.workspace = true
@@ -33,7 +33,7 @@ futures-core.workspace = true
 futures-util.workspace = true
 
 # metrics
-reth-metrics.workspace = true
+hanzo-evm-metrics.workspace = true
 metrics.workspace = true
 
 # misc

@@ -1,15 +1,15 @@
 use crate::{DatabaseHashedCursorFactory, DatabaseTrieCursorFactory};
 use alloy_primitives::{keccak256, map::hash_map, Address, BlockNumber, B256};
-use reth_db_api::{models::BlockNumberAddress, transaction::DbTx};
-use reth_execution_errors::StorageRootError;
-use reth_storage_api::{BlockNumReader, StorageChangeSetReader};
-use reth_storage_errors::provider::ProviderResult;
-use reth_trie::{
+use hanzo_evm_db_api::{models::BlockNumberAddress, transaction::DbTx};
+use hanzo_evm_execution_errors::StorageRootError;
+use hanzo_evm_storage_api::{BlockNumReader, StorageChangeSetReader};
+use hanzo_evm_storage_errors::provider::ProviderResult;
+use hanzo_evm_trie::{
     hashed_cursor::HashedPostStateCursorFactory, HashedPostState, HashedStorage, StorageRoot,
 };
 
 #[cfg(feature = "metrics")]
-use reth_trie::metrics::TrieRootMetrics;
+use hanzo_evm_trie::metrics::TrieRootMetrics;
 
 /// Extends [`StorageRoot`] with operations specific for working with a database transaction.
 pub trait DatabaseStorageRoot<'a, TX> {
@@ -67,7 +67,7 @@ impl<'a, TX: DbTx> DatabaseStorageRoot<'a, TX>
             address,
             Default::default(),
             #[cfg(feature = "metrics")]
-            TrieRootMetrics::new(reth_trie::TrieType::Storage),
+            TrieRootMetrics::new(hanzo_evm_trie::TrieType::Storage),
         )
     }
 
@@ -78,7 +78,7 @@ impl<'a, TX: DbTx> DatabaseStorageRoot<'a, TX>
             hashed_address,
             Default::default(),
             #[cfg(feature = "metrics")]
-            TrieRootMetrics::new(reth_trie::TrieType::Storage),
+            TrieRootMetrics::new(hanzo_evm_trie::TrieType::Storage),
         )
     }
 
@@ -96,7 +96,7 @@ impl<'a, TX: DbTx> DatabaseStorageRoot<'a, TX>
             address,
             prefix_set,
             #[cfg(feature = "metrics")]
-            TrieRootMetrics::new(reth_trie::TrieType::Storage),
+            TrieRootMetrics::new(hanzo_evm_trie::TrieType::Storage),
         )
         .root()
     }

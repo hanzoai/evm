@@ -6,15 +6,15 @@ use crate::{
     common::WithConfigs,
     components::NodeComponentsBuilder,
     node::FullNode,
-    rpc::{RethRpcAddOns, RethRpcServerHandles, RpcContext},
+    rpc::{EvmRpcAddOns, EvmRpcServerHandles, RpcContext},
     BlockReaderFor, DebugNode, DebugNodeLauncher, EngineNodeLauncher, LaunchNode, Node,
 };
 use alloy_eips::eip4844::env_settings::EnvKzgSettings;
 use futures::Future;
-use reth_chainspec::{EthChainSpec, EthereumHardforks, Hardforks};
-use reth_db_api::{database::Database, database_metrics::DatabaseMetrics};
-use reth_exex::ExExContext;
-use reth_network::{
+use hanzo_evm_chainspec::{EthChainSpec, EthereumHardforks, Hardforks};
+use hanzo_evm_db_api::{database::Database, database_metrics::DatabaseMetrics};
+use hanzo_evm_exex::ExExContext;
+use hanzo_evm_network::{
     transactions::{
         config::{AnnouncementFilteringPolicy, StrictEthAnnouncementFilter},
         TransactionPropagationPolicy, TransactionsManagerConfig,
@@ -22,21 +22,21 @@ use reth_network::{
     NetworkBuilder, NetworkConfig, NetworkConfigBuilder, NetworkHandle, NetworkManager,
     NetworkPrimitives,
 };
-use reth_node_api::{
+use hanzo_evm_node_api::{
     FullNodeTypes, FullNodeTypesAdapter, NodeAddOns, NodeTypes, NodeTypesWithDBAdapter,
 };
-use reth_node_core::{
-    cli::config::{PayloadBuilderConfig, RethTransactionPoolConfig},
+use hanzo_evm_node_core::{
+    cli::config::{PayloadBuilderConfig, EvmTransactionPoolConfig},
     dirs::{ChainPath, DataDirPath},
     node_config::NodeConfig,
     primitives::Head,
 };
-use reth_provider::{
+use hanzo_evm_provider::{
     providers::{BlockchainProvider, NodeTypesForProvider},
     ChainSpecProvider, FullProvider,
 };
-use reth_tasks::TaskExecutor;
-use reth_transaction_pool::{PoolConfig, PoolTransaction, TransactionPool};
+use hanzo_evm_tasks::TaskExecutor;
+use hanzo_evm_transaction_pool::{PoolConfig, PoolTransaction, TransactionPool};
 use secp256k1::SecretKey;
 use std::sync::Arc;
 use tracing::{info, trace, warn};
@@ -46,9 +46,9 @@ pub mod add_ons;
 mod states;
 pub use states::*;
 
-/// The adapter type for a reth node with the builtin provider type
+/// The adapter type for a evm node with the builtin provider type
 // Note: we need to hardcode this because custom components might depend on it in associated types.
-pub type RethFullAdapter<DB, Types> =
+pub type EvmFullAdapter<DB, Types> =
     FullNodeTypesAdapter<Types, DB, BlockchainProvider<NodeTypesWithDBAdapter<Types, DB>>>;
 
 #[expect(clippy::doc_markdown)]
@@ -79,7 +79,7 @@ pub type RethFullAdapter<DB, Types> =
 /// configured components and can interact with the node.
 ///
 /// There are convenience functions for networks that come with a preset of types and components via
-/// the [`Node`] trait, see `reth_node_ethereum::EthereumNode`.
+/// the [`Node`] trait, see `hanzo_evm_node_ethereum::EthereumNode`.
 ///
 /// The [`NodeBuilder::node`] function configures the node's types and components in one step.
 ///
@@ -135,10 +135,10 @@ pub type RethFullAdapter<DB, Types> =
 /// process, hence the database type is not part of the [`NodeTypes`] trait and the node's
 /// components, that depend on the database, are configured separately. In order to have a nice
 /// trait that encapsulates the entire node the
-/// [`FullNodeComponents`](reth_node_api::FullNodeComponents) trait was introduced. This
+/// [`FullNodeComponents`](hanzo_evm_node_api::FullNodeComponents) trait was introduced. This
 /// trait has convenient associated types for all the components of the node. After
 /// [`WithLaunchContext::launch`] the [`NodeHandle`] contains an instance of [`FullNode`] that
-/// implements the [`FullNodeComponents`](reth_node_api::FullNodeComponents) trait and has access to
+/// implements the [`FullNodeComponents`](hanzo_evm_node_api::FullNodeComponents) trait and has access to
 /// all the components of the node. Internally the node builder uses several generic adapter types
 /// that are then map to traits with associated types for ease of use.
 ///
@@ -244,9 +244,9 @@ impl<DB, ChainSpec: EthChainSpec> NodeBuilder<DB, ChainSpec> {
         self,
         task_executor: TaskExecutor,
     ) -> WithLaunchContext<
-        NodeBuilder<Arc<reth_db::test_utils::TempDatabase<reth_db::DatabaseEnv>>, ChainSpec>,
+        NodeBuilder<Arc<hanzo_evm_db::test_utils::TempDatabase<hanzo_evm_db::DatabaseEnv>>, ChainSpec>,
     > {
-        let path = reth_db::test_utils::tempdir_path();
+        let path = hanzo_evm_db::test_utils::tempdir_path();
         self.testing_node_with_datadir(task_executor, path)
     }
 
@@ -259,10 +259,10 @@ impl<DB, ChainSpec: EthChainSpec> NodeBuilder<DB, ChainSpec> {
         task_executor: TaskExecutor,
         datadir: impl Into<std::path::PathBuf>,
     ) -> WithLaunchContext<
-        NodeBuilder<Arc<reth_db::test_utils::TempDatabase<reth_db::DatabaseEnv>>, ChainSpec>,
+        NodeBuilder<Arc<hanzo_evm_db::test_utils::TempDatabase<hanzo_evm_db::DatabaseEnv>>, ChainSpec>,
     > {
-        let path = reth_node_core::dirs::MaybePlatformPath::<DataDirPath>::from(datadir.into());
-        self.config = self.config.with_datadir_args(reth_node_core::args::DatadirArgs {
+        let path = hanzo_evm_node_core::dirs::MaybePlatformPath::<DataDirPath>::from(datadir.into());
+        self.config = self.config.with_datadir_args(hanzo_evm_node_core::args::DatadirArgs {
             datadir: path.clone(),
             ..Default::default()
         });
@@ -270,7 +270,7 @@ impl<DB, ChainSpec: EthChainSpec> NodeBuilder<DB, ChainSpec> {
         let data_dir =
             path.unwrap_or_chain_default(self.config.chain.chain(), self.config.datadir.clone());
 
-        let db = reth_db::test_utils::create_test_rw_db_with_datadir(data_dir.data_dir());
+        let db = hanzo_evm_db::test_utils::create_test_rw_db_with_datadir(data_dir.data_dir());
 
         WithLaunchContext { builder: self.with_database(db), task_executor }
     }
@@ -282,7 +282,7 @@ where
     ChainSpec: EthChainSpec + EthereumHardforks,
 {
     /// Configures the types of the node.
-    pub fn with_types<T>(self) -> NodeBuilderWithTypes<RethFullAdapter<DB, T>>
+    pub fn with_types<T>(self) -> NodeBuilderWithTypes<EvmFullAdapter<DB, T>>
     where
         T: NodeTypesForProvider<ChainSpec = ChainSpec>,
     {
@@ -306,9 +306,9 @@ where
     pub fn node<N>(
         self,
         node: N,
-    ) -> NodeBuilderWithComponents<RethFullAdapter<DB, N>, N::ComponentsBuilder, N::AddOns>
+    ) -> NodeBuilderWithComponents<EvmFullAdapter<DB, N>, N::ComponentsBuilder, N::AddOns>
     where
-        N: Node<RethFullAdapter<DB, N>, ChainSpec = ChainSpec> + NodeTypesForProvider,
+        N: Node<EvmFullAdapter<DB, N>, ChainSpec = ChainSpec> + NodeTypesForProvider,
     {
         self.with_types().with_components(node.components_builder()).with_add_ons(node.add_ons())
     }
@@ -348,7 +348,7 @@ where
     ChainSpec: EthChainSpec + EthereumHardforks,
 {
     /// Configures the types of the node.
-    pub fn with_types<T>(self) -> WithLaunchContext<NodeBuilderWithTypes<RethFullAdapter<DB, T>>>
+    pub fn with_types<T>(self) -> WithLaunchContext<NodeBuilderWithTypes<EvmFullAdapter<DB, T>>>
     where
         T: NodeTypesForProvider<ChainSpec = ChainSpec>,
     {
@@ -376,10 +376,10 @@ where
         self,
         node: N,
     ) -> WithLaunchContext<
-        NodeBuilderWithComponents<RethFullAdapter<DB, N>, N::ComponentsBuilder, N::AddOns>,
+        NodeBuilderWithComponents<EvmFullAdapter<DB, N>, N::ComponentsBuilder, N::AddOns>,
     >
     where
-        N: Node<RethFullAdapter<DB, N>, ChainSpec = ChainSpec> + NodeTypesForProvider,
+        N: Node<EvmFullAdapter<DB, N>, ChainSpec = ChainSpec> + NodeTypesForProvider,
     {
         self.with_types().with_components(node.components_builder()).with_add_ons(node.add_ons())
     }
@@ -394,19 +394,19 @@ where
         node: N,
     ) -> eyre::Result<
         <EngineNodeLauncher as LaunchNode<
-            NodeBuilderWithComponents<RethFullAdapter<DB, N>, N::ComponentsBuilder, N::AddOns>,
+            NodeBuilderWithComponents<EvmFullAdapter<DB, N>, N::ComponentsBuilder, N::AddOns>,
         >>::Node,
     >
     where
-        N: Node<RethFullAdapter<DB, N>, ChainSpec = ChainSpec> + NodeTypesForProvider,
-        N::AddOns: RethRpcAddOns<
+        N: Node<EvmFullAdapter<DB, N>, ChainSpec = ChainSpec> + NodeTypesForProvider,
+        N::AddOns: EvmRpcAddOns<
             NodeAdapter<
-                RethFullAdapter<DB, N>,
-                <N::ComponentsBuilder as NodeComponentsBuilder<RethFullAdapter<DB, N>>>::Components,
+                EvmFullAdapter<DB, N>,
+                <N::ComponentsBuilder as NodeComponentsBuilder<EvmFullAdapter<DB, N>>>::Components,
             >,
         >,
         EngineNodeLauncher: LaunchNode<
-            NodeBuilderWithComponents<RethFullAdapter<DB, N>, N::ComponentsBuilder, N::AddOns>,
+            NodeBuilderWithComponents<EvmFullAdapter<DB, N>, N::ComponentsBuilder, N::AddOns>,
         >,
     {
         self.node(node).launch().await
@@ -454,7 +454,7 @@ impl<T, CB, AO> WithLaunchContext<NodeBuilderWithComponents<T, CB, AO>>
 where
     T: FullNodeTypes,
     CB: NodeComponentsBuilder<T>,
-    AO: RethRpcAddOns<NodeAdapter<T, CB::Components>>,
+    AO: EvmRpcAddOns<NodeAdapter<T, CB::Components>>,
 {
     /// Returns a reference to the node builder's config.
     pub const fn config(&self) -> &NodeConfig<<T::Types as NodeTypes>::ChainSpec> {
@@ -571,7 +571,7 @@ where
     where
         F: FnOnce(
                 RpcContext<'_, NodeAdapter<T, CB::Components>, AO::EthApi>,
-                RethRpcServerHandles,
+                EvmRpcServerHandles,
             ) -> eyre::Result<()>
             + Send
             + 'static,
@@ -770,7 +770,7 @@ impl<Node: FullNodeTypes> BuilderContext<Node> {
     }
 
     /// Returns the loaded reh.toml config.
-    pub const fn reth_config(&self) -> &reth_config::Config {
+    pub const fn hanzo_evm_config(&self) -> &hanzo_evm_config::Config {
         &self.config_container.toml_config
     }
 
@@ -914,13 +914,13 @@ impl<Node: FullNodeTypes> BuilderContext<Node> {
                 Box::pin(network.run_until_graceful_shutdown(shutdown, |network| {
                     if let Some(peers_file) = known_peers_file {
                         let num_known_peers = network.num_known_peers();
-                        trace!(target: "reth::cli", peers_file=?peers_file, num_peers=%num_known_peers, "Saving current peers");
+                        trace!(target: "evm::cli", peers_file=?peers_file, num_peers=%num_known_peers, "Saving current peers");
                         match network.write_peers_to_file(peers_file.as_path()) {
                             Ok(_) => {
-                                info!(target: "reth::cli", peers_file=?peers_file, "Wrote network peers to file");
+                                info!(target: "evm::cli", peers_file=?peers_file, "Wrote network peers to file");
                             }
                             Err(err) => {
-                                warn!(target: "reth::cli", %err, "Failed to write network peers to file");
+                                warn!(target: "evm::cli", %err, "Failed to write network peers to file");
                             }
                         }
                     }
@@ -981,7 +981,7 @@ impl<Node: FullNodeTypes<Types: NodeTypes<ChainSpec: Hardforks>>> BuilderContext
             .config()
             .network
             .network_config(
-                self.reth_config(),
+                self.hanzo_evm_config(),
                 self.config().chain.clone(),
                 secret_key,
                 default_peers_path,

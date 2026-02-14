@@ -1,7 +1,7 @@
 #![allow(unreachable_pub)]
 #![allow(missing_docs)]
 
-use reth_libmdbx::{Environment, WriteFlags};
+use hanzo_evm_libmdbx::{Environment, WriteFlags};
 use tempfile::{tempdir, TempDir};
 
 pub fn get_key(n: u32) -> String {

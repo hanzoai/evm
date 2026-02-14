@@ -15,7 +15,7 @@ use alloy_consensus::{
 use alloy_primitives::{Address, Bytes, Sealed, Signature, TxKind, B256, U256};
 use bytes::BufMut;
 use op_alloy_consensus::{OpTxEnvelope, OpTxType, OpTypedTransaction, TxDeposit as AlloyTxDeposit};
-use reth_codecs_derive::add_arbitrary_tests;
+use hanzo_evm_codecs_derive::add_arbitrary_tests;
 
 /// Deposit transactions, also known as deposits are initiated on L1, and executed on L2.
 ///
@@ -31,7 +31,7 @@ use reth_codecs_derive::add_arbitrary_tests;
     derive(arbitrary::Arbitrary, serde::Serialize, serde::Deserialize)
 )]
 #[cfg_attr(feature = "test-utils", allow(unreachable_pub), visibility::make(pub))]
-#[reth_codecs(crate = "crate")]
+#[hanzo_evm_codecs(crate = "crate")]
 #[add_arbitrary_tests(crate, compact)]
 pub(crate) struct TxDeposit {
     source_hash: B256,

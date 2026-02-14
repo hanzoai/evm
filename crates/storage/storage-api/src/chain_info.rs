@@ -1,5 +1,5 @@
 use alloy_rpc_types_engine::ForkchoiceState;
-use reth_primitives_traits::SealedHeader;
+use hanzo_evm_primitives_traits::SealedHeader;
 
 /// A type that can track updates related to fork choice updates.
 pub trait CanonChainTracker: Send + Sync {

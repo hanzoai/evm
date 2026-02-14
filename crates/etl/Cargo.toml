@@ -1,5 +1,5 @@
 [package]
-name = "reth-etl"
+name = "hanzo-evm-etl"
 version.workspace = true
 edition.workspace = true
 rust-version.workspace = true
@@ -12,7 +12,7 @@ workspace = true
 
 [dependencies]
 tempfile.workspace = true
-reth-db-api.workspace = true
+hanzo-evm-db-api.workspace = true
 rayon.workspace = true
 
 [dev-dependencies]

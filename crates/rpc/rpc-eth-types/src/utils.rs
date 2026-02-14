@@ -2,7 +2,7 @@
 
 use super::{EthApiError, EthResult};
 use alloy_consensus::TxReceipt;
-use reth_primitives_traits::{Recovered, SignedTransaction};
+use hanzo_evm_primitives_traits::{Recovered, SignedTransaction};
 use std::future::Future;
 
 /// Calculates the gas used and next log index for a transaction at the given index

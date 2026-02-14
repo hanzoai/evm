@@ -12,7 +12,7 @@
 //!
 //! ```ignore
 //! use types::{BeaconState, ChainSpec, MainnetEthSpec};
-//! use reth_era::era::types::consensus::CompressedBeaconState;
+//! use hanzo_evm_era::era::types::consensus::CompressedBeaconState;
 //!
 //! fn decode_state(
 //!     compressed_state: &CompressedBeaconState,
@@ -38,7 +38,7 @@
 //!
 //! ```ignore
 //! use consensus_types::{ForkName, ForkVersionDecode, MainnetEthSpec, SignedBeaconBlock};
-//! use reth_era::era::types::consensus::CompressedSignedBeaconBlock;
+//! use hanzo_evm_era::era::types::consensus::CompressedSignedBeaconBlock;
 //!
 //! // Decode using fork-aware decoding, fork must be known beforehand
 //! fn decode_block(

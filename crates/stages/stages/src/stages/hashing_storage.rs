@@ -1,21 +1,21 @@
 use alloy_primitives::{b256, bytes::BufMut, keccak256, Address, B256};
 use itertools::Itertools;
-use reth_config::config::{EtlConfig, HashingConfig};
-use reth_db_api::{
+use hanzo_evm_config::config::{EtlConfig, HashingConfig};
+use hanzo_evm_db_api::{
     cursor::{DbCursorRO, DbDupCursorRW},
     models::CompactU256,
     table::Decompress,
     tables,
     transaction::{DbTx, DbTxMut},
 };
-use reth_etl::Collector;
-use reth_primitives_traits::StorageEntry;
-use reth_provider::{DBProvider, HashingWriter, StatsReader, StorageReader};
-use reth_stages_api::{
+use hanzo_evm_etl::Collector;
+use hanzo_evm_primitives_traits::StorageEntry;
+use hanzo_evm_provider::{DBProvider, HashingWriter, StatsReader, StorageReader};
+use hanzo_evm_stages_api::{
     EntitiesCheckpoint, ExecInput, ExecOutput, Stage, StageCheckpoint, StageError, StageId,
     StorageHashingCheckpoint, UnwindInput, UnwindOutput,
 };
-use reth_storage_errors::provider::ProviderResult;
+use hanzo_evm_storage_errors::provider::ProviderResult;
 use std::{
     fmt::Debug,
     sync::mpsc::{self, Receiver},
@@ -225,14 +225,14 @@ mod tests {
     use alloy_primitives::{Address, U256};
     use assert_matches::assert_matches;
     use rand::Rng;
-    use reth_db_api::{
+    use hanzo_evm_db_api::{
         cursor::{DbCursorRW, DbDupCursorRO},
         models::{BlockNumberAddress, StoredBlockBodyIndices},
     };
-    use reth_ethereum_primitives::Block;
-    use reth_primitives_traits::SealedBlock;
-    use reth_provider::providers::StaticFileWriter;
-    use reth_testing_utils::generators::{
+    use hanzo_evm_ethereum_primitives::Block;
+    use hanzo_evm_primitives_traits::SealedBlock;
+    use hanzo_evm_provider::providers::StaticFileWriter;
+    use hanzo_evm_testing_utils::generators::{
         self, random_block_range, random_contract_account_range, BlockRangeParams,
     };
 
@@ -366,7 +366,7 @@ mod tests {
                 let block_number = progress.number;
                 self.db.commit(|tx| {
                     progress.body().transactions.iter().try_for_each(
-                        |transaction| -> Result<(), reth_db::DatabaseError> {
+                        |transaction| -> Result<(), hanzo_evm_db::DatabaseError> {
                             tx_hash_numbers.push((*transaction.tx_hash(), next_tx_num));
                             tx.put::<tables::Transactions>(next_tx_num, transaction.clone())?;
 
@@ -488,7 +488,7 @@ mod tests {
             bn_address: BlockNumberAddress,
             entry: StorageEntry,
             hash: bool,
-        ) -> Result<(), reth_db::DatabaseError> {
+        ) -> Result<(), hanzo_evm_db::DatabaseError> {
             let mut storage_cursor = tx.cursor_dup_write::<tables::PlainStorageState>()?;
             let prev_entry =
                 match storage_cursor.seek_by_key_subkey(bn_address.address(), entry.key)? {

@@ -6,8 +6,8 @@ use std::{
 use alloy_consensus::BlockHeader;
 use alloy_eips::BlockNumHash;
 use alloy_primitives::{map::FbHashMap, BlockNumber, B256};
-use reth_exex_types::ExExNotification;
-use reth_node_api::NodePrimitives;
+use hanzo_evm_exex_types::ExExNotification;
+use hanzo_evm_node_api::NodePrimitives;
 
 /// The block cache of the WAL.
 ///

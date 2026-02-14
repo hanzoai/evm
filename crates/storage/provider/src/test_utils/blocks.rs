@@ -8,11 +8,11 @@ use alloy_primitives::{
 use alloy_consensus::Header;
 use alloy_eips::eip4895::{Withdrawal, Withdrawals};
 use alloy_primitives::Signature;
-use reth_db_api::{database::Database, models::StoredBlockBodyIndices, tables};
-use reth_ethereum_primitives::{BlockBody, Receipt, Transaction, TransactionSigned, TxType};
-use reth_node_types::NodeTypes;
-use reth_primitives_traits::{Account, RecoveredBlock, SealedBlock, SealedHeader};
-use reth_trie::root::{state_root_unhashed, storage_root_unhashed};
+use hanzo_evm_db_api::{database::Database, models::StoredBlockBodyIndices, tables};
+use hanzo_evm_ethereum_primitives::{BlockBody, Receipt, Transaction, TransactionSigned, TxType};
+use hanzo_evm_node_types::NodeTypes;
+use hanzo_evm_primitives_traits::{Account, RecoveredBlock, SealedBlock, SealedHeader};
+use hanzo_evm_trie::root::{state_root_unhashed, storage_root_unhashed};
 use revm_database::BundleState;
 use revm_state::AccountInfo;
 use std::{str::FromStr, sync::LazyLock};
@@ -20,7 +20,7 @@ use std::{str::FromStr, sync::LazyLock};
 /// Assert genesis block
 pub fn assert_genesis_block<DB: Database, N: NodeTypes>(
     provider: &DatabaseProviderRW<DB, N>,
-    g: SealedBlock<reth_ethereum_primitives::Block>,
+    g: SealedBlock<hanzo_evm_ethereum_primitives::Block>,
 ) {
     let n = g.number;
     let h = B256::ZERO;
@@ -45,7 +45,7 @@ pub fn assert_genesis_block<DB: Database, N: NodeTypes>(
     assert_eq!(tx.table::<tables::PlainStorageState>().unwrap(), vec![]);
     assert_eq!(tx.table::<tables::AccountsHistory>().unwrap(), vec![]);
     assert_eq!(tx.table::<tables::StoragesHistory>().unwrap(), vec![]);
-    // Reorged bytecodes are not reverted per https://github.com/paradigmxyz/reth/issues/1588
+    // Reorged bytecodes are not reverted per https://github.com/hanzoai/evm/issues/1588
     // assert_eq!(tx.table::<tables::Bytecodes>().unwrap(), vec![]);
     assert_eq!(tx.table::<tables::AccountChangeSets>().unwrap(), vec![]);
     assert_eq!(tx.table::<tables::StorageChangeSets>().unwrap(), vec![]);
@@ -57,7 +57,7 @@ pub fn assert_genesis_block<DB: Database, N: NodeTypes>(
     // StageCheckpoints is not updated in tests
 }
 
-pub(crate) static TEST_BLOCK: LazyLock<SealedBlock<reth_ethereum_primitives::Block>> =
+pub(crate) static TEST_BLOCK: LazyLock<SealedBlock<hanzo_evm_ethereum_primitives::Block>> =
     LazyLock::new(|| {
         SealedBlock::from_sealed_parts(
             SealedHeader::new(
@@ -119,9 +119,9 @@ pub(crate) static TEST_BLOCK: LazyLock<SealedBlock<reth_ethereum_primitives::Blo
 #[derive(Debug)]
 pub struct BlockchainTestData {
     /// Genesis
-    pub genesis: SealedBlock<reth_ethereum_primitives::Block>,
+    pub genesis: SealedBlock<hanzo_evm_ethereum_primitives::Block>,
     /// Blocks with its execution result
-    pub blocks: Vec<(RecoveredBlock<reth_ethereum_primitives::Block>, ExecutionOutcome)>,
+    pub blocks: Vec<(RecoveredBlock<hanzo_evm_ethereum_primitives::Block>, ExecutionOutcome)>,
 }
 
 impl BlockchainTestData {
@@ -156,7 +156,7 @@ impl Default for BlockchainTestData {
 }
 
 /// Genesis block
-pub fn genesis() -> SealedBlock<reth_ethereum_primitives::Block> {
+pub fn genesis() -> SealedBlock<hanzo_evm_ethereum_primitives::Block> {
     SealedBlock::from_sealed_parts(
         SealedHeader::new(
             Header { number: 0, difficulty: U256::from(1), ..Default::default() },
@@ -188,7 +188,7 @@ fn bundle_state_root(execution_outcome: &ExecutionOutcome) -> B256 {
 /// Block one that points to genesis
 fn block1(
     number: BlockNumber,
-) -> (RecoveredBlock<reth_ethereum_primitives::Block>, ExecutionOutcome) {
+) -> (RecoveredBlock<hanzo_evm_ethereum_primitives::Block>, ExecutionOutcome) {
     // block changes
     let account1: Address = [0x60; 20].into();
     let account2: Address = [0x61; 20].into();
@@ -238,7 +238,7 @@ fn block2(
     number: BlockNumber,
     parent_hash: B256,
     prev_execution_outcome: &ExecutionOutcome,
-) -> (RecoveredBlock<reth_ethereum_primitives::Block>, ExecutionOutcome) {
+) -> (RecoveredBlock<hanzo_evm_ethereum_primitives::Block>, ExecutionOutcome) {
     // block changes
     let account: Address = [0x60; 20].into();
     let slot = U256::from(5);
@@ -296,7 +296,7 @@ fn block3(
     number: BlockNumber,
     parent_hash: B256,
     prev_execution_outcome: &ExecutionOutcome,
-) -> (RecoveredBlock<reth_ethereum_primitives::Block>, ExecutionOutcome) {
+) -> (RecoveredBlock<hanzo_evm_ethereum_primitives::Block>, ExecutionOutcome) {
     let address_range = 1..=20;
     let slot_range = 1..=100;
 
@@ -354,7 +354,7 @@ fn block4(
     number: BlockNumber,
     parent_hash: B256,
     prev_execution_outcome: &ExecutionOutcome,
-) -> (RecoveredBlock<reth_ethereum_primitives::Block>, ExecutionOutcome) {
+) -> (RecoveredBlock<hanzo_evm_ethereum_primitives::Block>, ExecutionOutcome) {
     let address_range = 1..=20;
     let slot_range = 1..=100;
 
@@ -437,7 +437,7 @@ fn block5(
     number: BlockNumber,
     parent_hash: B256,
     prev_execution_outcome: &ExecutionOutcome,
-) -> (RecoveredBlock<reth_ethereum_primitives::Block>, ExecutionOutcome) {
+) -> (RecoveredBlock<hanzo_evm_ethereum_primitives::Block>, ExecutionOutcome) {
     let address_range = 1..=20;
     let slot_range = 1..=100;
 

@@ -2,16 +2,16 @@ use super::tui::DbListTUI;
 use alloy_primitives::hex;
 use clap::Parser;
 use eyre::WrapErr;
-use reth_chainspec::EthereumHardforks;
-use reth_db::{transaction::DbTx, DatabaseEnv};
-use reth_db_api::{database::Database, table::Table, RawValue, TableViewer, Tables};
-use reth_db_common::{DbTool, ListFilter};
-use reth_node_builder::{NodeTypes, NodeTypesWithDBAdapter};
+use hanzo_evm_chainspec::EthereumHardforks;
+use hanzo_evm_db::{transaction::DbTx, DatabaseEnv};
+use hanzo_evm_db_api::{database::Database, table::Table, RawValue, TableViewer, Tables};
+use hanzo_evm_db_common::{DbTool, ListFilter};
+use hanzo_evm_node_builder::{NodeTypes, NodeTypesWithDBAdapter};
 use std::cell::RefCell;
 use tracing::error;
 
 #[derive(Parser, Debug)]
-/// The arguments for the `reth db list` command
+/// The arguments for the `evm db list` command
 pub struct Command {
     /// The table name
     table: Tables,
@@ -107,7 +107,7 @@ impl<N: NodeTypes> TableViewer<()> for ListTableViewer<'_, N> {
             let final_entry_idx = total_entries.saturating_sub(1);
             if self.args.skip > final_entry_idx {
                 error!(
-                    target: "reth::cli",
+                    target: "evm::cli",
                     "Start index {start} is greater than the final entry index ({final_entry_idx}) in the table {table}",
                     start = self.args.skip,
                     final_entry_idx = final_entry_idx,

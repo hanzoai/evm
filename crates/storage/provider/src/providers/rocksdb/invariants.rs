@@ -9,14 +9,14 @@ use crate::StaticFileProviderFactory;
 use alloy_eips::eip2718::Encodable2718;
 use alloy_primitives::BlockNumber;
 use rayon::prelude::*;
-use reth_db_api::tables;
-use reth_stages_types::StageId;
-use reth_static_file_types::StaticFileSegment;
-use reth_storage_api::{
+use hanzo_evm_db_api::tables;
+use hanzo_evm_stages_types::StageId;
+use hanzo_evm_static_file_types::StaticFileSegment;
+use hanzo_evm_storage_api::{
     BlockBodyIndicesProvider, ChangeSetReader, DBProvider, StageCheckpointReader,
     StorageChangeSetReader, StorageSettingsCache, TransactionsProvider,
 };
-use reth_storage_errors::provider::ProviderResult;
+use hanzo_evm_storage_errors::provider::ProviderResult;
 use std::collections::HashSet;
 
 /// Batch size for changeset iteration during history healing.
@@ -115,7 +115,7 @@ impl RocksDBProvider {
         // Fast path: if checkpoint is 0 and RocksDB has data, clear everything.
         if checkpoint == 0 && self.first::<tables::TransactionHashNumbers>()?.is_some() {
             tracing::info!(
-                target: "reth::providers::rocksdb",
+                target: "evm::providers::rocksdb",
                 "TransactionHashNumbers has data but checkpoint is 0, clearing all"
             );
             self.clear::<tables::TransactionHashNumbers>()?;
@@ -127,7 +127,7 @@ impl RocksDBProvider {
             // before RocksDB. If we get here, something is seriously wrong. The unwind is a
             // best-effort attempt but is probably futile.
             tracing::warn!(
-                target: "reth::providers::rocksdb",
+                target: "evm::providers::rocksdb",
                 sf_tip,
                 checkpoint,
                 "TransactionHashNumbers: static file tip behind checkpoint, unwind needed"
@@ -157,7 +157,7 @@ impl RocksDBProvider {
             // transactions up to sf_tip. If we get here, something is seriously wrong.
             // The unwind is a best-effort attempt but is probably futile.
             tracing::warn!(
-                target: "reth::providers::rocksdb",
+                target: "evm::providers::rocksdb",
                 sf_tip_end_tx,
                 checkpoint_next_tx,
                 checkpoint,
@@ -168,7 +168,7 @@ impl RocksDBProvider {
         }
 
         tracing::info!(
-            target: "reth::providers::rocksdb",
+            target: "evm::providers::rocksdb",
             checkpoint,
             sf_tip,
             checkpoint_next_tx,
@@ -183,7 +183,7 @@ impl RocksDBProvider {
             let batch_end = batch_start.saturating_add(BATCH_SIZE - 1).min(sf_tip_end_tx);
 
             tracing::debug!(
-                target: "reth::providers::rocksdb",
+                target: "evm::providers::rocksdb",
                 batch_start,
                 batch_end,
                 "Pruning TransactionHashNumbers batch"
@@ -230,7 +230,7 @@ impl RocksDBProvider {
 
         if !hashes.is_empty() {
             tracing::info!(
-                target: "reth::providers::rocksdb",
+                target: "evm::providers::rocksdb",
                 deleted_count = hashes.len(),
                 tx_range_start = *tx_range.start(),
                 tx_range_end = *tx_range.end(),
@@ -267,7 +267,7 @@ impl RocksDBProvider {
         // Fast path: if checkpoint is 0 and RocksDB has data, clear everything.
         if checkpoint == 0 && self.first::<tables::StoragesHistory>()?.is_some() {
             tracing::info!(
-                target: "reth::providers::rocksdb",
+                target: "evm::providers::rocksdb",
                 "StoragesHistory has data but checkpoint is 0, clearing all"
             );
             self.clear::<tables::StoragesHistory>()?;
@@ -284,7 +284,7 @@ impl RocksDBProvider {
             // committed before RocksDB. If we get here, something is seriously wrong.
             // The unwind is a best-effort attempt but is probably futile.
             tracing::warn!(
-                target: "reth::providers::rocksdb",
+                target: "evm::providers::rocksdb",
                 sf_tip,
                 checkpoint,
                 "StoragesHistory: static file tip behind checkpoint, unwind needed"
@@ -298,7 +298,7 @@ impl RocksDBProvider {
 
         let total_blocks = sf_tip - checkpoint;
         tracing::info!(
-            target: "reth::providers::rocksdb",
+            target: "evm::providers::rocksdb",
             checkpoint,
             sf_tip,
             total_blocks,
@@ -323,7 +323,7 @@ impl RocksDBProvider {
 
             if !indices.is_empty() {
                 tracing::info!(
-                    target: "reth::providers::rocksdb",
+                    target: "evm::providers::rocksdb",
                     batch_num,
                     total_batches,
                     batch_start,
@@ -361,7 +361,7 @@ impl RocksDBProvider {
         // Fast path: if checkpoint is 0 and RocksDB has data, clear everything.
         if checkpoint == 0 && self.first::<tables::AccountsHistory>()?.is_some() {
             tracing::info!(
-                target: "reth::providers::rocksdb",
+                target: "evm::providers::rocksdb",
                 "AccountsHistory has data but checkpoint is 0, clearing all"
             );
             self.clear::<tables::AccountsHistory>()?;
@@ -378,7 +378,7 @@ impl RocksDBProvider {
             // committed before RocksDB. If we get here, something is seriously wrong.
             // The unwind is a best-effort attempt but is probably futile.
             tracing::warn!(
-                target: "reth::providers::rocksdb",
+                target: "evm::providers::rocksdb",
                 sf_tip,
                 checkpoint,
                 "AccountsHistory: static file tip behind checkpoint, unwind needed"
@@ -392,7 +392,7 @@ impl RocksDBProvider {
 
         let total_blocks = sf_tip - checkpoint;
         tracing::info!(
-            target: "reth::providers::rocksdb",
+            target: "evm::providers::rocksdb",
             checkpoint,
             sf_tip,
             total_blocks,
@@ -416,7 +416,7 @@ impl RocksDBProvider {
 
             if !indices.is_empty() {
                 tracing::info!(
-                    target: "reth::providers::rocksdb",
+                    target: "evm::providers::rocksdb",
                     batch_num,
                     total_batches,
                     batch_start,
@@ -445,14 +445,14 @@ mod tests {
         BlockWriter, DatabaseProviderFactory, StageCheckpointWriter, TransactionsProvider,
     };
     use alloy_primitives::{Address, B256};
-    use reth_db::cursor::{DbCursorRO, DbCursorRW};
-    use reth_db_api::{
+    use hanzo_evm_db::cursor::{DbCursorRO, DbCursorRW};
+    use hanzo_evm_db_api::{
         models::{storage_sharded_key::StorageShardedKey, StorageSettings},
         tables::{self, BlockNumberList},
         transaction::DbTxMut,
     };
-    use reth_stages_types::StageCheckpoint;
-    use reth_testing_utils::generators::{self, BlockRangeParams};
+    use hanzo_evm_stages_types::StageCheckpoint;
+    use hanzo_evm_testing_utils::generators::{self, BlockRangeParams};
     use tempfile::TempDir;
 
     #[test]
@@ -882,7 +882,7 @@ mod tests {
 
     #[test]
     fn test_check_consistency_accounts_history_sentinel_only_with_checkpoint_is_first_run() {
-        use reth_db_api::models::ShardedKey;
+        use hanzo_evm_db_api::models::ShardedKey;
 
         let temp_dir = TempDir::new().unwrap();
         let rocksdb = RocksDBBuilder::new(temp_dir.path())
@@ -1074,7 +1074,7 @@ mod tests {
 
     #[test]
     fn test_check_consistency_accounts_history_has_data_no_checkpoint_prunes_data() {
-        use reth_db_api::models::ShardedKey;
+        use hanzo_evm_db_api::models::ShardedKey;
 
         let temp_dir = TempDir::new().unwrap();
         let rocksdb = RocksDBBuilder::new(temp_dir.path())
@@ -1112,9 +1112,9 @@ mod tests {
 
     #[test]
     fn test_check_consistency_accounts_history_sf_tip_equals_checkpoint_no_action() {
-        use reth_db::models::AccountBeforeTx;
-        use reth_db_api::models::ShardedKey;
-        use reth_static_file_types::StaticFileSegment;
+        use hanzo_evm_db::models::AccountBeforeTx;
+        use hanzo_evm_db_api::models::ShardedKey;
+        use hanzo_evm_static_file_types::StaticFileSegment;
 
         let temp_dir = TempDir::new().unwrap();
         let rocksdb = RocksDBBuilder::new(temp_dir.path())
@@ -1215,7 +1215,7 @@ mod tests {
     #[test]
     fn test_check_consistency_storages_history_heals_via_changesets_large_range() {
         use alloy_primitives::U256;
-        use reth_db_api::models::StorageBeforeTx;
+        use hanzo_evm_db_api::models::StorageBeforeTx;
 
         const TOTAL_BLOCKS: u64 = 15_000;
         const CHECKPOINT_BLOCK: u64 = 5_000;
@@ -1339,7 +1339,7 @@ mod tests {
     #[test]
     fn test_check_consistency_storages_history_preserves_checkpoint_block() {
         use alloy_primitives::U256;
-        use reth_db_api::models::StorageBeforeTx;
+        use hanzo_evm_db_api::models::StorageBeforeTx;
 
         const CHECKPOINT_BLOCK: u64 = 100;
         const SF_TIP: u64 = 200;
@@ -1445,9 +1445,9 @@ mod tests {
     ///    - The batching worked (no OOM, completed successfully)
     #[test]
     fn test_check_consistency_accounts_history_heals_via_changesets_large_range() {
-        use reth_db::models::AccountBeforeTx;
-        use reth_db_api::models::ShardedKey;
-        use reth_static_file_types::StaticFileSegment;
+        use hanzo_evm_db::models::AccountBeforeTx;
+        use hanzo_evm_db_api::models::ShardedKey;
+        use hanzo_evm_static_file_types::StaticFileSegment;
 
         let temp_dir = TempDir::new().unwrap();
         let rocksdb = RocksDBBuilder::new(temp_dir.path())
@@ -1565,8 +1565,8 @@ mod tests {
     /// Tests that accounts history healing preserves entries at exactly the checkpoint block.
     #[test]
     fn test_check_consistency_accounts_history_preserves_checkpoint_block() {
-        use reth_db::models::AccountBeforeTx;
-        use reth_db_api::models::ShardedKey;
+        use hanzo_evm_db::models::AccountBeforeTx;
+        use hanzo_evm_db_api::models::ShardedKey;
 
         const CHECKPOINT_BLOCK: u64 = 100;
         const SF_TIP: u64 = 200;
@@ -1645,8 +1645,8 @@ mod tests {
     #[test]
     fn test_check_consistency_storages_history_sf_tip_equals_checkpoint_no_action() {
         use alloy_primitives::U256;
-        use reth_db::models::StorageBeforeTx;
-        use reth_static_file_types::StaticFileSegment;
+        use hanzo_evm_db::models::StorageBeforeTx;
+        use hanzo_evm_static_file_types::StaticFileSegment;
 
         let temp_dir = TempDir::new().unwrap();
         let rocksdb = RocksDBBuilder::new(temp_dir.path())

@@ -1,5 +1,5 @@
 use crate::PruneLimiter;
-use reth_db_api::{
+use hanzo_evm_db_api::{
     cursor::{DbCursorRO, DbCursorRW, RangeWalker},
     table::{DupSort, Table, TableRow},
     transaction::{DbTx, DbTxMut},
@@ -188,11 +188,11 @@ impl<Tx> DbTxPruneExt for Tx where Tx: DbTxMut + DbTx {}
 mod tests {
     use super::DbTxPruneExt;
     use crate::PruneLimiter;
-    use reth_db_api::tables;
-    use reth_primitives_traits::SignerRecoverable;
-    use reth_provider::{DBProvider, DatabaseProviderFactory};
-    use reth_stages::test_utils::{StorageKind, TestStageDB};
-    use reth_testing_utils::generators::{self, random_block_range, BlockRangeParams};
+    use hanzo_evm_db_api::tables;
+    use hanzo_evm_primitives_traits::SignerRecoverable;
+    use hanzo_evm_provider::{DBProvider, DatabaseProviderFactory};
+    use hanzo_evm_stages::test_utils::{StorageKind, TestStageDB};
+    use hanzo_evm_testing_utils::generators::{self, random_block_range, BlockRangeParams};
     use std::sync::{
         atomic::{AtomicUsize, Ordering},
         Arc,

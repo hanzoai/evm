@@ -3,9 +3,9 @@
 use alloy_primitives::{B256, U256};
 use criterion::{measurement::WallTime, *};
 use rand::SeedableRng;
-use reth_eth_wire::EthVersion;
-use reth_eth_wire_types::EthNetworkPrimitives;
-use reth_network::{
+use hanzo_evm_eth_wire::EthVersion;
+use hanzo_evm_eth_wire_types::EthNetworkPrimitives;
+use hanzo_evm_network::{
     test_utils::{
         transactions::{buffer_hash_to_tx_fetcher, new_mock_session},
         Testnet,
@@ -15,9 +15,9 @@ use reth_network::{
         TransactionsManagerConfig,
     },
 };
-use reth_network_peers::PeerId;
-use reth_provider::test_utils::{ExtendedAccount, MockEthProvider};
-use reth_transaction_pool::{test_utils::TransactionGenerator, PoolTransaction, TransactionPool};
+use hanzo_evm_network_peers::PeerId;
+use hanzo_evm_provider::test_utils::{ExtendedAccount, MockEthProvider};
+use hanzo_evm_transaction_pool::{test_utils::TransactionGenerator, PoolTransaction, TransactionPool};
 use std::collections::HashMap;
 use tokio::runtime::Runtime as TokioRuntime;
 

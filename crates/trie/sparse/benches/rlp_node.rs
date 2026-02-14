@@ -5,9 +5,9 @@ use criterion::{criterion_group, criterion_main, Criterion};
 use prop::strategy::ValueTree;
 use proptest::{prelude::*, test_runner::TestRunner};
 use rand::{seq::IteratorRandom, Rng};
-use reth_testing_utils::generators;
-use reth_trie::Nibbles;
-use reth_trie_sparse::{provider::DefaultTrieNodeProvider, SerialSparseTrie, SparseTrie};
+use hanzo_evm_testing_utils::generators;
+use hanzo_evm_trie::Nibbles;
+use hanzo_evm_trie_sparse::{provider::DefaultTrieNodeProvider, SerialSparseTrie, SparseTrie};
 
 fn update_rlp_node_level(c: &mut Criterion) {
     let mut rng = generators::rng();

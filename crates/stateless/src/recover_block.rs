@@ -3,9 +3,9 @@ use alloc::vec::Vec;
 use alloy_consensus::BlockHeader;
 use alloy_primitives::Address;
 use core::ops::Deref;
-use reth_chainspec::EthereumHardforks;
-use reth_ethereum_primitives::{Block, TransactionSigned};
-use reth_primitives_traits::{Block as _, RecoveredBlock};
+use hanzo_evm_chainspec::EthereumHardforks;
+use hanzo_evm_ethereum_primitives::{Block, TransactionSigned};
+use hanzo_evm_primitives_traits::{Block as _, RecoveredBlock};
 use serde::{Deserialize, Serialize};
 use serde_with::{serde_as, Bytes};
 

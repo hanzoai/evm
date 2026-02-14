@@ -1,6 +1,6 @@
 use alloy_genesis::Genesis;
-use reth_discv4::NodeRecord;
-use reth_ethereum::chainspec::{ChainSpec, Head};
+use hanzo_evm_discv4::NodeRecord;
+use hanzo_evm_ethereum::chainspec::{ChainSpec, Head};
 
 use std::sync::Arc;
 

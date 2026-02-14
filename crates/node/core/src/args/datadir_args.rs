@@ -2,14 +2,14 @@
 
 use crate::dirs::{ChainPath, DataDirPath, MaybePlatformPath};
 use clap::Args;
-use reth_chainspec::Chain;
+use hanzo_evm_chainspec::Chain;
 use std::path::PathBuf;
 
 /// Parameters for datadir configuration
 #[derive(Debug, Args, PartialEq, Eq, Default, Clone)]
 #[command(next_help_heading = "Datadir")]
 pub struct DatadirArgs {
-    /// The path to the data dir for all reth files and subdirectories.
+    /// The path to the data dir for all evm files and subdirectories.
     ///
     /// Defaults to the OS-specific data directory:
     ///
@@ -60,7 +60,7 @@ mod tests {
     #[test]
     fn test_parse_datadir_args() {
         let default_args = DatadirArgs::default();
-        let args = CommandParser::<DatadirArgs>::parse_from(["reth"]).args;
+        let args = CommandParser::<DatadirArgs>::parse_from(["evm"]).args;
         assert_eq!(args, default_args);
     }
 }

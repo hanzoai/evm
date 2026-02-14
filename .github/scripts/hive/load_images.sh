@@ -13,7 +13,7 @@ IMAGES=(
     "/tmp/ethereum_sync.tar"
     "/tmp/eels_engine.tar"
     "/tmp/eels_rlp.tar"
-    "/tmp/reth_image.tar"
+    "/tmp/evm_image.tar"
 )
 
 # Loop through the images and load them

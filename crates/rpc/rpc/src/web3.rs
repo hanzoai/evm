@@ -1,9 +1,9 @@
 use alloy_primitives::{keccak256, Bytes, B256};
 use async_trait::async_trait;
 use jsonrpsee::core::RpcResult;
-use reth_network_api::NetworkInfo;
-use reth_rpc_api::Web3ApiServer;
-use reth_rpc_server_types::ToRpcResult;
+use hanzo_evm_network_api::NetworkInfo;
+use hanzo_evm_rpc_api::Web3ApiServer;
+use hanzo_evm_rpc_server_types::ToRpcResult;
 
 /// `web3` API implementation.
 ///

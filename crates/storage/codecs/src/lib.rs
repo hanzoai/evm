@@ -9,9 +9,9 @@
 //! - `alloy`: [Compact] implementation for various alloy types.
 
 #![doc(
-    html_logo_url = "https://raw.githubusercontent.com/paradigmxyz/reth/main/assets/reth-docs.png",
+    html_logo_url = "https://raw.githubusercontent.com/hanzoai/evm/main/assets/evm-docs.png",
     html_favicon_url = "https://avatars0.githubusercontent.com/u/97369466?s=256",
-    issue_tracker_base_url = "https://github.com/paradigmxyz/reth/issues/"
+    issue_tracker_base_url = "https://github.com/hanzoai/evm/issues/"
 )]
 #![cfg_attr(not(test), warn(unused_crate_dependencies))]
 #![cfg_attr(docsrs, feature(doc_cfg))]
@@ -19,7 +19,7 @@
 
 extern crate alloc;
 
-pub use reth_codecs_derive::*;
+pub use hanzo_evm_codecs_derive::*;
 use serde as _;
 
 use alloy_primitives::{Address, Bloom, Bytes, FixedBytes, U256};
@@ -699,7 +699,7 @@ mod tests {
 
     #[derive(Debug, PartialEq, Clone, Serialize, Deserialize, Compact, arbitrary::Arbitrary)]
     #[add_arbitrary_tests(crate, compact)]
-    #[reth_codecs(crate = "crate")]
+    #[hanzo_evm_codecs(crate = "crate")]
     struct TestStruct {
         f_u64: u64,
         f_u256: U256,
@@ -752,7 +752,7 @@ mod tests {
         Debug, PartialEq, Clone, Default, Serialize, Deserialize, Compact, arbitrary::Arbitrary,
     )]
     #[add_arbitrary_tests(crate, compact)]
-    #[reth_codecs(crate = "crate")]
+    #[hanzo_evm_codecs(crate = "crate")]
     enum TestEnum {
         #[default]
         Var0,

@@ -116,7 +116,7 @@ impl std::error::Error for OrderedRootError {}
 /// # Example
 ///
 /// ```
-/// use reth_trie_common::ordered_root::OrderedTrieRootEncodedBuilder;
+/// use hanzo_evm_trie_common::ordered_root::OrderedTrieRootEncodedBuilder;
 ///
 /// // Create a builder for 2 pre-encoded items
 /// let mut builder = OrderedTrieRootEncodedBuilder::new(2);

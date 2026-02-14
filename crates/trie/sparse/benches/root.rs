@@ -4,7 +4,7 @@ use alloy_primitives::{map::B256Map, B256, U256};
 use criterion::{criterion_group, criterion_main, BenchmarkId, Criterion};
 use itertools::Itertools;
 use proptest::{prelude::*, strategy::ValueTree, test_runner::TestRunner};
-use reth_trie::{
+use hanzo_evm_trie::{
     hashed_cursor::{noop::NoopHashedCursor, HashedPostStateCursor},
     node_iter::{TrieElement, TrieNodeIter},
     trie_cursor::{noop::NoopStorageTrieCursor, InMemoryTrieCursor},
@@ -12,8 +12,8 @@ use reth_trie::{
     walker::TrieWalker,
     HashedStorage,
 };
-use reth_trie_common::{updates::TrieUpdatesSorted, HashBuilder, Nibbles};
-use reth_trie_sparse::{provider::DefaultTrieNodeProvider, RevealableSparseTrie, SerialSparseTrie};
+use hanzo_evm_trie_common::{updates::TrieUpdatesSorted, HashBuilder, Nibbles};
+use hanzo_evm_trie_sparse::{provider::DefaultTrieNodeProvider, RevealableSparseTrie, SerialSparseTrie};
 
 fn calculate_root_from_leaves(c: &mut Criterion) {
     let mut group = c.benchmark_group("calculate root from leaves");
@@ -158,7 +158,7 @@ fn calculate_root_from_leaves_repeated(c: &mut Criterion) {
                                 let mut storages = alloy_primitives::map::B256Map::default();
                                 storages.insert(hashed_address, storage_sorted.clone());
                                 let hashed_post_state =
-                                    reth_trie::HashedPostStateSorted::new(Vec::new(), storages);
+                                    hanzo_evm_trie::HashedPostStateSorted::new(Vec::new(), storages);
 
                                 let mut node_iter = TrieNodeIter::storage_trie(
                                     walker,

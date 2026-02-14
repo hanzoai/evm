@@ -11,10 +11,10 @@ format = "per-crate"
 # Fixed groups: all always share the same version
 # reth binaries share version
 [[fixed]]
-members = ["reth"]
+members = ["evm"]
 
 # Packages to ignore (internal/test-only crates)
 ignore = [
     "reth-testing-utils",
-    "reth-bench",
+    "evm-bench",
 ]

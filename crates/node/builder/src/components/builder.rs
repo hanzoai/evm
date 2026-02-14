@@ -7,13 +7,13 @@ use crate::{
     },
     BuilderContext, ConfigureEvm, FullNodeTypes,
 };
-use reth_chainspec::EthChainSpec;
-use reth_consensus::{noop::NoopConsensus, FullConsensus};
-use reth_network::{types::NetPrimitivesFor, EthNetworkPrimitives, NetworkPrimitives};
-use reth_network_api::{noop::NoopNetwork, FullNetwork};
-use reth_node_api::{BlockTy, BodyTy, HeaderTy, NodeTypes, PrimitivesTy, ReceiptTy, TxTy};
-use reth_payload_builder::PayloadBuilderHandle;
-use reth_transaction_pool::{
+use hanzo_evm_chainspec::EthChainSpec;
+use hanzo_evm_consensus::{noop::NoopConsensus, FullConsensus};
+use hanzo_evm_network::{types::NetPrimitivesFor, EthNetworkPrimitives, NetworkPrimitives};
+use hanzo_evm_network_api::{noop::NoopNetwork, FullNetwork};
+use hanzo_evm_node_api::{BlockTy, BodyTy, HeaderTy, NodeTypes, PrimitivesTy, ReceiptTy, TxTy};
+use hanzo_evm_payload_builder::PayloadBuilderHandle;
+use hanzo_evm_transaction_pool::{
     noop::NoopTransactionPool, EthPoolTransaction, EthPooledTransaction, PoolPooledTx,
     PoolTransaction, TransactionPool,
 };
@@ -385,17 +385,17 @@ where
             _marker,
         } = self;
 
-        let evm_config = executor_builder.build_evm(context).await?;
-        let pool = pool_builder.build_pool(context, evm_config.clone()).await?;
+        let hanzo_evm_config = executor_builder.build_evm(context).await?;
+        let pool = pool_builder.build_pool(context, hanzo_evm_config.clone()).await?;
         let network = network_builder.build_network(context, pool.clone()).await?;
         let payload_builder_handle = payload_builder
-            .spawn_payload_builder_service(context, pool.clone(), evm_config.clone())
+            .spawn_payload_builder_service(context, pool.clone(), hanzo_evm_config.clone())
             .await?;
         let consensus = consensus_builder.build_consensus(context).await?;
 
         Ok(Components {
             transaction_pool: pool,
-            evm_config,
+            hanzo_evm_config,
             network,
             payload_builder_handle,
             consensus,
@@ -478,7 +478,7 @@ where
     async fn build_pool(
         self,
         _ctx: &BuilderContext<N>,
-        _evm_config: Evm,
+        _hanzo_evm_config: Evm,
     ) -> eyre::Result<Self::Pool> {
         Ok(NoopTransactionPool::<Tx>::new())
     }
@@ -558,7 +558,7 @@ where
         self,
         _ctx: &BuilderContext<N>,
         _pool: Pool,
-        _evm_config: EVM,
+        _hanzo_evm_config: EVM,
     ) -> eyre::Result<PayloadBuilderHandle<<N::Types as NodeTypes>::Payload>> {
         Ok(PayloadBuilderHandle::<<N::Types as NodeTypes>::Payload>::noop())
     }

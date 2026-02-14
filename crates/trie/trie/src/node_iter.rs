@@ -3,7 +3,7 @@ use crate::{
 };
 use alloy_primitives::B256;
 use alloy_trie::proof::AddedRemovedKeys;
-use reth_storage_errors::db::DatabaseError;
+use hanzo_evm_storage_errors::db::DatabaseError;
 use tracing::{instrument, trace};
 
 /// Represents a branch node in the trie.
@@ -326,8 +326,8 @@ mod tests {
         BranchNodeCompact, HashBuilder, Nibbles, TrieAccount, TrieMask, EMPTY_ROOT_HASH,
     };
     use itertools::Itertools;
-    use reth_primitives_traits::Account;
-    use reth_trie_common::{
+    use hanzo_evm_primitives_traits::Account;
+    use hanzo_evm_trie_common::{
         prefix_set::PrefixSetMut, updates::TrieUpdates, BranchNode, HashedPostState, LeafNode,
         RlpNode,
     };
@@ -388,7 +388,7 @@ mod tests {
             )))
         }
 
-        reth_tracing::init_test_tracing();
+        hanzo_evm_tracing::init_test_tracing();
 
         // Extension (Key = 0x0000000000000000000000000000000000000000000000000000000000000)
         // └── Branch (`branch_node_0`)

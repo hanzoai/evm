@@ -2,9 +2,9 @@
 
 use crate::{AsEthApiError, FromEthApiError, RpcNodeCore};
 use alloy_rpc_types_eth::Block;
-use reth_rpc_convert::{RpcConvert, SignableTxRequest};
-pub use reth_rpc_convert::{RpcTransaction, RpcTxReq, RpcTypes};
-use reth_storage_api::ProviderTx;
+use hanzo_evm_rpc_convert::{RpcConvert, SignableTxRequest};
+pub use hanzo_evm_rpc_convert::{RpcTransaction, RpcTxReq, RpcTypes};
+use hanzo_evm_storage_api::ProviderTx;
 use std::error::Error;
 
 /// Network specific `eth` API types.

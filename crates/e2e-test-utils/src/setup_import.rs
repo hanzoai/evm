@@ -1,21 +1,21 @@
 //! Setup utilities for importing RLP chain data before starting nodes.
 
 use crate::{node::NodeTestContext, NodeHelperType, Wallet};
-use reth_chainspec::ChainSpec;
-use reth_cli_commands::import_core::{import_blocks_from_file, ImportConfig};
-use reth_config::Config;
-use reth_db::DatabaseEnv;
-use reth_node_api::{NodeTypesWithDBAdapter, TreeConfig};
-use reth_node_builder::{EngineNodeLauncher, Node, NodeBuilder, NodeConfig, NodeHandle};
-use reth_node_core::args::{DiscoveryArgs, NetworkArgs, RpcServerArgs};
-use reth_node_ethereum::EthereumNode;
-use reth_provider::{
+use hanzo_evm_chainspec::ChainSpec;
+use hanzo_evm_cli_commands::import_core::{import_blocks_from_file, ImportConfig};
+use hanzo_evm_config::Config;
+use hanzo_evm_db::DatabaseEnv;
+use hanzo_evm_node_api::{NodeTypesWithDBAdapter, TreeConfig};
+use hanzo_evm_node_builder::{EngineNodeLauncher, Node, NodeBuilder, NodeConfig, NodeHandle};
+use hanzo_evm_node_core::args::{DiscoveryArgs, NetworkArgs, RpcServerArgs};
+use hanzo_evm_node_ethereum::EthereumNode;
+use hanzo_evm_provider::{
     providers::BlockchainProvider, DatabaseProviderFactory, ProviderFactory, StageCheckpointReader,
     StaticFileProviderFactory,
 };
-use reth_rpc_server_types::RpcModuleSelection;
-use reth_stages_types::StageId;
-use reth_tasks::TaskManager;
+use hanzo_evm_rpc_server_types::RpcModuleSelection;
+use hanzo_evm_stages_types::StageId;
+use hanzo_evm_tasks::TaskManager;
 use std::{path::Path, sync::Arc};
 use tempfile::TempDir;
 use tracing::{debug, info, span, Level};
@@ -62,7 +62,7 @@ pub async fn setup_engine_with_chain_import(
     is_dev: bool,
     tree_config: TreeConfig,
     rlp_path: &Path,
-    attributes_generator: impl Fn(u64) -> reth_payload_builder::EthPayloadBuilderAttributes
+    attributes_generator: impl Fn(u64) -> hanzo_evm_payload_builder::EthPayloadBuilderAttributes
         + Send
         + Sync
         + Copy
@@ -98,7 +98,7 @@ pub async fn setup_engine_with_chain_import(
 
         // Set the datadir
         node_config.datadir.datadir =
-            reth_node_core::dirs::MaybePlatformPath::from(datadir.clone());
+            hanzo_evm_node_core::dirs::MaybePlatformPath::from(datadir.clone());
         debug!(target: "e2e::import", "Node {idx} datadir: {datadir:?}");
 
         let span = span!(Level::INFO, "node", idx);
@@ -113,8 +113,8 @@ pub async fn setup_engine_with_chain_import(
         let rocksdb_dir_path = datadir.join("rocksdb");
 
         // Initialize the database using init_db (same as CLI import command)
-        let db_args = reth_node_core::args::DatabaseArgs::default().database_args();
-        let db = reth_db::init_db(&db_path, db_args)?;
+        let db_args = hanzo_evm_node_core::args::DatabaseArgs::default().database_args();
+        let db = hanzo_evm_db::init_db(&db_path, db_args)?;
 
         // Create a provider factory with the initialized database (use regular DB, not
         // TempDatabase) We need to specify the node types properly for the adapter
@@ -122,17 +122,17 @@ pub async fn setup_engine_with_chain_import(
             ProviderFactory::<NodeTypesWithDBAdapter<EthereumNode, DatabaseEnv>>::new(
                 db.clone(),
                 chain_spec.clone(),
-                reth_provider::providers::StaticFileProvider::read_write(
+                hanzo_evm_provider::providers::StaticFileProvider::read_write(
                     static_files_path.clone(),
                 )?,
-                reth_provider::providers::RocksDBProvider::builder(rocksdb_dir_path)
+                hanzo_evm_provider::providers::RocksDBProvider::builder(rocksdb_dir_path)
                     .with_default_tables()
                     .build()
                     .unwrap(),
             )?;
 
         // Initialize genesis if needed
-        reth_db_common::init::init_genesis(&provider_factory)?;
+        hanzo_evm_db_common::init::init_genesis(&provider_factory)?;
 
         // Import the chain data
         // Use no_state to skip state validation for test chains
@@ -140,16 +140,16 @@ pub async fn setup_engine_with_chain_import(
         let config = Config::default();
 
         // Create EVM and consensus for Ethereum
-        let evm_config = reth_node_ethereum::EthEvmConfig::new(chain_spec.clone());
+        let hanzo_evm_config = hanzo_evm_node_ethereum::EthEvmConfig::new(chain_spec.clone());
         // Use NoopConsensus to skip gas limit validation for test imports
-        let consensus = reth_consensus::noop::NoopConsensus::arc();
+        let consensus = hanzo_evm_consensus::noop::NoopConsensus::arc();
 
         let result = import_blocks_from_file(
             rlp_path,
             import_config,
             provider_factory.clone(),
             &config,
-            evm_config,
+            hanzo_evm_config,
             consensus,
         )
         .await?;
@@ -276,11 +276,11 @@ pub fn load_forkchoice_state(path: &Path) -> eyre::Result<alloy_rpc_types_engine
 mod tests {
     use super::*;
     use crate::test_rlp_utils::{create_fcu_json, generate_test_blocks, write_blocks_to_rlp};
-    use reth_chainspec::{ChainSpecBuilder, MAINNET};
-    use reth_db::mdbx::DatabaseArguments;
-    use reth_payload_builder::EthPayloadBuilderAttributes;
-    use reth_primitives::SealedBlock;
-    use reth_provider::{
+    use hanzo_evm_chainspec::{ChainSpecBuilder, MAINNET};
+    use hanzo_evm_db::mdbx::DatabaseArguments;
+    use hanzo_evm_payload_builder::EthPayloadBuilderAttributes;
+    use hanzo_evm_primitives::SealedBlock;
+    use hanzo_evm_provider::{
         test_utils::MockNodeTypesWithDB, BlockHashReader, BlockNumReader, BlockReaderIdExt,
     };
     use std::path::PathBuf;
@@ -289,7 +289,7 @@ mod tests {
     async fn test_stage_checkpoints_persistence() {
         // This test specifically verifies that stage checkpoints are persisted correctly
         // when reopening the database
-        reth_tracing::init_test_tracing();
+        hanzo_evm_tracing::init_test_tracing();
 
         let chain_spec = Arc::new(
             ChainSpecBuilder::default()
@@ -319,17 +319,17 @@ mod tests {
 
         // Import the chain
         {
-            let db_args = reth_node_core::args::DatabaseArgs::default().database_args();
-            let db = reth_db::init_db(&db_path, db_args).unwrap();
+            let db_args = hanzo_evm_node_core::args::DatabaseArgs::default().database_args();
+            let db = hanzo_evm_db::init_db(&db_path, db_args).unwrap();
 
             let provider_factory: ProviderFactory<
-                NodeTypesWithDBAdapter<reth_node_ethereum::EthereumNode, DatabaseEnv>,
+                NodeTypesWithDBAdapter<hanzo_evm_node_ethereum::EthereumNode, DatabaseEnv>,
             > = ProviderFactory::new(
                 db.clone(),
                 chain_spec.clone(),
-                reth_provider::providers::StaticFileProvider::read_write(static_files_path.clone())
+                hanzo_evm_provider::providers::StaticFileProvider::read_write(static_files_path.clone())
                     .unwrap(),
-                reth_provider::providers::RocksDBProvider::builder(rocksdb_dir_path.clone())
+                hanzo_evm_provider::providers::RocksDBProvider::builder(rocksdb_dir_path.clone())
                     .with_default_tables()
                     .build()
                     .unwrap(),
@@ -337,21 +337,21 @@ mod tests {
             .expect("failed to create provider factory");
 
             // Initialize genesis
-            reth_db_common::init::init_genesis(&provider_factory).unwrap();
+            hanzo_evm_db_common::init::init_genesis(&provider_factory).unwrap();
 
             // Import the chain data
             let import_config = ImportConfig::default();
             let config = Config::default();
-            let evm_config = reth_node_ethereum::EthEvmConfig::new(chain_spec.clone());
+            let hanzo_evm_config = hanzo_evm_node_ethereum::EthEvmConfig::new(chain_spec.clone());
             // Use NoopConsensus to skip gas limit validation for test imports
-            let consensus = reth_consensus::noop::NoopConsensus::arc();
+            let consensus = hanzo_evm_consensus::noop::NoopConsensus::arc();
 
             let result = import_blocks_from_file(
                 &rlp_path,
                 import_config,
                 provider_factory.clone(),
                 &config,
-                evm_config,
+                hanzo_evm_config,
                 consensus,
             )
             .await
@@ -384,16 +384,16 @@ mod tests {
 
         // Now reopen the database and verify checkpoints are still there
         {
-            let db = reth_db::init_db(&db_path, DatabaseArguments::default()).unwrap();
+            let db = hanzo_evm_db::init_db(&db_path, DatabaseArguments::default()).unwrap();
 
             let provider_factory: ProviderFactory<
-                NodeTypesWithDBAdapter<reth_node_ethereum::EthereumNode, DatabaseEnv>,
+                NodeTypesWithDBAdapter<hanzo_evm_node_ethereum::EthereumNode, DatabaseEnv>,
             > = ProviderFactory::new(
                 db,
                 chain_spec.clone(),
-                reth_provider::providers::StaticFileProvider::read_only(static_files_path, false)
+                hanzo_evm_provider::providers::StaticFileProvider::read_only(static_files_path, false)
                     .unwrap(),
-                reth_provider::providers::RocksDBProvider::builder(rocksdb_dir_path)
+                hanzo_evm_provider::providers::RocksDBProvider::builder(rocksdb_dir_path)
                     .with_default_tables()
                     .build()
                     .unwrap(),
@@ -467,7 +467,7 @@ mod tests {
     #[tokio::test]
     async fn test_import_blocks_only() {
         // Tests just the block import functionality without full node setup
-        reth_tracing::init_test_tracing();
+        hanzo_evm_tracing::init_test_tracing();
 
         let chain_spec = create_test_chain_spec();
         let temp_dir = tempfile::tempdir().expect("Failed to create temp dir");
@@ -478,9 +478,9 @@ mod tests {
         let datadir = temp_dir.path().join("datadir");
         std::fs::create_dir_all(&datadir).unwrap();
         let db_path = datadir.join("db");
-        let db_args = reth_node_core::args::DatabaseArgs::default().database_args();
-        let db_env = reth_db::init_db(&db_path, db_args).unwrap();
-        let db = Arc::new(reth_db::test_utils::TempDatabase::new(db_env, db_path));
+        let db_args = hanzo_evm_node_core::args::DatabaseArgs::default().database_args();
+        let db_env = hanzo_evm_db::init_db(&db_path, db_args).unwrap();
+        let db = Arc::new(hanzo_evm_db::test_utils::TempDatabase::new(db_env, db_path));
 
         // Create static files path
         let static_files_path = datadir.join("static_files");
@@ -492,8 +492,8 @@ mod tests {
         let provider_factory: ProviderFactory<MockNodeTypesWithDB> = ProviderFactory::new(
             db.clone(),
             chain_spec.clone(),
-            reth_provider::providers::StaticFileProvider::read_write(static_files_path).unwrap(),
-            reth_provider::providers::RocksDBProvider::builder(rocksdb_dir_path)
+            hanzo_evm_provider::providers::StaticFileProvider::read_write(static_files_path).unwrap(),
+            hanzo_evm_provider::providers::RocksDBProvider::builder(rocksdb_dir_path)
                 .with_default_tables()
                 .build()
                 .unwrap(),
@@ -501,21 +501,21 @@ mod tests {
         .expect("failed to create provider factory");
 
         // Initialize genesis
-        reth_db_common::init::init_genesis(&provider_factory).unwrap();
+        hanzo_evm_db_common::init::init_genesis(&provider_factory).unwrap();
 
         // Import the chain data
         let import_config = ImportConfig::default();
         let config = Config::default();
-        let evm_config = reth_node_ethereum::EthEvmConfig::new(chain_spec.clone());
+        let hanzo_evm_config = hanzo_evm_node_ethereum::EthEvmConfig::new(chain_spec.clone());
         // Use NoopConsensus to skip gas limit validation for test imports
-        let consensus = reth_consensus::noop::NoopConsensus::arc();
+        let consensus = hanzo_evm_consensus::noop::NoopConsensus::arc();
 
         let result = import_blocks_from_file(
             &rlp_path,
             import_config,
             provider_factory.clone(),
             &config,
-            evm_config,
+            hanzo_evm_config,
             consensus,
         )
         .await
@@ -544,7 +544,7 @@ mod tests {
     #[tokio::test]
     async fn test_import_with_node_integration() {
         // Tests the full integration with node setup, forkchoice updates, and syncing
-        reth_tracing::init_test_tracing();
+        hanzo_evm_tracing::init_test_tracing();
 
         let chain_spec = create_test_chain_spec();
         let temp_dir = tempfile::tempdir().expect("Failed to create temp dir");

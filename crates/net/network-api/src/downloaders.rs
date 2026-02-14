@@ -3,7 +3,7 @@
 use std::fmt::Debug;
 
 use futures::Future;
-use reth_network_p2p::BlockClient;
+use hanzo_evm_network_p2p::BlockClient;
 use tokio::sync::oneshot;
 
 /// Provides client for downloading blocks.

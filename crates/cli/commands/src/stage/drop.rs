@@ -1,29 +1,29 @@
 //! Database debugging tool
 use crate::common::{AccessRights, CliNodeTypes, Environment, EnvironmentArgs};
 use clap::Parser;
-use reth_chainspec::EthChainSpec;
-use reth_cli::chainspec::ChainSpecParser;
-use reth_db::{mdbx::tx::Tx, DatabaseError};
-use reth_db_api::{
+use hanzo_evm_chainspec::EthChainSpec;
+use hanzo_evm_cli::chainspec::ChainSpecParser;
+use hanzo_evm_db::{mdbx::tx::Tx, DatabaseError};
+use hanzo_evm_db_api::{
     tables,
     transaction::{DbTx, DbTxMut},
 };
-use reth_db_common::{
+use hanzo_evm_db_common::{
     init::{insert_genesis_header, insert_genesis_history, insert_genesis_state},
     DbTool,
 };
-use reth_node_api::{HeaderTy, ReceiptTy, TxTy};
-use reth_node_core::args::StageEnum;
-use reth_provider::{
+use hanzo_evm_node_api::{HeaderTy, ReceiptTy, TxTy};
+use hanzo_evm_node_core::args::StageEnum;
+use hanzo_evm_provider::{
     DBProvider, RocksDBProviderFactory, StaticFileProviderFactory, StaticFileWriter,
     StorageSettingsCache,
 };
-use reth_prune::PruneSegment;
-use reth_stages::StageId;
-use reth_static_file_types::StaticFileSegment;
+use hanzo_evm_prune::PruneSegment;
+use hanzo_evm_stages::StageId;
+use hanzo_evm_static_file_types::StaticFileSegment;
 use std::sync::Arc;
 
-/// `reth drop-stage` command
+/// `evm drop-stage` command
 #[derive(Debug, Parser)]
 pub struct Command<C: ChainSpecParser> {
     #[command(flatten)]
@@ -221,7 +221,7 @@ impl<C: ChainSpecParser> Command<C> {
 }
 
 fn reset_prune_checkpoint(
-    tx: &Tx<reth_db::mdbx::RW>,
+    tx: &Tx<hanzo_evm_db::mdbx::RW>,
     prune_segment: PruneSegment,
 ) -> Result<(), DatabaseError> {
     if let Some(mut prune_checkpoint) = tx.get::<tables::PruneCheckpoints>(prune_segment)? {
@@ -234,7 +234,7 @@ fn reset_prune_checkpoint(
 }
 
 fn reset_stage_checkpoint(
-    tx: &Tx<reth_db::mdbx::RW>,
+    tx: &Tx<hanzo_evm_db::mdbx::RW>,
     stage_id: StageId,
 ) -> Result<(), DatabaseError> {
     tx.put::<tables::StageCheckpoints>(stage_id.to_string(), Default::default())?;

@@ -1,6 +1,6 @@
 //! Metrics for the payload builder impl
 
-use reth_metrics::{metrics::Counter, Metrics};
+use hanzo_evm_metrics::{metrics::Counter, Metrics};
 
 /// Payload builder metrics
 #[derive(Metrics)]

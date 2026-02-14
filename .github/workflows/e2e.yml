@@ -39,7 +39,7 @@ jobs:
             --workspace \
             --exclude 'example-*' \
             --exclude 'exex-subscription' \
-            --exclude 'reth-bench' \
+            --exclude 'evm-bench' \
             --exclude 'ef-tests' \
             --exclude 'reth' \
             -E 'binary(e2e_testsuite)'
@@ -62,5 +62,5 @@ jobs:
         run: |
           cargo nextest run \
             --locked --features "edge" \
-            -p reth-e2e-test-utils \
+            -p evm-e2e-test-utils \
             -E 'binary(rocksdb)'

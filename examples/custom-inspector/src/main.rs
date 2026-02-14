@@ -16,7 +16,7 @@ use alloy_primitives::Address;
 use alloy_rpc_types_eth::{state::EvmOverrides, TransactionRequest};
 use clap::Parser;
 use futures_util::StreamExt;
-use reth_ethereum::{
+use hanzo_evm_ethereum::{
     cli::{chainspec::EthereumChainSpecParser, interface::Cli},
     evm::{
         primitives::ConfigureEvm,
@@ -33,7 +33,7 @@ use reth_ethereum::{
 };
 
 fn main() {
-    Cli::<EthereumChainSpecParser, RethCliTxpoolExt>::parse()
+    Cli::<EthereumChainSpecParser, EvmCliTxpoolExt>::parse()
         .run(|builder, args| async move {
             // launch the node
             let handle = builder.node(EthereumNode::default()).launch().await?;
@@ -63,7 +63,7 @@ fn main() {
                         let call_request =
                             TransactionRequest::from_recovered_transaction(tx.to_consensus());
 
-                        let evm_config = node.evm_config.clone();
+                        let hanzo_evm_config = node.hanzo_evm_config.clone();
 
                         let result = eth_api
                             .spawn_with_call_at(
@@ -72,7 +72,7 @@ fn main() {
                                 EvmOverrides::default(),
                                 move |db, evm_env, tx_env| {
                                     let mut dummy_inspector = DummyInspector::default();
-                                    let mut evm = evm_config.evm_with_env_and_inspector(
+                                    let mut evm = hanzo_evm_config.evm_with_env_and_inspector(
                                         db,
                                         evm_env,
                                         &mut dummy_inspector,
@@ -103,15 +103,15 @@ fn main() {
         .unwrap();
 }
 
-/// Our custom cli args extension that adds one flag to reth default CLI.
+/// Our custom cli args extension that adds one flag to evm default CLI.
 #[derive(Debug, Clone, Default, clap::Args)]
-struct RethCliTxpoolExt {
+struct EvmCliTxpoolExt {
     /// The addresses of the recipients that we want to inspect.
     #[arg(long, value_delimiter = ',')]
     pub recipients: Vec<Address>,
 }
 
-impl RethCliTxpoolExt {
+impl EvmCliTxpoolExt {
     /// Check if the recipient is in the list of recipients to inspect.
     pub fn is_match(&self, recipient: &Address) -> bool {
         self.recipients.is_empty() || self.recipients.contains(recipient)

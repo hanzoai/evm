@@ -2,6 +2,6 @@
 
 #[doc(inline)]
 #[allow(deprecated)]
-pub use reth_evm_ethereum::execute::EthExecutorProvider;
+pub use hanzo_evm_eth_execution::execute::EthExecutorProvider;
 #[doc(inline)]
-pub use reth_evm_ethereum::{EthEvm, EthEvmConfig};
+pub use hanzo_evm_eth_execution::{EthEvm, EthEvmConfig};

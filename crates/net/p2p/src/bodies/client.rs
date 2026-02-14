@@ -7,10 +7,10 @@ use std::{
 use crate::{download::DownloadClient, error::PeerRequestResult, priority::Priority};
 use alloy_primitives::B256;
 use futures::{Future, FutureExt};
-use reth_primitives_traits::BlockBody;
+use hanzo_evm_primitives_traits::BlockBody;
 
 /// The bodies future type
-pub type BodiesFut<B = reth_ethereum_primitives::BlockBody> =
+pub type BodiesFut<B = hanzo_evm_ethereum_primitives::BlockBody> =
     Pin<Box<dyn Future<Output = PeerRequestResult<Vec<B>>> + Send + Sync>>;
 
 /// A client capable of downloading block bodies.

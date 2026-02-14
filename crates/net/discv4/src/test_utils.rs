@@ -9,8 +9,8 @@ use crate::{
 };
 use alloy_primitives::{hex, B256, B512};
 use rand_08::{thread_rng, Rng, RngCore};
-use reth_ethereum_forks::{ForkHash, ForkId};
-use reth_network_peers::{pk2id, NodeRecord};
+use hanzo_evm_ethereum_forks::{ForkHash, ForkId};
+use hanzo_evm_network_peers::{pk2id, NodeRecord};
 use secp256k1::{SecretKey, SECP256K1};
 use std::{
     collections::{HashMap, HashSet},
@@ -326,7 +326,7 @@ mod tests {
     /// messages and we check the actual service receives answers
     #[tokio::test]
     async fn can_mock_discovery() {
-        reth_tracing::init_test_tracing();
+        hanzo_evm_tracing::init_test_tracing();
 
         let mut rng = thread_rng();
         let (_, mut service) = create_discv4().await;

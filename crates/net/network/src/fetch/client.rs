@@ -3,9 +3,9 @@
 use crate::{fetch::DownloadRequest, flattened_response::FlattenedResponse};
 use alloy_primitives::B256;
 use futures::{future, future::Either};
-use reth_eth_wire::{EthNetworkPrimitives, NetworkPrimitives};
-use reth_network_api::test_utils::PeersHandle;
-use reth_network_p2p::{
+use hanzo_evm_eth_wire::{EthNetworkPrimitives, NetworkPrimitives};
+use hanzo_evm_network_api::test_utils::PeersHandle;
+use hanzo_evm_network_p2p::{
     bodies::client::{BodiesClient, BodiesFut},
     download::DownloadClient,
     error::{PeerRequestResult, RequestError},
@@ -13,8 +13,8 @@ use reth_network_p2p::{
     priority::Priority,
     BlockClient,
 };
-use reth_network_peers::PeerId;
-use reth_network_types::ReputationChangeKind;
+use hanzo_evm_network_peers::PeerId;
+use hanzo_evm_network_types::ReputationChangeKind;
 use std::{
     ops::RangeInclusive,
     sync::{

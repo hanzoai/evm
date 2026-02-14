@@ -1,6 +1,6 @@
 //! Helper trait for full rpc provider
 
-use reth_chainspec::{ChainSpecProvider, EthereumHardforks};
+use hanzo_evm_chainspec::{ChainSpecProvider, EthereumHardforks};
 
 use crate::{
     BlockReaderIdExt, HeaderProvider, StageCheckpointReader, StateProviderFactory,

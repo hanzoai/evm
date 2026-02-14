@@ -4,10 +4,10 @@ use crate::{stats::ParallelTrieTracker, storage_root_targets::StorageRootTargets
 use alloy_primitives::B256;
 use alloy_rlp::{BufMut, Encodable};
 use itertools::Itertools;
-use reth_execution_errors::{SparseTrieError, StateProofError, StorageRootError};
-use reth_provider::{DatabaseProviderROFactory, ProviderError};
-use reth_storage_errors::db::DatabaseError;
-use reth_trie::{
+use hanzo_evm_execution_errors::{SparseTrieError, StateProofError, StorageRootError};
+use hanzo_evm_provider::{DatabaseProviderROFactory, ProviderError};
+use hanzo_evm_storage_errors::db::DatabaseError;
+use hanzo_evm_trie::{
     hashed_cursor::HashedCursorFactory,
     node_iter::{TrieElement, TrieNodeIter},
     prefix_set::TriePrefixSets,
@@ -176,8 +176,8 @@ where
                     };
 
                     let (storage_root, _, updates) = match storage_root_result {
-                        reth_trie::StorageRootProgress::Complete(root, _, updates) => (root, (), updates),
-                        reth_trie::StorageRootProgress::Progress(..) => {
+                        hanzo_evm_trie::StorageRootProgress::Complete(root, _, updates) => (root, (), updates),
+                        hanzo_evm_trie::StorageRootProgress::Progress(..) => {
                             return Err(ParallelStateRootError::StorageRoot(
                                 StorageRootError::Database(DatabaseError::Other(
                                     "StorageRoot returned Progress variant in parallel trie calculation".to_string()
@@ -299,16 +299,16 @@ mod tests {
     use super::*;
     use alloy_primitives::{keccak256, Address, U256};
     use rand::Rng;
-    use reth_primitives_traits::{Account, StorageEntry};
-    use reth_provider::{test_utils::create_test_provider_factory, HashingWriter};
-    use reth_trie::{test_utils, HashedPostState, HashedStorage};
+    use hanzo_evm_primitives_traits::{Account, StorageEntry};
+    use hanzo_evm_provider::{test_utils::create_test_provider_factory, HashingWriter};
+    use hanzo_evm_trie::{test_utils, HashedPostState, HashedStorage};
     use std::sync::Arc;
 
     #[tokio::test]
     async fn random_parallel_root() {
         let factory = create_test_provider_factory();
-        let changeset_cache = reth_trie_db::ChangesetCache::new();
-        let mut overlay_factory = reth_provider::providers::OverlayStateProviderFactory::new(
+        let changeset_cache = hanzo_evm_trie_db::ChangesetCache::new();
+        let mut overlay_factory = hanzo_evm_provider::providers::OverlayStateProviderFactory::new(
             factory.clone(),
             changeset_cache,
         );

@@ -6,7 +6,7 @@
 use crate::{updates::TrieUpdatesSorted, HashedPostStateSorted};
 use alloc::sync::Arc;
 use core::fmt;
-use reth_primitives_traits::sync::OnceLock;
+use hanzo_evm_primitives_traits::sync::OnceLock;
 
 /// Container for sorted trie data: hashed state and trie updates.
 ///

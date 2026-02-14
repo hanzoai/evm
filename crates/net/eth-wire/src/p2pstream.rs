@@ -12,9 +12,9 @@ use alloy_primitives::{
 use alloy_rlp::{Decodable, Encodable, Error as RlpError, EMPTY_LIST_CODE};
 use futures::{Sink, SinkExt, StreamExt};
 use pin_project::pin_project;
-use reth_codecs::add_arbitrary_tests;
-use reth_metrics::metrics::counter;
-use reth_primitives_traits::GotExpected;
+use hanzo_evm_codecs::add_arbitrary_tests;
+use hanzo_evm_metrics::metrics::counter;
+use hanzo_evm_primitives_traits::GotExpected;
 use std::{
     collections::VecDeque,
     future::Future,
@@ -56,7 +56,7 @@ const PING_INTERVAL: Duration = Duration::from_secs(60);
 /// `p2p` stream.
 ///
 /// Note: this default is rather low because it is expected that the [`P2PStream`] wraps an
-/// [`ECIESStream`](reth_ecies::stream::ECIESStream) which internally already buffers a few MB of
+/// [`ECIESStream`](hanzo_evm_ecies::stream::ECIESStream) which internally already buffers a few MB of
 /// encoded data.
 const MAX_P2P_CAPACITY: usize = 2;
 
@@ -227,7 +227,7 @@ where
 /// This stream emits _non-empty_ Bytes that start with the normalized message id, so that the first
 /// byte of each message starts from 0. If this stream only supports a single capability, for
 /// example `eth` then the first byte of each message will match
-/// [EthMessageID](reth_eth_wire_types::message::EthMessageID).
+/// [EthMessageID](hanzo_evm_eth_wire_types::message::EthMessageID).
 #[pin_project]
 #[derive(Debug)]
 pub struct P2PStream<S> {
@@ -804,7 +804,7 @@ mod tests {
 
     #[tokio::test]
     async fn test_can_disconnect() {
-        reth_tracing::init_test_tracing();
+        hanzo_evm_tracing::init_test_tracing();
         let listener = TcpListener::bind("127.0.0.1:0").await.unwrap();
         let local_addr = listener.local_addr().unwrap();
 
@@ -842,7 +842,7 @@ mod tests {
 
     #[tokio::test]
     async fn test_can_disconnect_weird_disconnect_encoding() {
-        reth_tracing::init_test_tracing();
+        hanzo_evm_tracing::init_test_tracing();
         let listener = TcpListener::bind("127.0.0.1:0").await.unwrap();
         let local_addr = listener.local_addr().unwrap();
 

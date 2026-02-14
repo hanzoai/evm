@@ -11,7 +11,7 @@
 //! and <https://era.ithaca.xyz/sepolia-era1/> for sepolia to keep the tests efficient.
 
 use alloy_consensus::{BlockBody, BlockHeader, Header, ReceiptEnvelope};
-use reth_era::{
+use hanzo_evm_era::{
     common::file_ops::{EraFileFormat, StreamReader, StreamWriter},
     e2s::types::IndexEntry,
     era1::{
@@ -24,7 +24,7 @@ use reth_era::{
         },
     },
 };
-use reth_ethereum_primitives::TransactionSigned;
+use hanzo_evm_ethereum_primitives::TransactionSigned;
 use std::io::Cursor;
 
 use crate::{EraTestDownloader, MAINNET, SEPOLIA};

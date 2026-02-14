@@ -6,9 +6,9 @@
 //! - `test-utils`: Export utilities for testing
 
 #![doc(
-    html_logo_url = "https://raw.githubusercontent.com/paradigmxyz/reth/main/assets/reth-docs.png",
+    html_logo_url = "https://raw.githubusercontent.com/hanzoai/evm/main/assets/evm-docs.png",
     html_favicon_url = "https://avatars0.githubusercontent.com/u/97369466?s=256",
-    issue_tracker_base_url = "https://github.com/paradigmxyz/reth/issues/"
+    issue_tracker_base_url = "https://github.com/hanzoai/evm/issues/"
 )]
 #![cfg_attr(not(test), warn(unused_crate_dependencies))]
 #![cfg_attr(docsrs, feature(doc_cfg))]
@@ -22,8 +22,8 @@ use crate::{
 pub use config::DnsDiscoveryConfig;
 use enr::Enr;
 pub use error::ParseDnsEntryError;
-use reth_ethereum_forks::{EnrForkIdEntry, ForkId};
-use reth_network_peers::{pk2id, NodeRecord};
+use hanzo_evm_ethereum_forks::{EnrForkIdEntry, ForkId};
+use hanzo_evm_network_peers::{pk2id, NodeRecord};
 use schnellru::{ByLength, LruMap};
 use secp256k1::SecretKey;
 use std::{
@@ -118,7 +118,7 @@ impl<R: Resolver> DnsDiscoveryService<R> {
     /// Creates a new instance of the [`DnsDiscoveryService`] using the given settings.
     ///
     /// ```
-    /// use reth_dns_discovery::{DnsDiscoveryService, DnsResolver};
+    /// use hanzo_evm_dns_discovery::{DnsDiscoveryService, DnsResolver};
     /// use std::sync::Arc;
     /// # fn t() {
     /// let service = DnsDiscoveryService::new(
@@ -411,8 +411,8 @@ mod tests {
     use alloy_chains::Chain;
     use alloy_rlp::{Decodable, Encodable};
     use enr::EnrKey;
-    use reth_chainspec::MAINNET;
-    use reth_ethereum_forks::{EthereumHardfork, ForkHash};
+    use hanzo_evm_chainspec::MAINNET;
+    use hanzo_evm_ethereum_forks::{EthereumHardfork, ForkHash};
     use secp256k1::rand::thread_rng;
     use std::{future::poll_fn, net::Ipv4Addr};
 
@@ -469,7 +469,7 @@ mod tests {
 
     #[tokio::test]
     async fn test_start_root_sync() {
-        reth_tracing::init_test_tracing();
+        hanzo_evm_tracing::init_test_tracing();
 
         let secret_key = SecretKey::new(&mut thread_rng());
         let resolver = MapResolver::default();
@@ -497,7 +497,7 @@ mod tests {
 
     #[tokio::test(flavor = "multi_thread")]
     async fn test_get_node() {
-        reth_tracing::init_test_tracing();
+        hanzo_evm_tracing::init_test_tracing();
 
         let secret_key = SecretKey::new(&mut thread_rng());
         let resolver = MapResolver::default();
@@ -550,7 +550,7 @@ mod tests {
 
     #[tokio::test]
     async fn test_recheck_tree() {
-        reth_tracing::init_test_tracing();
+        hanzo_evm_tracing::init_test_tracing();
 
         let config = DnsDiscoveryConfig {
             recheck_interval: Duration::from_millis(750),
@@ -607,7 +607,7 @@ mod tests {
     #[tokio::test]
     #[ignore]
     async fn test_dns_resolver() {
-        reth_tracing::init_test_tracing();
+        hanzo_evm_tracing::init_test_tracing();
 
         let mut service = DnsDiscoveryService::new(
             Arc::new(DnsResolver::from_system_conf().unwrap()),

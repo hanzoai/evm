@@ -8,7 +8,7 @@
 use alloc::vec::Vec;
 use alloy_primitives::{Bytes, B256};
 use alloy_rlp::{Decodable, Encodable, RlpDecodable, RlpEncodable};
-use reth_codecs_derive::add_arbitrary_tests;
+use hanzo_evm_codecs_derive::add_arbitrary_tests;
 
 /// Message IDs for the snap sync protocol
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]

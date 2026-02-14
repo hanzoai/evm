@@ -1,9 +1,9 @@
 use super::{Proof, StorageProof};
 use crate::{hashed_cursor::HashedCursorFactory, trie_cursor::TrieCursorFactory};
 use alloy_primitives::{map::HashSet, B256};
-use reth_execution_errors::{SparseTrieError, SparseTrieErrorKind};
-use reth_trie_common::{MultiProofTargets, Nibbles};
-use reth_trie_sparse::provider::{
+use hanzo_evm_execution_errors::{SparseTrieError, SparseTrieErrorKind};
+use hanzo_evm_trie_common::{MultiProofTargets, Nibbles};
+use hanzo_evm_trie_sparse::provider::{
     pad_path_to_key, RevealedNode, TrieNodeProvider, TrieNodeProviderFactory,
 };
 use std::time::Instant;

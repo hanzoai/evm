@@ -7,15 +7,15 @@ use alloy_primitives::{
     Address, Bytes, B256, U256,
 };
 use alloy_rlp::EMPTY_STRING_CODE;
-use reth_db::{cursor::DbCursorRW, tables};
-use reth_db_api::transaction::DbTxMut;
-use reth_primitives_traits::{Account, StorageEntry};
-use reth_provider::{test_utils::create_test_provider_factory, HashingWriter};
-use reth_trie::{
+use hanzo_evm_db::{cursor::DbCursorRW, tables};
+use hanzo_evm_db_api::transaction::DbTxMut;
+use hanzo_evm_primitives_traits::{Account, StorageEntry};
+use hanzo_evm_provider::{test_utils::create_test_provider_factory, HashingWriter};
+use hanzo_evm_trie::{
     proof::Proof, witness::TrieWitness, HashedPostState, HashedStorage, MultiProofTargets,
     StateRoot,
 };
-use reth_trie_db::{DatabaseProof, DatabaseStateRoot, DatabaseTrieWitness};
+use hanzo_evm_trie_db::{DatabaseProof, DatabaseStateRoot, DatabaseTrieWitness};
 
 #[test]
 fn includes_empty_node_preimage() {

@@ -42,27 +42,27 @@ use crate::{
 use alloy_primitives::{TxHash, B256};
 use constants::SOFT_LIMIT_COUNT_HASHES_IN_NEW_POOLED_TRANSACTIONS_BROADCAST_MESSAGE;
 use futures::{stream::FuturesUnordered, Future, StreamExt};
-use reth_eth_wire::{
+use hanzo_evm_eth_wire::{
     DedupPayload, EthNetworkPrimitives, EthVersion, GetPooledTransactions, HandleMempoolData,
     HandleVersionedMempoolData, NetworkPrimitives, NewPooledTransactionHashes,
     NewPooledTransactionHashes66, NewPooledTransactionHashes68, PooledTransactions,
     RequestTxHashes, Transactions, ValidAnnouncementData,
 };
-use reth_ethereum_primitives::{TransactionSigned, TxType};
-use reth_metrics::common::mpsc::UnboundedMeteredReceiver;
-use reth_network_api::{
+use hanzo_evm_ethereum_primitives::{TransactionSigned, TxType};
+use hanzo_evm_metrics::common::mpsc::UnboundedMeteredReceiver;
+use hanzo_evm_network_api::{
     events::{PeerEvent, SessionInfo},
     NetworkEvent, NetworkEventListenerProvider, PeerKind, PeerRequest, PeerRequestSender, Peers,
 };
-use reth_network_p2p::{
+use hanzo_evm_network_p2p::{
     error::{RequestError, RequestResult},
     sync::SyncStateProvider,
 };
-use reth_network_peers::PeerId;
-use reth_network_types::ReputationChangeKind;
-use reth_primitives_traits::SignedTransaction;
-use reth_tokio_util::EventStream;
-use reth_transaction_pool::{
+use hanzo_evm_network_peers::PeerId;
+use hanzo_evm_network_types::ReputationChangeKind;
+use hanzo_evm_primitives_traits::SignedTransaction;
+use hanzo_evm_tokio_util::EventStream;
+use hanzo_evm_transaction_pool::{
     error::{PoolError, PoolResult},
     AddedTransactionOutcome, GetPooledTransactionLimit, PoolTransaction, PropagateKind,
     PropagatedTransactions, TransactionPool, ValidPoolTransaction,
@@ -301,7 +301,7 @@ pub struct TransactionsManager<Pool, N: NetworkPrimitives = EthNetworkPrimitives
     /// The import process includes:
     ///  - validation of the transactions, e.g. transaction is well formed: valid tx type, fees are
     ///    valid, or for 4844 transaction the blobs are valid. See also
-    ///    [`EthTransactionValidator`](reth_transaction_pool::validate::EthTransactionValidator)
+    ///    [`EthTransactionValidator`](hanzo_evm_transaction_pool::validate::EthTransactionValidator)
     /// - if the transaction is valid, it is added into the pool.
     ///
     /// Once the new transaction reaches the __pending__ state it will be emitted by the pool via
@@ -1514,8 +1514,8 @@ where
 ///
 /// This should be spawned or used as part of `tokio::select!`.
 //
-// spawned in `NodeConfig::start_network`(reth_node_core::NodeConfig) and
-// `NetworkConfig::start_network`(reth_network::NetworkConfig)
+// spawned in `NodeConfig::start_network`(hanzo_evm_node_core::NodeConfig) and
+// `NetworkConfig::start_network`(hanzo_evm_network::NetworkConfig)
 impl<
         Pool: TransactionPool + Unpin + 'static,
         N: NetworkPrimitives<
@@ -2159,15 +2159,15 @@ mod tests {
     use alloy_primitives::{hex, Signature, TxKind, U256};
     use alloy_rlp::Decodable;
     use futures::FutureExt;
-    use reth_chainspec::MIN_TRANSACTION_GAS;
-    use reth_ethereum_primitives::{PooledTransactionVariant, Transaction, TransactionSigned};
-    use reth_network_api::{NetworkInfo, PeerKind};
-    use reth_network_p2p::{
+    use hanzo_evm_chainspec::MIN_TRANSACTION_GAS;
+    use hanzo_evm_ethereum_primitives::{PooledTransactionVariant, Transaction, TransactionSigned};
+    use hanzo_evm_network_api::{NetworkInfo, PeerKind};
+    use hanzo_evm_network_p2p::{
         error::{RequestError, RequestResult},
         sync::{NetworkSyncUpdater, SyncState},
     };
-    use reth_storage_api::noop::NoopProvider;
-    use reth_transaction_pool::test_utils::{
+    use hanzo_evm_storage_api::noop::NoopProvider;
+    use hanzo_evm_transaction_pool::test_utils::{
         testing_pool, MockTransaction, MockTransactionFactory, TestPool,
     };
     use secp256k1::SecretKey;
@@ -2180,7 +2180,7 @@ mod tests {
 
     #[tokio::test(flavor = "multi_thread")]
     async fn test_ignored_tx_broadcasts_while_initially_syncing() {
-        reth_tracing::init_test_tracing();
+        hanzo_evm_tracing::init_test_tracing();
         let net = Testnet::create(3).await;
 
         let mut handles = net.handles();
@@ -2250,7 +2250,7 @@ mod tests {
 
     #[tokio::test(flavor = "multi_thread")]
     async fn test_tx_broadcasts_through_two_syncs() {
-        reth_tracing::init_test_tracing();
+        hanzo_evm_tracing::init_test_tracing();
         let net = Testnet::create(3).await;
 
         let mut handles = net.handles();
@@ -2327,7 +2327,7 @@ mod tests {
     // event and is able to retrieve the corresponding transactions.
     #[tokio::test(flavor = "multi_thread")]
     async fn test_handle_incoming_transactions_hashes() {
-        reth_tracing::init_test_tracing();
+        hanzo_evm_tracing::init_test_tracing();
 
         let secret_key = SecretKey::new(&mut rand_08::thread_rng());
         let client = NoopProvider::default();
@@ -2423,7 +2423,7 @@ mod tests {
 
     #[tokio::test(flavor = "multi_thread")]
     async fn test_handle_incoming_transactions() {
-        reth_tracing::init_test_tracing();
+        hanzo_evm_tracing::init_test_tracing();
         let net = Testnet::create(3).await;
 
         let mut handles = net.handles();
@@ -2501,7 +2501,7 @@ mod tests {
 
     #[tokio::test(flavor = "multi_thread")]
     async fn test_on_get_pooled_transactions_network() {
-        reth_tracing::init_test_tracing();
+        hanzo_evm_tracing::init_test_tracing();
         let net = Testnet::create(2).await;
 
         let mut handles = net.handles();
@@ -2554,7 +2554,7 @@ mod tests {
         let tx = MockTransaction::eip1559();
         let _ = transactions
             .pool
-            .add_transaction(reth_transaction_pool::TransactionOrigin::External, tx.clone())
+            .add_transaction(hanzo_evm_transaction_pool::TransactionOrigin::External, tx.clone())
             .await;
 
         let request = GetPooledTransactions(vec![*tx.get_hash()]);
@@ -2583,7 +2583,7 @@ mod tests {
     // re-buffered.
     #[tokio::test]
     async fn test_partially_tx_response() {
-        reth_tracing::init_test_tracing();
+        hanzo_evm_tracing::init_test_tracing();
 
         let mut tx_manager = new_tx_manager().await.0;
         let tx_fetcher = &mut tx_manager.transaction_fetcher;
@@ -2696,7 +2696,7 @@ mod tests {
 
     #[tokio::test]
     async fn test_max_retries_tx_request() {
-        reth_tracing::init_test_tracing();
+        hanzo_evm_tracing::init_test_tracing();
 
         let mut tx_manager = new_tx_manager().await.0;
         let tx_fetcher = &mut tx_manager.transaction_fetcher;
@@ -2870,7 +2870,7 @@ mod tests {
 
     #[tokio::test]
     async fn test_propagate_full() {
-        reth_tracing::init_test_tracing();
+        hanzo_evm_tracing::init_test_tracing();
 
         let (mut tx_manager, network) = new_tx_manager().await;
         let peer_id = PeerId::random();
@@ -2923,7 +2923,7 @@ mod tests {
 
     #[tokio::test]
     async fn test_relaxed_filter_ignores_unknown_tx_types() {
-        reth_tracing::init_test_tracing();
+        hanzo_evm_tracing::init_test_tracing();
 
         let transactions_manager_config = TransactionsManagerConfig::default();
 

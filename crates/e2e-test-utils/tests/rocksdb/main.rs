@@ -7,13 +7,13 @@ use alloy_primitives::B256;
 use alloy_rpc_types_eth::{Transaction, TransactionReceipt};
 use eyre::Result;
 use jsonrpsee::core::client::ClientT;
-use reth_chainspec::{ChainSpec, ChainSpecBuilder, MAINNET};
-use reth_db::tables;
-use reth_e2e_test_utils::{transaction::TransactionTestContext, wallet, E2ETestSetupBuilder};
-use reth_node_core::args::RocksDbArgs;
-use reth_node_ethereum::EthereumNode;
-use reth_payload_builder::EthPayloadBuilderAttributes;
-use reth_provider::RocksDBProviderFactory;
+use hanzo_evm_chainspec::{ChainSpec, ChainSpecBuilder, MAINNET};
+use hanzo_evm_db::tables;
+use hanzo_evm_e2e_test_utils::{transaction::TransactionTestContext, wallet, E2ETestSetupBuilder};
+use hanzo_evm_node_core::args::RocksDbArgs;
+use hanzo_evm_node_ethereum::EthereumNode;
+use hanzo_evm_payload_builder::EthPayloadBuilderAttributes;
+use hanzo_evm_provider::RocksDBProviderFactory;
 use std::{sync::Arc, time::Duration};
 
 const ROCKSDB_POLL_TIMEOUT: Duration = Duration::from_secs(60);
@@ -115,7 +115,7 @@ fn test_rocksdb_defaults_are_none() {
 /// Smoke test: node boots with `RocksDB` routing enabled.
 #[tokio::test]
 async fn test_rocksdb_node_startup() -> Result<()> {
-    reth_tracing::init_test_tracing();
+    hanzo_evm_tracing::init_test_tracing();
 
     let chain_spec = test_chain_spec();
 
@@ -142,7 +142,7 @@ async fn test_rocksdb_node_startup() -> Result<()> {
 /// Block mining works with `RocksDB` storage.
 #[tokio::test]
 async fn test_rocksdb_block_mining() -> Result<()> {
-    reth_tracing::init_test_tracing();
+    hanzo_evm_tracing::init_test_tracing();
 
     let chain_spec = test_chain_spec();
     let chain_id = chain_spec.chain().id();
@@ -196,7 +196,7 @@ async fn test_rocksdb_block_mining() -> Result<()> {
 /// Tx hash lookup exercises `TransactionHashNumbers` table.
 #[tokio::test]
 async fn test_rocksdb_transaction_queries() -> Result<()> {
-    reth_tracing::init_test_tracing();
+    hanzo_evm_tracing::init_test_tracing();
 
     let chain_spec = test_chain_spec();
     let chain_id = chain_spec.chain().id();
@@ -263,7 +263,7 @@ async fn test_rocksdb_transaction_queries() -> Result<()> {
 /// Multiple transactions in the same block are correctly persisted to `RocksDB`.
 #[tokio::test]
 async fn test_rocksdb_multi_tx_same_block() -> Result<()> {
-    reth_tracing::init_test_tracing();
+    hanzo_evm_tracing::init_test_tracing();
 
     let chain_spec = test_chain_spec();
     let chain_id = chain_spec.chain().id();
@@ -331,7 +331,7 @@ async fn test_rocksdb_multi_tx_same_block() -> Result<()> {
 /// Transactions across multiple blocks have globally continuous `tx_numbers`.
 #[tokio::test]
 async fn test_rocksdb_txs_across_blocks() -> Result<()> {
-    reth_tracing::init_test_tracing();
+    hanzo_evm_tracing::init_test_tracing();
 
     let chain_spec = test_chain_spec();
     let chain_id = chain_spec.chain().id();
@@ -416,7 +416,7 @@ async fn test_rocksdb_txs_across_blocks() -> Result<()> {
 /// Pending transactions should NOT appear in `RocksDB` until mined.
 #[tokio::test]
 async fn test_rocksdb_pending_tx_not_in_storage() -> Result<()> {
-    reth_tracing::init_test_tracing();
+    hanzo_evm_tracing::init_test_tracing();
 
     let chain_spec = test_chain_spec();
     let chain_id = chain_spec.chain().id();
@@ -480,7 +480,7 @@ async fn test_rocksdb_pending_tx_not_in_storage() -> Result<()> {
 /// instead of using storage-aware methods that check `storage_changesets_in_static_files`.
 #[tokio::test]
 async fn test_rocksdb_reorg_unwind() -> Result<()> {
-    reth_tracing::init_test_tracing();
+    hanzo_evm_tracing::init_test_tracing();
 
     let chain_spec = test_chain_spec();
     let chain_id = chain_spec.chain().id();

@@ -17,7 +17,7 @@ use alloy_rlp::{Decodable, Encodable};
 pub enum NodeType {
     /// Stateless ress node.
     Stateless = 0x00,
-    /// Stateful reth node.
+    /// Stateful evm node.
     Stateful,
 }
 

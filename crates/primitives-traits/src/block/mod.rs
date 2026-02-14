@@ -3,9 +3,9 @@
 //! This module provides the core block types and transformations:
 //!
 //! ```rust
-//! # use reth_primitives_traits::{Block, SealedBlock, RecoveredBlock};
+//! # use hanzo_evm_primitives_traits::{Block, SealedBlock, RecoveredBlock};
 //! # fn example<B: Block + 'static>(block: B) -> Result<(), Box<dyn std::error::Error>>
-//! # where B::Body: reth_primitives_traits::BlockBody<Transaction: reth_primitives_traits::SignedTransaction> {
+//! # where B::Body: hanzo_evm_primitives_traits::BlockBody<Transaction: hanzo_evm_primitives_traits::SignedTransaction> {
 //! // Basic block flow
 //! let block: B = block;
 //!

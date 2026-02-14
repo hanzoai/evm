@@ -8,7 +8,7 @@ on:
     types: [completed]
 
 env:
-  DOCKER_REPRODUCIBLE_IMAGE_NAME: ghcr.io/${{ github.repository_owner }}/reth-reproducible
+  DOCKER_REPRODUCIBLE_IMAGE_NAME: ghcr.io/${{ github.repository_owner }}/evm-reproducible
 
 jobs:
   extract-version:
@@ -101,8 +101,8 @@ jobs:
       - name: Prepare artifacts from Docker build
         run: |
           mkdir reproducible-artifacts
-          cp docker-artifacts/reth reproducible-artifacts/reth-reproducible-${{ needs.extract-version.outputs.VERSION }}-x86_64-unknown-linux-gnu
-          cp docker-artifacts/*.deb reproducible-artifacts/reth-${{ needs.extract-version.outputs.VERSION }}-x86_64-unknown-linux-gnu-reproducible.deb
+          cp docker-artifacts/evm reproducible-artifacts/evm-reproducible-${{ needs.extract-version.outputs.VERSION }}-x86_64-unknown-linux-gnu
+          cp docker-artifacts/*.deb reproducible-artifacts/evm-${{ needs.extract-version.outputs.VERSION }}-x86_64-unknown-linux-gnu-reproducible.deb
 
       - name: Configure GPG and create artifacts
         env:
@@ -113,9 +113,9 @@ jobs:
           echo -n "$GPG_SIGNING_KEY" | base64 --decode | gpg --batch --import
 
           cd reproducible-artifacts
-          tar -czf reth-reproducible-${{ needs.extract-version.outputs.VERSION }}-x86_64-unknown-linux-gnu.tar.gz reth-reproducible-${{ needs.extract-version.outputs.VERSION }}-x86_64-unknown-linux-gnu --remove-files
-          echo "$GPG_PASSPHRASE" | gpg --passphrase-fd 0 --pinentry-mode loopback --batch -ab reth-reproducible-${{ needs.extract-version.outputs.VERSION }}-x86_64-unknown-linux-gnu.tar.gz
-          echo "$GPG_PASSPHRASE" | gpg --passphrase-fd 0 --pinentry-mode loopback --batch -ab reth-${{ needs.extract-version.outputs.VERSION }}-x86_64-unknown-linux-gnu-reproducible.deb
+          tar -czf evm-reproducible-${{ needs.extract-version.outputs.VERSION }}-x86_64-unknown-linux-gnu.tar.gz evm-reproducible-${{ needs.extract-version.outputs.VERSION }}-x86_64-unknown-linux-gnu --remove-files
+          echo "$GPG_PASSPHRASE" | gpg --passphrase-fd 0 --pinentry-mode loopback --batch -ab evm-reproducible-${{ needs.extract-version.outputs.VERSION }}-x86_64-unknown-linux-gnu.tar.gz
+          echo "$GPG_PASSPHRASE" | gpg --passphrase-fd 0 --pinentry-mode loopback --batch -ab evm-${{ needs.extract-version.outputs.VERSION }}-x86_64-unknown-linux-gnu-reproducible.deb
 
       - name: Upload reproducible artifacts to release
         env:

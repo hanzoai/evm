@@ -6,12 +6,12 @@ use alloy_consensus::{transaction::TxHashRef, BlockHeader};
 use alloy_eips::BlockHashOrNumber;
 use alloy_primitives::{TxHash, B256};
 use futures::{stream::FuturesOrdered, Stream, StreamExt};
-use reth_chain_state::CanonStateNotification;
-use reth_errors::{ProviderError, ProviderResult};
-use reth_execution_types::Chain;
-use reth_primitives_traits::{Block, BlockBody, NodePrimitives, RecoveredBlock};
-use reth_storage_api::{BlockReader, TransactionVariant};
-use reth_tasks::{TaskSpawner, TokioTaskExecutor};
+use hanzo_evm_chain_state::CanonStateNotification;
+use hanzo_evm_errors::{ProviderError, ProviderResult};
+use hanzo_evm_execution_types::Chain;
+use hanzo_evm_primitives_traits::{Block, BlockBody, NodePrimitives, RecoveredBlock};
+use hanzo_evm_storage_api::{BlockReader, TransactionVariant};
+use hanzo_evm_tasks::{TaskSpawner, TokioTaskExecutor};
 use schnellru::{ByLength, Limiter, LruMap};
 use std::{
     future::Future,
@@ -292,7 +292,7 @@ impl From<CacheServiceUnavailable> for ProviderError {
 /// A task that manages caches for data required by the `eth` rpc implementation.
 ///
 /// It provides a caching layer on top of the given
-/// [`StateProvider`](reth_storage_api::StateProvider) and keeps data fetched via the provider in
+/// [`StateProvider`](hanzo_evm_storage_api::StateProvider) and keeps data fetched via the provider in
 /// memory in an LRU cache. If the requested data is missing in the cache it is fetched and inserted
 /// into the cache afterwards. While fetching data from disk is sync, this service is async since
 /// requests and data is shared via channels.
@@ -303,7 +303,7 @@ impl From<CacheServiceUnavailable> for ProviderError {
 /// handles messages and does LRU lookups and never blocking IO.
 ///
 /// Caution: The channel for the data is _unbounded_ it is assumed that this is mainly used by the
-/// `reth_rpc::EthApi` which is typically invoked by the RPC server, which already uses
+/// `hanzo_evm_rpc::EthApi` which is typically invoked by the RPC server, which already uses
 /// permits to limit concurrent requests.
 #[must_use = "Type does nothing unless spawned"]
 pub(crate) struct EthStateCacheService<

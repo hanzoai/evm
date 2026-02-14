@@ -8,7 +8,7 @@ use std::sync::Arc;
 use alloy_genesis::Genesis;
 use alloy_primitives::{b256, hex};
 use futures_util::StreamExt;
-use reth_ethereum::{
+use hanzo_evm_ethereum::{
     chainspec::ChainSpec,
     node::{
         builder::{NodeBuilder, NodeHandle},

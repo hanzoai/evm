@@ -1,5 +1,5 @@
 [package]
-name = "reth-eth-wire"
+name = "hanzo-evm-eth-wire"
 description = "Implements the eth/64 and eth/65 P2P protocols"
 version.workspace = true
 edition.workspace = true
@@ -12,21 +12,21 @@ repository.workspace = true
 workspace = true
 
 [dependencies]
-# reth
-reth-codecs.workspace = true
-reth-primitives-traits.workspace = true
-reth-ecies.workspace = true
+# evm
+hanzo-evm-codecs.workspace = true
+hanzo-evm-primitives-traits.workspace = true
+hanzo-evm-ecies.workspace = true
 alloy-rlp = { workspace = true, features = ["derive"] }
-reth-eth-wire-types.workspace = true
-reth-network-peers.workspace = true
-reth-ethereum-forks.workspace = true
+hanzo-evm-eth-wire-types.workspace = true
+hanzo-evm-network-peers.workspace = true
+hanzo-evm-ethereum-forks.workspace = true
 
 # ethereum
 alloy-primitives.workspace = true
 alloy-chains.workspace = true
 
 # metrics
-reth-metrics.workspace = true
+hanzo-evm-metrics.workspace = true
 
 bytes.workspace = true
 derive_more.workspace = true
@@ -44,9 +44,9 @@ snap.workspace = true
 arbitrary = { workspace = true, features = ["derive"], optional = true }
 
 [dev-dependencies]
-reth-primitives-traits = { workspace = true, features = ["arbitrary"] }
-reth-eth-wire-types = { workspace = true, features = ["arbitrary"] }
-reth-tracing.workspace = true
+hanzo-evm-primitives-traits = { workspace = true, features = ["arbitrary"] }
+hanzo-evm-eth-wire-types = { workspace = true, features = ["arbitrary"] }
+hanzo-evm-tracing.workspace = true
 
 alloy-consensus.workspace = true
 test-fuzz.workspace = true
@@ -64,28 +64,28 @@ alloy-eips.workspace = true
 
 [features]
 arbitrary = [
-    "reth-eth-wire-types/arbitrary",
+    "hanzo-evm-eth-wire-types/arbitrary",
     "dep:arbitrary",
     "alloy-eips/arbitrary",
     "alloy-primitives/arbitrary",
-    "reth-codecs/arbitrary",
+    "hanzo-evm-codecs/arbitrary",
     "alloy-chains/arbitrary",
-    "reth-primitives-traits/arbitrary",
-    "reth-ethereum-forks/arbitrary",
+    "hanzo-evm-primitives-traits/arbitrary",
+    "hanzo-evm-ethereum-forks/arbitrary",
     "alloy-consensus/arbitrary",
 ]
 serde = [
     "dep:serde",
-    "reth-eth-wire-types/serde",
+    "hanzo-evm-eth-wire-types/serde",
     "alloy-eips/serde",
     "alloy-primitives/serde",
     "bytes/serde",
     "rand/serde",
     "secp256k1/serde",
-    "reth-codecs/serde",
+    "hanzo-evm-codecs/serde",
     "alloy-chains/serde",
-    "reth-primitives-traits/serde",
-    "reth-ethereum-forks/serde",
+    "hanzo-evm-primitives-traits/serde",
+    "hanzo-evm-ethereum-forks/serde",
     "alloy-consensus/serde",
     "rand_08/serde",
 ]

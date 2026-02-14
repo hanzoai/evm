@@ -1,6 +1,6 @@
 //! Storage metadata models.
 
-use reth_codecs::{add_arbitrary_tests, Compact};
+use hanzo_evm_codecs::{add_arbitrary_tests, Compact};
 use serde::{Deserialize, Serialize};
 
 /// Storage configuration settings for this node.
@@ -13,7 +13,7 @@ use serde::{Deserialize, Serialize};
 pub struct StorageSettings {
     /// Whether this node always writes receipts to static files.
     ///
-    /// If this is set to FALSE AND receipt pruning IS ENABLED, all receipts should be written to DB. Otherwise, they should be written to static files. This ensures that older nodes do not need to migrate their current DB tables to static files. For more, read: <https://github.com/paradigmxyz/reth/issues/18890#issuecomment-3457760097>
+    /// If this is set to FALSE AND receipt pruning IS ENABLED, all receipts should be written to DB. Otherwise, they should be written to static files. This ensures that older nodes do not need to migrate their current DB tables to static files. For more, read: <https://github.com/hanzoai/evm/issues/18890#issuecomment-3457760097>
     #[serde(default)]
     pub receipts_in_static_files: bool,
     /// Whether this node always writes transaction senders to static files.

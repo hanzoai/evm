@@ -4,9 +4,9 @@ use crate::{
     import_core::{import_blocks_from_file, ImportConfig},
 };
 use clap::Parser;
-use reth_chainspec::{ChainSpecProvider, EthChainSpec, EthereumHardforks};
-use reth_cli::chainspec::ChainSpecParser;
-use reth_node_core::version::version_metadata;
+use hanzo_evm_chainspec::{ChainSpecProvider, EthChainSpec, EthereumHardforks};
+use hanzo_evm_cli::chainspec::ChainSpecParser;
+use hanzo_evm_node_core::version::version_metadata;
 use std::{path::PathBuf, sync::Arc};
 use tracing::info;
 
@@ -52,13 +52,13 @@ impl<C: ChainSpecParser<ChainSpec: EthChainSpec + EthereumHardforks>> ImportComm
         N: CliNodeTypes<ChainSpec = C::ChainSpec>,
         Comp: CliNodeComponents<N>,
     {
-        info!(target: "reth::cli", "reth {} starting", version_metadata().short_version);
+        info!(target: "evm::cli", "reth {} starting", version_metadata().short_version);
 
         let Environment { provider_factory, config, .. } = self.env.init::<N>(AccessRights::RW)?;
 
         let components = components(provider_factory.chain_spec());
 
-        info!(target: "reth::cli", "Starting import of {} file(s)", self.paths.len());
+        info!(target: "evm::cli", "Starting import of {} file(s)", self.paths.len());
 
         let import_config = ImportConfig {
             no_state: self.no_state,
@@ -66,7 +66,7 @@ impl<C: ChainSpecParser<ChainSpec: EthChainSpec + EthereumHardforks>> ImportComm
             fail_on_invalid_block: self.fail_on_invalid_block,
         };
 
-        let executor = components.evm_config().clone();
+        let executor = components.hanzo_evm_config().clone();
         let consensus = Arc::new(components.consensus().clone());
 
         let mut total_imported_blocks = 0;
@@ -76,7 +76,7 @@ impl<C: ChainSpecParser<ChainSpec: EthChainSpec + EthereumHardforks>> ImportComm
 
         // Import each file sequentially
         for (index, path) in self.paths.iter().enumerate() {
-            info!(target: "reth::cli", "Importing file {} of {}: {}", index + 1, self.paths.len(), path.display());
+            info!(target: "evm::cli", "Importing file {} of {}: {}", index + 1, self.paths.len(), path.display());
 
             let result = import_blocks_from_file(
                 path,
@@ -95,7 +95,7 @@ impl<C: ChainSpecParser<ChainSpec: EthChainSpec + EthereumHardforks>> ImportComm
 
             // Check if we stopped due to an invalid block
             if result.stopped_on_invalid_block {
-                info!(target: "reth::cli",
+                info!(target: "evm::cli",
                       "Stopped at last valid block {} due to invalid block {} in file: {}. Imported {} blocks, {} transactions",
                       result.last_valid_block.unwrap_or(0),
                       result.bad_block.unwrap_or(0),
@@ -117,12 +117,12 @@ impl<C: ChainSpecParser<ChainSpec: EthChainSpec + EthereumHardforks>> ImportComm
                 ));
             }
 
-            info!(target: "reth::cli",
+            info!(target: "evm::cli",
                   "Successfully imported file {}: {} blocks, {} transactions",
                   path.display(), result.total_imported_blocks, result.total_imported_txns);
         }
 
-        info!(target: "reth::cli",
+        info!(target: "evm::cli",
               "Import complete. Total: {}/{} blocks, {}/{} transactions",
               total_imported_blocks, total_decoded_blocks, total_imported_txns, total_decoded_txns);
 
@@ -140,16 +140,16 @@ impl<C: ChainSpecParser> ImportCommand<C> {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use reth_ethereum_cli::chainspec::{EthereumChainSpecParser, SUPPORTED_CHAINS};
+    use hanzo_evm_ethereum_cli::chainspec::{EthereumChainSpecParser, SUPPORTED_CHAINS};
 
     #[test]
     fn parse_common_import_command_chain_args() {
         for chain in SUPPORTED_CHAINS {
             let args: ImportCommand<EthereumChainSpecParser> =
-                ImportCommand::parse_from(["reth", "--chain", chain, "."]);
+                ImportCommand::parse_from(["evm", "--chain", chain, "."]);
             assert_eq!(
                 Ok(args.env.chain.chain),
-                chain.parse::<reth_chainspec::Chain>(),
+                chain.parse::<hanzo_evm_chainspec::Chain>(),
                 "failed to parse chain {chain}"
             );
         }
@@ -158,7 +158,7 @@ mod tests {
     #[test]
     fn parse_import_command_with_multiple_paths() {
         let args: ImportCommand<EthereumChainSpecParser> =
-            ImportCommand::parse_from(["reth", "file1.rlp", "file2.rlp", "file3.rlp"]);
+            ImportCommand::parse_from(["evm", "file1.rlp", "file2.rlp", "file3.rlp"]);
         assert_eq!(args.paths.len(), 3);
         assert_eq!(args.paths[0], PathBuf::from("file1.rlp"));
         assert_eq!(args.paths[1], PathBuf::from("file2.rlp"));
@@ -168,7 +168,7 @@ mod tests {
     #[test]
     fn parse_import_command_with_fail_on_invalid_block() {
         let args: ImportCommand<EthereumChainSpecParser> =
-            ImportCommand::parse_from(["reth", "--fail-on-invalid-block", "chain.rlp"]);
+            ImportCommand::parse_from(["evm", "--fail-on-invalid-block", "chain.rlp"]);
         assert!(args.fail_on_invalid_block);
         assert_eq!(args.paths.len(), 1);
         assert_eq!(args.paths[0], PathBuf::from("chain.rlp"));
@@ -177,7 +177,7 @@ mod tests {
     #[test]
     fn parse_import_command_default_stops_on_invalid_block() {
         let args: ImportCommand<EthereumChainSpecParser> =
-            ImportCommand::parse_from(["reth", "chain.rlp"]);
+            ImportCommand::parse_from(["evm", "chain.rlp"]);
         assert!(!args.fail_on_invalid_block);
     }
 }

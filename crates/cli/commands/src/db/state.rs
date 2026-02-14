@@ -1,17 +1,17 @@
 use alloy_primitives::{Address, BlockNumber, B256, U256};
 use clap::Parser;
 use parking_lot::Mutex;
-use reth_db_api::{
+use hanzo_evm_db_api::{
     cursor::{DbCursorRO, DbDupCursorRO},
     database::Database,
     tables,
     transaction::DbTx,
 };
-use reth_db_common::DbTool;
-use reth_node_builder::NodeTypesWithDB;
-use reth_provider::providers::ProviderNodeTypes;
-use reth_storage_api::{BlockNumReader, StateProvider, StorageSettingsCache};
-use reth_tasks::spawn_scoped_os_thread;
+use hanzo_evm_db_common::DbTool;
+use hanzo_evm_node_builder::NodeTypesWithDB;
+use hanzo_evm_provider::providers::ProviderNodeTypes;
+use hanzo_evm_storage_api::{BlockNumReader, StateProvider, StorageSettingsCache};
+use hanzo_evm_tasks::spawn_scoped_os_thread;
 use std::{
     collections::BTreeSet,
     thread,
@@ -22,7 +22,7 @@ use tracing::{error, info};
 /// Log progress every 5 seconds
 const LOG_INTERVAL: Duration = Duration::from_secs(30);
 
-/// The arguments for the `reth db state` command
+/// The arguments for the `evm db state` command
 #[derive(Parser, Debug)]
 pub struct Command {
     /// The account address to get state for
@@ -86,7 +86,7 @@ impl Command {
 
                 if last_log.elapsed() >= LOG_INTERVAL {
                     info!(
-                        target: "reth::cli",
+                        target: "evm::cli",
                         address = %address,
                         slots_scanned = idx,
                         "Scanning storage slots"
@@ -127,7 +127,7 @@ impl Command {
 
         if history_in_rocksdb {
             error!(
-                target: "reth::cli",
+                target: "evm::cli",
                 "Historical storage queries with RocksDB backend are not yet supported. \
                  Use MDBX for storage history or query current state without --block."
             );
@@ -138,7 +138,7 @@ impl Command {
         self.collect_mdbx_storage_keys_parallel(tool, address, &mut storage_keys)?;
 
         info!(
-            target: "reth::cli",
+            target: "evm::cli",
             address = %address,
             block = block,
             total_keys = storage_keys.len(),
@@ -164,7 +164,7 @@ impl Command {
 
             if last_log.elapsed() >= LOG_INTERVAL {
                 info!(
-                    target: "reth::cli",
+                    target: "evm::cli",
                     address = %address,
                     block = block,
                     keys_total = storage_keys.len(),
@@ -201,7 +201,7 @@ impl Command {
         }
 
         info!(
-            target: "reth::cli",
+            target: "evm::cli",
             address = %address,
             tip,
             chunk_size = CHUNK_SIZE,
@@ -253,9 +253,9 @@ impl Command {
                                 let mut changeset_cursor =
                                     tx.cursor_read::<tables::StorageChangeSets>()?;
                                 let start_key =
-                                    reth_db_api::models::BlockNumberAddress((chunk_start, address));
+                                    hanzo_evm_db_api::models::BlockNumberAddress((chunk_start, address));
                                 let end_key =
-                                    reth_db_api::models::BlockNumberAddress((chunk_end, address));
+                                    hanzo_evm_db_api::models::BlockNumberAddress((chunk_end, address));
 
                                 let mut local_keys = BTreeSet::new();
                                 let mut entries_in_chunk = 0usize;
@@ -275,7 +275,7 @@ impl Command {
                                 *total_entries_ref.lock() += entries_in_chunk;
 
                                 info!(
-                                    target: "reth::cli",
+                                    target: "evm::cli",
                                     thread_id,
                                     chunk_start,
                                     chunk_end,
@@ -301,7 +301,7 @@ impl Command {
         let total = *total_entries_scanned.lock();
 
         info!(
-            target: "reth::cli",
+            target: "evm::cli",
             address = %address,
             total_entries = total,
             unique_keys = final_keys.len(),
@@ -316,7 +316,7 @@ impl Command {
         &self,
         address: Address,
         block: Option<BlockNumber>,
-        account: Option<reth_primitives_traits::Account>,
+        account: Option<hanzo_evm_primitives_traits::Account>,
         storage: &[(alloy_primitives::B256, U256)],
     ) {
         match self.format {

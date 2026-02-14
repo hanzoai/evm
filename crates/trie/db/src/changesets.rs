@@ -10,21 +10,21 @@
 use crate::{DatabaseHashedPostState, DatabaseStateRoot, DatabaseTrieCursorFactory};
 use alloy_primitives::{map::B256Map, BlockNumber, B256};
 use parking_lot::RwLock;
-use reth_storage_api::{
+use hanzo_evm_storage_api::{
     BlockNumReader, ChangeSetReader, DBProvider, StageCheckpointReader, StorageChangeSetReader,
 };
-use reth_storage_errors::provider::{ProviderError, ProviderResult};
-use reth_trie::{
+use hanzo_evm_storage_errors::provider::{ProviderError, ProviderResult};
+use hanzo_evm_trie::{
     changesets::compute_trie_changesets,
     trie_cursor::{InMemoryTrieCursorFactory, TrieCursor, TrieCursorFactory},
     HashedPostStateSorted, KeccakKeyHasher, StateRoot, TrieInputSorted,
 };
-use reth_trie_common::updates::{StorageTrieUpdatesSorted, TrieUpdatesSorted};
+use hanzo_evm_trie_common::updates::{StorageTrieUpdatesSorted, TrieUpdatesSorted};
 use std::{collections::BTreeMap, ops::RangeInclusive, sync::Arc, time::Instant};
 use tracing::debug;
 
 #[cfg(feature = "metrics")]
-use reth_metrics::{
+use hanzo_evm_metrics::{
     metrics::{Counter, Gauge},
     Metrics,
 };
@@ -186,7 +186,7 @@ where
 
     // Get the database tip block number
     let db_tip_block = provider
-        .get_stage_checkpoint(reth_stages_types::StageId::Finish)?
+        .get_stage_checkpoint(hanzo_evm_stages_types::StageId::Finish)?
         .as_ref()
         .map(|chk| chk.block_number)
         .ok_or_else(|| ProviderError::InsufficientChangesets {
@@ -427,7 +427,7 @@ impl ChangesetCache {
     {
         // Get the database tip block number
         let db_tip_block = provider
-            .get_stage_checkpoint(reth_stages_types::StageId::Finish)?
+            .get_stage_checkpoint(hanzo_evm_stages_types::StageId::Finish)?
             .as_ref()
             .map(|chk| chk.block_number)
             .ok_or_else(|| ProviderError::InsufficientChangesets {

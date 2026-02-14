@@ -1,5 +1,5 @@
 [package]
-name = "reth-rpc-e2e-tests"
+name = "hanzo-evm-rpc-e2e-tests"
 version.workspace = true
 edition.workspace = true
 rust-version.workspace = true
@@ -12,9 +12,9 @@ description = "RPC end-to-end tests including execution-apis compatibility testi
 workspace = true
 
 [dependencies]
-# reth
-reth-e2e-test-utils.workspace = true
-reth-rpc-api = { workspace = true, features = ["client"] }
+# evm
+hanzo-evm-e2e-test-utils.workspace = true
+hanzo-evm-rpc-api = { workspace = true, features = ["client"] }
 
 # ethereum
 alloy-rpc-types-engine.workspace = true
@@ -30,12 +30,12 @@ tracing.workspace = true
 jsonrpsee.workspace = true
 
 # required for the Action trait
-reth-node-api.workspace = true
+hanzo-evm-node-api.workspace = true
 
 [dev-dependencies]
-reth-tracing.workspace = true
-reth-chainspec.workspace = true
-reth-node-ethereum.workspace = true
+hanzo-evm-tracing.workspace = true
+hanzo-evm-chainspec.workspace = true
+hanzo-evm-node-ethereum.workspace = true
 alloy-genesis.workspace = true
 
 [[test]]

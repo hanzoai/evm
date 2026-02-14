@@ -14,24 +14,24 @@ use crate::{
 };
 use futures::{FutureExt, StreamExt};
 use pin_project::pin_project;
-use reth_chainspec::{ChainSpecProvider, EthereumHardforks, Hardforks};
-use reth_eth_wire::{
+use hanzo_evm_chainspec::{ChainSpecProvider, EthereumHardforks, Hardforks};
+use hanzo_evm_eth_wire::{
     protocol::Protocol, DisconnectReason, EthNetworkPrimitives, HelloMessageWithProtocols,
 };
-use reth_ethereum_primitives::{PooledTransactionVariant, TransactionSigned};
-use reth_evm_ethereum::EthEvmConfig;
-use reth_network_api::{
+use hanzo_evm_ethereum_primitives::{PooledTransactionVariant, TransactionSigned};
+use hanzo_evm_eth_execution::EthEvmConfig;
+use hanzo_evm_network_api::{
     events::{PeerEvent, SessionInfo},
     test_utils::{PeersHandle, PeersHandleProvider},
     NetworkEvent, NetworkEventListenerProvider, NetworkInfo, Peers,
 };
-use reth_network_peers::PeerId;
-use reth_storage_api::{
+use hanzo_evm_network_peers::PeerId;
+use hanzo_evm_storage_api::{
     noop::NoopProvider, BlockReader, BlockReaderIdExt, HeaderProvider, StateProviderFactory,
 };
-use reth_tasks::TokioTaskExecutor;
-use reth_tokio_util::EventStream;
-use reth_transaction_pool::{
+use hanzo_evm_tasks::TokioTaskExecutor;
+use hanzo_evm_tokio_util::EventStream;
+use hanzo_evm_transaction_pool::{
     blobstore::InMemoryBlobStore,
     test_utils::{TestPool, TestPoolBuilder},
     EthTransactionPool, PoolTransaction, TransactionPool, TransactionValidationTaskExecutor,
@@ -243,8 +243,8 @@ where
 impl<C, Pool> Testnet<C, Pool>
 where
     C: BlockReader<
-            Block = reth_ethereum_primitives::Block,
-            Receipt = reth_ethereum_primitives::Receipt,
+            Block = hanzo_evm_ethereum_primitives::Block,
+            Receipt = hanzo_evm_ethereum_primitives::Receipt,
             Header = alloy_consensus::Header,
         > + HeaderProvider
         + Clone
@@ -315,8 +315,8 @@ impl<C, Pool> fmt::Debug for Testnet<C, Pool> {
 impl<C, Pool> Future for Testnet<C, Pool>
 where
     C: BlockReader<
-            Block = reth_ethereum_primitives::Block,
-            Receipt = reth_ethereum_primitives::Receipt,
+            Block = hanzo_evm_ethereum_primitives::Block,
+            Receipt = hanzo_evm_ethereum_primitives::Receipt,
             Header = alloy_consensus::Header,
         > + HeaderProvider
         + Unpin
@@ -569,8 +569,8 @@ where
 impl<C, Pool> Future for Peer<C, Pool>
 where
     C: BlockReader<
-            Block = reth_ethereum_primitives::Block,
-            Receipt = reth_ethereum_primitives::Receipt,
+            Block = hanzo_evm_ethereum_primitives::Block,
+            Receipt = hanzo_evm_ethereum_primitives::Receipt,
             Header = alloy_consensus::Header,
         > + HeaderProvider
         + Unpin
@@ -600,7 +600,7 @@ where
     }
 }
 
-/// A helper config for setting up the reth networking stack.
+/// A helper config for setting up the evm networking stack.
 #[derive(Debug)]
 pub struct PeerConfig<C = NoopProvider> {
     config: NetworkConfig<C>,

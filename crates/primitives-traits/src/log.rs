@@ -4,7 +4,7 @@ mod tests {
     use alloy_rlp::{RlpDecodable, RlpEncodable};
     use proptest::proptest;
     use proptest_arbitrary_interop::arb;
-    use reth_codecs::{add_arbitrary_tests, Compact};
+    use hanzo_evm_codecs::{add_arbitrary_tests, Compact};
     use serde::{Deserialize, Serialize};
 
     /// This type is kept for compatibility tests after the codec support was added to

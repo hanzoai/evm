@@ -9,11 +9,11 @@ use crate::{
 };
 use alloy_consensus::{BlockHeader, Sealable};
 use alloy_primitives::U256;
-use reth_chain_state::{CanonStateNotification, CanonStateSubscriptions};
-use reth_network_api::{NetworkInfo, Peers};
-use reth_primitives_traits::{Block, BlockBody};
-use reth_storage_api::{BlockReader, BlockReaderIdExt, NodePrimitivesProvider};
-use reth_transaction_pool::TransactionPool;
+use hanzo_evm_chain_state::{CanonStateNotification, CanonStateSubscriptions};
+use hanzo_evm_network_api::{NetworkInfo, Peers};
+use hanzo_evm_primitives_traits::{Block, BlockBody};
+use hanzo_evm_storage_api::{BlockReader, BlockReaderIdExt, NodePrimitivesProvider};
+use hanzo_evm_transaction_pool::TransactionPool;
 
 use chrono::Local;
 use serde_json::Value;
@@ -746,9 +746,9 @@ where
 mod tests {
     use super::*;
     use futures_util::{SinkExt, StreamExt};
-    use reth_network_api::noop::NoopNetwork;
-    use reth_storage_api::noop::NoopProvider;
-    use reth_transaction_pool::noop::NoopTransactionPool;
+    use hanzo_evm_network_api::noop::NoopNetwork;
+    use hanzo_evm_storage_api::noop::NoopProvider;
+    use hanzo_evm_transaction_pool::noop::NoopTransactionPool;
     use serde_json::json;
     use tokio::net::TcpListener;
     use tokio_tungstenite::tungstenite::protocol::{frame::Utf8Bytes, Message};

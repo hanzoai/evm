@@ -1,21 +1,21 @@
 [package]
-name = "reth-rpc-convert"
+name = "hanzo-evm-rpc-convert"
 version.workspace = true
 edition.workspace = true
 rust-version.workspace = true
 license.workspace = true
 homepage.workspace = true
 repository.workspace = true
-description = "Compatibility layer for reth-primitives and ethereum RPC types"
+description = "Compatibility layer for hanzo-evm-primitives and ethereum RPC types"
 
 [lints]
 workspace = true
 
 [dependencies]
-# reth
-reth-primitives-traits.workspace = true
-reth-evm.workspace = true
-reth-ethereum-primitives.workspace = true
+# evm
+hanzo-evm-primitives-traits.workspace = true
+hanzo-evm-execution.workspace = true
+hanzo-evm-ethereum-primitives.workspace = true
 
 # ethereum
 alloy-primitives.workspace = true
@@ -49,7 +49,7 @@ op = [
     "dep:op-alloy-consensus",
     "dep:op-alloy-rpc-types",
     "dep:op-alloy-network",
-    "reth-evm/op",
-    "reth-primitives-traits/op",
+    "hanzo-evm-execution/op",
+    "hanzo-evm-primitives-traits/op",
     "alloy-evm/op",
 ]

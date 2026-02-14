@@ -2,18 +2,18 @@ use crate::{
     AccountReader, BlockHashReader, HashedPostStateProvider, StateProvider, StateRootProvider,
 };
 use alloy_primitives::{Address, BlockNumber, Bytes, StorageKey, StorageValue, B256};
-use reth_db_api::{cursor::DbDupCursorRO, tables, transaction::DbTx};
-use reth_primitives_traits::{Account, Bytecode};
-use reth_storage_api::{BytecodeReader, DBProvider, StateProofProvider, StorageRootProvider};
-use reth_storage_errors::provider::{ProviderError, ProviderResult};
-use reth_trie::{
+use hanzo_evm_db_api::{cursor::DbDupCursorRO, tables, transaction::DbTx};
+use hanzo_evm_primitives_traits::{Account, Bytecode};
+use hanzo_evm_storage_api::{BytecodeReader, DBProvider, StateProofProvider, StorageRootProvider};
+use hanzo_evm_storage_errors::provider::{ProviderError, ProviderResult};
+use hanzo_evm_trie::{
     proof::{Proof, StorageProof},
     updates::TrieUpdates,
     witness::TrieWitness,
     AccountProof, HashedPostState, HashedStorage, KeccakKeyHasher, MultiProof, MultiProofTargets,
     StateRoot, StorageMultiProof, StorageRoot, TrieInput, TrieInputSorted,
 };
-use reth_trie_db::{
+use hanzo_evm_trie_db::{
     DatabaseProof, DatabaseStateRoot, DatabaseStorageProof, DatabaseStorageRoot,
     DatabaseTrieWitness,
 };
@@ -99,7 +99,7 @@ impl<Provider: DBProvider> StorageRootProvider for LatestStateProviderRef<'_, Pr
         address: Address,
         slot: B256,
         hashed_storage: HashedStorage,
-    ) -> ProviderResult<reth_trie::StorageProof> {
+    ) -> ProviderResult<hanzo_evm_trie::StorageProof> {
         StorageProof::overlay_storage_proof(self.tx(), address, slot, hashed_storage)
             .map_err(ProviderError::from)
     }
@@ -194,7 +194,7 @@ impl<Provider: DBProvider> LatestStateProvider<Provider> {
 }
 
 // Delegates all provider impls to [LatestStateProviderRef]
-reth_storage_api::macros::delegate_provider_impls!(LatestStateProvider<Provider> where [Provider: DBProvider + BlockHashReader ]);
+hanzo_evm_storage_api::macros::delegate_provider_impls!(LatestStateProvider<Provider> where [Provider: DBProvider + BlockHashReader ]);
 
 #[cfg(test)]
 mod tests {

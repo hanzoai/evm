@@ -9,19 +9,19 @@ use crate::{
 };
 use eyre::Context;
 use metrics::{gauge, Label};
-use reth_db_api::{
+use hanzo_evm_db_api::{
     cursor::{DbCursorRO, DbCursorRW},
     database::Database,
     database_metrics::DatabaseMetrics,
     models::ClientVersion,
     transaction::{DbTx, DbTxMut},
 };
-use reth_libmdbx::{
+use hanzo_evm_libmdbx::{
     ffi, DatabaseFlags, Environment, EnvironmentFlags, Geometry, HandleSlowReadersReturnCode,
     MaxReadTransactionDuration, Mode, PageSize, SyncMode, RO, RW,
 };
-use reth_storage_errors::db::LogLevel;
-use reth_tracing::tracing::error;
+use hanzo_evm_storage_errors::db::LogLevel;
+use hanzo_evm_tracing::tracing::error;
 use std::{
     collections::HashMap,
     ops::{Deref, Range},
@@ -49,7 +49,7 @@ pub const TERABYTE: usize = GIGABYTE * 1024;
 const DEFAULT_MAX_READERS: u64 = 32_000;
 
 /// Space that a read-only transaction can occupy until the warning is emitted.
-/// See [`reth_libmdbx::EnvironmentBuilder::set_handle_slow_readers`] for more information.
+/// See [`hanzo_evm_libmdbx::EnvironmentBuilder::set_handle_slow_readers`] for more information.
 const MAX_SAFE_READER_SPACE: usize = 10 * GIGABYTE;
 
 /// Environment used when opening a MDBX environment. RO/RW.
@@ -175,7 +175,7 @@ impl DatabaseArguments {
     /// Sets the database page size value.
     pub const fn with_geometry_page_size(mut self, page_size: Option<usize>) -> Self {
         if let Some(size) = page_size {
-            self.geometry.page_size = Some(reth_libmdbx::PageSize::Set(size));
+            self.geometry.page_size = Some(hanzo_evm_libmdbx::PageSize::Set(size));
         }
 
         self
@@ -422,7 +422,7 @@ impl DatabaseEnv {
                     "External process has a long-lived database transaction that grows the database file. \
                      Use shorter-lived read transactions or shut down the node."
                 };
-                reth_tracing::tracing::warn!(
+                hanzo_evm_tracing::tracing::warn!(
                     target: "storage::db::mdbx",
                     ?process_id,
                     ?thread_id,
@@ -434,7 +434,7 @@ impl DatabaseEnv {
                 )
             }
 
-            reth_libmdbx::HandleSlowReadersReturnCode::ProceedWithoutKillingReader
+            hanzo_evm_libmdbx::HandleSlowReadersReturnCode::ProceedWithoutKillingReader
         }
         inner_env.set_handle_slow_readers(handle_slow_readers);
 
@@ -460,7 +460,7 @@ impl DatabaseEnv {
         // 3. a. If found, return the sequence.
         // 3. b. If not found, repeat steps 1-3. If the reclaimed list size is larger than
         //    the `rp augment limit`, stop the search and allocate new pages at the end of the file:
-        //    https://github.com/paradigmxyz/reth/blob/2a4c78759178f66e30c8976ec5d243b53102fc9a/crates/storage/libmdbx-rs/mdbx-sys/libmdbx/mdbx.c#L11479-L11480.
+        //    https://github.com/hanzoai/evm/blob/2a4c78759178f66e30c8976ec5d243b53102fc9a/crates/storage/libmdbx-rs/mdbx-sys/libmdbx/mdbx.c#L11479-L11480.
         //
         // Basically, this parameter controls for how long do we search through the freelist before
         // trying to allocate new pages. Smaller value will make MDBX to fallback to
@@ -469,11 +469,11 @@ impl DatabaseEnv {
         //
         // The default value of this parameter is set depending on the DB size. The bigger the
         // database, the larger is `rp augment limit`.
-        // https://github.com/paradigmxyz/reth/blob/2a4c78759178f66e30c8976ec5d243b53102fc9a/crates/storage/libmdbx-rs/mdbx-sys/libmdbx/mdbx.c#L10018-L10024.
+        // https://github.com/hanzoai/evm/blob/2a4c78759178f66e30c8976ec5d243b53102fc9a/crates/storage/libmdbx-rs/mdbx-sys/libmdbx/mdbx.c#L10018-L10024.
         //
         // Previously, MDBX set this value as `256 * 1024` constant. Let's fallback to this,
         // because we want to prioritize freelist lookup speed over database growth.
-        // https://github.com/paradigmxyz/reth/blob/fa2b9b685ed9787636d962f4366caf34a9186e66/crates/storage/libmdbx-rs/mdbx-sys/libmdbx/mdbx.c#L16017.
+        // https://github.com/hanzoai/evm/blob/fa2b9b685ed9787636d962f4366caf34a9186e66/crates/storage/libmdbx-rs/mdbx-sys/libmdbx/mdbx.c#L16017.
         inner_env.set_rp_augment_limit(256 * 1024);
 
         if let Some(log_level) = args.log_level {
@@ -603,7 +603,7 @@ impl DatabaseEnv {
                 tx.commit().map_err(|e| DatabaseError::Commit(e.into()))?;
                 Ok(true)
             }
-            Err(reth_libmdbx::Error::NotFound) => Ok(false),
+            Err(hanzo_evm_libmdbx::Error::NotFound) => Ok(false),
             Err(e) => Err(DatabaseError::Open(e.into())),
         }
     }
@@ -650,14 +650,14 @@ mod tests {
     };
     use alloy_consensus::Header;
     use alloy_primitives::{address, Address, B256, U256};
-    use reth_db_api::{
+    use hanzo_evm_db_api::{
         cursor::{DbDupCursorRO, DbDupCursorRW, ReverseWalker, Walker},
         models::{AccountBeforeTx, IntegerList, ShardedKey},
         table::{Encode, Table},
     };
-    use reth_libmdbx::Error;
-    use reth_primitives_traits::{Account, StorageEntry};
-    use reth_storage_errors::db::{DatabaseWriteError, DatabaseWriteOperation};
+    use hanzo_evm_libmdbx::Error;
+    use hanzo_evm_primitives_traits::{Account, StorageEntry};
+    use hanzo_evm_storage_errors::db::{DatabaseWriteError, DatabaseWriteOperation};
     use std::str::FromStr;
     use tempfile::TempDir;
 
@@ -1173,7 +1173,7 @@ mod tests {
         assert!(cursor.seek_exact(key2).unwrap().is_none());
         assert!(matches!(
             cursor.delete_current().unwrap_err(),
-            DatabaseError::Delete(err) if err == reth_libmdbx::Error::NoData.into()));
+            DatabaseError::Delete(err) if err == hanzo_evm_libmdbx::Error::NoData.into()));
         // Assert that key1 is still there
         assert_eq!(cursor.seek_exact(key1).unwrap(), Some((key1, Account::default())));
         // Assert that key3 is still there

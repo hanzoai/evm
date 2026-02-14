@@ -1,4 +1,4 @@
-//! Reth's transaction pool implementation.
+//! Hanzo EVM's transaction pool implementation.
 //!
 //! This crate provides a generic transaction pool implementation.
 //!
@@ -84,11 +84,11 @@
 //!
 //! ### Common Errors
 //!
-//! - [`NonceNotConsistent`](reth_primitives_traits::transaction::error::InvalidTransactionError::NonceNotConsistent): Nonce too low
-//! - [`InsufficientFunds`](reth_primitives_traits::transaction::error::InvalidTransactionError::InsufficientFunds): Insufficient balance
+//! - [`NonceNotConsistent`](hanzo_evm_primitives_traits::transaction::error::InvalidTransactionError::NonceNotConsistent): Nonce too low
+//! - [`InsufficientFunds`](hanzo_evm_primitives_traits::transaction::error::InvalidTransactionError::InsufficientFunds): Insufficient balance
 //! - [`ExceedsGasLimit`](crate::error::InvalidPoolTransactionError::ExceedsGasLimit): Gas limit too
 //!   high
-//! - [`SignerAccountHasBytecode`](reth_primitives_traits::transaction::error::InvalidTransactionError::SignerAccountHasBytecode): EOA has code
+//! - [`SignerAccountHasBytecode`](hanzo_evm_primitives_traits::transaction::error::InvalidTransactionError::SignerAccountHasBytecode): EOA has code
 //! - [`Underpriced`](crate::error::InvalidPoolTransactionError::Underpriced): Fee too low
 //! - [`ReplacementUnderpriced`](crate::error::PoolErrorKind::ReplacementUnderpriced): Replacement
 //!   transaction fee too low
@@ -196,23 +196,23 @@
 //! Listen for new transactions and print them:
 //!
 //! ```
-//! use reth_chainspec::MAINNET;
-//! use reth_storage_api::{BlockReaderIdExt, StateProviderFactory};
-//! use reth_tasks::TokioTaskExecutor;
-//! use reth_chainspec::ChainSpecProvider;
-//! use reth_transaction_pool::{TransactionValidationTaskExecutor, Pool, TransactionPool};
-//! use reth_transaction_pool::blobstore::InMemoryBlobStore;
-//! use reth_chainspec::EthereumHardforks;
-//! use reth_evm::ConfigureEvm;
+//! use hanzo_evm_chainspec::MAINNET;
+//! use hanzo_evm_storage_api::{BlockReaderIdExt, StateProviderFactory};
+//! use hanzo_evm_tasks::TokioTaskExecutor;
+//! use hanzo_evm_chainspec::ChainSpecProvider;
+//! use hanzo_evm_transaction_pool::{TransactionValidationTaskExecutor, Pool, TransactionPool};
+//! use hanzo_evm_transaction_pool::blobstore::InMemoryBlobStore;
+//! use hanzo_evm_chainspec::EthereumHardforks;
+//! use hanzo_evm_execution::ConfigureEvm;
 //! use alloy_consensus::Header;
-//! async fn t<C, Evm>(client: C, evm_config: Evm)
+//! async fn t<C, Evm>(client: C, hanzo_evm_config: Evm)
 //! where
 //!     C: ChainSpecProvider<ChainSpec: EthereumHardforks> + StateProviderFactory + BlockReaderIdExt<Header = Header> + Clone + 'static,
-//!     Evm: ConfigureEvm<Primitives: reth_primitives_traits::NodePrimitives<BlockHeader = Header>> + 'static,
+//!     Evm: ConfigureEvm<Primitives: hanzo_evm_primitives_traits::NodePrimitives<BlockHeader = Header>> + 'static,
 //! {
 //!     let blob_store = InMemoryBlobStore::default();
 //!     let pool = Pool::eth_pool(
-//!         TransactionValidationTaskExecutor::eth(client, evm_config, blob_store.clone(), TokioTaskExecutor::default()),
+//!         TransactionValidationTaskExecutor::eth(client, hanzo_evm_config, blob_store.clone(), TokioTaskExecutor::default()),
 //!         blob_store,
 //!         Default::default(),
 //!     );
@@ -232,20 +232,20 @@
 //!
 //! ```
 //! use futures_util::Stream;
-//! use reth_chain_state::CanonStateNotification;
-//! use reth_chainspec::{MAINNET, ChainSpecProvider, ChainSpec};
-//! use reth_storage_api::{BlockReaderIdExt, StateProviderFactory};
-//! use reth_tasks::TokioTaskExecutor;
-//! use reth_tasks::TaskSpawner;
-//! use reth_tasks::TaskManager;
-//! use reth_transaction_pool::{TransactionValidationTaskExecutor, Pool};
-//! use reth_transaction_pool::blobstore::InMemoryBlobStore;
-//! use reth_transaction_pool::maintain::{maintain_transaction_pool_future};
-//! use reth_evm::ConfigureEvm;
-//! use reth_ethereum_primitives::EthPrimitives;
+//! use hanzo_evm_chain_state::CanonStateNotification;
+//! use hanzo_evm_chainspec::{MAINNET, ChainSpecProvider, ChainSpec};
+//! use hanzo_evm_storage_api::{BlockReaderIdExt, StateProviderFactory};
+//! use hanzo_evm_tasks::TokioTaskExecutor;
+//! use hanzo_evm_tasks::TaskSpawner;
+//! use hanzo_evm_tasks::TaskManager;
+//! use hanzo_evm_transaction_pool::{TransactionValidationTaskExecutor, Pool};
+//! use hanzo_evm_transaction_pool::blobstore::InMemoryBlobStore;
+//! use hanzo_evm_transaction_pool::maintain::{maintain_transaction_pool_future};
+//! use hanzo_evm_execution::ConfigureEvm;
+//! use hanzo_evm_ethereum_primitives::EthPrimitives;
 //! use alloy_consensus::Header;
 //!
-//!  async fn t<C, St, Evm>(client: C, stream: St, evm_config: Evm)
+//!  async fn t<C, St, Evm>(client: C, stream: St, hanzo_evm_config: Evm)
 //!    where C: StateProviderFactory + BlockReaderIdExt<Header = Header> + ChainSpecProvider<ChainSpec = ChainSpec> + Clone + 'static,
 //!     St: Stream<Item = CanonStateNotification<EthPrimitives>> + Send + Unpin + 'static,
 //!     Evm: ConfigureEvm<Primitives = EthPrimitives> + 'static,
@@ -255,7 +255,7 @@
 //!     let manager = TaskManager::new(rt.handle().clone());
 //!     let executor = manager.executor();
 //!     let pool = Pool::eth_pool(
-//!         TransactionValidationTaskExecutor::eth(client.clone(), evm_config, blob_store.clone(), executor.clone()),
+//!         TransactionValidationTaskExecutor::eth(client.clone(), hanzo_evm_config, blob_store.clone(), executor.clone()),
 //!         blob_store,
 //!         Default::default(),
 //!     );
@@ -272,9 +272,9 @@
 //! - `test-utils`: Export utilities for testing
 
 #![doc(
-    html_logo_url = "https://raw.githubusercontent.com/paradigmxyz/reth/main/assets/reth-docs.png",
+    html_logo_url = "https://raw.githubusercontent.com/hanzoai/evm/main/assets/evm-docs.png",
     html_favicon_url = "https://avatars0.githubusercontent.com/u/97369466?s=256",
-    issue_tracker_base_url = "https://github.com/paradigmxyz/reth/issues/"
+    issue_tracker_base_url = "https://github.com/hanzoai/evm/issues/"
 )]
 #![cfg_attr(docsrs, feature(doc_cfg))]
 #![cfg_attr(not(test), warn(unused_crate_dependencies))]
@@ -309,13 +309,13 @@ use alloy_eips::{
 };
 use alloy_primitives::{map::AddressSet, Address, TxHash, B256, U256};
 use aquamarine as _;
-use reth_chainspec::{ChainSpecProvider, EthereumHardforks};
-use reth_eth_wire_types::HandleMempoolData;
-use reth_evm::ConfigureEvm;
-use reth_evm_ethereum::EthEvmConfig;
-use reth_execution_types::ChangedAccount;
-use reth_primitives_traits::{HeaderTy, Recovered};
-use reth_storage_api::{BlockReaderIdExt, StateProviderFactory};
+use hanzo_evm_chainspec::{ChainSpecProvider, EthereumHardforks};
+use hanzo_evm_eth_wire_types::HandleMempoolData;
+use hanzo_evm_execution::ConfigureEvm;
+use hanzo_evm_eth_execution::EthEvmConfig;
+use hanzo_evm_execution_types::ChangedAccount;
+use hanzo_evm_primitives_traits::{HeaderTy, Recovered};
+use hanzo_evm_storage_api::{BlockReaderIdExt, StateProviderFactory};
 use std::sync::Arc;
 use tokio::sync::mpsc::Receiver;
 use tracing::{instrument, trace};
@@ -437,26 +437,26 @@ where
     /// # Example
     ///
     /// ```
-    /// use reth_chainspec::MAINNET;
-    /// use reth_storage_api::{BlockReaderIdExt, StateProviderFactory};
-    /// use reth_tasks::TokioTaskExecutor;
-    /// use reth_chainspec::ChainSpecProvider;
-    /// use reth_transaction_pool::{
+    /// use hanzo_evm_chainspec::MAINNET;
+    /// use hanzo_evm_storage_api::{BlockReaderIdExt, StateProviderFactory};
+    /// use hanzo_evm_tasks::TokioTaskExecutor;
+    /// use hanzo_evm_chainspec::ChainSpecProvider;
+    /// use hanzo_evm_transaction_pool::{
     ///     blobstore::InMemoryBlobStore, Pool, TransactionValidationTaskExecutor,
     /// };
-    /// use reth_chainspec::EthereumHardforks;
-    /// use reth_evm::ConfigureEvm;
+    /// use hanzo_evm_chainspec::EthereumHardforks;
+    /// use hanzo_evm_execution::ConfigureEvm;
     /// use alloy_consensus::Header;
-    /// # fn t<C, Evm>(client: C, evm_config: Evm)
+    /// # fn t<C, Evm>(client: C, hanzo_evm_config: Evm)
     /// # where
     /// #     C: ChainSpecProvider<ChainSpec: EthereumHardforks> + StateProviderFactory + BlockReaderIdExt<Header = Header> + Clone + 'static,
-    /// #     Evm: ConfigureEvm<Primitives: reth_primitives_traits::NodePrimitives<BlockHeader = Header>> + 'static,
+    /// #     Evm: ConfigureEvm<Primitives: hanzo_evm_primitives_traits::NodePrimitives<BlockHeader = Header>> + 'static,
     /// # {
     /// let blob_store = InMemoryBlobStore::default();
     /// let pool = Pool::eth_pool(
     ///     TransactionValidationTaskExecutor::eth(
     ///         client,
-    ///         evm_config,
+    ///         hanzo_evm_config,
     ///         blob_store.clone(),
     ///         TokioTaskExecutor::default(),
     ///     ),

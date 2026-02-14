@@ -1,13 +1,13 @@
 #![allow(missing_docs)]
 
 use alloy_primitives::B256;
-use reth_db_api::{cursor::DbCursorRW, tables, transaction::DbTxMut};
-use reth_provider::test_utils::create_test_provider_factory;
-use reth_trie::{
+use hanzo_evm_db_api::{cursor::DbCursorRW, tables, transaction::DbTxMut};
+use hanzo_evm_provider::test_utils::create_test_provider_factory;
+use hanzo_evm_trie::{
     prefix_set::PrefixSetMut, trie_cursor::TrieCursor, walker::TrieWalker, BranchNodeCompact,
     Nibbles, StorageTrieEntry,
 };
-use reth_trie_db::{DatabaseAccountTrieCursor, DatabaseStorageTrieCursor};
+use hanzo_evm_trie_db::{DatabaseAccountTrieCursor, DatabaseStorageTrieCursor};
 
 #[test]
 fn walk_nodes_with_common_prefix() {

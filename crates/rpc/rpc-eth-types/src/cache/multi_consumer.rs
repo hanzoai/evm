@@ -2,7 +2,7 @@
 //! a cache miss.
 
 use super::metrics::CacheMetrics;
-use reth_primitives_traits::InMemorySize;
+use hanzo_evm_primitives_traits::InMemorySize;
 use schnellru::{ByLength, Limiter, LruMap};
 use std::{
     collections::{hash_map::Entry, HashMap},

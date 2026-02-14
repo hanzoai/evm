@@ -2,7 +2,7 @@
 
 use alloy_primitives::B256;
 use parking_lot::RwLock;
-use reth_eth_wire::BlockRangeUpdate;
+use hanzo_evm_eth_wire::BlockRangeUpdate;
 use std::{
     ops::RangeInclusive,
     sync::{

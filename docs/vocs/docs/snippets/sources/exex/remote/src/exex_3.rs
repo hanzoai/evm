@@ -2,9 +2,9 @@ use remote_exex::proto::{
     self,
     remote_ex_ex_server::{RemoteExEx, RemoteExExServer},
 };
-use reth_exex::ExExNotification;
-use reth_node_ethereum::EthereumNode;
-use reth_tracing::tracing::info;
+use hanzo_evm_exex::ExExNotification;
+use hanzo_evm_node_ethereum::EthereumNode;
+use hanzo_evm_tracing::tracing::info;
 use std::sync::Arc;
 use tokio::sync::{broadcast, mpsc};
 use tokio_stream::wrappers::ReceiverStream;

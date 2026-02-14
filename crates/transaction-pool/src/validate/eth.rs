@@ -25,14 +25,14 @@ use alloy_eips::{
     eip1559::ETHEREUM_BLOCK_GAS_LIMIT_30M, eip4844::env_settings::EnvKzgSettings,
     eip7840::BlobParams, BlockId,
 };
-use reth_chainspec::{ChainSpecProvider, EthChainSpec, EthereumHardforks};
-use reth_evm::ConfigureEvm;
-use reth_primitives_traits::{
+use hanzo_evm_chainspec::{ChainSpecProvider, EthChainSpec, EthereumHardforks};
+use hanzo_evm_execution::ConfigureEvm;
+use hanzo_evm_primitives_traits::{
     transaction::error::InvalidTransactionError, Account, BlockTy, GotExpected, HeaderTy,
     SealedBlock,
 };
-use reth_storage_api::{AccountInfoReader, BlockReaderIdExt, BytecodeReader, StateProviderFactory};
-use reth_tasks::TaskSpawner;
+use hanzo_evm_storage_api::{AccountInfoReader, BlockReaderIdExt, BytecodeReader, StateProviderFactory};
+use hanzo_evm_tasks::TaskSpawner;
 use revm::context_interface::Cfg;
 use revm_primitives::U256;
 use std::{
@@ -92,7 +92,7 @@ pub struct EthTransactionValidator<Client, T, Evm> {
     /// Disable balance checks during transaction validation
     disable_balance_check: bool,
     /// EVM configuration for fetching execution limits
-    evm_config: Evm,
+    hanzo_evm_config: Evm,
     /// Marker for the transaction type
     _marker: PhantomData<T>,
     /// Metrics for tsx pool validation
@@ -797,9 +797,9 @@ where
 
         self.block_gas_limit.store(new_tip_block.gas_limit(), std::sync::atomic::Ordering::Relaxed);
 
-        // Get EVM limits from evm_config.evm_env()
+        // Get EVM limits from hanzo_evm_config.evm_env()
         let evm_env = self
-            .evm_config
+            .hanzo_evm_config
             .evm_env(new_tip_block)
             .expect("evm_env should not fail for executed block");
 
@@ -876,7 +876,7 @@ where
 pub struct EthTransactionValidatorBuilder<Client, Evm> {
     client: Client,
     /// The EVM configuration to use for validation.
-    evm_config: Evm,
+    hanzo_evm_config: Evm,
     /// Fork indicator whether we are in the Shanghai stage.
     shanghai: bool,
     /// Fork indicator whether we are in the Cancun hardfork.
@@ -940,7 +940,7 @@ impl<Client, Evm> EthTransactionValidatorBuilder<Client, Evm> {
     ///  - EIP-1559
     ///  - EIP-4844
     ///  - EIP-7702
-    pub fn new(client: Client, evm_config: Evm) -> Self
+    pub fn new(client: Client, hanzo_evm_config: Evm) -> Self
     where
         Client: ChainSpecProvider<ChainSpec: EthChainSpec + EthereumHardforks>
             + BlockReaderIdExt<Header = HeaderTy<Evm::Primitives>>,
@@ -952,12 +952,12 @@ impl<Client, Evm> EthTransactionValidatorBuilder<Client, Evm> {
             .expect("failed to fetch latest header")
             .expect("latest header is not found");
         let evm_env =
-            evm_config.evm_env(&tip).expect("evm_env should not fail for existing blocks");
+            hanzo_evm_config.evm_env(&tip).expect("evm_env should not fail for existing blocks");
 
         Self {
             block_gas_limit: ETHEREUM_BLOCK_GAS_LIMIT_30M.into(),
             client,
-            evm_config,
+            hanzo_evm_config,
             minimum_priority_fee: None,
             additional_tasks: 1,
             kzg_settings: EnvKzgSettings::Default,
@@ -1178,7 +1178,7 @@ impl<Client, Evm> EthTransactionValidatorBuilder<Client, Evm> {
     {
         let Self {
             client,
-            evm_config,
+            hanzo_evm_config,
             shanghai,
             cancun,
             prague,
@@ -1231,7 +1231,7 @@ impl<Client, Evm> EthTransactionValidatorBuilder<Client, Evm> {
             max_tx_input_bytes,
             max_tx_gas_limit,
             disable_balance_check,
-            evm_config,
+            hanzo_evm_config,
             _marker: Default::default(),
             validation_metrics: TxPoolValidationMetrics::default(),
             other_tx_types,
@@ -1381,13 +1381,13 @@ mod tests {
     use alloy_consensus::Transaction;
     use alloy_eips::eip2718::Decodable2718;
     use alloy_primitives::{hex, U256};
-    use reth_ethereum_primitives::PooledTransactionVariant;
-    use reth_evm_ethereum::EthEvmConfig;
-    use reth_primitives_traits::SignedTransaction;
-    use reth_provider::test_utils::{ExtendedAccount, MockEthProvider};
+    use hanzo_evm_ethereum_primitives::PooledTransactionVariant;
+    use hanzo_evm_eth_execution::EthEvmConfig;
+    use hanzo_evm_primitives_traits::SignedTransaction;
+    use hanzo_evm_provider::test_utils::{ExtendedAccount, MockEthProvider};
     use revm_primitives::eip3860::MAX_INITCODE_SIZE;
 
-    fn test_evm_config() -> EthEvmConfig {
+    fn test_hanzo_evm_config() -> EthEvmConfig {
         EthEvmConfig::mainnet()
     }
 
@@ -1400,7 +1400,7 @@ mod tests {
         EthPooledTransaction::from_pooled(tx.try_into_recovered().unwrap())
     }
 
-    // <https://github.com/paradigmxyz/reth/issues/5178>
+    // <https://github.com/hanzoai/evm/issues/5178>
     #[tokio::test]
     async fn validate_transaction() {
         let transaction = get_transaction();
@@ -1428,7 +1428,7 @@ mod tests {
             ExtendedAccount::new(transaction.nonce(), U256::MAX),
         );
         let blob_store = InMemoryBlobStore::default();
-        let validator = EthTransactionValidatorBuilder::new(provider, test_evm_config())
+        let validator = EthTransactionValidatorBuilder::new(provider, test_hanzo_evm_config())
             .build(blob_store.clone());
 
         let outcome = validator.validate_one(TransactionOrigin::External, transaction.clone());
@@ -1444,7 +1444,7 @@ mod tests {
         assert!(tx.is_some());
     }
 
-    // <https://github.com/paradigmxyz/reth/issues/8550>
+    // <https://github.com/hanzoai/evm/issues/8550>
     #[tokio::test]
     async fn invalid_on_gas_limit_too_high() {
         let transaction = get_transaction();
@@ -1456,7 +1456,7 @@ mod tests {
         );
 
         let blob_store = InMemoryBlobStore::default();
-        let validator = EthTransactionValidatorBuilder::new(provider, test_evm_config())
+        let validator = EthTransactionValidatorBuilder::new(provider, test_hanzo_evm_config())
             .set_block_gas_limit(1_000_000) // tx gas limit is 1_015_288
             .build(blob_store.clone());
 
@@ -1489,7 +1489,7 @@ mod tests {
         );
 
         let blob_store = InMemoryBlobStore::default();
-        let validator = EthTransactionValidatorBuilder::new(provider, test_evm_config())
+        let validator = EthTransactionValidatorBuilder::new(provider, test_hanzo_evm_config())
             .set_tx_fee_cap(100) // 100 wei cap
             .build(blob_store.clone());
 
@@ -1638,7 +1638,7 @@ mod tests {
         local_config: Option<LocalTransactionConfig>,
     ) -> EthTransactionValidator<MockEthProvider, EthPooledTransaction, EthEvmConfig> {
         let blob_store = InMemoryBlobStore::default();
-        let mut builder = EthTransactionValidatorBuilder::new(provider, test_evm_config())
+        let mut builder = EthTransactionValidatorBuilder::new(provider, test_hanzo_evm_config())
             .with_minimum_priority_fee(minimum_priority_fee);
 
         if let Some(config) = local_config {

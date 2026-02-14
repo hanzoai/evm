@@ -2,10 +2,10 @@
 
 use super::constants;
 use alloy_primitives::BlockNumber;
-use reth_db_api::{
+use hanzo_evm_db_api::{
     cursor::DbCursorRO, database::Database, tables, transaction::DbTx, DatabaseError as DbError,
 };
-use reth_stages::{
+use hanzo_evm_stages::{
     stages::{AccountHashingStage, SeedOpts},
     test_utils::TestStageDB,
     StageCheckpoint,

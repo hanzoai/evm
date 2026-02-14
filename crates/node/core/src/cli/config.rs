@@ -2,9 +2,9 @@
 
 use alloy_eips::eip1559::ETHEREUM_BLOCK_GAS_LIMIT_36M;
 use alloy_primitives::Bytes;
-use reth_chainspec::{Chain, ChainKind, NamedChain};
-use reth_network::{protocol::IntoRlpxSubProtocol, NetworkPrimitives};
-use reth_transaction_pool::PoolConfig;
+use hanzo_evm_chainspec::{Chain, ChainKind, NamedChain};
+use hanzo_evm_network::{protocol::IntoRlpxSubProtocol, NetworkPrimitives};
+use hanzo_evm_transaction_pool::PoolConfig;
 use std::{borrow::Cow, time::Duration};
 
 /// 60M gas limit
@@ -57,14 +57,14 @@ pub trait PayloadBuilderConfig {
 
 /// A trait that represents the configured network and can be used to apply additional configuration
 /// to the network.
-pub trait RethNetworkConfig {
+pub trait EvmNetworkConfig {
     /// Adds a new additional protocol to the `RLPx` sub-protocol list.
     ///
     /// These additional protocols are negotiated during the `RLPx` handshake.
     /// If both peers share the same protocol, the corresponding handler will be included alongside
     /// the `eth` protocol.
     ///
-    /// See also [`ProtocolHandler`](reth_network::protocol::ProtocolHandler)
+    /// See also [`ProtocolHandler`](hanzo_evm_network::protocol::ProtocolHandler)
     fn add_rlpx_sub_protocol(&mut self, protocol: impl IntoRlpxSubProtocol);
 
     /// Returns the secret key used for authenticating sessions.
@@ -73,7 +73,7 @@ pub trait RethNetworkConfig {
     // TODO add more network config methods here
 }
 
-impl<N: NetworkPrimitives> RethNetworkConfig for reth_network::NetworkManager<N> {
+impl<N: NetworkPrimitives> EvmNetworkConfig for hanzo_evm_network::NetworkManager<N> {
     fn add_rlpx_sub_protocol(&mut self, protocol: impl IntoRlpxSubProtocol) {
         Self::add_rlpx_sub_protocol(self, protocol);
     }
@@ -85,7 +85,7 @@ impl<N: NetworkPrimitives> RethNetworkConfig for reth_network::NetworkManager<N>
 
 /// A trait that provides all basic config values for the transaction pool and is implemented by the
 /// [`TxPoolArgs`](crate::args::TxPoolArgs) type.
-pub trait RethTransactionPoolConfig {
+pub trait EvmTransactionPoolConfig {
     /// Returns transaction pool configuration.
     fn pool_config(&self) -> PoolConfig;
 

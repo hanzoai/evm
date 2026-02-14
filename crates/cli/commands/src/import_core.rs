@@ -2,28 +2,28 @@
 
 use alloy_primitives::B256;
 use futures::StreamExt;
-use reth_config::Config;
-use reth_consensus::FullConsensus;
-use reth_db_api::{tables, transaction::DbTx};
-use reth_downloaders::{
+use hanzo_evm_config::Config;
+use hanzo_evm_consensus::FullConsensus;
+use hanzo_evm_db_api::{tables, transaction::DbTx};
+use hanzo_evm_downloaders::{
     bodies::bodies::BodiesDownloaderBuilder,
     file_client::{ChunkedFileReader, FileClient, DEFAULT_BYTE_LEN_CHUNK_CHAIN_FILE},
     headers::reverse_headers::ReverseHeadersDownloaderBuilder,
 };
-use reth_evm::ConfigureEvm;
-use reth_network_p2p::{
+use hanzo_evm_execution::ConfigureEvm;
+use hanzo_evm_network_p2p::{
     bodies::downloader::BodyDownloader,
     headers::downloader::{HeaderDownloader, SyncTarget},
 };
-use reth_node_api::BlockTy;
-use reth_node_events::node::NodeEvent;
-use reth_provider::{
+use hanzo_evm_node_api::BlockTy;
+use hanzo_evm_node_events::node::NodeEvent;
+use hanzo_evm_provider::{
     providers::ProviderNodeTypes, BlockNumReader, HeaderProvider, ProviderError, ProviderFactory,
     StageCheckpointReader,
 };
-use reth_prune::PruneModes;
-use reth_stages::{prelude::*, ControlFlow, Pipeline, StageId, StageSet};
-use reth_static_file::StaticFileProducer;
+use hanzo_evm_prune::PruneModes;
+use hanzo_evm_stages::{prelude::*, ControlFlow, Pipeline, StageId, StageSet};
+use hanzo_evm_static_file::StaticFileProducer;
 use std::{path::Path, sync::Arc};
 use tokio::sync::watch;
 use tracing::{debug, error, info, warn};
@@ -92,15 +92,15 @@ where
     N: ProviderNodeTypes,
 {
     if import_config.no_state {
-        info!(target: "reth::import", "Disabled stages requiring state");
+        info!(target: "evm::import", "Disabled stages requiring state");
     }
 
-    debug!(target: "reth::import",
+    debug!(target: "evm::import",
         chunk_byte_len=import_config.chunk_len.unwrap_or(DEFAULT_BYTE_LEN_CHUNK_CHAIN_FILE),
         "Chunking chain import"
     );
 
-    info!(target: "reth::import", "Consensus engine initialized");
+    info!(target: "evm::import", "Consensus engine initialized");
 
     // open file
     let mut reader = ChunkedFileReader::new(path, import_config.chunk_len).await?;
@@ -129,12 +129,12 @@ where
         reader.next_chunk::<BlockTy<N>>(consensus.clone(), Some(sealed_header)).await?
     {
         // create a new FileClient from chunk read from file
-        info!(target: "reth::import",
+        info!(target: "evm::import",
             "Importing chain file chunk"
         );
 
         let tip = file_client.tip().ok_or(eyre::eyre!("file client has no tip"))?;
-        info!(target: "reth::import", "Chain file chunk read");
+        info!(target: "evm::import", "Chain file chunk read");
 
         total_decoded_blocks += file_client.headers_len();
         total_decoded_txns += file_client.total_transactions();
@@ -151,20 +151,20 @@ where
 
         // override the tip
         pipeline.set_tip(tip);
-        debug!(target: "reth::import", ?tip, "Tip manually set");
+        debug!(target: "evm::import", ?tip, "Tip manually set");
 
         let latest_block_number =
             provider_factory.get_stage_checkpoint(StageId::Finish)?.map(|ch| ch.block_number);
-        tokio::spawn(reth_node_events::node::handle_events(None, latest_block_number, events));
+        tokio::spawn(hanzo_evm_node_events::node::handle_events(None, latest_block_number, events));
 
         // Run pipeline
-        info!(target: "reth::import", "Starting sync pipeline");
+        info!(target: "evm::import", "Starting sync pipeline");
         if import_config.fail_on_invalid_block {
             // Original behavior: fail on unwind
             tokio::select! {
                 res = pipeline.run() => res?,
                 _ = tokio::signal::ctrl_c() => {
-                    info!(target: "reth::import", "Import interrupted by user");
+                    info!(target: "evm::import", "Import interrupted by user");
                     break;
                 },
             }
@@ -173,7 +173,7 @@ where
             let result = tokio::select! {
                 res = pipeline.run_loop() => res,
                 _ = tokio::signal::ctrl_c() => {
-                    info!(target: "reth::import", "Import interrupted by user");
+                    info!(target: "evm::import", "Import interrupted by user");
                     break;
                 },
             };
@@ -183,7 +183,7 @@ where
                     // An invalid block was encountered; stop at last valid block
                     let bad = bad_block.block.number;
                     warn!(
-                        target: "reth::import",
+                        target: "evm::import",
                         bad_block = bad,
                         last_valid_block = target,
                         "Invalid block encountered during import; stopping at last valid block"
@@ -194,10 +194,10 @@ where
                     break;
                 }
                 Ok(ControlFlow::Continue { block_number }) => {
-                    debug!(target: "reth::import", block_number, "Pipeline chunk completed");
+                    debug!(target: "evm::import", block_number, "Pipeline chunk completed");
                 }
                 Ok(ControlFlow::NoProgress { block_number }) => {
-                    debug!(target: "reth::import", ?block_number, "Pipeline made no progress");
+                    debug!(target: "evm::import", ?block_number, "Pipeline made no progress");
                 }
                 Err(e) => {
                     // Propagate other pipeline errors
@@ -227,7 +227,7 @@ where
     };
 
     if result.stopped_on_invalid_block {
-        info!(target: "reth::import",
+        info!(target: "evm::import",
             total_imported_blocks,
             total_imported_txns,
             bad_block = ?result.bad_block,
@@ -235,7 +235,7 @@ where
             "Import stopped at last valid block due to invalid block"
         );
     } else if !result.is_complete() {
-        error!(target: "reth::import",
+        error!(target: "evm::import",
             total_decoded_blocks,
             total_imported_blocks,
             total_decoded_txns,
@@ -243,7 +243,7 @@ where
             "Chain was partially imported"
         );
     } else {
-        info!(target: "reth::import",
+        info!(target: "evm::import",
             total_imported_blocks,
             total_imported_txns,
             "Chain was fully imported"
@@ -264,7 +264,7 @@ pub fn build_import_pipeline_impl<N, C, E>(
     file_client: Arc<FileClient<BlockTy<N>>>,
     static_file_producer: StaticFileProducer<ProviderFactory<N>>,
     disable_exec: bool,
-    evm_config: E,
+    hanzo_evm_config: E,
 ) -> eyre::Result<(Pipeline<N>, impl futures::Stream<Item = NodeEvent<N::Primitives>> + use<N, C, E>)>
 where
     N: ProviderNodeTypes,
@@ -314,7 +314,7 @@ where
                 consensus.clone(),
                 header_downloader,
                 body_downloader,
-                evm_config,
+                hanzo_evm_config,
                 config.stages.clone(),
                 PruneModes::default(),
                 None,

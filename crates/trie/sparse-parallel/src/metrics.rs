@@ -1,5 +1,5 @@
 //! Metrics for the parallel sparse trie
-use reth_metrics::{metrics::Histogram, Metrics};
+use hanzo_evm_metrics::{metrics::Histogram, Metrics};
 
 /// Metrics for the parallel sparse trie
 #[derive(Metrics, Clone)]

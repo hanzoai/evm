@@ -22,8 +22,8 @@ impl From<Vec<u8>> for StoredNibbles {
     }
 }
 
-#[cfg(any(test, feature = "reth-codec"))]
-impl reth_codecs::Compact for StoredNibbles {
+#[cfg(any(test, feature = "hanzo-evm-codec"))]
+impl hanzo_evm_codecs::Compact for StoredNibbles {
     fn to_compact<B>(&self, buf: &mut B) -> usize
     where
         B: bytes::BufMut + AsMut<[u8]>,
@@ -69,8 +69,8 @@ impl From<StoredNibblesSubKey> for Nibbles {
     }
 }
 
-#[cfg(any(test, feature = "reth-codec"))]
-impl reth_codecs::Compact for StoredNibblesSubKey {
+#[cfg(any(test, feature = "hanzo-evm-codec"))]
+impl hanzo_evm_codecs::Compact for StoredNibblesSubKey {
     fn to_compact<B>(&self, buf: &mut B) -> usize
     where
         B: bytes::BufMut + AsMut<[u8]>,
@@ -98,7 +98,7 @@ impl reth_codecs::Compact for StoredNibblesSubKey {
 mod tests {
     use super::*;
     use bytes::BytesMut;
-    use reth_codecs::Compact;
+    use hanzo_evm_codecs::Compact;
 
     #[test]
     fn test_stored_nibbles_from_nibbles() {

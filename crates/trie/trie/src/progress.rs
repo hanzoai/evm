@@ -4,8 +4,8 @@ use crate::{
     updates::{StorageTrieUpdates, TrieUpdates},
 };
 use alloy_primitives::B256;
-use reth_primitives_traits::Account;
-use reth_stages_types::MerkleCheckpoint;
+use hanzo_evm_primitives_traits::Account;
+use hanzo_evm_stages_types::MerkleCheckpoint;
 
 /// The progress of the state root computation.
 #[derive(Debug)]

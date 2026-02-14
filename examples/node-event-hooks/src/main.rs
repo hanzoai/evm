@@ -7,13 +7,13 @@
 //! cargo run -p node-event-hooks -- node
 //! ```
 //!
-//! This launches a regular reth node and also print:
+//! This launches a regular evm node and also print:
 //! > "All components initialized" – once all components have been initialized
 //! > "Node started" – once the node has been started.
 
 #![warn(unused_crate_dependencies)]
 
-use reth_ethereum::{cli::interface::Cli, node::EthereumNode};
+use hanzo_evm_ethereum::{cli::interface::Cli, node::EthereumNode};
 
 fn main() {
     Cli::parse_args()

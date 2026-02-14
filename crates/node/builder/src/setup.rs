@@ -4,27 +4,27 @@ use std::sync::Arc;
 
 use crate::BlockTy;
 use alloy_primitives::{BlockNumber, B256};
-use reth_config::{config::StageConfig, PruneConfig};
-use reth_consensus::FullConsensus;
-use reth_downloaders::{
+use hanzo_evm_config::{config::StageConfig, PruneConfig};
+use hanzo_evm_consensus::FullConsensus;
+use hanzo_evm_downloaders::{
     bodies::bodies::BodiesDownloaderBuilder,
     headers::reverse_headers::ReverseHeadersDownloaderBuilder,
 };
-use reth_evm::ConfigureEvm;
-use reth_exex::ExExManagerHandle;
-use reth_network_p2p::{
+use hanzo_evm_execution::ConfigureEvm;
+use hanzo_evm_exex::ExExManagerHandle;
+use hanzo_evm_network_p2p::{
     bodies::downloader::BodyDownloader, headers::downloader::HeaderDownloader, BlockClient,
 };
-use reth_node_api::HeaderTy;
-use reth_provider::{providers::ProviderNodeTypes, ProviderFactory};
-use reth_stages::{
+use hanzo_evm_node_api::HeaderTy;
+use hanzo_evm_provider::{providers::ProviderNodeTypes, ProviderFactory};
+use hanzo_evm_stages::{
     prelude::DefaultStages,
     stages::{EraImportSource, ExecutionStage},
     Pipeline, StageSet,
 };
-use reth_static_file::StaticFileProducer;
-use reth_tasks::TaskExecutor;
-use reth_tracing::tracing::debug;
+use hanzo_evm_static_file::StaticFileProducer;
+use hanzo_evm_tasks::TaskExecutor;
+use hanzo_evm_tracing::tracing::debug;
 use tokio::sync::watch;
 
 /// Constructs a [Pipeline] that's wired to the network
@@ -35,11 +35,11 @@ pub fn build_networked_pipeline<N, Client, Evm>(
     consensus: Arc<dyn FullConsensus<N::Primitives>>,
     provider_factory: ProviderFactory<N>,
     task_executor: &TaskExecutor,
-    metrics_tx: reth_stages::MetricEventsSender,
+    metrics_tx: hanzo_evm_stages::MetricEventsSender,
     prune_config: PruneConfig,
     max_block: Option<BlockNumber>,
     static_file_producer: StaticFileProducer<ProviderFactory<N>>,
-    evm_config: Evm,
+    hanzo_evm_config: Evm,
     exex_manager_handle: ExExManagerHandle<N::Primitives>,
     era_import_source: Option<EraImportSource>,
 ) -> eyre::Result<Pipeline<N>>
@@ -67,7 +67,7 @@ where
         metrics_tx,
         prune_config,
         static_file_producer,
-        evm_config,
+        hanzo_evm_config,
         exex_manager_handle,
         era_import_source,
     )?;
@@ -84,10 +84,10 @@ pub fn build_pipeline<N, H, B, Evm>(
     body_downloader: B,
     consensus: Arc<dyn FullConsensus<N::Primitives>>,
     max_block: Option<u64>,
-    metrics_tx: reth_stages::MetricEventsSender,
+    metrics_tx: hanzo_evm_stages::MetricEventsSender,
     prune_config: PruneConfig,
     static_file_producer: StaticFileProducer<ProviderFactory<N>>,
-    evm_config: Evm,
+    hanzo_evm_config: Evm,
     exex_manager_handle: ExExManagerHandle<N::Primitives>,
     era_import_source: Option<EraImportSource>,
 ) -> eyre::Result<Pipeline<N>>
@@ -100,7 +100,7 @@ where
     let mut builder = Pipeline::<N>::builder();
 
     if let Some(max_block) = max_block {
-        debug!(target: "reth::cli", max_block, "Configuring builder to use max block");
+        debug!(target: "evm::cli", max_block, "Configuring builder to use max block");
         builder = builder.with_max_block(max_block)
     }
 
@@ -116,13 +116,13 @@ where
                 Arc::clone(&consensus),
                 header_downloader,
                 body_downloader,
-                evm_config.clone(),
+                hanzo_evm_config.clone(),
                 stage_config.clone(),
                 prune_config.segments,
                 era_import_source,
             )
             .set(ExecutionStage::new(
-                evm_config,
+                hanzo_evm_config,
                 consensus,
                 stage_config.execution.into(),
                 stage_config.execution_external_clean_threshold(),

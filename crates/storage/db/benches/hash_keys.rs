@@ -11,14 +11,14 @@ use proptest::{
     strategy::{Strategy, ValueTree},
     test_runner::TestRunner,
 };
-use reth_db::{test_utils::create_test_rw_db_with_path, DatabaseEnv, TransactionHashNumbers};
-use reth_db_api::{
+use hanzo_evm_db::{test_utils::create_test_rw_db_with_path, DatabaseEnv, TransactionHashNumbers};
+use hanzo_evm_db_api::{
     cursor::DbCursorRW,
     database::Database,
     table::{Table, TableRow},
     transaction::{DbTx, DbTxMut},
 };
-use reth_fs_util as fs;
+use hanzo_evm_fs_util as fs;
 
 mod utils;
 use utils::*;

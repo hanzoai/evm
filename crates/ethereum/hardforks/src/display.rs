@@ -64,7 +64,7 @@ impl core::fmt::Display for DisplayFork {
 // # Examples
 //
 // ```
-// # use reth_chainspec::MAINNET;
+// # use hanzo_evm_chainspec::MAINNET;
 // println!("{}", MAINNET.display_hardforks());
 // ```
 //

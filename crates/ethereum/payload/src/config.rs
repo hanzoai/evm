@@ -1,6 +1,6 @@
 use alloy_eips::eip1559::ETHEREUM_BLOCK_GAS_LIMIT_30M;
 use alloy_primitives::Bytes;
-use reth_primitives_traits::constants::GAS_LIMIT_BOUND_DIVISOR;
+use hanzo_evm_primitives_traits::constants::GAS_LIMIT_BOUND_DIVISOR;
 
 /// Settings for the Ethereum builder.
 #[derive(PartialEq, Eq, Clone, Debug)]

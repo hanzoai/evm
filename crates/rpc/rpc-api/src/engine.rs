@@ -20,7 +20,7 @@ use alloy_rpc_types_eth::{
 };
 use alloy_serde::JsonStorageKey;
 use jsonrpsee::{core::RpcResult, proc_macros::rpc, RpcModule};
-use reth_engine_primitives::EngineTypes;
+use hanzo_evm_engine_primitives::EngineTypes;
 
 /// Helper trait for the engine api server.
 ///

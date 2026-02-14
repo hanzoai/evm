@@ -1,26 +1,26 @@
 [package]
-name = "reth-db-api"
+name = "hanzo-evm-db-api"
 version.workspace = true
 edition.workspace = true
 rust-version.workspace = true
 license.workspace = true
 homepage.workspace = true
 repository.workspace = true
-description = "Database abstraction used in reth."
+description = "Database abstraction used in Hanzo EVM."
 
 [lints]
 workspace = true
 
 [dependencies]
-# reth
-reth-codecs.workspace = true
-reth-db-models = { workspace = true, features = ["serde", "reth-codec"] }
-reth-ethereum-primitives = { workspace = true, features = ["serde", "reth-codec"] }
-reth-primitives-traits = { workspace = true, features = ["serde", "reth-codec"] }
-reth-stages-types = { workspace = true, features = ["serde", "reth-codec"] }
-reth-prune-types = { workspace = true, features = ["serde", "reth-codec"] }
-reth-storage-errors.workspace = true
-reth-trie-common.workspace = true
+# evm
+hanzo-evm-codecs.workspace = true
+hanzo-evm-db-models = { workspace = true, features = ["serde", "hanzo-evm-codec"] }
+hanzo-evm-ethereum-primitives = { workspace = true, features = ["serde", "hanzo-evm-codec"] }
+hanzo-evm-primitives-traits = { workspace = true, features = ["serde", "hanzo-evm-codec"] }
+hanzo-evm-stages-types = { workspace = true, features = ["serde", "hanzo-evm-codec"] }
+hanzo-evm-prune-types = { workspace = true, features = ["serde", "hanzo-evm-codec"] }
+hanzo-evm-storage-errors.workspace = true
+hanzo-evm-trie-common.workspace = true
 
 # ethereum
 alloy-primitives.workspace = true
@@ -49,9 +49,9 @@ arbitrary = { workspace = true, features = ["derive"], optional = true }
 proptest = { workspace = true, optional = true }
 
 [dev-dependencies]
-# reth libs with arbitrary
-reth-codecs = { workspace = true, features = ["test-utils"] }
-reth-db-models = { workspace = true, features = ["arbitrary"] }
+# evm libs with arbitrary
+hanzo-evm-codecs = { workspace = true, features = ["test-utils"] }
+hanzo-evm-db-models = { workspace = true, features = ["arbitrary"] }
 
 alloy-primitives = { workspace = true, features = ["rand"] }
 rand.workspace = true
@@ -65,33 +65,33 @@ proptest-arbitrary-interop.workspace = true
 [features]
 test-utils = [
     "arbitrary",
-    "reth-primitives-traits/test-utils",
-    "reth-codecs/test-utils",
-    "reth-db-models/test-utils",
-    "reth-trie-common/test-utils",
-    "reth-prune-types/test-utils",
-    "reth-stages-types/test-utils",
-    "reth-ethereum-primitives/test-utils",
+    "hanzo-evm-primitives-traits/test-utils",
+    "hanzo-evm-codecs/test-utils",
+    "hanzo-evm-db-models/test-utils",
+    "hanzo-evm-trie-common/test-utils",
+    "hanzo-evm-prune-types/test-utils",
+    "hanzo-evm-stages-types/test-utils",
+    "hanzo-evm-ethereum-primitives/test-utils",
 ]
 arbitrary = [
-    "reth-db-models/arbitrary",
+    "hanzo-evm-db-models/arbitrary",
     "dep:arbitrary",
     "dep:proptest",
-    "reth-primitives-traits/arbitrary",
-    "reth-trie-common/arbitrary",
+    "hanzo-evm-primitives-traits/arbitrary",
+    "hanzo-evm-trie-common/arbitrary",
     "alloy-primitives/arbitrary",
     "parity-scale-codec/arbitrary",
-    "reth-codecs/arbitrary",
-    "reth-prune-types/arbitrary",
-    "reth-stages-types/arbitrary",
+    "hanzo-evm-codecs/arbitrary",
+    "hanzo-evm-prune-types/arbitrary",
+    "hanzo-evm-stages-types/arbitrary",
     "alloy-consensus/arbitrary",
     "op-alloy-consensus?/arbitrary",
-    "reth-ethereum-primitives/arbitrary",
+    "hanzo-evm-ethereum-primitives/arbitrary",
 ]
 op = [
     "dep:op-alloy-consensus",
-    "reth-codecs/op",
-    "reth-primitives-traits/op",
+    "hanzo-evm-codecs/op",
+    "hanzo-evm-primitives-traits/op",
 ]
 bench = []
 rocksdb = []

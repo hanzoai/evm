@@ -1,7 +1,7 @@
 use std::sync::Arc;
 
 use alloy_primitives::{map::AddressSet, Address};
-use reth_transaction_pool::{PoolTransaction, ValidPoolTransaction};
+use hanzo_evm_transaction_pool::{PoolTransaction, ValidPoolTransaction};
 
 /// Iterator that returns transactions for the block building process in the order they should be
 /// included in the block.
@@ -104,7 +104,7 @@ mod tests {
         PayloadTransactionsFixed,
     };
     use alloy_primitives::{map::AddressSet, Address};
-    use reth_transaction_pool::{
+    use hanzo_evm_transaction_pool::{
         pool::{BestTransactionsWithPrioritizedSenders, PendingPool},
         test_utils::{MockOrdering, MockTransaction, MockTransactionFactory},
         PoolTransaction,

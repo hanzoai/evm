@@ -1,6 +1,6 @@
 use super::event::ProtocolEvent;
 use crate::subprotocol::connection::handler::CustomRlpxConnectionHandler;
-use reth_ethereum::network::{api::PeerId, protocol::ProtocolHandler};
+use hanzo_evm_ethereum::network::{api::PeerId, protocol::ProtocolHandler};
 use std::net::SocketAddr;
 use tokio::sync::mpsc;
 

@@ -1,11 +1,11 @@
 use clap::Parser;
-use reth_db::{open_db_read_only, tables_to_generic, DatabaseEnv};
-use reth_db_api::{
+use hanzo_evm_db::{open_db_read_only, tables_to_generic, DatabaseEnv};
+use hanzo_evm_db_api::{
     cursor::DbCursorRO, database::Database, table::Table, transaction::DbTx, Tables,
 };
-use reth_db_common::DbTool;
-use reth_node_builder::{NodeTypes, NodeTypesWithDBAdapter};
-use reth_node_core::{
+use hanzo_evm_db_common::DbTool;
+use hanzo_evm_node_builder::{NodeTypes, NodeTypesWithDBAdapter};
+use hanzo_evm_node_core::{
     args::DatabaseArgs,
     dirs::{DataDirPath, PlatformPath},
 };
@@ -20,9 +20,9 @@ use std::{
 use tracing::{info, warn};
 
 #[derive(Parser, Debug)]
-/// The arguments for the `reth db diff` command
+/// The arguments for the `evm db diff` command
 pub struct Command {
-    /// The path to the data dir for all reth files and subdirectories.
+    /// The path to the data dir for all evm files and subdirectories.
     #[arg(long, verbatim_doc_comment)]
     secondary_datadir: PlatformPath<DataDirPath>,
 
@@ -57,7 +57,7 @@ impl Command {
         self,
         tool: &DbTool<NodeTypesWithDBAdapter<T, DatabaseEnv>>,
     ) -> eyre::Result<()> {
-        warn!("Make sure the node is not running when running `reth db diff`!");
+        warn!("Make sure the node is not running when running `evm db diff`!");
         // open second db
         let second_db_path: PathBuf = self.secondary_datadir.join("db").into();
         let second_db = open_db_read_only(&second_db_path, self.second_db.database_args())?;

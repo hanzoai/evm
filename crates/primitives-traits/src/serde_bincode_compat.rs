@@ -1,4 +1,4 @@
-//! Bincode compatibility support for reth primitive types.
+//! Bincode compatibility support for evm primitive types.
 //!
 //! This module provides traits and implementations to work around bincode's limitations
 //! with optional serde fields. The bincode crate requires all fields to be present during
@@ -19,7 +19,7 @@
 //! ## Using with `serde_with`
 //!
 //! ```rust
-//! # use reth_primitives_traits::serde_bincode_compat::{self, SerdeBincodeCompat};
+//! # use hanzo_evm_primitives_traits::serde_bincode_compat::{self, SerdeBincodeCompat};
 //! # use serde::{Deserialize, Serialize};
 //! # use serde_with::serde_as;
 //! # use alloy_consensus::Header;
@@ -52,7 +52,7 @@ pub use block_bincode::{Block, BlockBody};
 /// The easiest way to implement this trait is using [`RlpBincode`] for RLP-encodable types:
 ///
 /// ```rust
-/// # use reth_primitives_traits::serde_bincode_compat::RlpBincode;
+/// # use hanzo_evm_primitives_traits::serde_bincode_compat::RlpBincode;
 /// # use alloy_rlp::{RlpEncodable, RlpDecodable};
 /// # #[derive(RlpEncodable, RlpDecodable)]
 /// # struct MyType;
@@ -97,7 +97,7 @@ impl SerdeBincodeCompat for alloy_consensus::Header {
 /// # Example
 ///
 /// ```rust
-/// # use reth_primitives_traits::serde_bincode_compat::{SerdeBincodeCompat, BincodeReprFor};
+/// # use hanzo_evm_primitives_traits::serde_bincode_compat::{SerdeBincodeCompat, BincodeReprFor};
 /// fn serialize_to_bincode<T: SerdeBincodeCompat>(value: &T) -> BincodeReprFor<'_, T> {
 ///     value.as_repr()
 /// }
@@ -113,7 +113,7 @@ pub type BincodeReprFor<'a, T> = <T as SerdeBincodeCompat>::BincodeRepr<'a>;
 /// # Example
 ///
 /// ```rust
-/// # use reth_primitives_traits::serde_bincode_compat::RlpBincode;
+/// # use hanzo_evm_primitives_traits::serde_bincode_compat::RlpBincode;
 /// # use alloy_rlp::{RlpEncodable, RlpDecodable};
 /// #[derive(RlpEncodable, RlpDecodable)]
 /// struct MyCustomType {
@@ -155,7 +155,7 @@ mod block_bincode {
     /// Intended to use with the [`serde_with::serde_as`] macro in the following way:
     /// ```rust
     /// use alloy_consensus::Block;
-    /// use reth_primitives_traits::serde_bincode_compat::{self, SerdeBincodeCompat};
+    /// use hanzo_evm_primitives_traits::serde_bincode_compat::{self, SerdeBincodeCompat};
     /// use serde::{Deserialize, Serialize};
     /// use serde_with::serde_as;
     ///
@@ -233,7 +233,7 @@ mod block_bincode {
     ///
     /// Intended to use with the [`serde_with::serde_as`] macro in the following way:
     /// ```rust
-    /// use reth_primitives_traits::serde_bincode_compat::{self, SerdeBincodeCompat};
+    /// use hanzo_evm_primitives_traits::serde_bincode_compat::{self, SerdeBincodeCompat};
     /// use serde::{Deserialize, Serialize};
     /// use serde_with::serde_as;
     ///

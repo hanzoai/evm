@@ -7,16 +7,16 @@ use crate::{
     PrunerError,
 };
 use alloy_primitives::BlockNumber;
-use reth_db_api::{models::ShardedKey, tables, transaction::DbTxMut};
-use reth_provider::{
+use hanzo_evm_db_api::{models::ShardedKey, tables, transaction::DbTxMut};
+use hanzo_evm_provider::{
     changeset_walker::StaticFileAccountChangesetWalker, DBProvider, EitherWriter,
     RocksDBProviderFactory, StaticFileProviderFactory,
 };
-use reth_prune_types::{
+use hanzo_evm_prune_types::{
     PruneMode, PrunePurpose, PruneSegment, SegmentOutput, SegmentOutputCheckpoint,
 };
-use reth_static_file_types::StaticFileSegment;
-use reth_storage_api::{ChangeSetReader, StorageSettingsCache};
+use hanzo_evm_static_file_types::StaticFileSegment;
+use hanzo_evm_storage_api::{ChangeSetReader, StorageSettingsCache};
 use rustc_hash::FxHashMap;
 use tracing::{instrument, trace};
 
@@ -334,14 +334,14 @@ mod tests {
     use crate::segments::{AccountHistory, PruneInput, PruneLimiter, Segment, SegmentOutput};
     use alloy_primitives::{BlockNumber, B256};
     use assert_matches::assert_matches;
-    use reth_db_api::{models::StorageSettings, tables, BlockNumberList};
-    use reth_provider::{DBProvider, DatabaseProviderFactory, PruneCheckpointReader};
-    use reth_prune_types::{
+    use hanzo_evm_db_api::{models::StorageSettings, tables, BlockNumberList};
+    use hanzo_evm_provider::{DBProvider, DatabaseProviderFactory, PruneCheckpointReader};
+    use hanzo_evm_prune_types::{
         PruneCheckpoint, PruneInterruptReason, PruneMode, PruneProgress, PruneSegment,
     };
-    use reth_stages::test_utils::{StorageKind, TestStageDB};
-    use reth_storage_api::StorageSettingsCache;
-    use reth_testing_utils::generators::{
+    use hanzo_evm_stages::test_utils::{StorageKind, TestStageDB};
+    use hanzo_evm_storage_api::StorageSettingsCache;
+    use hanzo_evm_testing_utils::generators::{
         self, random_block_range, random_changeset_range, random_eoa_accounts, BlockRangeParams,
     };
     use std::{collections::BTreeMap, ops::AddAssign};
@@ -659,8 +659,8 @@ mod tests {
     #[cfg(all(unix, feature = "rocksdb"))]
     #[test]
     fn prune_rocksdb_path() {
-        use reth_db_api::models::ShardedKey;
-        use reth_provider::{RocksDBProviderFactory, StaticFileProviderFactory};
+        use hanzo_evm_db_api::models::ShardedKey;
+        use hanzo_evm_provider::{RocksDBProviderFactory, StaticFileProviderFactory};
 
         let db = TestStageDB::default();
         let mut rng = generators::rng();
@@ -753,7 +753,7 @@ mod tests {
 
         let static_file_provider = db.factory.static_file_provider();
         let highest_block = static_file_provider.get_highest_static_file_block(
-            reth_static_file_types::StaticFileSegment::AccountChangeSets,
+            hanzo_evm_static_file_types::StaticFileSegment::AccountChangeSets,
         );
         if let Some(block) = highest_block {
             assert!(
@@ -768,8 +768,8 @@ mod tests {
     #[test]
     fn prune_partial_progress_mid_block() {
         use alloy_primitives::{Address, U256};
-        use reth_primitives_traits::Account;
-        use reth_testing_utils::generators::ChangeSet;
+        use hanzo_evm_primitives_traits::Account;
+        use hanzo_evm_testing_utils::generators::ChangeSet;
 
         let db = TestStageDB::default();
         let mut rng = generators::rng();

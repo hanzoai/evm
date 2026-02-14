@@ -1,5 +1,5 @@
 use metrics::Gauge;
-use reth_metrics::Metrics;
+use hanzo_evm_metrics::Metrics;
 
 /// Metrics for the [WAL](`super::Wal`)
 #[derive(Metrics)]

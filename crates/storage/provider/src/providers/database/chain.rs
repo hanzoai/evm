@@ -1,9 +1,9 @@
 use crate::{providers::NodeTypesForProvider, DatabaseProvider};
-use reth_db_api::transaction::{DbTx, DbTxMut};
-use reth_node_types::NodePrimitives;
+use hanzo_evm_db_api::transaction::{DbTx, DbTxMut};
+use hanzo_evm_node_types::NodePrimitives;
 
-use reth_primitives_traits::{FullBlockHeader, FullSignedTx};
-use reth_storage_api::{ChainStorageReader, ChainStorageWriter, EmptyBodyStorage, EthStorage};
+use hanzo_evm_primitives_traits::{FullBlockHeader, FullSignedTx};
+use hanzo_evm_storage_api::{ChainStorageReader, ChainStorageWriter, EmptyBodyStorage, EthStorage};
 
 /// Trait that provides access to implementations of [`ChainStorage`]
 pub trait ChainStorage<Primitives: NodePrimitives>: Send + Sync {

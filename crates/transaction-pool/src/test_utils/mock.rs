@@ -25,8 +25,8 @@ use alloy_eips::{
 use alloy_primitives::{Address, Bytes, ChainId, Signature, TxHash, TxKind, B256, U256};
 use paste::paste;
 use rand::{distr::Uniform, prelude::Distribution};
-use reth_ethereum_primitives::{PooledTransactionVariant, Transaction, TransactionSigned};
-use reth_primitives_traits::{
+use hanzo_evm_ethereum_primitives::{PooledTransactionVariant, Transaction, TransactionSigned};
+use hanzo_evm_primitives_traits::{
     transaction::error::TryFromRecoveredTransactionError, InMemorySize, Recovered,
     SignedTransaction,
 };

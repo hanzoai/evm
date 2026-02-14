@@ -1,9 +1,9 @@
-//! reth's database abstraction layer.
+//! evm's database abstraction layer.
 //!
 //! The database abstraction assumes that the underlying store is a KV store subdivided into tables.
 //!
 //! One or more changes are tied to a transaction that is atomically committed to the data store at
-//! the same time. Strong consistency in what data is written and when is important for reth, so it
+//! the same time. Strong consistency in what data is written and when is important for evm, so it
 //! is not possible to write data to the database outside of using a transaction.
 //!
 //! Good starting points for this crate are:
@@ -28,7 +28,7 @@
 //!
 //! # Tables
 //!
-//! reth has two types of tables: simple KV stores (one key, one value) and dup tables (one key,
+//! evm has two types of tables: simple KV stores (one key, one value) and dup tables (one key,
 //! many values). Dup tables can be efficient for certain types of data.
 //!
 //! Keys are de/serialized using the [`Encode`] and [`Decode`] traits, and values are de/serialized
@@ -52,9 +52,9 @@
 //! [`Table`]: crate::table::Table
 
 #![doc(
-    html_logo_url = "https://raw.githubusercontent.com/paradigmxyz/reth/main/assets/reth-docs.png",
+    html_logo_url = "https://raw.githubusercontent.com/hanzoai/evm/main/assets/evm-docs.png",
     html_favicon_url = "https://avatars0.githubusercontent.com/u/97369466?s=256",
-    issue_tracker_base_url = "https://github.com/paradigmxyz/reth/issues/"
+    issue_tracker_base_url = "https://github.com/hanzoai/evm/issues/"
 )]
 #![cfg_attr(not(test), warn(unused_crate_dependencies))]
 #![cfg_attr(docsrs, feature(doc_cfg))]
@@ -83,7 +83,7 @@ pub use tables::*;
 pub mod transaction;
 
 /// Re-exports
-pub use reth_storage_errors::db::{DatabaseError, DatabaseWriteOperation};
+pub use hanzo_evm_storage_errors::db::{DatabaseError, DatabaseWriteOperation};
 
 pub mod models;
 mod scale;

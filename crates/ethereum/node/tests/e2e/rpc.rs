@@ -10,18 +10,18 @@ use alloy_rpc_types_beacon::relay::{
 use alloy_rpc_types_engine::{BlobsBundleV1, ExecutionPayloadV3};
 use alloy_rpc_types_eth::TransactionRequest;
 use rand::{rngs::StdRng, Rng, SeedableRng};
-use reth_chainspec::{ChainSpecBuilder, EthChainSpec, MAINNET};
-use reth_e2e_test_utils::setup_engine;
-use reth_network::types::NatResolver;
-use reth_node_builder::{NodeBuilder, NodeHandle};
-use reth_node_core::{
+use hanzo_evm_chainspec::{ChainSpecBuilder, EthChainSpec, MAINNET};
+use hanzo_evm_e2e_test_utils::setup_engine;
+use hanzo_evm_network::types::NatResolver;
+use hanzo_evm_node_builder::{NodeBuilder, NodeHandle};
+use hanzo_evm_node_core::{
     args::{NetworkArgs, RpcServerArgs},
     node_config::NodeConfig,
 };
-use reth_node_ethereum::EthereumNode;
-use reth_payload_primitives::BuiltPayload;
-use reth_rpc_api::servers::AdminApiServer;
-use reth_tasks::TaskManager;
+use hanzo_evm_node_ethereum::EthereumNode;
+use hanzo_evm_payload_primitives::BuiltPayload;
+use hanzo_evm_rpc_api::servers::AdminApiServer;
+use hanzo_evm_tasks::TaskManager;
 use std::{
     sync::Arc,
     time::{SystemTime, UNIX_EPOCH},
@@ -43,7 +43,7 @@ alloy_sol_types::sol! {
 
 #[tokio::test]
 async fn test_fee_history() -> eyre::Result<()> {
-    reth_tracing::init_test_tracing();
+    hanzo_evm_tracing::init_test_tracing();
 
     let seed: [u8; 32] = rand::rng().random();
     let mut rng = StdRng::from_seed(seed);
@@ -132,7 +132,7 @@ async fn test_fee_history() -> eyre::Result<()> {
 
 #[tokio::test]
 async fn test_flashbots_validate_v3() -> eyre::Result<()> {
-    reth_tracing::init_test_tracing();
+    hanzo_evm_tracing::init_test_tracing();
 
     let chain_spec = Arc::new(
         ChainSpecBuilder::default()
@@ -214,7 +214,7 @@ async fn test_flashbots_validate_v3() -> eyre::Result<()> {
 
 #[tokio::test]
 async fn test_flashbots_validate_v4() -> eyre::Result<()> {
-    reth_tracing::init_test_tracing();
+    hanzo_evm_tracing::init_test_tracing();
 
     let chain_spec = Arc::new(
         ChainSpecBuilder::default()
@@ -297,7 +297,7 @@ async fn test_flashbots_validate_v4() -> eyre::Result<()> {
 
 #[tokio::test]
 async fn test_eth_config() -> eyre::Result<()> {
-    reth_tracing::init_test_tracing();
+    hanzo_evm_tracing::init_test_tracing();
 
     let timestamp = SystemTime::now().duration_since(UNIX_EPOCH).unwrap().as_secs();
 
@@ -339,10 +339,10 @@ async fn test_eth_config() -> eyre::Result<()> {
     Ok(())
 }
 
-// <https://github.com/paradigmxyz/reth/issues/19765>
+// <https://github.com/hanzoai/evm/issues/19765>
 #[tokio::test]
 async fn test_admin_external_ip() -> eyre::Result<()> {
-    reth_tracing::init_test_tracing();
+    hanzo_evm_tracing::init_test_tracing();
 
     let exec = TaskManager::current();
     let exec = exec.executor();

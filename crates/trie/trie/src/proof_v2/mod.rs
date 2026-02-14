@@ -14,8 +14,8 @@ use crate::{
 use alloy_primitives::{keccak256, B256, U256};
 use alloy_rlp::Encodable;
 use alloy_trie::{BranchNodeCompact, TrieMask};
-use reth_execution_errors::trie::StateProofError;
-use reth_trie_common::{BranchNode, BranchNodeMasks, Nibbles, ProofTrieNode, RlpNode, TrieNode};
+use hanzo_evm_execution_errors::trie::StateProofError;
+use hanzo_evm_trie_common::{BranchNode, BranchNodeMasks, Nibbles, ProofTrieNode, RlpNode, TrieNode};
 use std::cmp::Ordering;
 use tracing::{error, instrument, trace};
 
@@ -1643,8 +1643,8 @@ mod tests {
     use alloy_primitives::map::{B256Map, B256Set};
     use alloy_rlp::Decodable;
     use itertools::Itertools;
-    use reth_primitives_traits::Account;
-    use reth_trie_common::{
+    use hanzo_evm_primitives_traits::Account;
+    use hanzo_evm_trie_common::{
         updates::{StorageTrieUpdates, TrieUpdates},
         HashedPostState, MultiProofTargets, TrieNode,
     };
@@ -1819,7 +1819,7 @@ mod tests {
         use super::*;
         use alloy_primitives::{map::B256Map, U256};
         use proptest::prelude::*;
-        use reth_trie_common::HashedPostState;
+        use hanzo_evm_trie_common::HashedPostState;
 
         /// Generate a strategy for Account values
         fn account_strategy() -> impl Strategy<Value = Account> {
@@ -1897,7 +1897,7 @@ mod tests {
                         (Just(post_state), targets_strategy)
                     })
             ) {
-                reth_tracing::init_test_tracing();
+                hanzo_evm_tracing::init_test_tracing();
                 let harness = ProofTestHarness::new(post_state);
 
                 harness.assert_proof(targets).expect("Proof generation failed");
@@ -1909,7 +1909,7 @@ mod tests {
     fn test_big_trie() {
         use rand::prelude::*;
 
-        reth_tracing::init_test_tracing();
+        hanzo_evm_tracing::init_test_tracing();
         let mut rng = rand::rngs::SmallRng::seed_from_u64(1);
 
         let mut rand_b256 = || {
@@ -1971,7 +1971,7 @@ mod tests {
     fn test_failing_proptest_case_0() {
         use alloy_primitives::{hex, map::B256Map};
 
-        reth_tracing::init_test_tracing();
+        hanzo_evm_tracing::init_test_tracing();
 
         // Helper function to create B256 from hex string
         let b256 = |s: &str| B256::from_slice(&hex::decode(s).unwrap());

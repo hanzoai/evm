@@ -4,11 +4,11 @@ use std::sync::Arc;
 
 use alloy_consensus::{transaction::TxHashRef, TxReceipt};
 use alloy_primitives::TxHash;
-use reth_primitives_traits::{
+use hanzo_evm_primitives_traits::{
     Block, BlockBody, BlockTy, IndexedTx, NodePrimitives, ReceiptTy, Recovered, RecoveredBlock,
     SealedBlock,
 };
-use reth_rpc_convert::{transaction::ConvertReceiptInput, RpcConvert, RpcTypes};
+use hanzo_evm_rpc_convert::{transaction::ConvertReceiptInput, RpcConvert, RpcTypes};
 
 use crate::utils::calculate_gas_used_and_next_log_index;
 

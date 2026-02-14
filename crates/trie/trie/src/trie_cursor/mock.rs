@@ -8,8 +8,8 @@ use crate::{
     BranchNodeCompact, Nibbles,
 };
 use alloy_primitives::{map::B256Map, B256};
-use reth_storage_errors::db::DatabaseError;
-use reth_trie_common::updates::TrieUpdates;
+use hanzo_evm_storage_errors::db::DatabaseError;
+use hanzo_evm_trie_common::updates::TrieUpdates;
 
 /// Mock trie cursor factory.
 #[derive(Clone, Default, Debug)]

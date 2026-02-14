@@ -4,12 +4,12 @@ version = "0.1.0"
 edition = "2024"
 
 [dependencies]
-# reth
-reth = { git = "https://github.com/paradigmxyz/reth.git" }
-reth-exex = { git = "https://github.com/paradigmxyz/reth.git", features = ["serde"] }
-reth-node-ethereum = { git = "https://github.com/paradigmxyz/reth.git" }
-reth-node-api = { git = "https://github.com/paradigmxyz/reth.git" }
-reth-tracing = { git = "https://github.com/paradigmxyz/reth.git" }
+# evm
+reth = { git = "https://github.com/hanzoai/evm.git" }
+hanzo-evm-exex = { git = "https://github.com/hanzoai/evm.git", features = ["serde"] }
+hanzo-evm-node-ethereum = { git = "https://github.com/hanzoai/evm.git" }
+hanzo-evm-node-api = { git = "https://github.com/hanzoai/evm.git" }
+hanzo-evm-tracing = { git = "https://github.com/hanzoai/evm.git" }
 
 # async
 tokio = { version = "1", features = ["full"] }

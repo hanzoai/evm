@@ -1,15 +1,15 @@
-//! Reth interface definitions and commonly used types for the reth-network crate.
+//! Hanzo EVM interface definitions and commonly used types for the evm-network crate.
 //!
-//! Provides abstractions for the reth-network crate.
+//! Provides abstractions for the evm-network crate.
 //!
 //! ## Feature Flags
 //!
 //! - `serde` (default): Enable serde support
 
 #![doc(
-    html_logo_url = "https://raw.githubusercontent.com/paradigmxyz/reth/main/assets/reth-docs.png",
+    html_logo_url = "https://raw.githubusercontent.com/hanzoai/evm/main/assets/evm-docs.png",
     html_favicon_url = "https://avatars0.githubusercontent.com/u/97369466?s=256",
-    issue_tracker_base_url = "https://github.com/paradigmxyz/reth/issues/"
+    issue_tracker_base_url = "https://github.com/hanzoai/evm/issues/"
 )]
 #![cfg_attr(docsrs, feature(doc_cfg))]
 
@@ -24,8 +24,8 @@ pub mod test_utils;
 use test_utils::PeersHandleProvider;
 
 pub use alloy_rpc_types_admin::EthProtocolInfo;
-pub use reth_network_p2p::{BlockClient, HeadersClient};
-pub use reth_network_types::{PeerKind, Reputation, ReputationChangeKind};
+pub use hanzo_evm_network_p2p::{BlockClient, HeadersClient};
+pub use hanzo_evm_network_types::{PeerKind, Reputation, ReputationChangeKind};
 
 pub use downloaders::BlockDownloaderProvider;
 pub use error::NetworkError;
@@ -34,12 +34,12 @@ pub use events::{
     PeerRequestSender,
 };
 
-use reth_eth_wire_types::{
+use hanzo_evm_eth_wire_types::{
     capability::Capabilities, Capability, DisconnectReason, EthVersion, NetworkPrimitives,
     UnifiedStatus,
 };
-use reth_network_p2p::sync::NetworkSyncUpdater;
-use reth_network_peers::NodeRecord;
+use hanzo_evm_network_p2p::sync::NetworkSyncUpdater;
+use hanzo_evm_network_peers::NodeRecord;
 use std::{future::Future, net::SocketAddr, sync::Arc, time::Instant};
 
 /// The `PeerId` type.
@@ -199,7 +199,7 @@ pub trait Peers: PeersInfo {
     fn disconnect_peer_with_reason(&self, peer: PeerId, reason: DisconnectReason);
 
     /// Connect to the given peer. NOTE: if the maximum number of outbound sessions is reached,
-    /// this won't do anything. See `reth_network::SessionManager::dial_outbound`.
+    /// this won't do anything. See `hanzo_evm_network::SessionManager::dial_outbound`.
     fn connect_peer(&self, peer: PeerId, tcp_addr: SocketAddr) {
         self.connect_peer_kind(peer, PeerKind::Static, tcp_addr, None)
     }

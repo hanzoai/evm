@@ -1,5 +1,5 @@
 [package]
-name = "reth-config"
+name = "hanzo-evm-config"
 version.workspace = true
 edition.workspace = true
 rust-version.workspace = true
@@ -11,11 +11,11 @@ repository.workspace = true
 workspace = true
 
 [dependencies]
-# reth
-reth-network-types.workspace = true
-reth-prune-types.workspace = true
-reth-stages-types.workspace = true
-reth-static-file-types.workspace = true
+# evm
+hanzo-evm-network-types.workspace = true
+hanzo-evm-prune-types.workspace = true
+hanzo-evm-stages-types.workspace = true
+hanzo-evm-static-file-types.workspace = true
 
 # serde
 serde = { workspace = true, optional = true }
@@ -33,14 +33,14 @@ serde = [
     "dep:serde",
     "dep:toml",
     "dep:humantime-serde",
-    "reth-network-types/serde",
-    "reth-prune-types/serde",
-    "reth-stages-types/serde",
+    "hanzo-evm-network-types/serde",
+    "hanzo-evm-prune-types/serde",
+    "hanzo-evm-stages-types/serde",
     "alloy-primitives/serde",
     "url/serde",
 ]
 
 [dev-dependencies]
 tempfile.workspace = true
-reth-network-peers.workspace = true
+hanzo-evm-network-peers.workspace = true
 alloy-primitives = { workspace = true, features = ["getrandom"] }

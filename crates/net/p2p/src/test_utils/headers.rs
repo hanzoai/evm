@@ -12,9 +12,9 @@ use crate::{
 };
 use alloy_consensus::Header;
 use futures::{Future, FutureExt, Stream, StreamExt};
-use reth_eth_wire_types::HeadersDirection;
-use reth_network_peers::{PeerId, WithPeerId};
-use reth_primitives_traits::SealedHeader;
+use hanzo_evm_eth_wire_types::HeadersDirection;
+use hanzo_evm_network_peers::{PeerId, WithPeerId};
+use hanzo_evm_primitives_traits::SealedHeader;
 use std::{
     fmt,
     pin::Pin,

@@ -7,9 +7,9 @@
 //! proper features are selected.
 
 #![doc(
-    html_logo_url = "https://raw.githubusercontent.com/paradigmxyz/reth/main/assets/reth-docs.png",
+    html_logo_url = "https://raw.githubusercontent.com/hanzoai/evm/main/assets/evm-docs.png",
     html_favicon_url = "https://avatars0.githubusercontent.com/u/97369466?s=256",
-    issue_tracker_base_url = "https://github.com/paradigmxyz/reth/issues/"
+    issue_tracker_base_url = "https://github.com/hanzoai/evm/issues/"
 )]
 #![cfg_attr(not(test), warn(unused_crate_dependencies))]
 #![cfg_attr(docsrs, feature(doc_cfg))]
@@ -31,8 +31,8 @@ use alloy_evm::{
 use alloy_primitives::{Address, Bytes, B256};
 use core::{error::Error, fmt::Debug};
 use execute::{BasicBlockExecutor, BlockAssembler, BlockBuilder};
-use reth_execution_errors::BlockExecutionError;
-use reth_primitives_traits::{
+use hanzo_evm_execution_errors::BlockExecutionError;
+use hanzo_evm_primitives_traits::{
     BlockTy, HeaderTy, NodePrimitives, ReceiptTy, SealedBlock, SealedHeader, TxTy,
 };
 use revm::{context::TxEnv, database::State, primitives::hardfork::SpecId};
@@ -93,10 +93,10 @@ pub use alloy_evm::{
 /// ## 1. Executing Externally Provided Blocks (e.g., during sync)
 ///
 /// ```rust,ignore
-/// use reth_evm::ConfigureEvm;
+/// use hanzo_evm_execution::ConfigureEvm;
 ///
 /// // Execute a received block
-/// let mut executor = evm_config.executor(state_db);
+/// let mut executor = hanzo_evm_config.executor(state_db);
 /// let output = executor.execute(&block)?;
 ///
 /// // Access the execution results
@@ -111,7 +111,7 @@ pub use alloy_evm::{
 /// The block's header will be the outcome of the block building process.
 ///
 /// ```rust,ignore
-/// use reth_evm::{ConfigureEvm, NextBlockEnvAttributes};
+/// use hanzo_evm_execution::{ConfigureEvm, NextBlockEnvAttributes};
 ///
 /// // Create attributes for the next block
 /// let attributes = NextBlockEnvAttributes {
@@ -124,7 +124,7 @@ pub use alloy_evm::{
 /// };
 ///
 /// // Build a new block on top of parent
-/// let mut builder = evm_config.builder_for_next_block(
+/// let mut builder = hanzo_evm_config.builder_for_next_block(
 ///     &mut state_db,
 ///     &parent_header,
 ///     attributes
@@ -231,7 +231,7 @@ pub trait ConfigureEvm: Clone + Debug + Send + Sync + Unpin {
     /// # Example
     ///
     /// ```rust,ignore
-    /// let evm_env = evm_config.next_evm_env(&parent_header, &attributes)?;
+    /// let evm_env = hanzo_evm_config.next_evm_env(&parent_header, &attributes)?;
     /// // evm_env now contains:
     /// // - Correct spec ID based on timestamp and block number
     /// // - Block environment with next block's parameters
@@ -345,9 +345,9 @@ pub trait ConfigureEvm: Clone + Debug + Send + Sync + Unpin {
     ///
     /// ```rust,ignore
     /// // Create a builder with specific EVM configuration
-    /// let evm = evm_config.evm_with_env(&mut state_db, evm_env);
-    /// let ctx = evm_config.context_for_next_block(&parent, attributes);
-    /// let builder = evm_config.create_block_builder(evm, &parent, ctx);
+    /// let evm = hanzo_evm_config.evm_with_env(&mut state_db, evm_env);
+    /// let ctx = hanzo_evm_config.context_for_next_block(&parent, attributes);
+    /// let builder = hanzo_evm_config.create_block_builder(evm, &parent, ctx);
     /// ```
     fn create_block_builder<'a, DB, I>(
         &'a self,
@@ -383,7 +383,7 @@ pub trait ConfigureEvm: Clone + Debug + Send + Sync + Unpin {
     ///
     /// ```rust,ignore
     /// // Build a block with specific attributes
-    /// let mut builder = evm_config.builder_for_next_block(
+    /// let mut builder = hanzo_evm_config.builder_for_next_block(
     ///     &mut state_db,
     ///     &parent_header,
     ///     attributes
@@ -430,7 +430,7 @@ pub trait ConfigureEvm: Clone + Debug + Send + Sync + Unpin {
     ///
     /// ```rust,ignore
     /// // Create an executor
-    /// let mut executor = evm_config.executor(state_db);
+    /// let mut executor = hanzo_evm_config.executor(state_db);
     ///
     /// // Execute a single block
     /// let output = executor.execute(&block)?;
@@ -474,10 +474,10 @@ pub trait ConfigureEvm: Clone + Debug + Send + Sync + Unpin {
 ///    - Parent beacon block root for EIP-4788
 ///
 /// 2. **Configure EVM environment** using these attributes: ```rust,ignore let evm_env =
-///    evm_config.next_evm_env(&parent, &attributes)?; ```
+///    hanzo_evm_config.next_evm_env(&parent, &attributes)?; ```
 ///
 /// 3. **Build the block** with transactions: ```rust,ignore let mut builder =
-///    evm_config.builder_for_next_block( &mut state, &parent, attributes )?; ```
+///    hanzo_evm_config.builder_for_next_block( &mut state, &parent, attributes )?; ```
 ///
 /// 4. **Assemble the final block** using [`BlockAssembler`] which takes:
 ///    - Execution results from all transactions

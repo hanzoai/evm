@@ -7,17 +7,17 @@ use crate::{
     PrunerError,
 };
 use alloy_primitives::{Address, BlockNumber, B256};
-use reth_db_api::{
+use hanzo_evm_db_api::{
     models::{storage_sharded_key::StorageShardedKey, BlockNumberAddress},
     tables,
     transaction::DbTxMut,
 };
-use reth_provider::{DBProvider, EitherWriter, RocksDBProviderFactory, StaticFileProviderFactory};
-use reth_prune_types::{
+use hanzo_evm_provider::{DBProvider, EitherWriter, RocksDBProviderFactory, StaticFileProviderFactory};
+use hanzo_evm_prune_types::{
     PruneMode, PrunePurpose, PruneSegment, SegmentOutput, SegmentOutputCheckpoint,
 };
-use reth_static_file_types::StaticFileSegment;
-use reth_storage_api::{StorageChangeSetReader, StorageSettingsCache};
+use hanzo_evm_static_file_types::StaticFileSegment;
+use hanzo_evm_storage_api::{StorageChangeSetReader, StorageSettingsCache};
 use rustc_hash::FxHashMap;
 use tracing::{instrument, trace};
 
@@ -341,14 +341,14 @@ mod tests {
     use crate::segments::{PruneInput, PruneLimiter, Segment, SegmentOutput, StorageHistory};
     use alloy_primitives::{BlockNumber, B256};
     use assert_matches::assert_matches;
-    use reth_db_api::{models::StorageSettings, tables, BlockNumberList};
-    use reth_provider::{DBProvider, DatabaseProviderFactory, PruneCheckpointReader};
-    use reth_prune_types::{
+    use hanzo_evm_db_api::{models::StorageSettings, tables, BlockNumberList};
+    use hanzo_evm_provider::{DBProvider, DatabaseProviderFactory, PruneCheckpointReader};
+    use hanzo_evm_prune_types::{
         PruneCheckpoint, PruneInterruptReason, PruneMode, PruneProgress, PruneSegment,
     };
-    use reth_stages::test_utils::{StorageKind, TestStageDB};
-    use reth_storage_api::StorageSettingsCache;
-    use reth_testing_utils::generators::{
+    use hanzo_evm_stages::test_utils::{StorageKind, TestStageDB};
+    use hanzo_evm_storage_api::StorageSettingsCache;
+    use hanzo_evm_testing_utils::generators::{
         self, random_block_range, random_changeset_range, random_eoa_accounts, BlockRangeParams,
     };
     use std::{collections::BTreeMap, ops::AddAssign};
@@ -676,8 +676,8 @@ mod tests {
     #[test]
     fn prune_partial_progress_mid_block() {
         use alloy_primitives::{Address, U256};
-        use reth_primitives_traits::Account;
-        use reth_testing_utils::generators::ChangeSet;
+        use hanzo_evm_primitives_traits::Account;
+        use hanzo_evm_testing_utils::generators::ChangeSet;
 
         let db = TestStageDB::default();
         let mut rng = generators::rng();
@@ -697,7 +697,7 @@ mod tests {
         let account = Account { nonce: 1, balance: U256::from(100), bytecode_hash: None };
 
         // Create storage entries
-        let storage_entry = |key: u8| reth_primitives_traits::StorageEntry {
+        let storage_entry = |key: u8| hanzo_evm_primitives_traits::StorageEntry {
             key: B256::with_last_byte(key),
             value: U256::from(100),
         };
@@ -828,9 +828,9 @@ mod tests {
     #[cfg(all(unix, feature = "rocksdb"))]
     #[test]
     fn prune_rocksdb() {
-        use reth_db_api::models::storage_sharded_key::StorageShardedKey;
-        use reth_provider::RocksDBProviderFactory;
-        use reth_storage_api::StorageSettings;
+        use hanzo_evm_db_api::models::storage_sharded_key::StorageShardedKey;
+        use hanzo_evm_provider::RocksDBProviderFactory;
+        use hanzo_evm_storage_api::StorageSettings;
 
         let db = TestStageDB::default();
         let mut rng = generators::rng();

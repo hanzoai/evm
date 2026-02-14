@@ -17,4 +17,4 @@ pub use pubsub::EthPubSub;
 
 pub use helpers::{signer::DevSigner, sync_listener::SyncListener};
 
-pub use reth_rpc_eth_api::{EthApiServer, EthApiTypes, FullEthApiServer, RpcNodeCore};
+pub use hanzo_evm_rpc_eth_api::{EthApiServer, EthApiTypes, FullEthApiServer, RpcNodeCore};

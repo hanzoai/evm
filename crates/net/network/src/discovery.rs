@@ -6,15 +6,15 @@ use crate::{
 };
 use enr::Enr;
 use futures::StreamExt;
-use reth_discv4::{DiscoveryUpdate, Discv4, Discv4Config};
-use reth_discv5::{DiscoveredPeer, Discv5};
-use reth_dns_discovery::{
+use hanzo_evm_discv4::{DiscoveryUpdate, Discv4, Discv4Config};
+use hanzo_evm_discv5::{DiscoveredPeer, Discv5};
+use hanzo_evm_dns_discovery::{
     DnsDiscoveryConfig, DnsDiscoveryHandle, DnsDiscoveryService, DnsNodeRecordUpdate, DnsResolver,
 };
-use reth_ethereum_forks::{EnrForkIdEntry, ForkId};
-use reth_network_api::{DiscoveredEvent, DiscoveryEvent};
-use reth_network_peers::{NodeRecord, PeerId};
-use reth_network_types::PeerAddr;
+use hanzo_evm_ethereum_forks::{EnrForkIdEntry, ForkId};
+use hanzo_evm_network_api::{DiscoveredEvent, DiscoveryEvent};
+use hanzo_evm_network_peers::{NodeRecord, PeerId};
+use hanzo_evm_network_types::PeerAddr;
 use secp256k1::SecretKey;
 use std::{
     collections::VecDeque,
@@ -69,14 +69,14 @@ pub struct Discovery {
 impl Discovery {
     /// Spawns the discovery service.
     ///
-    /// This will spawn the [`reth_discv4::Discv4Service`] onto a new task and establish a listener
+    /// This will spawn the [`hanzo_evm_discv4::Discv4Service`] onto a new task and establish a listener
     /// channel to receive all discovered nodes.
     pub async fn new(
         tcp_addr: SocketAddr,
         discovery_v4_addr: SocketAddr,
         sk: SecretKey,
         discv4_config: Option<Discv4Config>,
-        discv5_config: Option<reth_discv5::Config>, // contains discv5 listen address
+        discv5_config: Option<hanzo_evm_discv5::Config>, // contains discv5 listen address
         dns_discovery_config: Option<DnsDiscoveryConfig>,
     ) -> Result<Self, NetworkError> {
         // setup discv4 with the discovery address and tcp port
@@ -362,8 +362,8 @@ mod tests {
         .unwrap();
     }
 
-    use reth_discv4::Discv4ConfigBuilder;
-    use reth_discv5::{enr::EnrCombinedKeyWrapper, enr_to_discv4_id};
+    use hanzo_evm_discv4::Discv4ConfigBuilder;
+    use hanzo_evm_discv5::{enr::EnrCombinedKeyWrapper, enr_to_discv4_id};
     use tracing::trace;
 
     async fn start_discovery_node(udp_port_discv4: u16, udp_port_discv5: u16) -> Discovery {
@@ -376,7 +376,7 @@ mod tests {
         let discv4_config = Discv4ConfigBuilder::default().external_ip_resolver(None).build();
 
         let discv5_listen_config = discv5::ListenConfig::from(discv5_addr);
-        let discv5_config = reth_discv5::Config::builder(discv5_addr)
+        let discv5_config = hanzo_evm_discv5::Config::builder(discv5_addr)
             .discv5_config(discv5::ConfigBuilder::new(discv5_listen_config).build())
             .build();
 
@@ -394,7 +394,7 @@ mod tests {
 
     #[tokio::test(flavor = "multi_thread")]
     async fn discv5_and_discv4_same_pk() {
-        reth_tracing::init_test_tracing();
+        hanzo_evm_tracing::init_test_tracing();
 
         // set up test
         let mut node_1 = start_discovery_node(40014, 40015).await;

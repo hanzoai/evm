@@ -5,9 +5,9 @@
 //! to safely read potentially malicious data.
 
 #![doc(
-    html_logo_url = "https://raw.githubusercontent.com/paradigmxyz/reth/main/assets/reth-docs.png",
+    html_logo_url = "https://raw.githubusercontent.com/hanzoai/evm/main/assets/evm-docs.png",
     html_favicon_url = "https://avatars0.githubusercontent.com/u/97369466?s=256",
-    issue_tracker_base_url = "https://github.com/paradigmxyz/reth/issues/"
+    issue_tracker_base_url = "https://github.com/hanzoai/evm/issues/"
 )]
 #![cfg_attr(not(test), warn(unused_crate_dependencies))]
 #![cfg_attr(docsrs, feature(doc_cfg))]
@@ -205,7 +205,7 @@ impl<H: NippyJarHeader> NippyJar<H> {
             .inspect_err(|e| {
                 warn!(?path, %e, "Failed to load static file jar");
             })
-            .map_err(|err| reth_fs_util::FsPathError::open(err, config_path))?;
+            .map_err(|err| hanzo_evm_fs_util::FsPathError::open(err, config_path))?;
 
         let mut obj = Self::load_from_reader(io::BufReader::new(config_file))?;
         obj.path = path.to_path_buf();
@@ -260,7 +260,7 @@ impl<H: NippyJarHeader> NippyJar<H> {
         ] {
             if path.exists() {
                 debug!(target: "nippy-jar", ?path, "Removing file.");
-                reth_fs_util::remove_file(path)?;
+                hanzo_evm_fs_util::remove_file(path)?;
             }
         }
 
@@ -274,7 +274,7 @@ impl<H: NippyJarHeader> NippyJar<H> {
 
     /// Writes all necessary configuration to file.
     fn freeze_config(&self) -> Result<(), NippyJarError> {
-        Ok(reth_fs_util::atomic_write_file(&self.config_path(), |file| self.save_to_writer(file))?)
+        Ok(hanzo_evm_fs_util::atomic_write_file(&self.config_path(), |file| self.save_to_writer(file))?)
     }
 }
 

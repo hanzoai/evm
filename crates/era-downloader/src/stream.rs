@@ -2,7 +2,7 @@ use crate::{client::HttpClient, EraClient, BLOCKS_PER_FILE};
 use alloy_primitives::BlockNumber;
 use futures_util::{stream::FuturesOrdered, FutureExt, Stream, StreamExt};
 use reqwest::Url;
-use reth_fs_util as fs;
+use hanzo_evm_fs_util as fs;
 use std::{
     collections::VecDeque,
     fmt::{Debug, Formatter},
@@ -16,7 +16,7 @@ use std::{
 ///
 /// # Examples
 /// ```
-/// use reth_era_downloader::EraStreamConfig;
+/// use hanzo_evm_era_downloader::EraStreamConfig;
 ///
 /// EraStreamConfig::default().with_max_files(10).with_max_concurrent_downloads(2);
 /// ```
@@ -58,7 +58,7 @@ impl EraStreamConfig {
 /// # Examples
 /// ```
 /// use futures_util::StreamExt;
-/// use reth_era_downloader::{EraMeta, EraStream, HttpClient};
+/// use hanzo_evm_era_downloader::{EraMeta, EraStream, HttpClient};
 ///
 /// # async fn import(mut stream: EraStream<impl HttpClient + Clone + Send + Sync + 'static + Unpin>) -> eyre::Result<()> {
 /// while let Some(meta) = stream.next().await {

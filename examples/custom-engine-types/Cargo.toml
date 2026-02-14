@@ -6,11 +6,11 @@ edition.workspace = true
 license.workspace = true
 
 [dependencies]
-reth-payload-builder.workspace = true
-reth-basic-payload-builder.workspace = true
-reth-ethereum-payload-builder.workspace = true
-reth-ethereum = { workspace = true, features = ["test-utils", "node", "node-api", "pool"] }
-reth-tracing.workspace = true
+hanzo-evm-payload-builder.workspace = true
+hanzo-evm-basic-payload-builder.workspace = true
+hanzo-evm-ethereum-payload-builder.workspace = true
+hanzo-evm-ethereum = { workspace = true, features = ["test-utils", "node", "node-api", "pool"] }
+hanzo-evm-tracing.workspace = true
 alloy-genesis.workspace = true
 alloy-rpc-types = { workspace = true, features = ["engine"] }
 alloy-primitives.workspace = true

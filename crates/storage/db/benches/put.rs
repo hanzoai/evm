@@ -2,8 +2,8 @@
 
 use alloy_primitives::B256;
 use criterion::{criterion_group, criterion_main, Criterion};
-use reth_db::{test_utils::create_test_rw_db_with_path, CanonicalHeaders, Database};
-use reth_db_api::transaction::DbTxMut;
+use hanzo_evm_db::{test_utils::create_test_rw_db_with_path, CanonicalHeaders, Database};
+use hanzo_evm_db_api::transaction::DbTxMut;
 
 mod utils;
 use utils::BENCH_DB_PATH;

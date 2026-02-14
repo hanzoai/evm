@@ -1,10 +1,10 @@
 //! RLPx subcommand of P2P Debugging tool.
 
 use clap::{Parser, Subcommand};
-use reth_ecies::stream::ECIESStream;
-use reth_eth_wire::{HelloMessage, UnauthedP2PStream};
-use reth_network::config::rng_secret_key;
-use reth_network_peers::{pk2id, AnyNode};
+use hanzo_evm_ecies::stream::ECIESStream;
+use hanzo_evm_eth_wire::{HelloMessage, UnauthedP2PStream};
+use hanzo_evm_network::config::rng_secret_key;
+use hanzo_evm_network_peers::{pk2id, AnyNode};
 use secp256k1::SECP256K1;
 use tokio::net::TcpStream;
 

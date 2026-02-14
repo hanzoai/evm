@@ -1,5 +1,5 @@
 [package]
-name = "reth-cli"
+name = "hanzo-evm-cli"
 version.workspace = true
 edition.workspace = true
 rust-version.workspace = true
@@ -11,9 +11,9 @@ repository.workspace = true
 workspace = true
 
 [dependencies]
-# reth
-reth-cli-runner.workspace = true
-reth-db.workspace = true
+# evm
+hanzo-evm-cli-runner.workspace = true
+hanzo-evm-db.workspace = true
 alloy-genesis.workspace = true
 
 # misc

@@ -1,4 +1,4 @@
-//! Reth RPC interface definitions
+//! Hanzo EVM RPC interface definitions
 //!
 //! Provides all RPC interfaces.
 //!
@@ -7,9 +7,9 @@
 //! - `client`: Enables JSON-RPC client support.
 
 #![doc(
-    html_logo_url = "https://raw.githubusercontent.com/paradigmxyz/reth/main/assets/reth-docs.png",
+    html_logo_url = "https://raw.githubusercontent.com/hanzoai/evm/main/assets/evm-docs.png",
     html_favicon_url = "https://avatars0.githubusercontent.com/u/97369466?s=256",
-    issue_tracker_base_url = "https://github.com/paradigmxyz/reth/issues/"
+    issue_tracker_base_url = "https://github.com/hanzoai/evm/issues/"
 )]
 #![cfg_attr(not(test), warn(unused_crate_dependencies))]
 #![cfg_attr(docsrs, feature(doc_cfg))]
@@ -23,7 +23,7 @@ mod mev;
 mod miner;
 mod net;
 mod otterscan;
-mod reth;
+mod evm;
 mod rpc;
 mod testing;
 mod trace;
@@ -46,7 +46,7 @@ pub mod servers {
         miner::MinerApiServer,
         net::NetApiServer,
         otterscan::OtterscanServer,
-        reth::RethApiServer,
+        evm::EvmApiServer,
         rpc::RpcApiServer,
         testing::TestingApiServer,
         trace::TraceApiServer,
@@ -54,7 +54,7 @@ pub mod servers {
         validation::BlockSubmissionValidationApiServer,
         web3::Web3ApiServer,
     };
-    pub use reth_rpc_eth_api::{
+    pub use hanzo_evm_rpc_eth_api::{
         self as eth, EthApiServer, EthBundleApiServer, EthCallBundleApiServer, EthFilterApiServer,
         EthPubSubApiServer, L2EthApiExtServer,
     };
@@ -77,7 +77,7 @@ pub mod clients {
         miner::MinerApiClient,
         net::NetApiClient,
         otterscan::OtterscanClient,
-        reth::RethApiClient,
+        evm::EvmApiClient,
         rpc::RpcApiServer,
         testing::TestingApiClient,
         trace::TraceApiClient,
@@ -85,7 +85,7 @@ pub mod clients {
         validation::BlockSubmissionValidationApiClient,
         web3::Web3ApiClient,
     };
-    pub use reth_rpc_eth_api::{
+    pub use hanzo_evm_rpc_eth_api::{
         EthApiClient, EthBundleApiClient, EthCallBundleApiClient, EthFilterApiClient,
         L2EthApiExtServer,
     };

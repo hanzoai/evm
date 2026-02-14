@@ -1,5 +1,5 @@
 [package]
-name = "reth-downloaders"
+name = "hanzo-evm-downloaders"
 version.workspace = true
 edition.workspace = true
 rust-version.workspace = true
@@ -12,19 +12,19 @@ description = "Implementations of various block downloaders"
 workspace = true
 
 [dependencies]
-# reth
-reth-config.workspace = true
-reth-consensus.workspace = true
-reth-network-p2p.workspace = true
-reth-network-peers.workspace = true
-reth-primitives-traits.workspace = true
-reth-storage-api.workspace = true
-reth-tasks.workspace = true
+# evm
+hanzo-evm-config.workspace = true
+hanzo-evm-consensus.workspace = true
+hanzo-evm-network-p2p.workspace = true
+hanzo-evm-network-peers.workspace = true
+hanzo-evm-primitives-traits.workspace = true
+hanzo-evm-storage-api.workspace = true
+hanzo-evm-tasks.workspace = true
 
 # optional deps for the test-utils feature
-reth-ethereum-primitives = { workspace = true, optional = true }
-reth-provider = { workspace = true, optional = true }
-reth-testing-utils = { workspace = true, optional = true }
+hanzo-evm-ethereum-primitives = { workspace = true, optional = true }
+hanzo-evm-provider = { workspace = true, optional = true }
+hanzo-evm-testing-utils = { workspace = true, optional = true }
 
 # ethereum
 alloy-consensus.workspace = true
@@ -42,7 +42,7 @@ tokio-util = { workspace = true, features = ["codec"] }
 async-compression = { workspace = true, features = ["gzip", "tokio"], optional = true }
 
 # metrics
-reth-metrics.workspace = true
+hanzo-evm-metrics.workspace = true
 metrics.workspace = true
 
 # misc
@@ -55,13 +55,13 @@ itertools = { workspace = true, optional = true }
 
 [dev-dependencies]
 async-compression = { workspace = true, features = ["gzip", "tokio"] }
-reth-ethereum-primitives.workspace = true
-reth-chainspec.workspace = true
-reth-consensus = { workspace = true, features = ["test-utils"] }
-reth-network-p2p = { workspace = true, features = ["test-utils"] }
-reth-provider = { workspace = true, features = ["test-utils"] }
-reth-testing-utils.workspace = true
-reth-tracing.workspace = true
+hanzo-evm-ethereum-primitives.workspace = true
+hanzo-evm-chainspec.workspace = true
+hanzo-evm-consensus = { workspace = true, features = ["test-utils"] }
+hanzo-evm-network-p2p = { workspace = true, features = ["test-utils"] }
+hanzo-evm-provider = { workspace = true, features = ["test-utils"] }
+hanzo-evm-testing-utils.workspace = true
+hanzo-evm-tracing.workspace = true
 
 assert_matches.workspace = true
 tokio = { workspace = true, features = ["macros", "rt-multi-thread"] }
@@ -75,12 +75,12 @@ default = []
 file-client = ["dep:async-compression", "dep:alloy-rlp", "dep:itertools"]
 test-utils = [
     "tempfile",
-    "reth-consensus/test-utils",
-    "reth-network-p2p/test-utils",
-    "reth-testing-utils",
-    "reth-chainspec/test-utils",
-    "reth-provider/test-utils",
-    "reth-primitives-traits/test-utils",
-    "dep:reth-ethereum-primitives",
-    "reth-ethereum-primitives?/test-utils",
+    "hanzo-evm-consensus/test-utils",
+    "hanzo-evm-network-p2p/test-utils",
+    "hanzo-evm-testing-utils",
+    "hanzo-evm-chainspec/test-utils",
+    "hanzo-evm-provider/test-utils",
+    "hanzo-evm-primitives-traits/test-utils",
+    "dep:hanzo-evm-ethereum-primitives",
+    "hanzo-evm-ethereum-primitives?/test-utils",
 ]

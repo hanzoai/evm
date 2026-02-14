@@ -1,5 +1,5 @@
 [package]
-name = "reth-exex"
+name = "hanzo-evm-exex"
 version.workspace = true
 edition.workspace = true
 rust-version.workspace = true
@@ -12,25 +12,25 @@ description = "Execution extensions for Reth"
 workspace = true
 
 [dependencies]
-## reth
-reth-chain-state.workspace = true
-reth-chainspec.workspace = true
-reth-config.workspace = true
-reth-evm.workspace = true
-reth-exex-types = { workspace = true, features = ["serde", "serde-bincode-compat"] }
-reth-fs-util.workspace = true
-reth-metrics.workspace = true
-reth-node-api.workspace = true
-reth-node-core.workspace = true
-reth-primitives-traits.workspace = true
-reth-ethereum-primitives.workspace = true
-reth-provider.workspace = true
-reth-prune-types.workspace = true
-reth-revm.workspace = true
-reth-stages-api.workspace = true
-reth-tasks.workspace = true
-reth-tracing.workspace = true
-reth-payload-builder.workspace = true
+## evm
+hanzo-evm-chain-state.workspace = true
+hanzo-evm-chainspec.workspace = true
+hanzo-evm-config.workspace = true
+hanzo-evm-execution.workspace = true
+hanzo-evm-exex-types = { workspace = true, features = ["serde", "serde-bincode-compat"] }
+hanzo-evm-fs-util.workspace = true
+hanzo-evm-metrics.workspace = true
+hanzo-evm-node-api.workspace = true
+hanzo-evm-node-core.workspace = true
+hanzo-evm-primitives-traits.workspace = true
+hanzo-evm-ethereum-primitives.workspace = true
+hanzo-evm-provider.workspace = true
+hanzo-evm-prune-types.workspace = true
+hanzo-evm-revm.workspace = true
+hanzo-evm-stages-api.workspace = true
+hanzo-evm-tasks.workspace = true
+hanzo-evm-tracing.workspace = true
+hanzo-evm-payload-builder.workspace = true
 
 # alloy
 alloy-consensus.workspace = true
@@ -52,12 +52,12 @@ thiserror.workspace = true
 tracing.workspace = true
 
 [dev-dependencies]
-reth-db-common.workspace = true
-reth-evm-ethereum.workspace = true
-reth-primitives-traits = { workspace = true, features = ["test-utils"] }
-reth-provider = { workspace = true, features = ["test-utils"] }
-reth-testing-utils.workspace = true
-reth-trie-common = { workspace = true, features = ["serde-bincode-compat"] }
+hanzo-evm-db-common.workspace = true
+hanzo-evm-eth-execution.workspace = true
+hanzo-evm-primitives-traits = { workspace = true, features = ["test-utils"] }
+hanzo-evm-provider = { workspace = true, features = ["test-utils"] }
+hanzo-evm-testing-utils.workspace = true
+hanzo-evm-trie-common = { workspace = true, features = ["serde-bincode-compat"] }
 
 alloy-genesis.workspace = true
 
@@ -67,20 +67,20 @@ tempfile.workspace = true
 
 [features]
 default = []
-edge = ["reth-provider/edge"]
+edge = ["hanzo-evm-provider/edge"]
 serde = [
-    "reth-exex-types/serde",
-    "reth-revm/serde",
+    "hanzo-evm-exex-types/serde",
+    "hanzo-evm-revm/serde",
     "alloy-consensus/serde",
     "alloy-eips/serde",
     "alloy-primitives/serde",
     "parking_lot/serde",
     "rand/serde",
     "secp256k1/serde",
-    "reth-primitives-traits/serde",
-    "reth-trie-common/serde",
-    "reth-prune-types/serde",
-    "reth-config/serde",
-    "reth-ethereum-primitives/serde",
-    "reth-chain-state/serde",
+    "hanzo-evm-primitives-traits/serde",
+    "hanzo-evm-trie-common/serde",
+    "hanzo-evm-prune-types/serde",
+    "hanzo-evm-config/serde",
+    "hanzo-evm-ethereum-primitives/serde",
+    "hanzo-evm-chain-state/serde",
 ]

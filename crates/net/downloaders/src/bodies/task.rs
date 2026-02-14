@@ -2,12 +2,12 @@ use alloy_primitives::BlockNumber;
 use futures::Stream;
 use futures_util::{FutureExt, StreamExt};
 use pin_project::pin_project;
-use reth_network_p2p::{
+use hanzo_evm_network_p2p::{
     bodies::downloader::{BodyDownloader, BodyDownloaderResult},
     error::DownloadResult,
 };
-use reth_primitives_traits::Block;
-use reth_tasks::{TaskSpawner, TokioTaskExecutor};
+use hanzo_evm_primitives_traits::Block;
+use hanzo_evm_tasks::{TaskSpawner, TokioTaskExecutor};
 use std::{
     fmt::Debug,
     future::Future,
@@ -42,11 +42,11 @@ impl<B: Block + 'static> TaskDownloader<B> {
     /// # Example
     ///
     /// ```
-    /// use reth_consensus::Consensus;
-    /// use reth_downloaders::bodies::{bodies::BodiesDownloaderBuilder, task::TaskDownloader};
-    /// use reth_network_p2p::bodies::client::BodiesClient;
-    /// use reth_primitives_traits::{Block, InMemorySize};
-    /// use reth_storage_api::HeaderProvider;
+    /// use hanzo_evm_consensus::Consensus;
+    /// use hanzo_evm_downloaders::bodies::{bodies::BodiesDownloaderBuilder, task::TaskDownloader};
+    /// use hanzo_evm_network_p2p::bodies::client::BodiesClient;
+    /// use hanzo_evm_primitives_traits::{Block, InMemorySize};
+    /// use hanzo_evm_storage_api::HeaderProvider;
     /// use std::{fmt::Debug, sync::Arc};
     ///
     /// fn t<
@@ -178,14 +178,14 @@ mod tests {
         test_utils::{generate_bodies, TestBodiesClient},
     };
     use assert_matches::assert_matches;
-    use reth_consensus::test_utils::TestConsensus;
-    use reth_network_p2p::error::DownloadError;
-    use reth_provider::test_utils::create_test_provider_factory;
+    use hanzo_evm_consensus::test_utils::TestConsensus;
+    use hanzo_evm_network_p2p::error::DownloadError;
+    use hanzo_evm_provider::test_utils::create_test_provider_factory;
     use std::sync::Arc;
 
     #[tokio::test(flavor = "multi_thread")]
     async fn download_one_by_one_on_task() {
-        reth_tracing::init_test_tracing();
+        hanzo_evm_tracing::init_test_tracing();
 
         let factory = create_test_provider_factory();
         let (headers, mut bodies) = generate_bodies(0..=19);
@@ -196,7 +196,7 @@ mod tests {
             TestBodiesClient::default().with_bodies(bodies.clone()).with_should_delay(true),
         );
         let downloader = BodiesDownloaderBuilder::default()
-            .build::<reth_ethereum_primitives::Block, _, _>(
+            .build::<hanzo_evm_ethereum_primitives::Block, _, _>(
                 client.clone(),
                 Arc::new(TestConsensus::default()),
                 factory,
@@ -215,11 +215,11 @@ mod tests {
     #[tokio::test(flavor = "multi_thread")]
     #[expect(clippy::reversed_empty_ranges)]
     async fn set_download_range_error_returned() {
-        reth_tracing::init_test_tracing();
+        hanzo_evm_tracing::init_test_tracing();
         let factory = create_test_provider_factory();
 
         let downloader = BodiesDownloaderBuilder::default()
-            .build::<reth_ethereum_primitives::Block, _, _>(
+            .build::<hanzo_evm_ethereum_primitives::Block, _, _>(
                 Arc::new(TestBodiesClient::default()),
                 Arc::new(TestConsensus::default()),
                 factory,

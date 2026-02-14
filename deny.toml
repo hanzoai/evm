@@ -64,7 +64,7 @@ allow = [
 # aren't accepted for every possible crate as with the normal allow list
 exceptions = [
     # TODO: decide on MPL-2.0 handling
-    # These dependencies are grandfathered in https://github.com/paradigmxyz/reth/pull/6980
+    # These dependencies are grandfathered in https://github.com/hanzoai/evm/pull/6980
     { allow = ["MPL-2.0"], name = "option-ext" },
     { allow = ["MPL-2.0"], name = "webpki-root-certs" },
 ]
@@ -89,8 +89,8 @@ allow-git = [
     "https://github.com/alloy-rs/alloy",
     "https://github.com/foundry-rs/block-explorers",
     "https://github.com/bluealloy/revm",
-    "https://github.com/paradigmxyz/revm-inspectors",
+    "https://github.com/hanzoai/revm-inspectors",
     "https://github.com/alloy-rs/evm",
     "https://github.com/alloy-rs/hardforks",
-    "https://github.com/paradigmxyz/jsonrpsee",
+    "https://github.com/hanzoai/jsonrpsee",
 ]

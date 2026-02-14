@@ -5,9 +5,9 @@ use alloc::{
 use alloy_primitives::{Address, BlockNumber};
 use auto_impl::auto_impl;
 use core::ops::{RangeBounds, RangeInclusive};
-use reth_db_models::AccountBeforeTx;
-use reth_primitives_traits::Account;
-use reth_storage_errors::provider::ProviderResult;
+use hanzo_evm_db_models::AccountBeforeTx;
+use hanzo_evm_primitives_traits::Account;
+use hanzo_evm_storage_errors::provider::ProviderResult;
 
 /// Account reader
 #[auto_impl(&, Arc, Box)]

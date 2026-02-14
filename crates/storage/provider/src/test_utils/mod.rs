@@ -3,14 +3,14 @@ use crate::{
     HashingWriter, ProviderFactory, TrieWriter,
 };
 use alloy_primitives::B256;
-use reth_chainspec::{ChainSpec, MAINNET};
-use reth_db::{test_utils::TempDatabase, DatabaseEnv};
-use reth_errors::ProviderResult;
-use reth_ethereum_engine_primitives::EthEngineTypes;
-use reth_node_types::NodeTypesWithDBAdapter;
-use reth_primitives_traits::{Account, StorageEntry};
-use reth_trie::StateRoot;
-use reth_trie_db::DatabaseStateRoot;
+use hanzo_evm_chainspec::{ChainSpec, MAINNET};
+use hanzo_evm_db::{test_utils::TempDatabase, DatabaseEnv};
+use hanzo_evm_errors::ProviderResult;
+use hanzo_evm_ethereum_engine_primitives::EthEngineTypes;
+use hanzo_evm_node_types::NodeTypesWithDBAdapter;
+use hanzo_evm_primitives_traits::{Account, StorageEntry};
+use hanzo_evm_trie::StateRoot;
+use hanzo_evm_trie_db::DatabaseStateRoot;
 use std::sync::Arc;
 
 pub mod blocks;
@@ -19,18 +19,18 @@ mod noop;
 
 pub use mock::{ExtendedAccount, MockEthProvider};
 pub use noop::NoopProvider;
-pub use reth_chain_state::test_utils::TestCanonStateSubscriptions;
+pub use hanzo_evm_chain_state::test_utils::TestCanonStateSubscriptions;
 
-/// Mock [`reth_node_types::NodeTypes`] for testing.
-pub type MockNodeTypes = reth_node_types::AnyNodeTypesWithEngine<
-    reth_ethereum_primitives::EthPrimitives,
-    reth_ethereum_engine_primitives::EthEngineTypes,
-    reth_chainspec::ChainSpec,
+/// Mock [`hanzo_evm_node_types::NodeTypes`] for testing.
+pub type MockNodeTypes = hanzo_evm_node_types::AnyNodeTypesWithEngine<
+    hanzo_evm_ethereum_primitives::EthPrimitives,
+    hanzo_evm_ethereum_engine_primitives::EthEngineTypes,
+    hanzo_evm_chainspec::ChainSpec,
     crate::EthStorage,
     EthEngineTypes,
 >;
 
-/// Mock [`reth_node_types::NodeTypesWithDB`] for testing.
+/// Mock [`hanzo_evm_node_types::NodeTypesWithDB`] for testing.
 pub type MockNodeTypesWithDB<DB = Arc<TempDatabase<DatabaseEnv>>> =
     NodeTypesWithDBAdapter<MockNodeTypes, DB>;
 
@@ -52,7 +52,7 @@ pub fn create_test_provider_factory_with_node_types<N: NodeTypesForProvider>(
 ) -> ProviderFactory<NodeTypesWithDBAdapter<N, Arc<TempDatabase<DatabaseEnv>>>> {
     // Create a single temp directory that contains all data dirs (db, static_files, rocksdb).
     // TempDatabase will clean up the entire directory on drop.
-    let datadir_path = reth_db::test_utils::tempdir_path();
+    let datadir_path = hanzo_evm_db::test_utils::tempdir_path();
 
     let static_files_path = datadir_path.join("static_files");
     let rocksdb_path = datadir_path.join("rocksdb");
@@ -61,7 +61,7 @@ pub fn create_test_provider_factory_with_node_types<N: NodeTypesForProvider>(
     std::fs::create_dir_all(&static_files_path).expect("failed to create static_files dir");
 
     // Create database with the datadir path so TempDatabase cleans up everything on drop
-    let db = reth_db::test_utils::create_test_rw_db_with_datadir(&datadir_path);
+    let db = hanzo_evm_db::test_utils::create_test_rw_db_with_datadir(&datadir_path);
 
     ProviderFactory::new(
         db,

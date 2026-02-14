@@ -1,21 +1,21 @@
 use super::missing_static_data_error;
 use futures_util::TryStreamExt;
-use reth_db_api::{
+use hanzo_evm_db_api::{
     cursor::DbCursorRO,
     tables,
     transaction::{DbTx, DbTxMut},
 };
-use reth_network_p2p::bodies::{downloader::BodyDownloader, response::BlockResponse};
-use reth_provider::{
+use hanzo_evm_network_p2p::bodies::{downloader::BodyDownloader, response::BlockResponse};
+use hanzo_evm_provider::{
     providers::StaticFileWriter, BlockReader, BlockWriter, DBProvider, ProviderError,
     StaticFileProviderFactory, StatsReader,
 };
-use reth_stages_api::{
+use hanzo_evm_stages_api::{
     EntitiesCheckpoint, ExecInput, ExecOutput, Stage, StageCheckpoint, StageError, StageId,
     UnwindInput, UnwindOutput,
 };
-use reth_static_file_types::StaticFileSegment;
-use reth_storage_errors::provider::ProviderResult;
+use hanzo_evm_static_file_types::StaticFileSegment;
+use hanzo_evm_storage_errors::provider::ProviderResult;
 use std::{
     cmp::Ordering,
     task::{ready, Context, Poll},
@@ -39,19 +39,19 @@ use tracing::*;
 ///
 /// The bodies are processed and data is inserted into these tables:
 ///
-/// - [`BlockOmmers`][reth_db_api::tables::BlockOmmers]
-/// - [`BlockBodies`][reth_db_api::tables::BlockBodyIndices]
-/// - [`Transactions`][reth_db_api::tables::Transactions]
-/// - [`TransactionBlocks`][reth_db_api::tables::TransactionBlocks]
+/// - [`BlockOmmers`][hanzo_evm_db_api::tables::BlockOmmers]
+/// - [`BlockBodies`][hanzo_evm_db_api::tables::BlockBodyIndices]
+/// - [`Transactions`][hanzo_evm_db_api::tables::Transactions]
+/// - [`TransactionBlocks`][hanzo_evm_db_api::tables::TransactionBlocks]
 ///
 /// # Genesis
 ///
 /// This stage expects that the genesis has been inserted into the appropriate tables:
 ///
 /// - The header tables (see [`HeaderStage`][crate::stages::HeaderStage])
-/// - The [`BlockOmmers`][reth_db_api::tables::BlockOmmers] table
-/// - The [`BlockBodies`][reth_db_api::tables::BlockBodyIndices] table
-/// - The [`Transactions`][reth_db_api::tables::Transactions] table
+/// - The [`BlockOmmers`][hanzo_evm_db_api::tables::BlockOmmers] table
+/// - The [`BlockBodies`][hanzo_evm_db_api::tables::BlockBodyIndices] table
+/// - The [`Transactions`][hanzo_evm_db_api::tables::Transactions] table
 #[derive(Debug)]
 pub struct BodyStage<D: BodyDownloader> {
     /// The body downloader.
@@ -257,8 +257,8 @@ mod tests {
         stage_test_suite_ext, ExecuteStageTestRunner, StageTestRunner, UnwindStageTestRunner,
     };
     use assert_matches::assert_matches;
-    use reth_provider::StaticFileProviderFactory;
-    use reth_stages_api::StageUnitCheckpoint;
+    use hanzo_evm_provider::StaticFileProviderFactory;
+    use hanzo_evm_stages_api::StageUnitCheckpoint;
     use test_utils::*;
 
     stage_test_suite_ext!(BodyTestRunner, body);
@@ -478,28 +478,28 @@ mod tests {
         use alloy_consensus::{BlockHeader, Header};
         use alloy_primitives::{map::B256Map, BlockNumber, TxNumber, B256};
         use futures_util::Stream;
-        use reth_db::{static_file::HeaderWithHashMask, tables};
-        use reth_db_api::{
+        use hanzo_evm_db::{static_file::HeaderWithHashMask, tables};
+        use hanzo_evm_db_api::{
             cursor::DbCursorRO,
             models::{StoredBlockBodyIndices, StoredBlockOmmers},
             transaction::{DbTx, DbTxMut},
         };
-        use reth_ethereum_primitives::{Block, BlockBody};
-        use reth_network_p2p::{
+        use hanzo_evm_ethereum_primitives::{Block, BlockBody};
+        use hanzo_evm_network_p2p::{
             bodies::{
                 downloader::{BodyDownloader, BodyDownloaderResult},
                 response::BlockResponse,
             },
             error::DownloadResult,
         };
-        use reth_primitives_traits::{SealedBlock, SealedHeader};
-        use reth_provider::{
+        use hanzo_evm_primitives_traits::{SealedBlock, SealedHeader};
+        use hanzo_evm_provider::{
             providers::StaticFileWriter, test_utils::MockNodeTypesWithDB, HeaderProvider,
             ProviderFactory, StaticFileProviderFactory, TransactionsProvider,
         };
-        use reth_stages_api::{ExecInput, ExecOutput, UnwindInput};
-        use reth_static_file_types::StaticFileSegment;
-        use reth_testing_utils::generators::{
+        use hanzo_evm_stages_api::{ExecInput, ExecOutput, UnwindInput};
+        use hanzo_evm_static_file_types::StaticFileSegment;
+        use hanzo_evm_testing_utils::generators::{
             self, random_block_range, random_signed_tx, BlockRangeParams,
         };
         use std::{

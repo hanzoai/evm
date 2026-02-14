@@ -12,12 +12,12 @@ use alloy_primitives::B256;
 use alloy_rlp::{Decodable, Encodable};
 use crossbeam_channel::{Receiver as CrossbeamReceiver, Sender as CrossbeamSender};
 use rayon::iter::{IntoParallelRefMutIterator, ParallelIterator};
-use reth_primitives_traits::{Account, ParallelBridgeBuffered};
-use reth_trie::{
+use hanzo_evm_primitives_traits::{Account, ParallelBridgeBuffered};
+use hanzo_evm_trie::{
     proof_v2::Target, updates::TrieUpdates, DecodedMultiProofV2, HashedPostState, Nibbles,
     TrieAccount, EMPTY_ROOT_HASH, TRIE_ACCOUNT_RLP_MAX_SIZE,
 };
-use reth_trie_parallel::{
+use hanzo_evm_trie_parallel::{
     proof_task::{
         AccountMultiproofInput, ProofResult, ProofResultContext, ProofResultMessage,
         ProofWorkerHandle,
@@ -25,7 +25,7 @@ use reth_trie_parallel::{
     root::ParallelStateRootError,
     targets_v2::MultiProofTargetsV2,
 };
-use reth_trie_sparse::{
+use hanzo_evm_trie_sparse::{
     errors::{SparseStateTrieResult, SparseTrieErrorKind, SparseTrieResult},
     provider::{TrieNodeProvider, TrieNodeProviderFactory},
     DeferredDrops, LeafUpdate, SerialSparseTrie, SparseStateTrie, SparseTrie, SparseTrieExt,

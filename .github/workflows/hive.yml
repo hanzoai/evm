@@ -15,27 +15,27 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  prepare-reth-stable:
-    uses: ./.github/workflows/prepare-reth.yml
+  prepare-evm-stable:
+    uses: ./.github/workflows/prepare-evm.yml
     with:
-      image_tag: ghcr.io/paradigmxyz/reth:latest
-      binary_name: reth
+      image_tag: ghcr.io/hanzoai/reth:latest
+      binary_name: evm
       cargo_features: "asm-keccak"
-      artifact_name: "reth-stable"
+      artifact_name: "evm-stable"
 
-  prepare-reth-edge:
-    uses: ./.github/workflows/prepare-reth.yml
+  prepare-evm-edge:
+    uses: ./.github/workflows/prepare-evm.yml
     with:
-      image_tag: ghcr.io/paradigmxyz/reth:latest
-      binary_name: reth
+      image_tag: ghcr.io/hanzoai/reth:latest
+      binary_name: evm
       cargo_features: "asm-keccak edge"
-      artifact_name: "reth-edge"
+      artifact_name: "evm-edge"
 
   prepare-hive:
-    if: github.repository == 'paradigmxyz/reth'
+    if: github.repository == 'hanzoai/reth'
     timeout-minutes: 45
     runs-on:
-      group: Reth
+      group: Evm
     steps:
       - uses: actions/checkout@v6
       - name: Checkout hive tests
@@ -102,7 +102,7 @@ jobs:
           #  limit: eth
           #  include:
           #    - MaliciousHandshake
-          #    # failures tracked in https://github.com/paradigmxyz/reth/issues/14825
+          #    # failures tracked in https://github.com/hanzoai/evm/issues/14825
           #    - Status
           #    - GetBlockHeaders
           #    - ZeroRequestID
@@ -112,7 +112,7 @@ jobs:
           - sim: devp2p
             limit: discv5
             include:
-              # failures tracked at https://github.com/paradigmxyz/reth/issues/14825
+              # failures tracked at https://github.com/hanzoai/evm/issues/14825
               - PingLargeRequestID
           - sim: ethereum/engine
             limit: engine-exchange-capabilities
@@ -187,12 +187,12 @@ jobs:
           - sim: ethereum/eels/consume-rlp
             limit: .*tests/paris.*
     needs:
-      - prepare-reth-stable
-      - prepare-reth-edge
+      - prepare-evm-stable
+      - prepare-evm-edge
       - prepare-hive
     name: ${{ matrix.storage }} / ${{ matrix.scenario.sim }}${{ matrix.scenario.limit && format(' - {0}', matrix.scenario.limit) }}
     runs-on:
-      group: Reth
+      group: Evm
     permissions:
       issues: write
     steps:
@@ -206,10 +206,10 @@ jobs:
           name: hive_assets
           path: /tmp
 
-      - name: Download reth image
+      - name: Download evm image
         uses: actions/download-artifact@v7
         with:
-          name: reth-${{ matrix.storage }}
+          name: evm-${{ matrix.storage }}
           path: /tmp
 
       - name: Load Docker images
@@ -252,10 +252,10 @@ jobs:
         run: |
           cat hivetests/workspace/logs/*simulator*.log
 
-      - name: Print reth client logs
+      - name: Print evm client logs
         if: ${{ failure() }}
         run: |
-          cat hivetests/workspace/logs/reth/client-*.log
+          cat hivetests/workspace/logs/evm/client-*.log
   notify-on-error:
     needs: test
     if: failure()
@@ -265,5 +265,5 @@ jobs:
         uses: rtCamp/action-slack-notify@v2
         env:
           SLACK_COLOR: ${{ job.status }}
-          SLACK_MESSAGE: "Failed run: https://github.com/paradigmxyz/reth/actions/runs/${{ github.run_id }}"
+          SLACK_MESSAGE: "Failed run: https://github.com/hanzoai/evm/actions/runs/${{ github.run_id }}"
           SLACK_WEBHOOK: ${{ secrets.SLACK_HIVE_WEBHOOK_URL }}

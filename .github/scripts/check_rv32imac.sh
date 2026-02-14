@@ -2,36 +2,36 @@
 set -uo pipefail
 
 crates_to_check=(
-    reth-codecs-derive
-    reth-primitives
-    reth-primitives-traits
-    reth-network-peers
-    reth-trie-common
-    reth-trie-sparse
-    reth-chainspec
-    reth-consensus
-    reth-consensus-common
-    reth-prune-types
-    reth-static-file-types
-    reth-storage-errors
-    reth-execution-errors
-    reth-errors
-    reth-execution-types
-    reth-db-models
-    reth-evm
-    reth-revm
-    reth-storage-api
+    evm-codecs-derive
+    evm-primitives
+    evm-primitives-traits
+    evm-network-peers
+    evm-trie-common
+    evm-trie-sparse
+    evm-chainspec
+    evm-consensus
+    evm-consensus-common
+    evm-prune-types
+    evm-static-file-types
+    evm-storage-errors
+    evm-execution-errors
+    evm-errors
+    evm-execution-types
+    evm-db-models
+    evm-evm
+    evm-revm
+    evm-storage-api
 
     ## ethereum
-    reth-evm-ethereum
-    reth-ethereum-forks
-    reth-ethereum-primitives
-    reth-ethereum-consensus
-    reth-stateless
+    evm-evm-ethereum
+    evm-ethereum-forks
+    evm-ethereum-primitives
+    evm-ethereum-consensus
+    evm-stateless
 )
 
 any_failed=0
-tmpdir=$(mktemp -d 2>/dev/null || mktemp -d -t reth-check)
+tmpdir=$(mktemp -d 2>/dev/null || mktemp -d -t evm-check)
 trap 'rm -rf -- "$tmpdir"' EXIT INT TERM
 
 for crate in "${crates_to_check[@]}"; do

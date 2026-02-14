@@ -747,7 +747,7 @@ mod tests {
     };
     use alloy_primitives::hex;
     use alloy_rlp::{Decodable, Encodable, Error};
-    use reth_ethereum_primitives::BlockBody;
+    use hanzo_evm_ethereum_primitives::BlockBody;
 
     fn encode<T: Encodable>(value: T) -> Vec<u8> {
         let mut buf = vec![];

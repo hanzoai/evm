@@ -2,7 +2,7 @@
 
 This crate provides an RPC-based implementation of reth's [`BlockchainProvider`](../provider/src/providers/blockchain_provider.rs) which provides access to local blockchain data, this crate offers the same functionality but for remote blockchain access via RPC.
 
-Originally created by [cakevm](https://github.com/cakevm/alloy-reth-provider).
+Originally created by [cakevm](https://github.com/cakevm/alloy-evm-provider).
 
 ## Features
 
@@ -16,7 +16,7 @@ Originally created by [cakevm](https://github.com/cakevm/alloy-reth-provider).
 
 ```rust
 use alloy_provider::ProviderBuilder;
-use reth_storage_rpc_provider::RpcBlockchainProvider;
+use evm_storage_rpc_provider::RpcBlockchainProvider;
 
 // Initialize provider
 let provider = ProviderBuilder::new()
@@ -36,11 +36,11 @@ let state = rpc_provider.state_by_block_id(BlockId::number(16148323)).unwrap();
 The provider can be configured with custom settings:
 
 ```rust
-use reth_storage_rpc_provider::{RpcBlockchainProvider, RpcBlockchainProviderConfig};
+use evm_storage_rpc_provider::{RpcBlockchainProvider, RpcBlockchainProviderConfig};
 
 let config = RpcBlockchainProviderConfig {
     compute_state_root: true,  // Enable state root computation
-    reth_rpc_support: true,    // Use Reth-specific RPC methods (default: true)
+    evm_rpc_support: true,    // Use Reth-specific RPC methods (default: true)
 };
 
 let rpc_provider = RpcBlockchainProvider::new_with_config(provider, config);
@@ -49,11 +49,11 @@ let rpc_provider = RpcBlockchainProvider::new_with_config(provider, config);
 ## Configuration Options
 
 - `compute_state_root`: When enabled, computes state root and trie updates (requires Reth-specific RPC methods)
-- `reth_rpc_support`: When enabled (default), uses Reth-specific RPC methods for better performance:
+- `evm_rpc_support`: When enabled (default), uses Reth-specific RPC methods for better performance:
   - `eth_getAccountInfo`: Fetches account balance, nonce, and code in a single call
   - `debug_codeByHash`: Retrieves bytecode by hash without needing the address
   
-  When disabled, falls back to standard RPC methods and caches bytecode locally for compatibility with non-Reth nodes.
+  When disabled, falls back to standard RPC methods and caches bytecode locally for compatibility with non-Hanzo EVM nodes.
 
 ## Technical Details
 

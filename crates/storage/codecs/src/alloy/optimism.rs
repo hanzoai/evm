@@ -5,13 +5,13 @@ use alloc::{borrow::Cow, vec::Vec};
 use alloy_consensus::{Receipt, TxReceipt};
 use alloy_primitives::Log;
 use op_alloy_consensus::{OpDepositReceipt, OpReceipt, OpTxType};
-use reth_codecs_derive::CompactZstd;
+use hanzo_evm_codecs_derive::CompactZstd;
 
 #[derive(CompactZstd)]
-#[reth_codecs(crate = "crate")]
-#[reth_zstd(
-    compressor = reth_zstd_compressors::with_receipt_compressor,
-    decompressor = reth_zstd_compressors::with_receipt_decompressor
+#[hanzo_evm_codecs(crate = "crate")]
+#[hanzo_evm_zstd(
+    compressor = hanzo_evm_zstd_compressors::with_receipt_compressor,
+    decompressor = hanzo_evm_zstd_compressors::with_receipt_decompressor
 )]
 struct CompactOpReceipt<'a> {
     tx_type: OpTxType,

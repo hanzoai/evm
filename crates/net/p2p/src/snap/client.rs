@@ -1,6 +1,6 @@
 use crate::{download::DownloadClient, error::PeerRequestResult, priority::Priority};
 use futures::Future;
-use reth_eth_wire_types::snap::{
+use hanzo_evm_eth_wire_types::snap::{
     AccountRangeMessage, ByteCodesMessage, GetAccountRangeMessage, GetByteCodesMessage,
     GetStorageRangesMessage, GetTrieNodesMessage, StorageRangesMessage, TrieNodesMessage,
 };

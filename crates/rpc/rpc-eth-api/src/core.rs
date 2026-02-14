@@ -16,10 +16,10 @@ use alloy_rpc_types_eth::{
 };
 use alloy_serde::JsonStorageKey;
 use jsonrpsee::{core::RpcResult, proc_macros::rpc};
-use reth_primitives_traits::TxTy;
-use reth_rpc_convert::RpcTxReq;
-use reth_rpc_eth_types::FillTransaction;
-use reth_rpc_server_types::{result::internal_rpc_err, ToRpcResult};
+use hanzo_evm_primitives_traits::TxTy;
+use hanzo_evm_rpc_convert::RpcTxReq;
+use hanzo_evm_rpc_eth_types::FillTransaction;
+use hanzo_evm_rpc_server_types::{result::internal_rpc_err, ToRpcResult};
 use tracing::trace;
 
 /// Helper trait, unifies functionality that must be supported to implement all RPC methods for

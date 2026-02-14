@@ -129,7 +129,7 @@ jobs:
       - uses: Swatinem/rust-cache@v2
         with:
           cache-on-failure: true
-      - run: cargo build --bin reth --workspace
+      - run: cargo build --bin evm --workspace
         env:
           RUSTFLAGS: -D warnings
 
@@ -192,10 +192,10 @@ jobs:
       - uses: Swatinem/rust-cache@v2
         with:
           cache-on-failure: true
-      - run: cargo build --bin reth --workspace
+      - run: cargo build --bin evm --workspace
         env:
           RUSTFLAGS: -D warnings
-      - run: ./docs/cli/update.sh target/debug/reth
+      - run: ./docs/cli/update.sh target/debug/evm
       - name: Check docs changes
         run: git diff --exit-code
 
@@ -235,7 +235,7 @@ jobs:
       - uses: rui314/setup-mold@v1
       - uses: dtolnay/rust-toolchain@stable
       - name: Ensure no arbitrary or proptest dependency on default build
-        run: cargo tree --package reth -e=features,no-dev | grep -Eq "arbitrary|proptest" && exit 1 || exit 0
+        run: cargo tree --package evm -e=features,no-dev | grep -Eq "arbitrary|proptest" && exit 1 || exit 0
 
   # Checks that selected crates can compile with power set of features
   features:
@@ -254,9 +254,9 @@ jobs:
         uses: taiki-e/install-action@cargo-hack
       - run: |
           cargo hack check \
-            --package reth-codecs \
-            --package reth-primitives-traits \
-            --package reth-primitives \
+            --package evm-codecs \
+            --package evm-primitives-traits \
+            --package evm-primitives \
             --feature-powerset \
             --depth 2
         env:

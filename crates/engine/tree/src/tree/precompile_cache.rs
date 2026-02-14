@@ -2,8 +2,8 @@
 
 use alloy_primitives::Bytes;
 use moka::policy::EvictionPolicy;
-use reth_evm::precompiles::{DynPrecompile, Precompile, PrecompileInput};
-use reth_primitives_traits::dashmap::DashMap;
+use hanzo_evm_execution::precompiles::{DynPrecompile, Precompile, PrecompileInput};
+use hanzo_evm_primitives_traits::dashmap::DashMap;
 use revm::precompile::{PrecompileId, PrecompileOutput, PrecompileResult};
 use revm_primitives::Address;
 use std::{hash::Hash, sync::Arc};
@@ -196,7 +196,7 @@ where
 }
 
 /// Metrics for the cached precompile.
-#[derive(reth_metrics::Metrics, Clone)]
+#[derive(hanzo_evm_metrics::Metrics, Clone)]
 #[metrics(scope = "sync.caching")]
 pub struct CachedPrecompileMetrics {
     /// Precompile cache hits
@@ -225,8 +225,8 @@ impl CachedPrecompileMetrics {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use reth_evm::{EthEvmFactory, Evm, EvmEnv, EvmFactory};
-    use reth_revm::db::EmptyDB;
+    use hanzo_evm_execution::{EthEvmFactory, Evm, EvmEnv, EvmFactory};
+    use hanzo_evm_revm::db::EmptyDB;
     use revm::{context::TxEnv, precompile::PrecompileOutput};
     use revm_primitives::hardfork::SpecId;
 

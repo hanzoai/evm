@@ -1,12 +1,12 @@
 use alloy_primitives::{B256, U256};
-use reth_db_api::{
+use hanzo_evm_db_api::{
     cursor::{DbCursorRO, DbDupCursorRO},
     tables,
     transaction::DbTx,
     DatabaseError,
 };
-use reth_primitives_traits::Account;
-use reth_trie::hashed_cursor::{HashedCursor, HashedCursorFactory, HashedStorageCursor};
+use hanzo_evm_primitives_traits::Account;
+use hanzo_evm_trie::hashed_cursor::{HashedCursor, HashedCursorFactory, HashedStorageCursor};
 
 /// A struct wrapping database transaction that implements [`HashedCursorFactory`].
 #[derive(Debug, Clone)]

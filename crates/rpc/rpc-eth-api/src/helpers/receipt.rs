@@ -4,12 +4,12 @@
 use crate::{EthApiTypes, RpcNodeCoreExt, RpcReceipt};
 use alloy_consensus::{transaction::TransactionMeta, TxReceipt};
 use futures::Future;
-use reth_primitives_traits::SignerRecoverable;
-use reth_rpc_convert::{transaction::ConvertReceiptInput, RpcConvert};
-use reth_rpc_eth_types::{
+use hanzo_evm_primitives_traits::SignerRecoverable;
+use hanzo_evm_rpc_convert::{transaction::ConvertReceiptInput, RpcConvert};
+use hanzo_evm_rpc_eth_types::{
     error::FromEthApiError, utils::calculate_gas_used_and_next_log_index, EthApiError,
 };
-use reth_storage_api::{ProviderReceipt, ProviderTx};
+use hanzo_evm_storage_api::{ProviderReceipt, ProviderTx};
 
 /// Assembles transaction receipt data w.r.t to network.
 ///

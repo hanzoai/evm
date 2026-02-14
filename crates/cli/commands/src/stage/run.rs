@@ -6,33 +6,33 @@ use crate::common::{AccessRights, CliNodeComponents, CliNodeTypes, Environment, 
 use alloy_eips::BlockHashOrNumber;
 use alloy_primitives::Sealable;
 use clap::Parser;
-use reth_chainspec::{EthChainSpec, EthereumHardforks, Hardforks};
-use reth_cli::chainspec::ChainSpecParser;
-use reth_cli_runner::CliContext;
-use reth_cli_util::get_secret_key;
-use reth_config::config::{HashingConfig, SenderRecoveryConfig, TransactionLookupConfig};
-use reth_downloaders::{
+use hanzo_evm_chainspec::{EthChainSpec, EthereumHardforks, Hardforks};
+use hanzo_evm_cli::chainspec::ChainSpecParser;
+use hanzo_evm_cli_runner::CliContext;
+use hanzo_evm_cli_util::get_secret_key;
+use hanzo_evm_config::config::{HashingConfig, SenderRecoveryConfig, TransactionLookupConfig};
+use hanzo_evm_downloaders::{
     bodies::bodies::BodiesDownloaderBuilder,
     headers::reverse_headers::ReverseHeadersDownloaderBuilder,
 };
-use reth_exex::ExExManagerHandle;
-use reth_network::BlockDownloaderProvider;
-use reth_network_p2p::HeadersClient;
-use reth_node_builder::common::metrics_hooks;
-use reth_node_core::{
+use hanzo_evm_exex::ExExManagerHandle;
+use hanzo_evm_network::BlockDownloaderProvider;
+use hanzo_evm_network_p2p::HeadersClient;
+use hanzo_evm_node_builder::common::metrics_hooks;
+use hanzo_evm_node_core::{
     args::{NetworkArgs, StageEnum},
     version::version_metadata,
 };
-use reth_node_metrics::{
+use hanzo_evm_node_metrics::{
     chain::ChainSpecInfo,
     server::{MetricServer, MetricServerConfig},
     version::VersionInfo,
 };
-use reth_provider::{
+use hanzo_evm_provider::{
     ChainSpecProvider, DBProvider, DatabaseProviderFactory, StageCheckpointReader,
     StageCheckpointWriter,
 };
-use reth_stages::{
+use hanzo_evm_stages::{
     stages::{
         AccountHashingStage, BodyStage, ExecutionStage, HeaderStage, IndexAccountHistoryStage,
         IndexStorageHistoryStage, MerkleStage, SenderRecoveryStage, StorageHashingStage,
@@ -44,7 +44,7 @@ use std::{any::Any, net::SocketAddr, sync::Arc, time::Instant};
 use tokio::sync::watch;
 use tracing::*;
 
-/// `reth stage` command
+/// `evm stage` command
 #[derive(Debug, Parser)]
 pub struct Command<C: ChainSpecParser> {
     #[command(flatten)]
@@ -186,7 +186,7 @@ impl<C: ChainSpecParser<ChainSpec: EthChainSpec + Hardforks + EthereumHardforks>
                                 }
                             }
                             Err(error) if error.is_retryable() => {
-                                warn!(target: "reth::cli", "Error requesting header: {error}. Retrying...")
+                                warn!(target: "evm::cli", "Error requesting header: {error}. Retrying...")
                             }
                             Err(error) => return Err(error.into()),
                         }
@@ -256,7 +256,7 @@ impl<C: ChainSpecParser<ChainSpec: EthChainSpec + Hardforks + EthereumHardforks>
                 ),
                 StageEnum::Execution => (
                     Box::new(ExecutionStage::new(
-                        components.evm_config().clone(),
+                        components.hanzo_evm_config().clone(),
                         Arc::new(components.consensus().clone()),
                         ExecutionStageThresholds {
                             max_blocks: Some(batch_size),
@@ -352,7 +352,7 @@ impl<C: ChainSpecParser<ChainSpec: EthChainSpec + Hardforks + EthereumHardforks>
         };
 
         let start = Instant::now();
-        info!(target: "reth::cli", stage = %self.stage, "Executing stage");
+        info!(target: "evm::cli", stage = %self.stage, "Executing stage");
         loop {
             exec_stage.execute_ready(input).await?;
             let ExecOutput { checkpoint, done } = exec_stage.execute(&provider_rw, input)?;
@@ -371,7 +371,7 @@ impl<C: ChainSpecParser<ChainSpec: EthChainSpec + Hardforks + EthereumHardforks>
                 break
             }
         }
-        info!(target: "reth::cli", stage = %self.stage, time = ?start.elapsed(), "Finished stage");
+        info!(target: "evm::cli", stage = %self.stage, time = ?start.elapsed(), "Finished stage");
 
         Ok(())
     }

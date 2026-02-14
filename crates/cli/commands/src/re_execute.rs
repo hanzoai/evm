@@ -7,18 +7,18 @@ use crate::common::{
 use alloy_consensus::{transaction::TxHashRef, BlockHeader, TxReceipt};
 use clap::Parser;
 use eyre::WrapErr;
-use reth_chainspec::{EthChainSpec, EthereumHardforks, Hardforks};
-use reth_cli::chainspec::ChainSpecParser;
-use reth_cli_util::cancellation::CancellationToken;
-use reth_consensus::FullConsensus;
-use reth_evm::{execute::Executor, ConfigureEvm};
-use reth_primitives_traits::{format_gas_throughput, BlockBody, GotExpected};
-use reth_provider::{
+use hanzo_evm_chainspec::{EthChainSpec, EthereumHardforks, Hardforks};
+use hanzo_evm_cli::chainspec::ChainSpecParser;
+use hanzo_evm_cli_util::cancellation::CancellationToken;
+use hanzo_evm_consensus::FullConsensus;
+use hanzo_evm_execution::{execute::Executor, ConfigureEvm};
+use hanzo_evm_primitives_traits::{format_gas_throughput, BlockBody, GotExpected};
+use hanzo_evm_provider::{
     BlockNumReader, BlockReader, ChainSpecProvider, DatabaseProviderFactory, ReceiptProvider,
     StaticFileProviderFactory, TransactionVariant,
 };
-use reth_revm::database::StateProviderDatabase;
-use reth_stages::stages::calculate_gas_used_from_headers;
+use hanzo_evm_revm::database::StateProviderDatabase;
+use hanzo_evm_stages::stages::calculate_gas_used_from_headers;
 use std::{
     sync::Arc,
     time::{Duration, Instant},
@@ -26,7 +26,7 @@ use std::{
 use tokio::{sync::mpsc, task::JoinSet};
 use tracing::*;
 
-/// `reth re-execute` command
+/// `evm re-execute` command
 ///
 /// Re-execute blocks in parallel to verify historical sync correctness.
 #[derive(Debug, Parser)]
@@ -118,14 +118,14 @@ impl<C: ChainSpecParser<ChainSpec: EthChainSpec + Hardforks + EthereumHardforks>
 
             // Spawn thread executing blocks
             let provider_factory = provider_factory.clone();
-            let evm_config = components.evm_config().clone();
+            let hanzo_evm_config = components.hanzo_evm_config().clone();
             let consensus = components.consensus().clone();
             let db_at = db_at.clone();
             let stats_tx = stats_tx.clone();
             let info_tx = info_tx.clone();
             let cancellation = cancellation.clone();
             tasks.spawn_blocking(move || {
-                let mut executor = evm_config.batch_executor(db_at(start_block - 1));
+                let mut executor = hanzo_evm_config.batch_executor(db_at(start_block - 1));
                 let mut executor_created = Instant::now();
                 let executor_lifetime = Duration::from_secs(120);
 
@@ -143,7 +143,7 @@ impl<C: ChainSpecParser<ChainSpec: EthChainSpec + Hardforks + EthereumHardforks>
                         Ok(result) => result,
                         Err(err) => {
                             if skip_invalid_blocks {
-                                executor = evm_config.batch_executor(db_at(block.number()));
+                                executor = hanzo_evm_config.batch_executor(db_at(block.number()));
                                 let _ = info_tx.send((block, eyre::Report::new(err)));
                                 continue
                             }
@@ -192,7 +192,7 @@ impl<C: ChainSpecParser<ChainSpec: EthChainSpec + Hardforks + EthereumHardforks>
 
                                     error!(number=?block.number(), ?mismatch, "Gas usage mismatch");
                                     if skip_invalid_blocks {
-                                        executor = evm_config.batch_executor(db_at(block.number()));
+                                        executor = hanzo_evm_config.batch_executor(db_at(block.number()));
                                         let _ = info_tx.send((block, err));
                                         continue 'blocks;
                                     }
@@ -211,7 +211,7 @@ impl<C: ChainSpecParser<ChainSpec: EthChainSpec + Hardforks + EthereumHardforks>
                     if executor.size_hint() > 1_000_000 ||
                         executor_created.elapsed() > executor_lifetime
                     {
-                        executor = evm_config.batch_executor(db_at(block.number()));
+                        executor = hanzo_evm_config.batch_executor(db_at(block.number()));
                         executor_created = Instant::now();
                     }
                 }

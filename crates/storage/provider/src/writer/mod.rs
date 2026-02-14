@@ -4,23 +4,23 @@ mod tests {
         test_utils::create_test_provider_factory, AccountReader, StorageTrieWriter, TrieWriter,
     };
     use alloy_primitives::{keccak256, map::HashMap, Address, B256, U256};
-    use reth_db_api::{
+    use hanzo_evm_db_api::{
         cursor::{DbCursorRO, DbCursorRW, DbDupCursorRO},
         models::{AccountBeforeTx, BlockNumberAddress},
         tables,
         transaction::{DbTx, DbTxMut},
     };
-    use reth_ethereum_primitives::Receipt;
-    use reth_execution_types::ExecutionOutcome;
-    use reth_primitives_traits::{Account, StorageEntry};
-    use reth_storage_api::{
+    use hanzo_evm_ethereum_primitives::Receipt;
+    use hanzo_evm_execution_types::ExecutionOutcome;
+    use hanzo_evm_primitives_traits::{Account, StorageEntry};
+    use hanzo_evm_storage_api::{
         DatabaseProviderFactory, HashedPostStateProvider, StateWriteConfig, StateWriter,
     };
-    use reth_trie::{
+    use hanzo_evm_trie::{
         test_utils::{state_root, storage_root_prehashed},
         HashedPostState, HashedStorage, StateRoot, StorageRoot, StorageRootProgress,
     };
-    use reth_trie_db::{DatabaseStateRoot, DatabaseStorageRoot};
+    use hanzo_evm_trie_db::{DatabaseStateRoot, DatabaseStorageRoot};
     use revm_database::{
         states::{
             bundle_state::BundleRetention, changes::PlainStorageRevert, PlainStorageChangeset,
@@ -139,19 +139,19 @@ mod tests {
         assert_eq!(reverts.storage, [[]]);
         provider.write_state_reverts(reverts, 1, StateWriteConfig::default()).expect("Could not write reverts to DB");
 
-        let reth_account_a = account_a.into();
-        let reth_account_b = account_b.into();
-        let reth_account_b_changed = (&account_b_changed).into();
+        let evm_account_a = account_a.into();
+        let evm_account_b = account_b.into();
+        let evm_account_b_changed = (&account_b_changed).into();
 
         // Check plain state
         assert_eq!(
             provider.basic_account(&address_a).expect("Could not read account state"),
-            Some(reth_account_a),
+            Some(evm_account_a),
             "Account A state is wrong"
         );
         assert_eq!(
             provider.basic_account(&address_b).expect("Could not read account state"),
-            Some(reth_account_b_changed),
+            Some(evm_account_b_changed),
             "Account B state is wrong"
         );
 
@@ -167,7 +167,7 @@ mod tests {
         );
         assert_eq!(
             changeset_cursor.next_dup().expect("Changeset table is malformed"),
-            Some((1, AccountBeforeTx { address: address_b, info: Some(reth_account_b) })),
+            Some((1, AccountBeforeTx { address: address_b, info: Some(evm_account_b) })),
             "Account B changeset is wrong"
         );
 
@@ -215,7 +215,7 @@ mod tests {
         // Check change set
         assert_eq!(
             changeset_cursor.seek_exact(2).expect("Could not read account change set"),
-            Some((2, AccountBeforeTx { address: address_b, info: Some(reth_account_b_changed) })),
+            Some((2, AccountBeforeTx { address: address_b, info: Some(evm_account_b_changed) })),
             "Account B changeset is wrong after deletion"
         );
     }

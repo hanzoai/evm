@@ -17,9 +17,9 @@
 //! - `test-utils`: Export utilities for testing
 
 #![doc(
-    html_logo_url = "https://raw.githubusercontent.com/paradigmxyz/reth/main/assets/reth-docs.png",
+    html_logo_url = "https://raw.githubusercontent.com/hanzoai/evm/main/assets/evm-docs.png",
     html_favicon_url = "https://avatars0.githubusercontent.com/u/97369466?s=256",
-    issue_tracker_base_url = "https://github.com/paradigmxyz/reth/issues/"
+    issue_tracker_base_url = "https://github.com/hanzoai/evm/issues/"
 )]
 #![cfg_attr(not(test), warn(unused_crate_dependencies))]
 #![cfg_attr(docsrs, feature(doc_cfg))]
@@ -41,8 +41,8 @@ use enr::Enr;
 use itertools::Itertools;
 use parking_lot::Mutex;
 use proto::{EnrRequest, EnrResponse};
-use reth_ethereum_forks::ForkId;
-use reth_network_peers::{pk2id, PeerId};
+use hanzo_evm_ethereum_forks::ForkId;
+use hanzo_evm_network_peers::{pk2id, PeerId};
 use secp256k1::SecretKey;
 use std::{
     cell::RefCell,
@@ -78,15 +78,15 @@ use node::{kad_key, NodeKey};
 mod table;
 
 // reexport NodeRecord primitive
-pub use reth_network_peers::NodeRecord;
+pub use hanzo_evm_network_peers::NodeRecord;
 
 #[cfg(any(test, feature = "test-utils"))]
 pub mod test_utils;
 
 use crate::table::PongTable;
-use reth_net_nat::ResolveNatInterval;
+use hanzo_evm_net_nat::ResolveNatInterval;
 /// reexport to get public ip.
-pub use reth_net_nat::{external_ip, NatResolver};
+pub use hanzo_evm_net_nat::{external_ip, NatResolver};
 
 /// The default address for discv4 via UDP
 ///
@@ -213,8 +213,8 @@ impl Discv4 {
     /// Binds a new `UdpSocket` and creates the service
     ///
     /// ```
-    /// use reth_discv4::{Discv4, Discv4Config};
-    /// use reth_network_peers::{pk2id, NodeRecord, PeerId};
+    /// use hanzo_evm_discv4::{Discv4, Discv4Config};
+    /// use hanzo_evm_network_peers::{pk2id, NodeRecord, PeerId};
     /// use secp256k1::SECP256K1;
     /// use std::{net::SocketAddr, str::FromStr};
     /// # async fn t() -> std:: io::Result<()> {
@@ -2415,8 +2415,8 @@ mod tests {
     use alloy_primitives::hex;
     use alloy_rlp::{Decodable, Encodable};
     use rand_08::Rng;
-    use reth_ethereum_forks::{EnrForkIdEntry, ForkHash};
-    use reth_network_peers::mainnet_nodes;
+    use hanzo_evm_ethereum_forks::{EnrForkIdEntry, ForkHash};
+    use hanzo_evm_network_peers::mainnet_nodes;
     use std::future::poll_fn;
 
     #[tokio::test]
@@ -2513,7 +2513,7 @@ mod tests {
     #[tokio::test(flavor = "multi_thread")]
     #[ignore]
     async fn test_mainnet_lookup() {
-        reth_tracing::init_test_tracing();
+        hanzo_evm_tracing::init_test_tracing();
         let fork_id = ForkId { hash: ForkHash(hex!("743f3d89")), next: 16191202 };
 
         let all_nodes = mainnet_nodes();
@@ -2548,7 +2548,7 @@ mod tests {
 
     #[tokio::test]
     async fn test_mapped_ipv4() {
-        reth_tracing::init_test_tracing();
+        hanzo_evm_tracing::init_test_tracing();
         let mut rng = rand_08::thread_rng();
         let config = Discv4Config::builder().build();
         let (_discv4, mut service) = create_discv4_with_config(config).await;
@@ -2580,7 +2580,7 @@ mod tests {
 
     #[tokio::test]
     async fn test_respect_ping_expiration() {
-        reth_tracing::init_test_tracing();
+        hanzo_evm_tracing::init_test_tracing();
         let mut rng = rand_08::thread_rng();
         let config = Discv4Config::builder().build();
         let (_discv4, mut service) = create_discv4_with_config(config).await;
@@ -2608,7 +2608,7 @@ mod tests {
 
     #[tokio::test]
     async fn test_single_lookups() {
-        reth_tracing::init_test_tracing();
+        hanzo_evm_tracing::init_test_tracing();
 
         let config = Discv4Config::builder().build();
         let (_discv4, mut service) = create_discv4_with_config(config.clone()).await;
@@ -2640,7 +2640,7 @@ mod tests {
 
     #[tokio::test]
     async fn test_on_neighbours_recursive_lookup() {
-        reth_tracing::init_test_tracing();
+        hanzo_evm_tracing::init_test_tracing();
 
         let config = Discv4Config::builder().build();
         let (_discv4, mut service) = create_discv4_with_config(config.clone()).await;
@@ -2697,7 +2697,7 @@ mod tests {
 
     #[tokio::test]
     async fn test_no_local_in_closest() {
-        reth_tracing::init_test_tracing();
+        hanzo_evm_tracing::init_test_tracing();
 
         let config = Discv4Config::builder().build();
         let (_discv4, mut service) = create_discv4_with_config(config).await;
@@ -2730,7 +2730,7 @@ mod tests {
 
     #[tokio::test]
     async fn test_random_lookup() {
-        reth_tracing::init_test_tracing();
+        hanzo_evm_tracing::init_test_tracing();
 
         let config = Discv4Config::builder().build();
         let (_discv4, mut service) = create_discv4_with_config(config).await;
@@ -2764,7 +2764,7 @@ mod tests {
 
     #[tokio::test]
     async fn test_reping_on_find_node_failures() {
-        reth_tracing::init_test_tracing();
+        hanzo_evm_tracing::init_test_tracing();
 
         let config = Discv4Config::builder().build();
         let (_discv4, mut service) = create_discv4_with_config(config).await;
@@ -2803,7 +2803,7 @@ mod tests {
 
     #[tokio::test]
     async fn test_service_commands() {
-        reth_tracing::init_test_tracing();
+        hanzo_evm_tracing::init_test_tracing();
 
         let config = Discv4Config::builder().build();
         let (discv4, mut service) = create_discv4_with_config(config).await;
@@ -2817,7 +2817,7 @@ mod tests {
 
     #[tokio::test]
     async fn test_requests_timeout() {
-        reth_tracing::init_test_tracing();
+        hanzo_evm_tracing::init_test_tracing();
         let fork_id = ForkId { hash: ForkHash(hex!("743f3d89")), next: 16191202 };
 
         let config = Discv4Config::builder()
@@ -2884,7 +2884,7 @@ mod tests {
     // sends a PING packet with wrong 'to' field and expects a PONG response.
     #[tokio::test(flavor = "multi_thread")]
     async fn test_check_wrong_to() {
-        reth_tracing::init_test_tracing();
+        hanzo_evm_tracing::init_test_tracing();
 
         let config = Discv4Config::builder().external_ip_resolver(None).build();
         let (_discv4, mut service_1) = create_discv4_with_config(config.clone()).await;
@@ -2922,7 +2922,7 @@ mod tests {
 
     #[tokio::test(flavor = "multi_thread")]
     async fn test_check_ping_pong() {
-        reth_tracing::init_test_tracing();
+        hanzo_evm_tracing::init_test_tracing();
 
         let config = Discv4Config::builder().external_ip_resolver(None).build();
         let (_discv4, mut service_1) = create_discv4_with_config(config.clone()).await;
@@ -3030,7 +3030,7 @@ mod tests {
 
     #[tokio::test]
     async fn test_bootnode_not_in_update_stream() {
-        reth_tracing::init_test_tracing();
+        hanzo_evm_tracing::init_test_tracing();
         let (_, service_1) = create_discv4().await;
         let peerid_1 = *service_1.local_peer_id();
 

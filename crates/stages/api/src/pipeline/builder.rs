@@ -1,7 +1,7 @@
 use crate::{pipeline::BoxedStage, MetricEventsSender, Pipeline, Stage, StageId, StageSet};
 use alloy_primitives::{BlockNumber, B256};
-use reth_provider::{providers::ProviderNodeTypes, DatabaseProviderFactory, ProviderFactory};
-use reth_static_file::StaticFileProducer;
+use hanzo_evm_provider::{providers::ProviderNodeTypes, DatabaseProviderFactory, ProviderFactory};
+use hanzo_evm_static_file::StaticFileProducer;
 use tokio::sync::watch;
 
 /// Builds a [`Pipeline`].

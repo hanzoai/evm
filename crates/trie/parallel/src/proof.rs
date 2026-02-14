@@ -9,13 +9,13 @@ use crate::{
 };
 use alloy_primitives::{map::B256Set, B256};
 use crossbeam_channel::{unbounded as crossbeam_unbounded, Receiver as CrossbeamReceiver};
-use reth_execution_errors::StorageRootError;
-use reth_storage_errors::db::DatabaseError;
-use reth_trie::{
+use hanzo_evm_execution_errors::StorageRootError;
+use hanzo_evm_storage_errors::db::DatabaseError;
+use hanzo_evm_trie::{
     prefix_set::{PrefixSet, PrefixSetMut, TriePrefixSets, TriePrefixSetsMut},
     DecodedMultiProof, DecodedStorageMultiProof, HashedPostState, MultiProofTargets, Nibbles,
 };
-use reth_trie_common::added_removed_keys::MultiAddedRemovedKeys;
+use hanzo_evm_trie_common::added_removed_keys::MultiAddedRemovedKeys;
 use std::{sync::Arc, time::Instant};
 use tracing::trace;
 
@@ -253,10 +253,10 @@ mod tests {
         Address, U256,
     };
     use rand::Rng;
-    use reth_primitives_traits::{Account, StorageEntry};
-    use reth_provider::{test_utils::create_test_provider_factory, HashingWriter};
-    use reth_trie::proof::Proof;
-    use reth_trie_db::{DatabaseHashedCursorFactory, DatabaseTrieCursorFactory};
+    use hanzo_evm_primitives_traits::{Account, StorageEntry};
+    use hanzo_evm_provider::{test_utils::create_test_provider_factory, HashingWriter};
+    use hanzo_evm_trie::proof::Proof;
+    use hanzo_evm_trie_db::{DatabaseHashedCursorFactory, DatabaseTrieCursorFactory};
     use tokio::runtime::Runtime;
 
     #[test]
@@ -323,9 +323,9 @@ mod tests {
 
         let rt = Runtime::new().unwrap();
 
-        let changeset_cache = reth_trie_db::ChangesetCache::new();
+        let changeset_cache = hanzo_evm_trie_db::ChangesetCache::new();
         let factory =
-            reth_provider::providers::OverlayStateProviderFactory::new(factory, changeset_cache);
+            hanzo_evm_provider::providers::OverlayStateProviderFactory::new(factory, changeset_cache);
         let task_ctx = ProofTaskCtx::new(factory);
         let proof_worker_handle =
             ProofWorkerHandle::new(rt.handle().clone(), task_ctx, 1, 1, false);

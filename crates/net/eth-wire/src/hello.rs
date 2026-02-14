@@ -1,8 +1,8 @@
 use crate::{Capability, EthVersion, ProtocolVersion};
 use alloy_rlp::{RlpDecodable, RlpEncodable};
-use reth_codecs::add_arbitrary_tests;
-use reth_network_peers::PeerId;
-use reth_primitives_traits::constants::RETH_CLIENT_VERSION;
+use hanzo_evm_codecs::add_arbitrary_tests;
+use hanzo_evm_network_peers::PeerId;
+use hanzo_evm_primitives_traits::constants::EVM_CLIENT_VERSION;
 
 /// The default tcp port for p2p.
 ///
@@ -44,8 +44,8 @@ impl HelloMessageWithProtocols {
     /// Starts a new `HelloMessageProtocolsBuilder`
     ///
     /// ```
-    /// use reth_eth_wire::HelloMessageWithProtocols;
-    /// use reth_network_peers::pk2id;
+    /// use hanzo_evm_eth_wire::HelloMessageWithProtocols;
+    /// use hanzo_evm_network_peers::pk2id;
     /// use secp256k1::{SecretKey, SECP256K1};
     /// let secret_key = SecretKey::new(&mut rand_08::thread_rng());
     /// let id = pk2id(&secret_key.public_key(SECP256K1));
@@ -127,8 +127,8 @@ impl HelloMessage {
     /// Starts a new `HelloMessageBuilder`
     ///
     /// ```
-    /// use reth_eth_wire::HelloMessage;
-    /// use reth_network_peers::pk2id;
+    /// use hanzo_evm_eth_wire::HelloMessage;
+    /// use hanzo_evm_network_peers::pk2id;
     /// use secp256k1::{SecretKey, SECP256K1};
     /// let secret_key = SecretKey::new(&mut rand_08::thread_rng());
     /// let id = pk2id(&secret_key.public_key(SECP256K1));
@@ -197,13 +197,13 @@ impl HelloMessageBuilder {
     ///
     /// Unset fields will be set to their default values:
     /// - `protocol_version`: [`ProtocolVersion::V5`]
-    /// - `client_version`: [`RETH_CLIENT_VERSION`]
+    /// - `client_version`: [`EVM_CLIENT_VERSION`]
     /// - `capabilities`: All [`EthVersion`]
     pub fn build(self) -> HelloMessageWithProtocols {
         let Self { protocol_version, client_version, protocols, port, id } = self;
         HelloMessageWithProtocols {
             protocol_version: protocol_version.unwrap_or_default(),
-            client_version: client_version.unwrap_or_else(|| RETH_CLIENT_VERSION.to_string()),
+            client_version: client_version.unwrap_or_else(|| EVM_CLIENT_VERSION.to_string()),
             protocols: protocols.unwrap_or_else(|| {
                 EthVersion::ALL_VERSIONS.iter().copied().map(Into::into).collect()
             }),
@@ -220,7 +220,7 @@ mod tests {
         ProtocolVersion,
     };
     use alloy_rlp::{Decodable, Encodable, EMPTY_STRING_CODE};
-    use reth_network_peers::pk2id;
+    use hanzo_evm_network_peers::pk2id;
     use secp256k1::{SecretKey, SECP256K1};
 
     #[test]
@@ -229,7 +229,7 @@ mod tests {
         let id = pk2id(&secret_key.public_key(SECP256K1));
         let hello = P2PMessage::Hello(HelloMessage {
             protocol_version: ProtocolVersion::V5,
-            client_version: "reth/0.1.0".to_string(),
+            client_version: "evm/0.1.0".to_string(),
             capabilities: vec![Capability::new_static("eth", EthVersion::Eth67 as usize)],
             port: 30303,
             id,
@@ -249,7 +249,7 @@ mod tests {
         let id = pk2id(&secret_key.public_key(SECP256K1));
         let hello = P2PMessage::Hello(HelloMessage {
             protocol_version: ProtocolVersion::V5,
-            client_version: "reth/0.1.0".to_string(),
+            client_version: "evm/0.1.0".to_string(),
             capabilities: vec![Capability::new_static("eth", EthVersion::Eth67 as usize)],
             port: 30303,
             id,
@@ -283,7 +283,7 @@ mod tests {
         let id = pk2id(&secret_key.public_key(SECP256K1));
         let hello = P2PMessage::Hello(HelloMessage {
             protocol_version: ProtocolVersion::V5,
-            client_version: "reth/0.1.0".to_string(),
+            client_version: "evm/0.1.0".to_string(),
             capabilities: vec![Capability::new_static("eth", EthVersion::Eth67 as usize)],
             port: 30303,
             id,

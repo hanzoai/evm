@@ -45,7 +45,7 @@ pub struct PendingPool<T: TransactionOrdering> {
     independent_transactions: FxHashMap<SenderId, PendingTransaction<T>>,
     /// Keeps track of the size of this pool.
     ///
-    /// See also [`reth_primitives_traits::InMemorySize::size`].
+    /// See also [`hanzo_evm_primitives_traits::InMemorySize::size`].
     size_of: SizeTracker,
     /// Used to broadcast new transactions that have been added to the `PendingPool` to existing
     /// `static_files` of this pool.
@@ -877,7 +877,7 @@ mod tests {
         assert_eq!(pending, expected_pending);
     }
 
-    // <https://github.com/paradigmxyz/reth/issues/12340>
+    // <https://github.com/hanzoai/evm/issues/12340>
     #[test]
     fn test_eligible_updates_promoted() {
         let mut pool = PendingPool::new(MockOrdering::default());

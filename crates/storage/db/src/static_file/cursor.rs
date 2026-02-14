@@ -1,10 +1,10 @@
 use super::mask::{ColumnSelectorOne, ColumnSelectorThree, ColumnSelectorTwo};
 use alloy_primitives::B256;
 use derive_more::{Deref, DerefMut};
-use reth_db_api::table::Decompress;
-use reth_nippy_jar::{DataReader, NippyJar, NippyJarCursor};
-use reth_static_file_types::SegmentHeader;
-use reth_storage_errors::provider::{ProviderError, ProviderResult};
+use hanzo_evm_db_api::table::Decompress;
+use hanzo_evm_nippy_jar::{DataReader, NippyJar, NippyJarCursor};
+use hanzo_evm_static_file_types::SegmentHeader;
+use hanzo_evm_storage_errors::provider::{ProviderError, ProviderResult};
 use std::sync::Arc;
 
 /// Cursor of a static file segment.

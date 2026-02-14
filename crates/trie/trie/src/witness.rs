@@ -6,8 +6,8 @@ use crate::{
 };
 use alloy_rlp::EMPTY_STRING_CODE;
 use alloy_trie::EMPTY_ROOT_HASH;
-use reth_trie_common::HashedPostState;
-use reth_trie_sparse::SparseTrie;
+use hanzo_evm_trie_common::HashedPostState;
+use hanzo_evm_trie_sparse::SparseTrie;
 
 use alloy_primitives::{
     keccak256,
@@ -15,12 +15,12 @@ use alloy_primitives::{
     Bytes, B256,
 };
 use itertools::Itertools;
-use reth_execution_errors::{
+use hanzo_evm_execution_errors::{
     SparseStateTrieErrorKind, SparseTrieError, SparseTrieErrorKind, StateProofError,
     TrieWitnessError,
 };
-use reth_trie_common::{MultiProofTargets, Nibbles};
-use reth_trie_sparse::{
+use hanzo_evm_trie_common::{MultiProofTargets, Nibbles};
+use hanzo_evm_trie_sparse::{
     provider::{RevealedNode, TrieNodeProvider, TrieNodeProviderFactory},
     SerialSparseTrie, SparseStateTrie,
 };

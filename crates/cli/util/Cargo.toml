@@ -1,5 +1,5 @@
 [package]
-name = "reth-cli-util"
+name = "hanzo-evm-cli-util"
 version.workspace = true
 edition.workspace = true
 rust-version.workspace = true
@@ -11,8 +11,8 @@ repository.workspace = true
 workspace = true
 
 [dependencies]
-# reth
-reth-fs-util.workspace = true
+# evm
+hanzo-evm-fs-util.workspace = true
 
 # eth
 alloy-primitives.workspace = true
@@ -27,7 +27,7 @@ thiserror.workspace = true
 serde.workspace = true
 
 tracy-client = { workspace = true, optional = true }
-reth-tracing = { workspace = true, optional = true }
+hanzo-evm-tracing = { workspace = true, optional = true }
 
 [dev-dependencies]
 rand.workspace = true
@@ -47,7 +47,7 @@ jemalloc-prof = ["jemalloc", "tikv-jemallocator?/profiling"]
 jemalloc-unprefixed = ["jemalloc", "tikv-jemallocator?/unprefixed_malloc_on_supported_platforms"]
 
 # Wraps the selected allocator in the tracy profiling allocator
-tracy-allocator = ["dep:tracy-client", "dep:reth-tracing"]
+tracy-allocator = ["dep:tracy-client", "dep:hanzo-evm-tracing"]
 
 snmalloc = ["dep:snmalloc-rs"]
 

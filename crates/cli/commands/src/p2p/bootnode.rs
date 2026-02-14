@@ -1,11 +1,11 @@
 //! Standalone bootnode command
 
 use clap::Parser;
-use reth_cli_util::{get_secret_key, load_secret_key::rng_secret_key};
-use reth_discv4::{DiscoveryUpdate, Discv4, Discv4Config};
-use reth_discv5::{discv5::Event, Config, Discv5};
-use reth_net_nat::NatResolver;
-use reth_network_peers::NodeRecord;
+use hanzo_evm_cli_util::{get_secret_key, load_secret_key::rng_secret_key};
+use hanzo_evm_discv4::{DiscoveryUpdate, Discv4, Discv4Config};
+use hanzo_evm_discv5::{discv5::Event, Config, Discv5};
+use hanzo_evm_net_nat::NatResolver;
+use hanzo_evm_network_peers::NodeRecord;
 use secp256k1::SecretKey;
 use std::{net::SocketAddr, path::PathBuf};
 use tokio::select;

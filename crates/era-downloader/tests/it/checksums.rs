@@ -2,7 +2,7 @@ use bytes::Bytes;
 use futures::Stream;
 use futures_util::StreamExt;
 use reqwest::{IntoUrl, Url};
-use reth_era_downloader::{EraClient, EraStream, EraStreamConfig, HttpClient};
+use hanzo_evm_era_downloader::{EraClient, EraStream, EraStreamConfig, HttpClient};
 use std::str::FromStr;
 use tempfile::tempdir;
 use test_case::test_case;

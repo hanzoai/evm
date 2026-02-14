@@ -2,7 +2,7 @@ use super::CustomRlpxConnection;
 use crate::subprotocol::protocol::{
     event::ProtocolEvent, handler::ProtocolState, proto::CustomRlpxProtoMessage,
 };
-use reth_ethereum::network::{
+use hanzo_evm_ethereum::network::{
     api::{Direction, PeerId},
     eth_wire::{capability::SharedCapabilities, multiplex::ProtocolConnection, protocol::Protocol},
     protocol::{ConnectionHandler, OnNotSupported},

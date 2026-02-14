@@ -2,8 +2,8 @@ use alloc::vec::Vec;
 use alloy_eips::BlockHashOrNumber;
 use alloy_primitives::{BlockHash, BlockNumber};
 use core::ops::RangeBounds;
-use reth_primitives_traits::{BlockHeader, SealedHeader};
-use reth_storage_errors::provider::ProviderResult;
+use hanzo_evm_primitives_traits::{BlockHeader, SealedHeader};
+use hanzo_evm_storage_errors::provider::ProviderResult;
 
 /// A helper type alias to access [`HeaderProvider::Header`].
 pub type ProviderHeader<P> = <P as HeaderProvider>::Header;

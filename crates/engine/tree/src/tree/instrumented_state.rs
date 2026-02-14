@@ -1,14 +1,14 @@
 //! Implements a state provider that tracks latency metrics.
 use alloy_primitives::{Address, StorageKey, StorageValue, B256};
 use metrics::{Gauge, Histogram};
-use reth_errors::ProviderResult;
-use reth_metrics::Metrics;
-use reth_primitives_traits::{Account, Bytecode};
-use reth_provider::{
+use hanzo_evm_errors::ProviderResult;
+use hanzo_evm_metrics::Metrics;
+use hanzo_evm_primitives_traits::{Account, Bytecode};
+use hanzo_evm_provider::{
     AccountReader, BlockHashReader, BytecodeReader, HashedPostStateProvider, StateProofProvider,
     StateProvider, StateRootProvider, StorageRootProvider,
 };
-use reth_trie::{
+use hanzo_evm_trie::{
     updates::TrieUpdates, AccountProof, HashedPostState, HashedStorage, MultiProof,
     MultiProofTargets, StorageMultiProof, StorageProof, TrieInput,
 };
@@ -304,7 +304,7 @@ impl<S: BlockHashReader> BlockHashReader for InstrumentedStateProvider<S> {
 }
 
 impl<S: HashedPostStateProvider> HashedPostStateProvider for InstrumentedStateProvider<S> {
-    fn hashed_post_state(&self, bundle_state: &reth_revm::db::BundleState) -> HashedPostState {
+    fn hashed_post_state(&self, bundle_state: &hanzo_evm_revm::db::BundleState) -> HashedPostState {
         self.state_provider.hashed_post_state(bundle_state)
     }
 }

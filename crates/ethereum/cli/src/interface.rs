@@ -5,34 +5,34 @@ use crate::{
     chainspec::EthereumChainSpecParser,
 };
 use clap::{Parser, Subcommand};
-use reth_chainspec::{ChainSpec, EthChainSpec, Hardforks};
-use reth_cli::chainspec::ChainSpecParser;
-use reth_cli_commands::{
+use hanzo_evm_chainspec::{ChainSpec, EthChainSpec, Hardforks};
+use hanzo_evm_cli::chainspec::ChainSpecParser;
+use hanzo_evm_cli_commands::{
     common::{CliComponentsBuilder, CliNodeTypes, HeaderMut},
     config_cmd, db, download, dump_genesis, export_era, import, import_era, init_cmd, init_state,
     launcher::FnLauncher,
     node::{self, NoArgs},
     p2p, prune, re_execute, stage,
 };
-use reth_cli_runner::CliRunner;
-use reth_db::DatabaseEnv;
-use reth_node_api::NodePrimitives;
-use reth_node_builder::{NodeBuilder, WithLaunchContext};
-use reth_node_core::{
+use hanzo_evm_cli_runner::CliRunner;
+use hanzo_evm_db::DatabaseEnv;
+use hanzo_evm_node_api::NodePrimitives;
+use hanzo_evm_node_builder::{NodeBuilder, WithLaunchContext};
+use hanzo_evm_node_core::{
     args::{LogArgs, OtlpInitStatus, OtlpLogsStatus, TraceArgs},
     version::version_metadata,
 };
-use reth_node_metrics::recorder::install_prometheus_recorder;
-use reth_rpc_server_types::{DefaultRpcModuleValidator, RpcModuleValidator};
-use reth_tracing::{FileWorkerGuard, Layers};
+use hanzo_evm_node_metrics::recorder::install_prometheus_recorder;
+use hanzo_evm_rpc_server_types::{DefaultRpcModuleValidator, RpcModuleValidator};
+use hanzo_evm_tracing::{FileWorkerGuard, Layers};
 use std::{ffi::OsString, fmt, future::Future, marker::PhantomData, sync::Arc};
 use tracing::{info, warn};
 
-/// The main reth cli interface.
+/// The main evm cli interface.
 ///
 /// This is the entrypoint to the executable.
 #[derive(Debug, Parser)]
-#[command(author, name = version_metadata().name_client.as_ref(), version = version_metadata().short_version.as_ref(), long_version = version_metadata().long_version.as_ref(), about = "Reth", long_about = None)]
+#[command(author, name = version_metadata().name_client.as_ref(), version = version_metadata().short_version.as_ref(), long_version = version_metadata().long_version.as_ref(), about = "Hanzo EVM", long_about = None)]
 pub struct Cli<
     C: ChainSpecParser = EthereumChainSpecParser,
     Ext: clap::Args + fmt::Debug = NoArgs,
@@ -92,14 +92,14 @@ impl<
     /// This accepts a closure that is used to launch the node via the
     /// [`NodeCommand`](node::NodeCommand).
     ///
-    /// This command will be run on the [default tokio runtime](reth_cli_runner::tokio_runtime).
+    /// This command will be run on the [default tokio runtime](hanzo_evm_cli_runner::tokio_runtime).
     ///
     ///
     /// # Example
     ///
     /// ```no_run
-    /// use reth_ethereum_cli::interface::Cli;
-    /// use reth_node_ethereum::EthereumNode;
+    /// use hanzo_evm_ethereum_cli::interface::Cli;
+    /// use hanzo_evm_node_ethereum::EthereumNode;
     ///
     /// Cli::parse_args()
     ///     .run(async move |builder, _| {
@@ -116,7 +116,7 @@ impl<
     ///
     /// ```no_run
     /// use clap::Parser;
-    /// use reth_ethereum_cli::{chainspec::EthereumChainSpecParser, interface::Cli};
+    /// use hanzo_evm_ethereum_cli::{chainspec::EthereumChainSpecParser, interface::Cli};
     ///
     /// #[derive(Debug, Parser)]
     /// pub struct MyArgs {
@@ -143,7 +143,7 @@ impl<
     /// This accepts a closure that is used to launch the node via the
     /// [`NodeCommand`](node::NodeCommand).
     ///
-    /// This command will be run on the [default tokio runtime](reth_cli_runner::tokio_runtime).
+    /// This command will be run on the [default tokio runtime](hanzo_evm_cli_runner::tokio_runtime).
     pub fn run_with_components<N>(
         self,
         components: impl CliComponentsBuilder<N>,
@@ -165,9 +165,9 @@ impl<
     /// # Example
     ///
     /// ```no_run
-    /// use reth_cli_runner::CliRunner;
-    /// use reth_ethereum_cli::interface::Cli;
-    /// use reth_node_ethereum::EthereumNode;
+    /// use hanzo_evm_cli_runner::CliRunner;
+    /// use hanzo_evm_ethereum_cli::interface::Cli;
+    /// use hanzo_evm_node_ethereum::EthereumNode;
     ///
     /// let runner = CliRunner::try_default_runtime().unwrap();
     ///
@@ -234,24 +234,24 @@ impl<
         let otlp_logs_status = runner.block_on(self.traces.init_otlp_logs(&mut layers))?;
 
         let guard = self.logs.init_tracing_with_layers(layers)?;
-        info!(target: "reth::cli", "Initialized tracing, debug log directory: {}", self.logs.log_file_directory);
+        info!(target: "evm::cli", "Initialized tracing, debug log directory: {}", self.logs.log_file_directory);
 
         match otlp_status {
             OtlpInitStatus::Started(endpoint) => {
-                info!(target: "reth::cli", "Started OTLP {:?} tracing export to {endpoint}", self.traces.protocol);
+                info!(target: "evm::cli", "Started OTLP {:?} tracing export to {endpoint}", self.traces.protocol);
             }
             OtlpInitStatus::NoFeature => {
-                warn!(target: "reth::cli", "Provided OTLP tracing arguments do not have effect, compile with the `otlp` feature")
+                warn!(target: "evm::cli", "Provided OTLP tracing arguments do not have effect, compile with the `otlp` feature")
             }
             OtlpInitStatus::Disabled => {}
         }
 
         match otlp_logs_status {
             OtlpLogsStatus::Started(endpoint) => {
-                info!(target: "reth::cli", "Started OTLP {:?} logs export to {endpoint}", self.traces.protocol);
+                info!(target: "evm::cli", "Started OTLP {:?} logs export to {endpoint}", self.traces.protocol);
             }
             OtlpLogsStatus::NoFeature => {
-                warn!(target: "reth::cli", "Provided OTLP logs arguments do not have effect, compile with the `otlp-logs` feature")
+                warn!(target: "evm::cli", "Provided OTLP logs arguments do not have effect, compile with the `otlp-logs` feature")
             }
             OtlpLogsStatus::Disabled => {}
         }
@@ -302,7 +302,7 @@ pub enum Commands<
     /// Generate Test Vectors
     #[cfg(feature = "dev")]
     #[command(name = "test-vectors")]
-    TestVectors(reth_cli_commands::test_vectors::Command),
+    TestVectors(hanzo_evm_cli_commands::test_vectors::Command),
     /// Write config to stdout
     #[command(name = "config")]
     Config(config_cmd::Command),
@@ -362,12 +362,12 @@ mod tests {
     use super::*;
     use crate::chainspec::SUPPORTED_CHAINS;
     use clap::CommandFactory;
-    use reth_chainspec::SEPOLIA;
-    use reth_node_core::args::ColorMode;
+    use hanzo_evm_chainspec::SEPOLIA;
+    use hanzo_evm_node_core::args::ColorMode;
 
     #[test]
     fn parse_color_mode() {
-        let reth = Cli::try_parse_args_from(["reth", "node", "--color", "always"]).unwrap();
+        let evm = Cli::try_parse_args_from(["evm", "node", "--color", "always"]).unwrap();
         assert_eq!(reth.logs.color, ColorMode::Always);
     }
 
@@ -376,9 +376,9 @@ mod tests {
     /// runtime
     #[test]
     fn test_parse_help_all_subcommands() {
-        let reth = Cli::<EthereumChainSpecParser, NoArgs>::command();
-        for sub_command in reth.get_subcommands() {
-            let err = Cli::try_parse_args_from(["reth", sub_command.get_name(), "--help"])
+        let evm = Cli::<EthereumChainSpecParser, NoArgs>::command();
+        for sub_command in evm.get_subcommands() {
+            let err = Cli::try_parse_args_from(["evm", sub_command.get_name(), "--help"])
                 .err()
                 .unwrap_or_else(|| {
                     panic!("Failed to parse help message {}", sub_command.get_name())
@@ -394,24 +394,24 @@ mod tests {
     /// always tied to the specific chain's name.
     #[test]
     fn parse_logs_path_node() {
-        let mut reth = Cli::try_parse_args_from(["reth", "node"]).unwrap();
+        let mut evm = Cli::try_parse_args_from(["evm", "node"]).unwrap();
         if let Some(chain_spec) = reth.command.chain_spec() {
             reth.logs.log_file_directory =
                 reth.logs.log_file_directory.join(chain_spec.chain.to_string());
         }
         let log_dir = reth.logs.log_file_directory;
-        let end = format!("reth/logs/{}", SUPPORTED_CHAINS[0]);
+        let end = format!("evm/logs/{}", SUPPORTED_CHAINS[0]);
         assert!(log_dir.as_ref().ends_with(end), "{log_dir:?}");
 
         let mut iter = SUPPORTED_CHAINS.iter();
         iter.next();
         for chain in iter {
-            let mut reth = Cli::try_parse_args_from(["reth", "node", "--chain", chain]).unwrap();
+            let mut evm = Cli::try_parse_args_from(["evm", "node", "--chain", chain]).unwrap();
             let chain =
                 reth.command.chain_spec().map(|c| c.chain.to_string()).unwrap_or(String::new());
             reth.logs.log_file_directory = reth.logs.log_file_directory.join(chain.clone());
             let log_dir = reth.logs.log_file_directory;
-            let end = format!("reth/logs/{chain}");
+            let end = format!("evm/logs/{chain}");
             assert!(log_dir.as_ref().ends_with(end), "{log_dir:?}");
         }
     }
@@ -420,13 +420,13 @@ mod tests {
     /// uses the underlying environment in command to get the chain.
     #[test]
     fn parse_logs_path_init() {
-        let mut reth = Cli::try_parse_args_from(["reth", "init"]).unwrap();
+        let mut evm = Cli::try_parse_args_from(["evm", "init"]).unwrap();
         if let Some(chain_spec) = reth.command.chain_spec() {
             reth.logs.log_file_directory =
                 reth.logs.log_file_directory.join(chain_spec.chain.to_string());
         }
         let log_dir = reth.logs.log_file_directory;
-        let end = format!("reth/logs/{}", SUPPORTED_CHAINS[0]);
+        let end = format!("evm/logs/{}", SUPPORTED_CHAINS[0]);
         println!("{log_dir:?}");
         assert!(log_dir.as_ref().ends_with(end), "{log_dir:?}");
     }
@@ -434,13 +434,13 @@ mod tests {
     /// Tests that the config command does not return any chain spec leading to empty chain id.
     #[test]
     fn parse_empty_logs_path() {
-        let mut reth = Cli::try_parse_args_from(["reth", "config"]).unwrap();
+        let mut evm = Cli::try_parse_args_from(["evm", "config"]).unwrap();
         if let Some(chain_spec) = reth.command.chain_spec() {
             reth.logs.log_file_directory =
                 reth.logs.log_file_directory.join(chain_spec.chain.to_string());
         }
         let log_dir = reth.logs.log_file_directory;
-        let end = "reth/logs".to_string();
+        let end = "evm/logs".to_string();
         println!("{log_dir:?}");
         assert!(log_dir.as_ref().ends_with(end), "{log_dir:?}");
     }
@@ -450,8 +450,8 @@ mod tests {
         let temp_dir = tempfile::tempdir().unwrap();
 
         unsafe { std::env::set_var("RUST_LOG", "info,evm=debug") };
-        let reth = Cli::try_parse_args_from([
-            "reth",
+        let evm = Cli::try_parse_args_from([
+            "evm",
             "init",
             "--datadir",
             temp_dir.path().to_str().unwrap(),
@@ -464,19 +464,19 @@ mod tests {
 
     #[test]
     fn test_rpc_module_validation() {
-        use reth_rpc_server_types::RethRpcModule;
+        use hanzo_evm_rpc_server_types::EvmRpcModule;
 
         // Test that standard modules are accepted
         let cli =
-            Cli::try_parse_args_from(["reth", "node", "--http.api", "eth,admin,debug"]).unwrap();
+            Cli::try_parse_args_from(["evm", "node", "--http.api", "eth,admin,debug"]).unwrap();
 
         if let Commands::Node(command) = &cli.command {
             if let Some(http_api) = &command.rpc.http_api {
                 // Should contain the expected modules
                 let modules = http_api.to_selection();
-                assert!(modules.contains(&RethRpcModule::Eth));
-                assert!(modules.contains(&RethRpcModule::Admin));
-                assert!(modules.contains(&RethRpcModule::Debug));
+                assert!(modules.contains(&EvmRpcModule::Eth));
+                assert!(modules.contains(&EvmRpcModule::Admin));
+                assert!(modules.contains(&EvmRpcModule::Debug));
             } else {
                 panic!("Expected http.api to be set");
             }
@@ -486,13 +486,13 @@ mod tests {
 
         // Test that unknown modules are parsed as Other variant
         let cli =
-            Cli::try_parse_args_from(["reth", "node", "--http.api", "eth,customrpc"]).unwrap();
+            Cli::try_parse_args_from(["evm", "node", "--http.api", "eth,customrpc"]).unwrap();
 
         if let Commands::Node(command) = &cli.command {
             if let Some(http_api) = &command.rpc.http_api {
                 let modules = http_api.to_selection();
-                assert!(modules.contains(&RethRpcModule::Eth));
-                assert!(modules.contains(&RethRpcModule::Other("customrpc".to_string())));
+                assert!(modules.contains(&EvmRpcModule::Eth));
+                assert!(modules.contains(&EvmRpcModule::Other("customrpc".to_string())));
             } else {
                 panic!("Expected http.api to be set");
             }
@@ -503,11 +503,11 @@ mod tests {
 
     #[test]
     fn test_rpc_module_unknown_rejected() {
-        use reth_cli_runner::CliRunner;
+        use hanzo_evm_cli_runner::CliRunner;
 
         // Test that unknown module names are rejected during validation
         let cli =
-            Cli::try_parse_args_from(["reth", "node", "--http.api", "unknownmodule"]).unwrap();
+            Cli::try_parse_args_from(["evm", "node", "--http.api", "unknownmodule"]).unwrap();
 
         // When we try to run the CLI with validation, it should fail
         let runner = CliRunner::try_default_runtime().unwrap();
@@ -533,7 +533,7 @@ mod tests {
     #[test]
     fn parse_unwind_chain() {
         let cli = Cli::try_parse_args_from([
-            "reth", "stage", "unwind", "--chain", "sepolia", "to-block", "100",
+            "evm", "stage", "unwind", "--chain", "sepolia", "to-block", "100",
         ])
         .unwrap();
         match cli.command {
@@ -563,7 +563,7 @@ mod tests {
         }
 
         let cli = Cli::<FileChainSpecParser>::try_parse_from([
-            "reth", "stage", "unwind", "--chain", "sepolia", "to-block", "100",
+            "evm", "stage", "unwind", "--chain", "sepolia", "to-block", "100",
         ])
         .unwrap();
         match cli.command {
@@ -580,8 +580,8 @@ mod tests {
     #[test]
     fn test_extensible_subcommands() {
         use crate::app::ExtendedCommand;
-        use reth_cli_runner::CliRunner;
-        use reth_rpc_server_types::DefaultRpcModuleValidator;
+        use hanzo_evm_cli_runner::CliRunner;
+        use hanzo_evm_rpc_server_types::DefaultRpcModuleValidator;
         use std::sync::atomic::{AtomicBool, Ordering};
 
         #[derive(Debug, Subcommand)]
@@ -619,7 +619,7 @@ mod tests {
             NoArgs,
             DefaultRpcModuleValidator,
             CustomCommands,
-        >::try_parse_from(["reth", "hello", "--name", "world"])
+        >::try_parse_from(["evm", "hello", "--name", "world"])
         .unwrap();
 
         match &cli.command {
@@ -635,7 +635,7 @@ mod tests {
             NoArgs,
             DefaultRpcModuleValidator,
             CustomCommands,
-        >::try_parse_from(["reth", "goodbye"])
+        >::try_parse_from(["evm", "goodbye"])
         .unwrap();
 
         match &cli.command {
@@ -649,7 +649,7 @@ mod tests {
             NoArgs,
             DefaultRpcModuleValidator,
             CustomCommands,
-        >::try_parse_from(["reth", "node"])
+        >::try_parse_from(["evm", "node"])
         .unwrap();
 
         match &cli.command {
@@ -663,7 +663,7 @@ mod tests {
             NoArgs,
             DefaultRpcModuleValidator,
             CustomCommands,
-        >::try_parse_from(["reth", "hello", "--name", "world"])
+        >::try_parse_from(["evm", "hello", "--name", "world"])
         .unwrap();
 
         if let Commands::Ext(cmd) = cli.command {

@@ -1,12 +1,12 @@
 use alloy_primitives::{keccak256, Address, B256, U256};
-use reth_revm::{
+use hanzo_evm_revm::{
     state::{AccountInfo, Bytecode},
     Database,
 };
-use reth_trie::{HashedPostState, HashedStorage};
+use hanzo_evm_trie::{HashedPostState, HashedStorage};
 
 /// The state witness recorder that records all state accesses during execution.
-/// It does so by implementing the [`reth_revm::Database`] and recording accesses of accounts and
+/// It does so by implementing the [`hanzo_evm_revm::Database`] and recording accesses of accounts and
 /// slots.
 #[derive(Debug)]
 pub(crate) struct StateWitnessRecorderDatabase<D> {

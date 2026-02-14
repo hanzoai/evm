@@ -1,19 +1,19 @@
 [package]
-name = "reth-stages-types"
+name = "hanzo-evm-stages-types"
 version.workspace = true
 edition.workspace = true
 homepage.workspace = true
 license.workspace = true
 repository.workspace = true
 rust-version.workspace = true
-description = "Commonly used types for stages usage in reth."
+description = "Commonly used types for stages usage in Hanzo EVM."
 
 [lints]
 workspace = true
 
 [dependencies]
-reth-codecs = { workspace = true, optional = true }
-reth-trie-common.workspace = true
+hanzo-evm-codecs = { workspace = true, optional = true }
+hanzo-evm-trie-common.workspace = true
 alloy-primitives.workspace = true
 
 serde = { workspace = true, optional = true }
@@ -23,8 +23,8 @@ bytes = { workspace = true, optional = true }
 modular-bitfield = { workspace = true, optional = true }
 
 [dev-dependencies]
-reth-codecs.workspace = true
-reth-trie-common = { workspace = true, features = ["reth-codec"] }
+hanzo-evm-codecs.workspace = true
+hanzo-evm-trie-common = { workspace = true, features = ["hanzo-evm-codec"] }
 alloy-primitives = { workspace = true, features = ["arbitrary", "rand"] }
 arbitrary = { workspace = true, features = ["derive"] }
 proptest.workspace = true
@@ -38,32 +38,32 @@ default = ["std"]
 std = [
     "alloy-primitives/std",
     "bytes?/std",
-    "reth-trie-common/std",
+    "hanzo-evm-trie-common/std",
     "serde?/std",
 ]
-reth-codec = [
-    "dep:reth-codecs",
+hanzo-evm-codec = [
+    "dep:hanzo-evm-codecs",
     "dep:bytes",
     "dep:modular-bitfield",
-    "reth-trie-common/reth-codec",
+    "hanzo-evm-trie-common/hanzo-evm-codec",
 ]
 test-utils = [
     "arbitrary",
-    "reth-codecs?/test-utils",
-    "reth-trie-common/test-utils",
+    "hanzo-evm-codecs?/test-utils",
+    "hanzo-evm-trie-common/test-utils",
 ]
 arbitrary = [
     "std",
     "dep:arbitrary",
     "alloy-primitives/arbitrary",
-    "reth-codecs?/arbitrary",
-    "reth-trie-common/arbitrary",
+    "hanzo-evm-codecs?/arbitrary",
+    "hanzo-evm-trie-common/arbitrary",
 ]
 serde = [
     "dep:serde",
     "alloy-primitives/serde",
     "bytes?/serde",
     "rand/serde",
-    "reth-codecs?/serde",
-    "reth-trie-common/serde",
+    "hanzo-evm-codecs?/serde",
+    "hanzo-evm-trie-common/serde",
 ]

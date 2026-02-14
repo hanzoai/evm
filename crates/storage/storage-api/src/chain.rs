@@ -3,20 +3,20 @@ use alloc::{vec, vec::Vec};
 use alloy_consensus::Header;
 use alloy_primitives::BlockNumber;
 use core::marker::PhantomData;
-use reth_chainspec::{ChainSpecProvider, EthereumHardforks};
-use reth_db_api::{
+use hanzo_evm_chainspec::{ChainSpecProvider, EthereumHardforks};
+use hanzo_evm_db_api::{
     cursor::{DbCursorRO, DbCursorRW},
     models::StoredBlockOmmers,
     tables,
     transaction::{DbTx, DbTxMut},
     DbTxUnwindExt,
 };
-use reth_db_models::StoredBlockWithdrawals;
-use reth_ethereum_primitives::TransactionSigned;
-use reth_primitives_traits::{
+use hanzo_evm_db_models::StoredBlockWithdrawals;
+use hanzo_evm_ethereum_primitives::TransactionSigned;
+use hanzo_evm_primitives_traits::{
     Block, BlockBody, FullBlockHeader, NodePrimitives, SignedTransaction,
 };
-use reth_storage_errors::provider::ProviderResult;
+use hanzo_evm_storage_errors::provider::ProviderResult;
 
 /// Trait that implements how block bodies are written to the storage.
 ///

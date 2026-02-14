@@ -1,7 +1,7 @@
 // Docker Bake configuration for reth images
 
 variable "REGISTRY" {
-  default = "ghcr.io/paradigmxyz"
+  default = "ghcr.io/hanzoai"
 }
 
 variable "TAG" {

@@ -4,22 +4,22 @@ use comfy_table::{Cell, Row, Table as ComfyTable};
 use eyre::WrapErr;
 use human_bytes::human_bytes;
 use itertools::Itertools;
-use reth_chainspec::EthereumHardforks;
-use reth_db::{mdbx, static_file::iter_static_files, DatabaseEnv};
-use reth_db_api::{database::Database, TableViewer, Tables};
-use reth_db_common::DbTool;
-use reth_fs_util as fs;
-use reth_node_builder::{NodePrimitives, NodeTypesWithDB, NodeTypesWithDBAdapter};
-use reth_node_core::dirs::{ChainPath, DataDirPath};
-use reth_provider::{
+use hanzo_evm_chainspec::EthereumHardforks;
+use hanzo_evm_db::{mdbx, static_file::iter_static_files, DatabaseEnv};
+use hanzo_evm_db_api::{database::Database, TableViewer, Tables};
+use hanzo_evm_db_common::DbTool;
+use hanzo_evm_fs_util as fs;
+use hanzo_evm_node_builder::{NodePrimitives, NodeTypesWithDB, NodeTypesWithDBAdapter};
+use hanzo_evm_node_core::dirs::{ChainPath, DataDirPath};
+use hanzo_evm_provider::{
     providers::{ProviderNodeTypes, StaticFileProvider},
     RocksDBProviderFactory,
 };
-use reth_static_file_types::SegmentRangeInclusive;
+use hanzo_evm_static_file_types::SegmentRangeInclusive;
 use std::time::Duration;
 
 #[derive(Parser, Debug)]
-/// The arguments for the `reth db stats` command
+/// The arguments for the `evm db stats` command
 pub struct Command {
     /// Skip consistency checks for static files.
     #[arg(long, default_value_t = false)]
@@ -38,7 +38,7 @@ pub struct Command {
     /// WARNING: this option will take a long time to run, as it needs to traverse and hash the
     /// entire database.
     ///
-    /// For individual table checksums, use the `reth db checksum` command.
+    /// For individual table checksums, use the `evm db checksum` command.
     #[arg(long, default_value_t = false)]
     checksum: bool,
 }

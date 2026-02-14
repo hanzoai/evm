@@ -1,13 +1,13 @@
 //! Shared models for <https://github.com/ethereum/tests>
 
 use crate::{assert::assert_equal, Error};
-use alloy_consensus::Header as RethHeader;
+use alloy_consensus::Header as EvmHeader;
 use alloy_eips::eip4895::Withdrawals;
 use alloy_genesis::GenesisAccount;
 use alloy_primitives::{keccak256, Address, Bloom, Bytes, B256, B64, U256};
-use reth_chainspec::{ChainSpec, ChainSpecBuilder, EthereumHardfork, ForkCondition};
-use reth_db_api::{cursor::DbDupCursorRO, tables, transaction::DbTx};
-use reth_primitives_traits::SealedHeader;
+use hanzo_evm_chainspec::{ChainSpec, ChainSpecBuilder, EthereumHardfork, ForkCondition};
+use hanzo_evm_db_api::{cursor::DbDupCursorRO, tables, transaction::DbTx};
+use hanzo_evm_primitives_traits::SealedHeader;
 use revm::primitives::HashMap;
 use serde::Deserialize;
 use std::{
@@ -94,7 +94,7 @@ pub struct Header {
 
 impl From<Header> for SealedHeader {
     fn from(value: Header) -> Self {
-        let header = RethHeader {
+        let header = EvmHeader {
             base_fee_per_gas: value.base_fee_per_gas.map(|v| v.to::<u64>()),
             beneficiary: value.coinbase,
             difficulty: value.difficulty,
@@ -327,7 +327,7 @@ pub enum ForkSpec {
 }
 
 impl ForkSpec {
-    /// Converts this EF fork spec to a Reth [`ChainSpec`].
+    /// Converts this EF fork spec to a Hanzo EVM [`ChainSpec`].
     pub fn to_chain_spec(self) -> Arc<ChainSpec> {
         static MAP: OnceLock<RwLock<HashMap<ForkSpec, Arc<ChainSpec>>>> = OnceLock::new();
         let map = MAP.get_or_init(Default::default);

@@ -1,5 +1,5 @@
 use metrics::{Gauge, Histogram};
-use reth_metrics::Metrics;
+use hanzo_evm_metrics::Metrics;
 use std::time::{Duration, Instant};
 
 #[derive(Debug)]

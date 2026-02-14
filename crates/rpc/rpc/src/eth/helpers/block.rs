@@ -1,11 +1,11 @@
 //! Contains RPC handler implementations specific to blocks.
 
-use reth_rpc_convert::RpcConvert;
-use reth_rpc_eth_api::{
+use hanzo_evm_rpc_convert::RpcConvert;
+use hanzo_evm_rpc_eth_api::{
     helpers::{EthBlocks, LoadBlock, LoadPendingBlock},
     FromEvmError, RpcNodeCore,
 };
-use reth_rpc_eth_types::EthApiError;
+use hanzo_evm_rpc_eth_types::EthApiError;
 
 use crate::EthApi;
 

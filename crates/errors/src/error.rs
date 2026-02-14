@@ -1,11 +1,11 @@
 use alloc::{boxed::Box, string::ToString};
 use core::fmt::Display;
-use reth_consensus::ConsensusError;
-use reth_execution_errors::BlockExecutionError;
-use reth_storage_errors::{db::DatabaseError, provider::ProviderError};
+use hanzo_evm_consensus::ConsensusError;
+use hanzo_evm_execution_errors::BlockExecutionError;
+use hanzo_evm_storage_errors::{db::DatabaseError, provider::ProviderError};
 
-/// Result alias for [`RethError`].
-pub type RethResult<T> = Result<T, RethError>;
+/// Result alias for [`EvmError`].
+pub type EvmResult<T> = Result<T, EvmError>;
 
 /// Core error variants possible when interacting with the blockchain.
 ///
@@ -13,7 +13,7 @@ pub type RethResult<T> = Result<T, RethError>;
 ///
 /// It allows for structured error handling based on the nature of the encountered issue.
 #[derive(Debug, thiserror::Error)]
-pub enum RethError {
+pub enum EvmError {
     /// Error encountered during block execution.
     #[error(transparent)]
     Execution(#[from] BlockExecutionError),
@@ -35,8 +35,8 @@ pub enum RethError {
     Other(Box<dyn core::error::Error + Send + Sync>),
 }
 
-impl RethError {
-    /// Create a new `RethError` from a given error.
+impl EvmError {
+    /// Create a new `EvmError` from a given error.
     pub fn other<E>(error: E) -> Self
     where
         E: core::error::Error + Send + Sync + 'static,
@@ -44,7 +44,7 @@ impl RethError {
         Self::Other(Box::new(error))
     }
 
-    /// Create a new `RethError` from a given message.
+    /// Create a new `EvmError` from a given message.
     pub fn msg(msg: impl Display) -> Self {
         Self::Other(msg.to_string().into())
     }
@@ -61,7 +61,7 @@ mod size_asserts {
         };
     }
 
-    static_assert_size!(RethError, 56);
+    static_assert_size!(EvmError, 56);
     static_assert_size!(BlockExecutionError, 56);
     static_assert_size!(ConsensusError, 48);
     static_assert_size!(DatabaseError, 32);

@@ -16,28 +16,28 @@ use async_trait::async_trait;
 use core::fmt;
 use jsonrpsee::core::RpcResult;
 use jsonrpsee_types::error::ErrorObject;
-use reth_chainspec::{ChainSpecProvider, EthereumHardforks};
-use reth_consensus::{Consensus, FullConsensus};
-use reth_consensus_common::validation::MAX_RLP_BLOCK_SIZE;
-use reth_engine_primitives::PayloadValidator;
-use reth_errors::{BlockExecutionError, ConsensusError, ProviderError};
-use reth_evm::{execute::Executor, ConfigureEvm};
-use reth_execution_types::BlockExecutionOutput;
-use reth_metrics::{
+use hanzo_evm_chainspec::{ChainSpecProvider, EthereumHardforks};
+use hanzo_evm_consensus::{Consensus, FullConsensus};
+use hanzo_evm_consensus_common::validation::MAX_RLP_BLOCK_SIZE;
+use hanzo_evm_engine_primitives::PayloadValidator;
+use hanzo_evm_errors::{BlockExecutionError, ConsensusError, ProviderError};
+use hanzo_evm_execution::{execute::Executor, ConfigureEvm};
+use hanzo_evm_execution_types::BlockExecutionOutput;
+use hanzo_evm_metrics::{
     metrics,
     metrics::{gauge, Gauge},
     Metrics,
 };
-use reth_node_api::{NewPayloadError, PayloadTypes};
-use reth_primitives_traits::{
+use hanzo_evm_node_api::{NewPayloadError, PayloadTypes};
+use hanzo_evm_primitives_traits::{
     constants::GAS_LIMIT_BOUND_DIVISOR, BlockBody, GotExpected, NodePrimitives, RecoveredBlock,
     SealedBlock, SealedHeaderFor,
 };
-use reth_revm::{cached::CachedReads, database::StateProviderDatabase};
-use reth_rpc_api::BlockSubmissionValidationApiServer;
-use reth_rpc_server_types::result::{internal_rpc_err, invalid_params_rpc_err};
-use reth_storage_api::{BlockReaderIdExt, StateProviderFactory};
-use reth_tasks::TaskSpawner;
+use hanzo_evm_revm::{cached::CachedReads, database::StateProviderDatabase};
+use hanzo_evm_rpc_api::BlockSubmissionValidationApiServer;
+use hanzo_evm_rpc_server_types::result::{internal_rpc_err, invalid_params_rpc_err};
+use hanzo_evm_storage_api::{BlockReaderIdExt, StateProviderFactory};
+use hanzo_evm_tasks::TaskSpawner;
 use revm_primitives::{Address, B256, U256};
 use serde::{Deserialize, Serialize};
 use sha2::{Digest, Sha256};
@@ -61,7 +61,7 @@ where
     pub fn new(
         provider: Provider,
         consensus: Arc<dyn FullConsensus<E::Primitives>>,
-        evm_config: E,
+        hanzo_evm_config: E,
         config: ValidationApiConfig,
         task_spawner: Box<dyn TaskSpawner>,
         payload_validator: Arc<
@@ -74,7 +74,7 @@ where
             provider,
             consensus,
             payload_validator,
-            evm_config,
+            hanzo_evm_config,
             disallow,
             validation_window,
             cached_state: Default::default(),
@@ -180,7 +180,7 @@ where
         let mut request_cache = self.cached_reads(parent_header_hash).await;
 
         let cached_db = request_cache.as_db_mut(StateProviderDatabase::new(&state_provider));
-        let executor = self.evm_config.batch_executor(cached_db);
+        let executor = self.hanzo_evm_config.batch_executor(cached_db);
 
         let mut accessed_blacklisted = None;
         let output = executor.execute_with_state_closure(&block, |state| {
@@ -567,7 +567,7 @@ pub struct ValidationApiInner<Provider, E: ConfigureEvm, T: PayloadTypes> {
     payload_validator:
         Arc<dyn PayloadValidator<T, Block = <E::Primitives as NodePrimitives>::Block>>,
     /// Block executor factory.
-    evm_config: E,
+    hanzo_evm_config: E,
     /// Set of disallowed addresses
     disallow: AddressSet,
     /// The maximum block distance - parent to latest - allowed for validation

@@ -1,6 +1,6 @@
 [package]
-name = "reth-testing-utils"
-description = "Testing utils for reth."
+name = "hanzo-evm-testing-utils"
+description = "Testing utils for Hanzo EVM."
 version.workspace = true
 edition.workspace = true
 rust-version.workspace = true
@@ -12,8 +12,8 @@ repository.workspace = true
 workspace = true
 
 [dependencies]
-reth-ethereum-primitives = { workspace = true, features = ["arbitrary", "std"] }
-reth-primitives-traits = { workspace = true, features = ["secp256k1", "arbitrary"] }
+hanzo-evm-ethereum-primitives = { workspace = true, features = ["arbitrary", "std"] }
+hanzo-evm-primitives-traits = { workspace = true, features = ["secp256k1", "arbitrary"] }
 alloy-genesis.workspace = true
 alloy-primitives = { workspace = true, features = ["rand"] }
 alloy-consensus.workspace = true

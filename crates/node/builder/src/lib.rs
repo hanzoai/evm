@@ -1,12 +1,12 @@
-//! Standalone crate for Reth configuration and builder types.
+//! Standalone crate for Hanzo EVM configuration and builder types.
 //!
 //! # features
 //! - `js-tracer`: Enable the `JavaScript` tracer for the `debug_trace` endpoints
 
 #![doc(
-    html_logo_url = "https://raw.githubusercontent.com/paradigmxyz/reth/main/assets/reth-docs.png",
+    html_logo_url = "https://raw.githubusercontent.com/hanzoai/evm/main/assets/evm-docs.png",
     html_favicon_url = "https://avatars0.githubusercontent.com/u/97369466?s=256",
-    issue_tracker_base_url = "https://github.com/paradigmxyz/reth/issues/"
+    issue_tracker_base_url = "https://github.com/hanzoai/evm/issues/"
 )]
 #![cfg_attr(not(test), warn(unused_crate_dependencies))]
 #![cfg_attr(docsrs, feature(doc_cfg))]
@@ -51,16 +51,16 @@ pub use aliases::*;
 pub mod exex;
 
 /// Re-export the core configuration traits.
-pub use reth_node_core::cli::config::{
-    PayloadBuilderConfig, RethNetworkConfig, RethTransactionPoolConfig,
+pub use hanzo_evm_node_core::cli::config::{
+    PayloadBuilderConfig, EvmNetworkConfig, EvmTransactionPoolConfig,
 };
 
 // re-export the core config for convenience
-pub use reth_node_core::node_config::NodeConfig;
+pub use hanzo_evm_node_core::node_config::NodeConfig;
 
 // re-export API types for convenience
-pub use reth_node_api::*;
+pub use hanzo_evm_node_api::*;
 
 use aquamarine as _;
 
-use reth_rpc as _;
+use hanzo_evm_rpc as _;

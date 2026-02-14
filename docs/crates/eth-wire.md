@@ -8,7 +8,7 @@ This crate can be thought of as having 2 components:
 1. Data structures that serialize and deserialize the Ethereum protocol messages into Rust-compatible types.
 2. Abstractions over Tokio Streams that operate on these types.
 
-(Note that ECIES is implemented in a separate `reth-ecies` crate.)
+(Note that ECIES is implemented in a separate `evm-ecies` crate.)
 Additionally, this crate focuses on stream implementations (P2P and Eth), handshakes, and multiplexing. The protocol
 message types and RLP encoding/decoding live in the separate `eth-wire-types` crate and are re-exported by `eth-wire`
 for convenience.
@@ -130,7 +130,7 @@ And the corresponding transaction type is defined here:
 
 [File: crates/ethereum/primitives/src/transaction.rs](../../crates/ethereum/primitives/src/transaction.rs)
 ```rust, ignore
-#[reth_codec]
+#[evm_codec]
 #[derive(Debug, Clone, PartialEq, Eq, Hash, AsRef, Deref, Default, Serialize, Deserialize)]
 pub struct TransactionSigned {
     pub hash: TxHash,
@@ -221,7 +221,7 @@ pub(crate) enum PingState {
 
 State transitions are then implemented like a future, with the `poll_ping` function advancing the state of the pinger.
 
-[File: crates/net/eth-wire/src/pinger.rs](https://github.com/paradigmxyz/reth/blob/1563506aea09049a85e5cc72c2894f3f7a371581/crates/net/eth-wire/src/pinger.rs)
+[File: crates/net/eth-wire/src/pinger.rs](https://github.com/hanzoai/evm/blob/1563506aea09049a85e5cc72c2894f3f7a371581/crates/net/eth-wire/src/pinger.rs)
 ```rust, ignore
 pub(crate) fn poll_ping(
     &mut self,

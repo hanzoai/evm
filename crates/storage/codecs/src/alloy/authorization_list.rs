@@ -5,13 +5,13 @@ use alloy_eips::eip7702::{Authorization as AlloyAuthorization, SignedAuthorizati
 use alloy_primitives::{Address, U256};
 use bytes::Buf;
 use core::ops::Deref;
-use reth_codecs_derive::add_arbitrary_tests;
+use hanzo_evm_codecs_derive::add_arbitrary_tests;
 
 /// Authorization acts as bridge which simplifies Compact implementation for `AlloyAuthorization`.
 ///
 /// Notice: Make sure this struct is 1:1 with `alloy_eips::eip7702::Authorization`
 #[derive(Debug, Clone, PartialEq, Eq, Default, Compact)]
-#[reth_codecs(crate = "crate")]
+#[hanzo_evm_codecs(crate = "crate")]
 #[cfg_attr(
     any(test, feature = "test-utils"),
     derive(arbitrary::Arbitrary, serde::Serialize, serde::Deserialize)

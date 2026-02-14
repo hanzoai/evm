@@ -3,7 +3,7 @@ mod utils;
 
 use criterion::{criterion_group, criterion_main, Criterion};
 use rand::{prelude::SliceRandom, rngs::StdRng, SeedableRng};
-use reth_libmdbx::{ffi::*, ObjectLength, WriteFlags};
+use hanzo_evm_libmdbx::{ffi::*, ObjectLength, WriteFlags};
 use std::{hint::black_box, ptr};
 use utils::*;
 

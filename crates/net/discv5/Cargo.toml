@@ -1,5 +1,5 @@
 [package]
-name = "reth-discv5"
+name = "hanzo-evm-discv5"
 version.workspace = true
 edition.workspace = true
 rust-version.workspace = true
@@ -12,11 +12,11 @@ description = "Ethereum peer discovery V5"
 workspace = true
 
 [dependencies]
-# reth
-reth-chainspec.workspace = true
-reth-ethereum-forks.workspace = true
-reth-metrics.workspace = true
-reth-network-peers = { workspace = true, features = ["secp256k1"] }
+# evm
+hanzo-evm-chainspec.workspace = true
+hanzo-evm-ethereum-forks.workspace = true
+hanzo-evm-metrics.workspace = true
+hanzo-evm-network-peers = { workspace = true, features = ["secp256k1"] }
 
 # ethereum
 alloy-primitives.workspace = true
@@ -40,7 +40,7 @@ itertools.workspace = true
 metrics.workspace = true
 
 [dev-dependencies]
-reth-tracing.workspace = true
+hanzo-evm-tracing.workspace = true
 alloy-primitives = { workspace = true, features = ["rand"] }
 tokio = { workspace = true, features = ["rt-multi-thread"] }
 secp256k1 = { workspace = true, features = ["std", "rand"] }

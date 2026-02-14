@@ -23,18 +23,18 @@ use alloy_eips::merge::EPOCH_SLOTS;
 use alloy_primitives::Sealable;
 use futures::{stream::Fuse, SinkExt, StreamExt};
 use metrics::Gauge;
-use reth_eth_wire::{
+use hanzo_evm_eth_wire::{
     errors::{EthHandshakeError, EthStreamError},
     message::{EthBroadcastMessage, MessageError},
     Capabilities, DisconnectP2P, DisconnectReason, EthMessage, NetworkPrimitives, NewBlockPayload,
 };
-use reth_eth_wire_types::{message::RequestPair, RawCapabilityMessage};
-use reth_metrics::common::mpsc::MeteredPollSender;
-use reth_network_api::PeerRequest;
-use reth_network_p2p::error::RequestError;
-use reth_network_peers::PeerId;
-use reth_network_types::session::config::INITIAL_REQUEST_TIMEOUT;
-use reth_primitives_traits::Block;
+use hanzo_evm_eth_wire_types::{message::RequestPair, RawCapabilityMessage};
+use hanzo_evm_metrics::common::mpsc::MeteredPollSender;
+use hanzo_evm_network_api::PeerRequest;
+use hanzo_evm_network_p2p::error::RequestError;
+use hanzo_evm_network_peers::PeerId;
+use hanzo_evm_network_types::session::config::INITIAL_REQUEST_TIMEOUT;
+use hanzo_evm_primitives_traits::Block;
 use rustc_hash::FxHashMap;
 use tokio::{
     sync::{mpsc::error::TrySendError, oneshot},
@@ -935,16 +935,16 @@ mod tests {
     use super::*;
     use crate::session::{handle::PendingSessionEvent, start_pending_incoming_session};
     use alloy_eips::eip2124::ForkFilter;
-    use reth_chainspec::MAINNET;
-    use reth_ecies::stream::ECIESStream;
-    use reth_eth_wire::{
+    use hanzo_evm_chainspec::MAINNET;
+    use hanzo_evm_ecies::stream::ECIESStream;
+    use hanzo_evm_eth_wire::{
         handshake::EthHandshake, EthNetworkPrimitives, EthStream, GetBlockBodies,
         HelloMessageWithProtocols, P2PStream, StatusBuilder, UnauthedEthStream, UnauthedP2PStream,
         UnifiedStatus,
     };
-    use reth_ethereum_forks::EthereumHardfork;
-    use reth_network_peers::pk2id;
-    use reth_network_types::session::config::PROTOCOL_BREACH_REQUEST_TIMEOUT;
+    use hanzo_evm_ethereum_forks::EthereumHardfork;
+    use hanzo_evm_network_peers::pk2id;
+    use hanzo_evm_network_types::session::config::PROTOCOL_BREACH_REQUEST_TIMEOUT;
     use secp256k1::{SecretKey, SECP256K1};
     use tokio::{
         net::{TcpListener, TcpStream},
@@ -1166,7 +1166,7 @@ mod tests {
 
     #[tokio::test(flavor = "multi_thread")]
     async fn test_send_many_messages() {
-        reth_tracing::init_test_tracing();
+        hanzo_evm_tracing::init_test_tracing();
         let mut builder = SessionBuilder::default();
 
         let listener = TcpListener::bind("127.0.0.1:0").await.unwrap();
@@ -1200,7 +1200,7 @@ mod tests {
 
     #[tokio::test(flavor = "multi_thread")]
     async fn test_request_timeout() {
-        reth_tracing::init_test_tracing();
+        hanzo_evm_tracing::init_test_tracing();
 
         let mut builder = SessionBuilder::default();
 

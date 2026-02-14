@@ -6,7 +6,7 @@ edition.workspace = true
 license.workspace = true
 
 [dependencies]
-reth-ethereum = { workspace = true, features = ["node", "evm", "pool", "cli"] }
+hanzo-evm-ethereum = { workspace = true, features = ["node", "evm", "pool", "cli"] }
 alloy-rpc-types-eth.workspace = true
 clap = { workspace = true, features = ["derive"] }
 futures-util.workspace = true

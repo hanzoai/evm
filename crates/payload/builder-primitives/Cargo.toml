@@ -1,5 +1,5 @@
 [package]
-name = "reth-payload-builder-primitives"
+name = "hanzo-evm-payload-builder-primitives"
 version.workspace = true
 edition.workspace = true
 rust-version.workspace = true
@@ -12,8 +12,8 @@ exclude.workspace = true
 workspace = true
 
 [dependencies]
-# reth
-reth-payload-primitives.workspace = true
+# evm
+hanzo-evm-payload-primitives.workspace = true
 
 # async
 pin-project.workspace = true

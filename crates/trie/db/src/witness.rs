@@ -1,8 +1,8 @@
 use crate::{DatabaseHashedCursorFactory, DatabaseTrieCursorFactory};
 use alloy_primitives::{map::B256Map, Bytes};
-use reth_db_api::transaction::DbTx;
-use reth_execution_errors::TrieWitnessError;
-use reth_trie::{
+use hanzo_evm_db_api::transaction::DbTx;
+use hanzo_evm_execution_errors::TrieWitnessError;
+use hanzo_evm_trie::{
     hashed_cursor::HashedPostStateCursorFactory, trie_cursor::InMemoryTrieCursorFactory,
     witness::TrieWitness, HashedPostState, TrieInput,
 };

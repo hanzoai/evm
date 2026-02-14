@@ -1,6 +1,6 @@
 use eyre::Result;
 use futures_util::StreamExt;
-use reth_ethereum::{
+use hanzo_evm_ethereum::{
     exex::{ExExContext, ExExEvent},
     node::api::{FullNodeComponents, NodeTypes},
     EthPrimitives,

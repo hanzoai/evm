@@ -15,7 +15,7 @@ pub(crate) fn generate_flag_struct(
     let flags_ident = format_ident!("{ident}Flags");
     let mod_flags_ident = format_ident!("{ident}_flags");
 
-    let reth_codecs = parse_reth_codecs_path(attrs).unwrap();
+    let hanzo_evm_codecs = parse_hanzo_evm_codecs_path(attrs).unwrap();
 
     let mut field_flags = vec![];
 
@@ -93,9 +93,9 @@ pub(crate) fn generate_flag_struct(
         pub use #mod_flags_ident::#flags_ident;
         #[expect(non_snake_case)]
         mod #mod_flags_ident {
-            use #reth_codecs::__private::Buf;
-            use #reth_codecs::__private::modular_bitfield;
-            use #reth_codecs::__private::modular_bitfield::prelude::*;
+            use #hanzo_evm_codecs::__private::Buf;
+            use #hanzo_evm_codecs::__private::modular_bitfield;
+            use #hanzo_evm_codecs::__private::modular_bitfield::prelude::*;
 
             #[doc = #docs]
             #[bitfield]

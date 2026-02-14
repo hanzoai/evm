@@ -10,17 +10,17 @@ use std::{
 
 use crate::version::version_metadata;
 use clap::Args;
-use reth_chainspec::EthChainSpec;
-use reth_cli_util::{get_secret_key, load_secret_key::SecretKeyError};
-use reth_config::Config;
-use reth_discv4::{NodeRecord, DEFAULT_DISCOVERY_ADDR, DEFAULT_DISCOVERY_PORT};
-use reth_discv5::{
+use hanzo_evm_chainspec::EthChainSpec;
+use hanzo_evm_cli_util::{get_secret_key, load_secret_key::SecretKeyError};
+use hanzo_evm_config::Config;
+use hanzo_evm_discv4::{NodeRecord, DEFAULT_DISCOVERY_ADDR, DEFAULT_DISCOVERY_PORT};
+use hanzo_evm_discv5::{
     discv5::ListenConfig, DEFAULT_COUNT_BOOTSTRAP_LOOKUPS, DEFAULT_DISCOVERY_V5_PORT,
     DEFAULT_SECONDS_BOOTSTRAP_LOOKUP_INTERVAL, DEFAULT_SECONDS_LOOKUP_INTERVAL,
 };
-use reth_net_banlist::IpFilter;
-use reth_net_nat::{NatResolver, DEFAULT_NET_IF_NAME};
-use reth_network::{
+use hanzo_evm_net_banlist::IpFilter;
+use hanzo_evm_net_nat::{NatResolver, DEFAULT_NET_IF_NAME};
+use hanzo_evm_network::{
     transactions::{
         config::{TransactionIngressPolicy, TransactionPropagationKind},
         constants::{
@@ -38,7 +38,7 @@ use reth_network::{
     },
     HelloMessageWithProtocols, NetworkConfigBuilder, NetworkPrimitives,
 };
-use reth_network_peers::{mainnet_nodes, TrustedPeer};
+use hanzo_evm_network_peers::{mainnet_nodes, TrustedPeer};
 use secp256k1::SecretKey;
 use std::str::FromStr;
 use tracing::error;
@@ -234,10 +234,10 @@ impl NetworkArgs {
     pub fn resolved_addr(&self) -> IpAddr {
         if let Some(ref if_name) = self.net_if {
             let if_name = if if_name.is_empty() { DEFAULT_NET_IF_NAME } else { if_name };
-            return match reth_net_nat::net_if::resolve_net_if_ip(if_name) {
+            return match hanzo_evm_net_nat::net_if::resolve_net_if_ip(if_name) {
                 Ok(addr) => addr,
                 Err(err) => {
-                    error!(target: "reth::cli",
+                    error!(target: "evm::cli",
                         if_name,
                         %err,
                         "Failed to read network interface IP"
@@ -585,7 +585,7 @@ impl DiscoveryArgs {
         }
 
         if self.disable_nat {
-            // we only check for `disable-nat` here and not for disable discovery because nat:extip can be used without discovery: <https://github.com/paradigmxyz/reth/issues/14878>
+            // we only check for `disable-nat` here and not for disable discovery because nat:extip can be used without discovery: <https://github.com/hanzoai/evm/issues/14878>
             network_config_builder = network_config_builder.disable_nat();
         }
 
@@ -597,12 +597,12 @@ impl DiscoveryArgs {
         network_config_builder
     }
 
-    /// Creates a [`reth_discv5::ConfigBuilder`] filling it with the values from this struct.
+    /// Creates a [`hanzo_evm_discv5::ConfigBuilder`] filling it with the values from this struct.
     pub fn discovery_v5_builder(
         &self,
         rlpx_tcp_socket: SocketAddr,
         boot_nodes: impl IntoIterator<Item = NodeRecord>,
-    ) -> reth_discv5::ConfigBuilder {
+    ) -> hanzo_evm_discv5::ConfigBuilder {
         let Self {
             discv5_addr,
             discv5_addr_ipv6,
@@ -624,9 +624,9 @@ impl DiscoveryArgs {
             SocketAddr::V6(addr) => Some(*addr.ip()),
         });
 
-        reth_discv5::Config::builder(rlpx_tcp_socket)
+        hanzo_evm_discv5::Config::builder(rlpx_tcp_socket)
             .discv5_config(
-                reth_discv5::discv5::ConfigBuilder::new(ListenConfig::from_two_sockets(
+                hanzo_evm_discv5::discv5::ConfigBuilder::new(ListenConfig::from_two_sockets(
                     discv5_addr_ipv4.map(|addr| SocketAddrV4::new(addr, *discv5_port)),
                     discv5_addr_ipv6.map(|addr| SocketAddrV6::new(addr, *discv5_port_ipv6, 0, 0)),
                 ))
@@ -713,9 +713,9 @@ fn parse_block_num_hash(s: &str) -> Result<BlockNumHash, String> {
 mod tests {
     use super::*;
     use clap::Parser;
-    use reth_chainspec::MAINNET;
-    use reth_config::Config;
-    use reth_network_peers::NodeRecord;
+    use hanzo_evm_chainspec::MAINNET;
+    use hanzo_evm_config::Config;
+    use hanzo_evm_network_peers::NodeRecord;
     use secp256k1::SecretKey;
     use std::{
         fs,
@@ -731,23 +731,23 @@ mod tests {
 
     #[test]
     fn parse_nat_args() {
-        let args = CommandParser::<NetworkArgs>::parse_from(["reth", "--nat", "none"]).args;
+        let args = CommandParser::<NetworkArgs>::parse_from(["evm", "--nat", "none"]).args;
         assert_eq!(args.nat, NatResolver::None);
 
         let args =
-            CommandParser::<NetworkArgs>::parse_from(["reth", "--nat", "extip:0.0.0.0"]).args;
+            CommandParser::<NetworkArgs>::parse_from(["evm", "--nat", "extip:0.0.0.0"]).args;
         assert_eq!(args.nat, NatResolver::ExternalIp("0.0.0.0".parse().unwrap()));
     }
 
     #[test]
     fn parse_peer_args() {
         let args =
-            CommandParser::<NetworkArgs>::parse_from(["reth", "--max-outbound-peers", "50"]).args;
+            CommandParser::<NetworkArgs>::parse_from(["evm", "--max-outbound-peers", "50"]).args;
         assert_eq!(args.max_outbound_peers, Some(50));
         assert_eq!(args.max_inbound_peers, None);
 
         let args = CommandParser::<NetworkArgs>::parse_from([
-            "reth",
+            "evm",
             "--max-outbound-peers",
             "75",
             "--max-inbound-peers",
@@ -762,7 +762,7 @@ mod tests {
     fn parse_trusted_peer_args() {
         let args =
             CommandParser::<NetworkArgs>::parse_from([
-            "reth",
+            "evm",
             "--trusted-peers",
             "enode://d860a01f9722d78051619d1e2351aba3f43f943f6f00718d1b9baa4101932a1f5011f16bb2b1bb35db20d6fe28fa0bf09636d26a87d31de9ec6203eeedb1f666@18.138.108.67:30303,enode://22a8232c3abc76a16ae9d6c3b164f98775fe226f0917b0ca871128a74a8e9630b458460865bab457221f1d448dd9791d24c4e5d88786180ac185df813a68d4de@3.209.45.79:30303"
         ])
@@ -784,7 +784,7 @@ mod tests {
         for retries in tests {
             let retries_str = retries.to_string();
             let args = CommandParser::<NetworkArgs>::parse_from([
-                "reth",
+                "evm",
                 "--dns-retries",
                 retries_str.as_str(),
             ])
@@ -796,13 +796,13 @@ mod tests {
 
     #[test]
     fn parse_disable_tx_gossip_args() {
-        let args = CommandParser::<NetworkArgs>::parse_from(["reth", "--disable-tx-gossip"]).args;
+        let args = CommandParser::<NetworkArgs>::parse_from(["evm", "--disable-tx-gossip"]).args;
         assert!(args.disable_tx_gossip);
     }
 
     #[test]
     fn parse_max_peers_flag() {
-        let args = CommandParser::<NetworkArgs>::parse_from(["reth", "--max-peers", "90"]).args;
+        let args = CommandParser::<NetworkArgs>::parse_from(["evm", "--max-peers", "90"]).args;
 
         assert_eq!(args.max_peers, Some(90));
         assert_eq!(args.max_outbound_peers, None);
@@ -814,7 +814,7 @@ mod tests {
     #[test]
     fn max_peers_conflicts_with_outbound() {
         let result = CommandParser::<NetworkArgs>::try_parse_from([
-            "reth",
+            "evm",
             "--max-peers",
             "90",
             "--max-outbound-peers",
@@ -829,7 +829,7 @@ mod tests {
     #[test]
     fn max_peers_conflicts_with_inbound() {
         let result = CommandParser::<NetworkArgs>::try_parse_from([
-            "reth",
+            "evm",
             "--max-peers",
             "90",
             "--max-inbound-peers",
@@ -843,7 +843,7 @@ mod tests {
 
     #[test]
     fn max_peers_split_calculation() {
-        let args = CommandParser::<NetworkArgs>::parse_from(["reth", "--max-peers", "90"]).args;
+        let args = CommandParser::<NetworkArgs>::parse_from(["evm", "--max-peers", "90"]).args;
 
         assert_eq!(args.max_peers, Some(90));
         assert_eq!(args.resolved_max_outbound_peers(), Some(30));
@@ -852,15 +852,15 @@ mod tests {
 
     #[test]
     fn max_peers_small_values() {
-        let args1 = CommandParser::<NetworkArgs>::parse_from(["reth", "--max-peers", "1"]).args;
+        let args1 = CommandParser::<NetworkArgs>::parse_from(["evm", "--max-peers", "1"]).args;
         assert_eq!(args1.resolved_max_outbound_peers(), Some(1));
         assert_eq!(args1.resolved_max_inbound_peers(), Some(0));
 
-        let args2 = CommandParser::<NetworkArgs>::parse_from(["reth", "--max-peers", "2"]).args;
+        let args2 = CommandParser::<NetworkArgs>::parse_from(["evm", "--max-peers", "2"]).args;
         assert_eq!(args2.resolved_max_outbound_peers(), Some(1));
         assert_eq!(args2.resolved_max_inbound_peers(), Some(1));
 
-        let args3 = CommandParser::<NetworkArgs>::parse_from(["reth", "--max-peers", "3"]).args;
+        let args3 = CommandParser::<NetworkArgs>::parse_from(["evm", "--max-peers", "3"]).args;
         assert_eq!(args3.resolved_max_outbound_peers(), Some(1));
         assert_eq!(args3.resolved_max_inbound_peers(), Some(2));
     }
@@ -868,7 +868,7 @@ mod tests {
     #[test]
     fn resolved_peers_without_max_peers() {
         let args = CommandParser::<NetworkArgs>::parse_from([
-            "reth",
+            "evm",
             "--max-outbound-peers",
             "75",
             "--max-inbound-peers",
@@ -883,7 +883,7 @@ mod tests {
 
     #[test]
     fn resolved_peers_with_defaults() {
-        let args = CommandParser::<NetworkArgs>::parse_from(["reth"]).args;
+        let args = CommandParser::<NetworkArgs>::parse_from(["evm"]).args;
 
         assert_eq!(args.max_peers, None);
         assert_eq!(args.resolved_max_outbound_peers(), None);
@@ -893,7 +893,7 @@ mod tests {
     #[test]
     fn network_args_default_sanity_test() {
         let default_args = NetworkArgs::default();
-        let args = CommandParser::<NetworkArgs>::parse_from(["reth"]).args;
+        let args = CommandParser::<NetworkArgs>::parse_from(["evm"]).args;
 
         assert_eq!(args, default_args);
     }
@@ -901,7 +901,7 @@ mod tests {
     #[test]
     fn parse_required_block_hashes() {
         let args = CommandParser::<NetworkArgs>::parse_from([
-            "reth",
+            "evm",
             "--required-block-hashes",
             "0x1111111111111111111111111111111111111111111111111111111111111111,23115201=0x2222222222222222222222222222222222222222222222222222222222222222",
         ])
@@ -924,7 +924,7 @@ mod tests {
 
     #[test]
     fn parse_empty_required_block_hashes() {
-        let args = CommandParser::<NetworkArgs>::parse_from(["reth"]).args;
+        let args = CommandParser::<NetworkArgs>::parse_from(["evm"]).args;
         assert!(args.required_block_hashes.is_empty());
     }
 
@@ -956,7 +956,7 @@ mod tests {
     fn parse_p2p_secret_key_hex() {
         let hex = "4c0883a69102937d6231471b5dbb6204fe512961708279f8c5c58b3b9c4e8b8f";
         let args =
-            CommandParser::<NetworkArgs>::parse_from(["reth", "--p2p-secret-key-hex", hex]).args;
+            CommandParser::<NetworkArgs>::parse_from(["evm", "--p2p-secret-key-hex", hex]).args;
 
         let expected: B256 = hex.parse().unwrap();
         assert_eq!(args.p2p_secret_key_hex, Some(expected));
@@ -967,7 +967,7 @@ mod tests {
     fn parse_p2p_secret_key_hex_with_0x_prefix() {
         let hex = "0x4c0883a69102937d6231471b5dbb6204fe512961708279f8c5c58b3b9c4e8b8f";
         let args =
-            CommandParser::<NetworkArgs>::parse_from(["reth", "--p2p-secret-key-hex", hex]).args;
+            CommandParser::<NetworkArgs>::parse_from(["evm", "--p2p-secret-key-hex", hex]).args;
 
         let expected: B256 = hex.parse().unwrap();
         assert_eq!(args.p2p_secret_key_hex, Some(expected));
@@ -977,7 +977,7 @@ mod tests {
     #[test]
     fn test_p2p_secret_key_and_hex_are_mutually_exclusive() {
         let result = CommandParser::<NetworkArgs>::try_parse_from([
-            "reth",
+            "evm",
             "--p2p-secret-key",
             "/path/to/key",
             "--p2p-secret-key-hex",
@@ -991,7 +991,7 @@ mod tests {
     fn test_secret_key_method_with_hex() {
         let hex = "4c0883a69102937d6231471b5dbb6204fe512961708279f8c5c58b3b9c4e8b8f";
         let args =
-            CommandParser::<NetworkArgs>::parse_from(["reth", "--p2p-secret-key-hex", hex]).args;
+            CommandParser::<NetworkArgs>::parse_from(["evm", "--p2p-secret-key-hex", hex]).args;
 
         let temp_dir = std::env::temp_dir();
         let default_path = temp_dir.join("default_key");
@@ -1004,7 +1004,7 @@ mod tests {
     #[test]
     fn parse_netrestrict_single_network() {
         let args =
-            CommandParser::<NetworkArgs>::parse_from(["reth", "--netrestrict", "192.168.0.0/16"])
+            CommandParser::<NetworkArgs>::parse_from(["evm", "--netrestrict", "192.168.0.0/16"])
                 .args;
 
         assert_eq!(args.netrestrict, Some("192.168.0.0/16".to_string()));
@@ -1018,7 +1018,7 @@ mod tests {
     #[test]
     fn parse_netrestrict_multiple_networks() {
         let args = CommandParser::<NetworkArgs>::parse_from([
-            "reth",
+            "evm",
             "--netrestrict",
             "192.168.0.0/16,10.0.0.0/8",
         ])
@@ -1036,7 +1036,7 @@ mod tests {
     #[test]
     fn parse_netrestrict_ipv6() {
         let args =
-            CommandParser::<NetworkArgs>::parse_from(["reth", "--netrestrict", "2001:db8::/32"])
+            CommandParser::<NetworkArgs>::parse_from(["evm", "--netrestrict", "2001:db8::/32"])
                 .args;
 
         let ip_filter = args.ip_filter().unwrap();
@@ -1047,7 +1047,7 @@ mod tests {
 
     #[test]
     fn netrestrict_not_set() {
-        let args = CommandParser::<NetworkArgs>::parse_from(["reth"]).args;
+        let args = CommandParser::<NetworkArgs>::parse_from(["evm"]).args;
         assert_eq!(args.netrestrict, None);
 
         let ip_filter = args.ip_filter().unwrap();
@@ -1059,7 +1059,7 @@ mod tests {
     #[test]
     fn netrestrict_invalid_cidr() {
         let args =
-            CommandParser::<NetworkArgs>::parse_from(["reth", "--netrestrict", "invalid-cidr"])
+            CommandParser::<NetworkArgs>::parse_from(["evm", "--netrestrict", "invalid-cidr"])
                 .args;
 
         assert!(args.ip_filter().is_err());
@@ -1070,7 +1070,7 @@ mod tests {
         let enode = "enode://6f8a80d14311c39f35f516fa664deaaaa13e85b2f7493f37f6144d86991ec012937307647bd3b9a82abe2974e1407241d54947bbb39763a4cac9f77166ad92a0@10.3.58.6:30303?discport=30301";
         let unique = SystemTime::now().duration_since(UNIX_EPOCH).unwrap().as_nanos();
 
-        let peers_file = std::env::temp_dir().join(format!("reth_peers_test_{}.json", unique));
+        let peers_file = std::env::temp_dir().join(format!("hanzo_evm_peers_test_{}.json", unique));
         fs::write(&peers_file, format!("[\"{}\"]", enode)).expect("write peers file");
 
         // Build NetworkArgs with peers_file set and no_persist_peers=false
@@ -1082,7 +1082,7 @@ mod tests {
 
         // Build the network config using a deterministic secret key
         let secret_key = SecretKey::from_byte_array(&[1u8; 32]).unwrap();
-        let builder = args.network_config::<reth_network::EthNetworkPrimitives>(
+        let builder = args.network_config::<hanzo_evm_network::EthNetworkPrimitives>(
             &Config::default(),
             MAINNET.clone(),
             secret_key,

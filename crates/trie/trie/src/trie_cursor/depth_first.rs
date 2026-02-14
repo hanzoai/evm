@@ -1,6 +1,6 @@
 use super::TrieCursor;
 use crate::{BranchNodeCompact, Nibbles};
-use reth_storage_errors::db::DatabaseError;
+use hanzo_evm_storage_errors::db::DatabaseError;
 use std::cmp::Ordering;
 use tracing::trace;
 

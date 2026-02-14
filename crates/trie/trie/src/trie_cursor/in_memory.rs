@@ -1,8 +1,8 @@
 use super::{TrieCursor, TrieCursorFactory, TrieStorageCursor};
 use crate::{forward_cursor::ForwardInMemoryCursor, updates::TrieUpdatesSorted};
 use alloy_primitives::B256;
-use reth_storage_errors::db::DatabaseError;
-use reth_trie_common::{BranchNodeCompact, Nibbles};
+use hanzo_evm_storage_errors::db::DatabaseError;
+use hanzo_evm_trie_common::{BranchNodeCompact, Nibbles};
 
 /// The trie cursor factory for the trie updates.
 #[derive(Debug, Clone)]
@@ -627,7 +627,7 @@ mod tests {
     #[test]
     fn test_all_storage_slots_deleted_not_wiped_exact_keys() {
         use tracing::debug;
-        reth_tracing::init_test_tracing();
+        hanzo_evm_tracing::init_test_tracing();
 
         // This test reproduces an edge case where:
         // - cursor is not None (not wiped)
@@ -795,7 +795,7 @@ mod tests {
                 in_memory_nodes in sorted_in_memory_nodes_strategy(),
                 op_choices in prop::collection::vec(any::<u8>(), 10..500),
             ) {
-                reth_tracing::init_test_tracing();
+                hanzo_evm_tracing::init_test_tracing();
                 use tracing::debug;
 
                 debug!(

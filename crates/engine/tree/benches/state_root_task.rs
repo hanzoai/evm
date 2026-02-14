@@ -9,17 +9,17 @@ use alloy_primitives::{Address, B256};
 use criterion::{criterion_group, criterion_main, BenchmarkId, Criterion};
 use proptest::test_runner::TestRunner;
 use rand::Rng;
-use reth_chainspec::ChainSpec;
-use reth_db_common::init::init_genesis;
-use reth_engine_tree::tree::{
+use hanzo_evm_chainspec::ChainSpec;
+use hanzo_evm_db_common::init::init_genesis;
+use hanzo_evm_engine_tree::tree::{
     executor::WorkloadExecutor, precompile_cache::PrecompileCacheMap, PayloadProcessor,
     StateProviderBuilder, TreeConfig,
 };
-use reth_ethereum_primitives::TransactionSigned;
-use reth_evm::OnStateHook;
-use reth_evm_ethereum::EthEvmConfig;
-use reth_primitives_traits::{Account as RethAccount, Recovered, StorageEntry};
-use reth_provider::{
+use hanzo_evm_ethereum_primitives::TransactionSigned;
+use hanzo_evm_execution::OnStateHook;
+use hanzo_evm_eth_execution::EthEvmConfig;
+use hanzo_evm_primitives_traits::{Account as EvmAccount, Recovered, StorageEntry};
+use hanzo_evm_provider::{
     providers::{BlockchainProvider, OverlayStateProviderFactory},
     test_utils::{create_test_provider_factory_with_chain_spec, MockNodeTypesWithDB},
     AccountReader, ChainSpecProvider, HashingWriter, ProviderFactory,
@@ -100,10 +100,10 @@ fn create_bench_state_updates(params: &BenchParams) -> Vec<EvmState> {
     updates
 }
 
-fn convert_revm_to_reth_account(revm_account: &RevmAccount) -> Option<RethAccount> {
+fn convert_revm_to_evm_account(revm_account: &RevmAccount) -> Option<EvmAccount> {
     match revm_account.status {
         AccountStatus::SelfDestructed => None,
-        _ => Some(RethAccount {
+        _ => Some(EvmAccount {
             balance: revm_account.info.balance,
             nonce: revm_account.info.nonce,
             bytecode_hash: if revm_account.info.code_hash == KECCAK_EMPTY {
@@ -139,7 +139,7 @@ fn setup_provider(
             if should_process {
                 account_updates.push((
                     *address,
-                    convert_revm_to_reth_account(account),
+                    convert_revm_to_evm_account(account),
                     (account.status == AccountStatus::Touched).then(|| {
                         account
                             .storage
@@ -170,7 +170,7 @@ fn setup_provider(
 }
 
 fn bench_state_root(c: &mut Criterion) {
-    reth_tracing::init_test_tracing();
+    hanzo_evm_tracing::init_test_tracing();
 
     let mut group = c.benchmark_group("state_root");
 
@@ -244,7 +244,7 @@ fn bench_state_root(c: &mut Criterion) {
                                 StateProviderBuilder::new(provider.clone(), genesis_hash, None),
                                 OverlayStateProviderFactory::new(
                                     provider,
-                                    reth_trie_db::ChangesetCache::new(),
+                                    hanzo_evm_trie_db::ChangesetCache::new(),
                                 ),
                                 &TreeConfig::default(),
                                 None,

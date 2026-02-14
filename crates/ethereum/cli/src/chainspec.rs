@@ -1,5 +1,5 @@
-use reth_chainspec::{ChainSpec, DEV, HOLESKY, HOODI, MAINNET, SEPOLIA};
-use reth_cli::chainspec::{parse_genesis, ChainSpecParser};
+use hanzo_evm_chainspec::{ChainSpec, DEV, HOLESKY, HOODI, MAINNET, SEPOLIA};
+use hanzo_evm_cli::chainspec::{parse_genesis, ChainSpecParser};
 use std::sync::Arc;
 
 /// Chains supported by reth. First value should be used as the default.
@@ -38,7 +38,7 @@ impl ChainSpecParser for EthereumChainSpecParser {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use reth_chainspec::EthereumHardforks;
+    use hanzo_evm_chainspec::EthereumHardforks;
 
     #[test]
     fn parse_known_chain_spec() {

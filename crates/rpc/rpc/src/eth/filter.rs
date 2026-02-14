@@ -15,24 +15,24 @@ use futures::{
 };
 use itertools::Itertools;
 use jsonrpsee::{core::RpcResult, server::IdProvider};
-use reth_errors::ProviderError;
-use reth_primitives_traits::{NodePrimitives, SealedHeader};
-use reth_rpc_eth_api::{
+use hanzo_evm_errors::ProviderError;
+use hanzo_evm_primitives_traits::{NodePrimitives, SealedHeader};
+use hanzo_evm_rpc_eth_api::{
     helpers::{EthBlocks, LoadReceipt},
     EngineEthFilter, EthApiTypes, EthFilterApiServer, FullEthApiTypes, QueryLimits, RpcConvert,
     RpcNodeCoreExt, RpcTransaction,
 };
-use reth_rpc_eth_types::{
+use hanzo_evm_rpc_eth_types::{
     logs_utils::{self, append_matching_block_logs, ProviderOrBlock},
     EthApiError, EthFilterConfig, EthStateCache, EthSubscriptionIdProvider,
 };
-use reth_rpc_server_types::{result::rpc_error_with_code, ToRpcResult};
-use reth_storage_api::{
+use hanzo_evm_rpc_server_types::{result::rpc_error_with_code, ToRpcResult};
+use hanzo_evm_storage_api::{
     BlockHashReader, BlockIdReader, BlockNumReader, BlockReader, HeaderProvider, ProviderBlock,
     ProviderReceipt, ReceiptProvider,
 };
-use reth_tasks::TaskSpawner;
-use reth_transaction_pool::{NewSubpoolTransactionStream, PoolTransaction, TransactionPool};
+use hanzo_evm_tasks::TaskSpawner;
+use hanzo_evm_transaction_pool::{NewSubpoolTransactionStream, PoolTransaction, TransactionPool};
 use std::{
     collections::{HashMap, VecDeque},
     fmt,
@@ -121,12 +121,12 @@ where
     /// # Create a new instance with [`EthApi`](crate::EthApi)
     ///
     /// ```no_run
-    /// use reth_evm_ethereum::EthEvmConfig;
-    /// use reth_network_api::noop::NoopNetwork;
-    /// use reth_provider::noop::NoopProvider;
-    /// use reth_rpc::{EthApi, EthFilter};
-    /// use reth_tasks::TokioTaskExecutor;
-    /// use reth_transaction_pool::noop::NoopTransactionPool;
+    /// use hanzo_evm_eth_execution::EthEvmConfig;
+    /// use hanzo_evm_network_api::noop::NoopNetwork;
+    /// use hanzo_evm_provider::noop::NoopProvider;
+    /// use hanzo_evm_rpc::{EthApi, EthFilter};
+    /// use hanzo_evm_tasks::TokioTaskExecutor;
+    /// use hanzo_evm_transaction_pool::noop::NoopTransactionPool;
     /// let eth_api = EthApi::builder(
     ///     NoopProvider::default(),
     ///     NoopTransactionPool::default(),
@@ -444,7 +444,7 @@ struct EthFilterInner<Eth: EthApiTypes> {
 impl<Eth> EthFilterInner<Eth>
 where
     Eth: RpcNodeCoreExt<Provider: BlockIdReader, Pool: TransactionPool>
-        + EthApiTypes<NetworkTypes: reth_rpc_eth_api::types::RpcTypes>
+        + EthApiTypes<NetworkTypes: hanzo_evm_rpc_eth_api::types::RpcTypes>
         + LoadReceipt
         + EthBlocks
         + 'static,
@@ -984,7 +984,7 @@ where
     /// We always need the entire receipts for the matching block.
     receipts: Arc<Vec<ProviderReceipt<P>>>,
     /// Block can be optional and we can fetch it lazily when needed.
-    recovered_block: Option<Arc<reth_primitives_traits::RecoveredBlock<ProviderBlock<P>>>>,
+    recovered_block: Option<Arc<hanzo_evm_primitives_traits::RecoveredBlock<ProviderBlock<P>>>>,
     /// The header of the block.
     header: SealedHeader<<P as HeaderProvider>::Header>,
 }
@@ -1312,17 +1312,17 @@ mod tests {
     use alloy_network::Ethereum;
     use alloy_primitives::FixedBytes;
     use rand::Rng;
-    use reth_chainspec::{ChainSpec, ChainSpecProvider};
-    use reth_ethereum_primitives::TxType;
-    use reth_evm_ethereum::EthEvmConfig;
-    use reth_network_api::noop::NoopNetwork;
-    use reth_provider::test_utils::MockEthProvider;
-    use reth_rpc_convert::RpcConverter;
-    use reth_rpc_eth_api::node::RpcNodeCoreAdapter;
-    use reth_rpc_eth_types::receipt::EthReceiptConverter;
-    use reth_tasks::TokioTaskExecutor;
-    use reth_testing_utils::generators;
-    use reth_transaction_pool::test_utils::{testing_pool, TestPool};
+    use hanzo_evm_chainspec::{ChainSpec, ChainSpecProvider};
+    use hanzo_evm_ethereum_primitives::TxType;
+    use hanzo_evm_eth_execution::EthEvmConfig;
+    use hanzo_evm_network_api::noop::NoopNetwork;
+    use hanzo_evm_provider::test_utils::MockEthProvider;
+    use hanzo_evm_rpc_convert::RpcConverter;
+    use hanzo_evm_rpc_eth_api::node::RpcNodeCoreAdapter;
+    use hanzo_evm_rpc_eth_types::receipt::EthReceiptConverter;
+    use hanzo_evm_tasks::TokioTaskExecutor;
+    use hanzo_evm_testing_utils::generators;
+    use hanzo_evm_transaction_pool::test_utils::{testing_pool, TestPool};
     use std::{collections::VecDeque, sync::Arc};
 
     #[test]
@@ -1420,19 +1420,19 @@ mod tests {
         let expected_block_hash_2 = FixedBytes::from([2u8; 32]);
 
         // create mock receipts to test receipt handling
-        let mock_receipt_1 = reth_ethereum_primitives::Receipt {
+        let mock_receipt_1 = hanzo_evm_ethereum_primitives::Receipt {
             tx_type: TxType::Legacy,
             cumulative_gas_used: 100_000,
             logs: vec![],
             success: true,
         };
-        let mock_receipt_2 = reth_ethereum_primitives::Receipt {
+        let mock_receipt_2 = hanzo_evm_ethereum_primitives::Receipt {
             tx_type: TxType::Eip1559,
             cumulative_gas_used: 200_000,
             logs: vec![],
             success: true,
         };
-        let mock_receipt_3 = reth_ethereum_primitives::Receipt {
+        let mock_receipt_3 = hanzo_evm_ethereum_primitives::Receipt {
             tx_type: TxType::Eip2930,
             cumulative_gas_used: 150_000,
             logs: vec![],
@@ -1561,19 +1561,19 @@ mod tests {
             data: alloy_primitives::LogData::new_unchecked(vec![], alloy_primitives::Bytes::new()),
         };
 
-        let receipt_100_1 = reth_ethereum_primitives::Receipt {
+        let receipt_100_1 = hanzo_evm_ethereum_primitives::Receipt {
             tx_type: TxType::Legacy,
             cumulative_gas_used: 21_000,
             logs: vec![mock_log.clone()],
             success: true,
         };
-        let receipt_100_2 = reth_ethereum_primitives::Receipt {
+        let receipt_100_2 = hanzo_evm_ethereum_primitives::Receipt {
             tx_type: TxType::Eip1559,
             cumulative_gas_used: 42_000,
             logs: vec![mock_log.clone()],
             success: true,
         };
-        let receipt_101_1 = reth_ethereum_primitives::Receipt {
+        let receipt_101_1 = hanzo_evm_ethereum_primitives::Receipt {
             tx_type: TxType::Eip2930,
             cumulative_gas_used: 30_000,
             logs: vec![mock_log.clone()],
@@ -1668,7 +1668,7 @@ mod tests {
         provider.add_header(block_hash_101, header_101.clone());
 
         // Add mock receipts so headers are actually processed
-        let mock_receipt = reth_ethereum_primitives::Receipt {
+        let mock_receipt = hanzo_evm_ethereum_primitives::Receipt {
             tx_type: TxType::Legacy,
             cumulative_gas_used: 21_000,
             logs: vec![],
@@ -1738,7 +1738,7 @@ mod tests {
             data: alloy_primitives::LogData::new_unchecked(vec![], alloy_primitives::Bytes::new()),
         };
 
-        let mock_receipt = reth_ethereum_primitives::Receipt {
+        let mock_receipt = hanzo_evm_ethereum_primitives::Receipt {
             tx_type: TxType::Legacy,
             cumulative_gas_used: 21_000,
             logs: vec![mock_log],
@@ -1811,7 +1811,7 @@ mod tests {
 
         // Create a transaction for blocks that will have receipts
         use alloy_consensus::TxLegacy;
-        use reth_ethereum_primitives::{TransactionSigned, TxType};
+        use hanzo_evm_ethereum_primitives::{TransactionSigned, TxType};
 
         let tx_inner = TxLegacy {
             chain_id: Some(1),
@@ -1845,9 +1845,9 @@ mod tests {
             // Add transaction to blocks that will have receipts (100 and 102)
             let transactions = if i == 100 || i == 102 { vec![tx.clone()] } else { vec![] };
 
-            let block = reth_ethereum_primitives::Block {
+            let block = hanzo_evm_ethereum_primitives::Block {
                 header,
-                body: reth_ethereum_primitives::BlockBody { transactions, ..Default::default() },
+                body: hanzo_evm_ethereum_primitives::BlockBody { transactions, ..Default::default() },
             };
             provider.add_block(hash, block);
         }
@@ -1858,7 +1858,7 @@ mod tests {
             data: alloy_primitives::LogData::new_unchecked(vec![], alloy_primitives::Bytes::new()),
         };
 
-        let receipt = reth_ethereum_primitives::Receipt {
+        let receipt = hanzo_evm_ethereum_primitives::Receipt {
             tx_type: TxType::Legacy,
             cumulative_gas_used: 21_000,
             logs: vec![mock_log],
@@ -1871,7 +1871,7 @@ mod tests {
         provider.add_receipts(103, vec![]);
 
         // Add block body indices for each block so receipts can be fetched
-        use reth_db_api::models::StoredBlockBodyIndices;
+        use hanzo_evm_db_api::models::StoredBlockBodyIndices;
         provider
             .add_block_body_indices(100, StoredBlockBodyIndices { first_tx_num: 0, tx_count: 1 });
         provider

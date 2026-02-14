@@ -9,8 +9,8 @@ on:
         description: 'Release version to tag as latest (e.g., v1.8.4)'
         required: true
         type: string
-      tag_reth:
-        description: 'Tag reth image as latest'
+      tag_evm:
+        description: 'Tag evm image as latest'
         required: false
         type: boolean
         default: true
@@ -18,10 +18,10 @@ env:
   DOCKER_USERNAME: ${{ github.actor }}
 
 jobs:
-  tag-reth-latest:
-    name: Tag reth as latest
+  tag-evm-latest:
+    name: Tag evm as latest
     runs-on: ubuntu-24.04
-    if: ${{ inputs.tag_reth }}
+    if: ${{ inputs.tag_evm }}
     permissions:
       packages: write
       contents: read
@@ -34,7 +34,7 @@ jobs:
         run: |
           docker pull ghcr.io/${{ github.repository_owner }}/reth:${{ inputs.version }}
 
-      - name: Tag reth as latest
+      - name: Tag evm as latest
         run: |
           docker tag ghcr.io/${{ github.repository_owner }}/reth:${{ inputs.version }} ghcr.io/${{ github.repository_owner }}/reth:latest
 

@@ -1,19 +1,19 @@
 //! Root
 //! Includes common helpers for integration tests
 //!
-//! These tests use the `reth-era-downloader` client to download `.era1` files temporarily
+//! These tests use the `evm-era-downloader` client to download `.era1` files temporarily
 //! and verify that we can correctly read and decompress their data.
 //!
 //! Files are downloaded from [`MAINNET_URL`] and [`SEPOLIA_URL`].
 
 use reqwest::{Client, Url};
-use reth_era::{
+use hanzo_evm_era::{
     common::file_ops::{EraFileType, FileReader},
     e2s::error::E2sError,
     era::file::{EraFile, EraReader},
     era1::file::{Era1File, Era1Reader},
 };
-use reth_era_downloader::EraClient;
+use hanzo_evm_era_downloader::EraClient;
 use std::{
     collections::HashMap,
     path::PathBuf,

@@ -19,11 +19,11 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  prepare-reth:
-    uses: ./.github/workflows/prepare-reth.yml
+  prepare-evm:
+    uses: ./.github/workflows/prepare-evm.yml
     with:
-      image_tag: ghcr.io/paradigmxyz/reth:kurtosis-ci
-      binary_name: reth
+      image_tag: ghcr.io/hanzoai/evm:kurtosis-ci
+      binary_name: evm
 
   test:
     timeout-minutes: 60
@@ -32,13 +32,13 @@ jobs:
     name: run kurtosis
     runs-on: depot-ubuntu-latest
     needs:
-      - prepare-reth
+      - prepare-evm
     steps:
       - uses: actions/checkout@v6
         with:
           fetch-depth: 0
 
-      - name: Download reth image
+      - name: Download evm image
         uses: actions/download-artifact@v7
         with:
           name: artifacts
@@ -46,7 +46,7 @@ jobs:
 
       - name: Load Docker image
         run: |
-          docker load -i /tmp/reth_image.tar &
+          docker load -i /tmp/evm_image.tar &
           wait
           docker image ls -a
 
@@ -64,5 +64,5 @@ jobs:
         uses: rtCamp/action-slack-notify@v2
         env:
           SLACK_COLOR: ${{ job.status }}
-          SLACK_MESSAGE: "Failed run: https://github.com/paradigmxyz/reth/actions/runs/${{ github.run_id }}"
+          SLACK_MESSAGE: "Failed run: https://github.com/hanzoai/evm/actions/runs/${{ github.run_id }}"
           SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK_URL }}

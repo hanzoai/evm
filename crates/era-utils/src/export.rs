@@ -5,7 +5,7 @@ use crate::calculate_td_by_number;
 use alloy_consensus::BlockHeader;
 use alloy_primitives::{BlockNumber, B256, U256};
 use eyre::{eyre, Result};
-use reth_era::{
+use hanzo_evm_era::{
     common::file_ops::{EraFileId, StreamWriter},
     e2s::types::IndexEntry,
     era1::{
@@ -19,9 +19,9 @@ use reth_era::{
         },
     },
 };
-use reth_fs_util as fs;
-use reth_primitives_traits::Block;
-use reth_storage_api::{BlockNumReader, BlockReader, HeaderProvider};
+use hanzo_evm_fs_util as fs;
+use hanzo_evm_primitives_traits::Block;
+use hanzo_evm_storage_api::{BlockNumReader, BlockReader, HeaderProvider};
 use std::{
     path::PathBuf,
     time::{Duration, Instant},
@@ -319,7 +319,7 @@ where
 #[cfg(test)]
 mod tests {
     use crate::ExportConfig;
-    use reth_era::era1::types::execution::MAX_BLOCKS_PER_ERA1;
+    use hanzo_evm_era::era1::types::execution::MAX_BLOCKS_PER_ERA1;
     use tempfile::tempdir;
 
     #[test]

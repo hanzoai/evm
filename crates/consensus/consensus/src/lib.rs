@@ -1,9 +1,9 @@
 //! Consensus protocol functions
 
 #![doc(
-    html_logo_url = "https://raw.githubusercontent.com/paradigmxyz/reth/main/assets/reth-docs.png",
+    html_logo_url = "https://raw.githubusercontent.com/hanzoai/evm/main/assets/evm-docs.png",
     html_favicon_url = "https://avatars0.githubusercontent.com/u/97369466?s=256",
-    issue_tracker_base_url = "https://github.com/paradigmxyz/reth/issues/"
+    issue_tracker_base_url = "https://github.com/hanzoai/evm/issues/"
 )]
 #![cfg_attr(not(test), warn(unused_crate_dependencies))]
 #![cfg_attr(docsrs, feature(doc_cfg))]
@@ -21,8 +21,8 @@ use core::error::Error;
 /// When provided to [`FullConsensus::validate_block_post_execution`], this allows skipping
 /// the receipt root computation and using the pre-computed values instead.
 pub type ReceiptRootBloom = (B256, Bloom);
-use reth_execution_types::BlockExecutionResult;
-use reth_primitives_traits::{
+use hanzo_evm_execution_types::BlockExecutionResult;
+use hanzo_evm_primitives_traits::{
     constants::{GAS_LIMIT_BOUND_DIVISOR, MAXIMUM_GAS_LIMIT_BLOCK, MINIMUM_GAS_LIMIT},
     transaction::error::InvalidTransactionError,
     Block, GotExpected, GotExpectedBoxed, NodePrimitives, RecoveredBlock, SealedBlock,

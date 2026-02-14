@@ -2,10 +2,10 @@ use crate::{GetHeaders, NodeType, RessMessage, RessProtocolMessage, RessProtocol
 use alloy_consensus::Header;
 use alloy_primitives::{bytes::BytesMut, BlockHash, Bytes, B256};
 use futures::{stream::FuturesUnordered, Stream, StreamExt};
-use reth_eth_wire::{message::RequestPair, multiplex::ProtocolConnection};
-use reth_ethereum_primitives::BlockBody;
-use reth_network_api::{test_utils::PeersHandle, PeerId, ReputationChangeKind};
-use reth_storage_errors::ProviderResult;
+use hanzo_evm_eth_wire::{message::RequestPair, multiplex::ProtocolConnection};
+use hanzo_evm_ethereum_primitives::BlockBody;
+use hanzo_evm_network_api::{test_utils::PeersHandle, PeerId, ReputationChangeKind};
+use hanzo_evm_storage_errors::ProviderResult;
 use std::{
     collections::HashMap,
     future::Future,

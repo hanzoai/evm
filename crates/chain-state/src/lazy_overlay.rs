@@ -6,7 +6,7 @@
 
 use crate::DeferredTrieData;
 use alloy_primitives::B256;
-use reth_trie::{updates::TrieUpdatesSorted, HashedPostStateSorted, TrieInputSorted};
+use hanzo_evm_trie::{updates::TrieUpdatesSorted, HashedPostStateSorted, TrieInputSorted};
 use std::sync::{Arc, OnceLock};
 use tracing::{debug, trace};
 
@@ -141,7 +141,7 @@ impl LazyOverlay {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use reth_trie::{updates::TrieUpdates, HashedPostState};
+    use hanzo_evm_trie::{updates::TrieUpdates, HashedPostState};
 
     fn empty_deferred(anchor: B256) -> DeferredTrieData {
         DeferredTrieData::pending(

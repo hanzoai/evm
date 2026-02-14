@@ -1,15 +1,15 @@
-//! `reth db settings` command for managing storage settings
+//! `evm db settings` command for managing storage settings
 
 use clap::{ArgAction, Parser, Subcommand};
-use reth_db_common::DbTool;
-use reth_provider::{
+use hanzo_evm_db_common::DbTool;
+use hanzo_evm_provider::{
     providers::ProviderNodeTypes, DBProvider, DatabaseProviderFactory, MetadataProvider,
     MetadataWriter, StorageSettings,
 };
 
 use crate::common::AccessRights;
 
-/// `reth db settings` subcommand
+/// `evm db settings` subcommand
 #[derive(Debug, Parser)]
 pub struct Command {
     #[command(subcommand)]

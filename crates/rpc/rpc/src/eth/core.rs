@@ -10,26 +10,26 @@ use alloy_network::Ethereum;
 use alloy_primitives::{Bytes, U256};
 use alloy_rpc_client::RpcClient;
 use derive_more::Deref;
-use reth_chainspec::{ChainSpec, ChainSpecProvider};
-use reth_evm_ethereum::EthEvmConfig;
-use reth_network_api::noop::NoopNetwork;
-use reth_node_api::{FullNodeComponents, FullNodeTypes};
-use reth_rpc_convert::{RpcConvert, RpcConverter};
-use reth_rpc_eth_api::{
+use hanzo_evm_chainspec::{ChainSpec, ChainSpecProvider};
+use hanzo_evm_eth_execution::EthEvmConfig;
+use hanzo_evm_network_api::noop::NoopNetwork;
+use hanzo_evm_node_api::{FullNodeComponents, FullNodeTypes};
+use hanzo_evm_rpc_convert::{RpcConvert, RpcConverter};
+use hanzo_evm_rpc_eth_api::{
     helpers::{pending_block::PendingEnvBuilder, spec::SignersForRpc, SpawnBlocking},
     node::{RpcNodeCoreAdapter, RpcNodeCoreExt},
     EthApiTypes, RpcNodeCore,
 };
-use reth_rpc_eth_types::{
+use hanzo_evm_rpc_eth_types::{
     builder::config::PendingBlockKind, receipt::EthReceiptConverter, tx_forward::ForwardConfig,
     EthApiError, EthStateCache, FeeHistoryCache, GasCap, GasPriceOracle, PendingBlock,
 };
-use reth_storage_api::{noop::NoopProvider, BlockReaderIdExt, ProviderHeader};
-use reth_tasks::{
+use hanzo_evm_storage_api::{noop::NoopProvider, BlockReaderIdExt, ProviderHeader};
+use hanzo_evm_tasks::{
     pool::{BlockingTaskGuard, BlockingTaskPool},
     TaskSpawner, TokioTaskExecutor,
 };
-use reth_transaction_pool::{
+use hanzo_evm_transaction_pool::{
     blobstore::BlobSidecarConverter, noop::NoopTransactionPool, AddedTransactionOutcome,
     BatchTxProcessor, BatchTxRequest, TransactionPool,
 };
@@ -55,8 +55,8 @@ pub type EthApiBuilderFor<N, NetworkT = Ethereum> =
 ///
 /// This type provides the functionality for handling `eth_` related requests.
 /// These are implemented two-fold: Core functionality is implemented as
-/// [`EthApiSpec`](reth_rpc_eth_api::helpers::EthApiSpec) trait. Additionally, the required server
-/// implementations (e.g. [`EthApiServer`](reth_rpc_eth_api::EthApiServer)) are implemented
+/// [`EthApiSpec`](hanzo_evm_rpc_eth_api::helpers::EthApiSpec) trait. Additionally, the required server
+/// implementations (e.g. [`EthApiServer`](hanzo_evm_rpc_eth_api::EthApiServer)) are implemented
 /// separately in submodules. The rpc handler implementation can then delegate to the main impls.
 /// This way [`EthApi`] is not limited to [`jsonrpsee`] and can be used standalone or in other
 /// network handlers (for example ipc).
@@ -101,11 +101,11 @@ impl
     ///
     /// ```no_run
     /// use alloy_network::Ethereum;
-    /// use reth_evm_ethereum::EthEvmConfig;
-    /// use reth_network_api::noop::NoopNetwork;
-    /// use reth_provider::noop::NoopProvider;
-    /// use reth_rpc::EthApi;
-    /// use reth_transaction_pool::noop::NoopTransactionPool;
+    /// use hanzo_evm_eth_execution::EthEvmConfig;
+    /// use hanzo_evm_network_api::noop::NoopNetwork;
+    /// use hanzo_evm_provider::noop::NoopProvider;
+    /// use hanzo_evm_rpc::EthApi;
+    /// use hanzo_evm_transaction_pool::noop::NoopTransactionPool;
     /// let eth_api = EthApi::builder(
     ///     NoopProvider::default(),
     ///     NoopTransactionPool::default(),
@@ -119,7 +119,7 @@ impl
         provider: Provider,
         pool: Pool,
         network: Network,
-        evm_config: EvmConfig,
+        hanzo_evm_config: EvmConfig,
     ) -> EthApiBuilder<
         RpcNodeCoreAdapter<Provider, Pool, Network, EvmConfig>,
         RpcConverter<Ethereum, EvmConfig, EthReceiptConverter<ChainSpec>>,
@@ -128,7 +128,7 @@ impl
         RpcNodeCoreAdapter<Provider, Pool, Network, EvmConfig>:
             RpcNodeCore<Provider: ChainSpecProvider<ChainSpec = ChainSpec>, Evm = EvmConfig>,
     {
-        EthApiBuilder::new(provider, pool, network, evm_config)
+        EthApiBuilder::new(provider, pool, network, hanzo_evm_config)
     }
 }
 
@@ -214,8 +214,8 @@ where
         self.inner.pool()
     }
 
-    fn evm_config(&self) -> &Self::Evm {
-        self.inner.evm_config()
+    fn hanzo_evm_config(&self) -> &Self::Evm {
+        self.inner.hanzo_evm_config()
     }
 
     fn network(&self) -> &Self::Network {
@@ -445,7 +445,7 @@ where
         &self.pending_block
     }
 
-    /// Returns a type that knows how to build a [`reth_evm::ConfigureEvm::NextBlockEnvCtx`] for a
+    /// Returns a type that knows how to build a [`hanzo_evm_execution::ConfigureEvm::NextBlockEnvCtx`] for a
     /// pending block.
     #[inline]
     pub const fn pending_env_builder(&self) -> &dyn PendingEnvBuilder<N::Evm> {
@@ -468,8 +468,8 @@ where
 
     /// Returns a handle to the EVM config.
     #[inline]
-    pub fn evm_config(&self) -> &N::Evm {
-        self.components.evm_config()
+    pub fn hanzo_evm_config(&self) -> &N::Evm {
+        self.components.hanzo_evm_config()
     }
 
     /// Returns a handle to the transaction pool.
@@ -559,11 +559,11 @@ where
         transaction: <N::Pool as TransactionPool>::Transaction,
     ) -> Result<AddedTransactionOutcome, EthApiError> {
         let (response_tx, response_rx) = tokio::sync::oneshot::channel();
-        let request = reth_transaction_pool::BatchTxRequest::new(transaction, response_tx);
+        let request = hanzo_evm_transaction_pool::BatchTxRequest::new(transaction, response_tx);
 
         self.tx_batch_sender()
             .send(request)
-            .map_err(|_| reth_rpc_eth_types::EthApiError::BatchTxSendError)?;
+            .map_err(|_| hanzo_evm_rpc_eth_types::EthApiError::BatchTxSendError)?;
 
         Ok(response_rx.await??)
     }
@@ -620,19 +620,19 @@ mod tests {
     use alloy_rpc_types::FeeHistory;
     use jsonrpsee_types::error::INVALID_PARAMS_CODE;
     use rand::Rng;
-    use reth_chain_state::CanonStateSubscriptions;
-    use reth_chainspec::{ChainSpec, ChainSpecProvider, EthChainSpec};
-    use reth_ethereum_primitives::TransactionSigned;
-    use reth_evm_ethereum::EthEvmConfig;
-    use reth_network_api::noop::NoopNetwork;
-    use reth_provider::{
+    use hanzo_evm_chain_state::CanonStateSubscriptions;
+    use hanzo_evm_chainspec::{ChainSpec, ChainSpecProvider, EthChainSpec};
+    use hanzo_evm_ethereum_primitives::TransactionSigned;
+    use hanzo_evm_eth_execution::EthEvmConfig;
+    use hanzo_evm_network_api::noop::NoopNetwork;
+    use hanzo_evm_provider::{
         test_utils::{MockEthProvider, NoopProvider},
         StageCheckpointReader,
     };
-    use reth_rpc_eth_api::{node::RpcNodeCoreAdapter, EthApiServer};
-    use reth_storage_api::{BlockReader, BlockReaderIdExt, StateProviderFactory};
-    use reth_testing_utils::generators;
-    use reth_transaction_pool::test_utils::{testing_pool, TestPool};
+    use hanzo_evm_rpc_eth_api::{node::RpcNodeCoreAdapter, EthApiServer};
+    use hanzo_evm_storage_api::{BlockReader, BlockReaderIdExt, StateProviderFactory};
+    use hanzo_evm_testing_utils::generators;
+    use hanzo_evm_transaction_pool::test_utils::{testing_pool, TestPool};
 
     type FakeEthApi<P = MockEthProvider> = EthApi<
         RpcNodeCoreAdapter<P, TestPool, NoopNetwork, EthEvmConfig>,
@@ -641,14 +641,14 @@ mod tests {
 
     fn build_test_eth_api<
         P: BlockReaderIdExt<
-                Block = reth_ethereum_primitives::Block,
-                Receipt = reth_ethereum_primitives::Receipt,
+                Block = hanzo_evm_ethereum_primitives::Block,
+                Receipt = hanzo_evm_ethereum_primitives::Receipt,
                 Header = alloy_consensus::Header,
-                Transaction = reth_ethereum_primitives::TransactionSigned,
+                Transaction = hanzo_evm_ethereum_primitives::TransactionSigned,
             > + BlockReader
             + ChainSpecProvider<ChainSpec = ChainSpec>
             + StateProviderFactory
-            + CanonStateSubscriptions<Primitives = reth_ethereum_primitives::EthPrimitives>
+            + CanonStateSubscriptions<Primitives = hanzo_evm_ethereum_primitives::EthPrimitives>
             + StageCheckpointReader
             + Unpin
             + Clone
@@ -706,7 +706,7 @@ mod tests {
 
                 if let Some(base_fee_per_gas) = header.base_fee_per_gas {
                     let transaction = TransactionSigned::new_unhashed(
-                        reth_ethereum_primitives::Transaction::Eip1559(
+                        hanzo_evm_ethereum_primitives::Transaction::Eip1559(
                             alloy_consensus::TxEip1559 {
                                 max_priority_fee_per_gas: random_fee,
                                 max_fee_per_gas: random_fee + base_fee_per_gas as u128,
@@ -719,7 +719,7 @@ mod tests {
                     transactions.push(transaction);
                 } else {
                     let transaction = TransactionSigned::new_unhashed(
-                        reth_ethereum_primitives::Transaction::Legacy(Default::default()),
+                        hanzo_evm_ethereum_primitives::Transaction::Legacy(Default::default()),
                         Signature::test_signature(),
                     );
 

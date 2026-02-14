@@ -1,5 +1,5 @@
 [package]
-name = "reth-ethereum-primitives"
+name = "hanzo-evm-ethereum-primitives"
 version.workspace = true
 edition.workspace = true
 rust-version.workspace = true
@@ -12,10 +12,10 @@ description = "Ethereum primitive types"
 workspace = true
 
 [dependencies]
-# reth
-reth-codecs = { workspace = true, optional = true }
-reth-primitives-traits.workspace = true
-reth-zstd-compressors = { workspace = true, optional = true }
+# evm
+hanzo-evm-codecs = { workspace = true, optional = true }
+hanzo-evm-primitives-traits.workspace = true
+hanzo-evm-zstd-compressors = { workspace = true, optional = true }
 
 # ethereum
 alloy-eips = { workspace = true, features = ["k256"] }
@@ -39,8 +39,8 @@ proptest.workspace = true
 proptest-arbitrary-interop.workspace = true
 rand_08.workspace = true
 rand.workspace = true
-reth-codecs = { workspace = true, features = ["test-utils"] }
-reth-zstd-compressors.workspace = true
+hanzo-evm-codecs = { workspace = true, features = ["test-utils"] }
+hanzo-evm-zstd-compressors.workspace = true
 secp256k1 = { workspace = true, features = ["rand"] }
 alloy-consensus = { workspace = true, features = ["serde", "arbitrary"] }
 serde_json.workspace = true
@@ -48,15 +48,15 @@ serde_json.workspace = true
 [features]
 default = ["std"]
 test-utils = [
-    "reth-codecs?/test-utils",
-    "reth-primitives-traits/test-utils",
+    "hanzo-evm-codecs?/test-utils",
+    "hanzo-evm-primitives-traits/test-utils",
 ]
 std = [
     "alloy-consensus/std",
     "alloy-primitives/std",
     "alloy-rlp/std",
-    "reth-primitives-traits/std",
-    "reth-zstd-compressors?/std",
+    "hanzo-evm-primitives-traits/std",
+    "hanzo-evm-zstd-compressors?/std",
     "serde?/std",
     "alloy-eips/std",
     "derive_more/std",
@@ -66,11 +66,11 @@ std = [
     "alloy-serde?/std",
     "serde_json/std",
 ]
-reth-codec = [
+hanzo-evm-codec = [
     "std",
-    "dep:reth-codecs",
+    "dep:hanzo-evm-codecs",
     "dep:modular-bitfield",
-    "dep:reth-zstd-compressors",
+    "dep:hanzo-evm-zstd-compressors",
 ]
 arbitrary = [
     "std",
@@ -78,8 +78,8 @@ arbitrary = [
     "alloy-consensus/arbitrary",
     "alloy-consensus/k256",
     "alloy-primitives/arbitrary",
-    "reth-codecs?/arbitrary",
-    "reth-primitives-traits/arbitrary",
+    "hanzo-evm-codecs?/arbitrary",
+    "hanzo-evm-primitives-traits/arbitrary",
     "alloy-eips/arbitrary",
     "alloy-rpc-types-eth?/arbitrary",
     "alloy-serde?/arbitrary",
@@ -88,7 +88,7 @@ serde-bincode-compat = [
     "dep:serde_with",
     "alloy-consensus/serde-bincode-compat",
     "alloy-eips/serde-bincode-compat",
-    "reth-primitives-traits/serde-bincode-compat",
+    "hanzo-evm-primitives-traits/serde-bincode-compat",
     "alloy-rpc-types-eth?/serde-bincode-compat",
 ]
 serde = [
@@ -97,8 +97,8 @@ serde = [
     "alloy-consensus/serde",
     "alloy-eips/serde",
     "alloy-primitives/serde",
-    "reth-codecs?/serde",
-    "reth-primitives-traits/serde",
+    "hanzo-evm-codecs?/serde",
+    "hanzo-evm-primitives-traits/serde",
     "rand/serde",
     "rand_08/serde",
     "secp256k1/serde",

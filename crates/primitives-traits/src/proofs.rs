@@ -23,7 +23,7 @@ mod tests {
     use alloy_genesis::GenesisAccount;
     use alloy_primitives::{b256, hex_literal::hex, Address, B256, U256};
     use alloy_trie::root::{state_root_ref_unhashed, state_root_unhashed};
-    use reth_chainspec::{HOLESKY, MAINNET, SEPOLIA};
+    use hanzo_evm_chainspec::{HOLESKY, MAINNET, SEPOLIA};
     use std::collections::HashMap;
 
     #[test]

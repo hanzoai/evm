@@ -94,7 +94,7 @@ impl IpcClientBuilder {
     ///
     /// ```
     /// use jsonrpsee::{core::client::ClientT, rpc_params};
-    /// use reth_ipc::client::IpcClientBuilder;
+    /// use hanzo_evm_ipc::client::IpcClientBuilder;
     ///
     /// # async fn run_client() -> Result<(), Box<dyn core::error::Error +  Send + Sync>> {
     /// let client = IpcClientBuilder::default().build("/tmp/my-uds").await?;

@@ -4,7 +4,7 @@ use crate::Compact;
 use alloy_consensus::TxEip2930 as AlloyTxEip2930;
 use alloy_eips::eip2930::AccessList;
 use alloy_primitives::{Bytes, ChainId, TxKind, U256};
-use reth_codecs_derive::add_arbitrary_tests;
+use hanzo_evm_codecs_derive::add_arbitrary_tests;
 
 /// Transaction with an [`AccessList`] ([EIP-2930](https://eips.ethereum.org/EIPS/eip-2930)).
 ///
@@ -15,7 +15,7 @@ use reth_codecs_derive::add_arbitrary_tests;
 ///
 /// Notice: Make sure this struct is 1:1 with [`alloy_consensus::TxEip2930`]
 #[derive(Debug, Clone, PartialEq, Eq, Hash, Default, Compact)]
-#[reth_codecs(crate = "crate")]
+#[hanzo_evm_codecs(crate = "crate")]
 #[cfg_attr(
     any(test, feature = "test-utils"),
     derive(arbitrary::Arbitrary, serde::Serialize, serde::Deserialize)

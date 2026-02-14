@@ -2,7 +2,7 @@
 //!
 //! ## Overview
 //!
-//! This crate defines various traits and types that form the foundation of the reth stack.
+//! This crate defines various traits and types that form the foundation of the evm stack.
 //! The top-level trait is [`Block`] which represents a block in the blockchain. A [`Block`] is
 //! composed of a [`Header`] and a [`BlockBody`]. A [`BlockBody`] contains the transactions in the
 //! block and additional data that is part of the block. In ethereum, this includes uncle headers
@@ -19,7 +19,7 @@
 //! - `arbitrary`: Adds `proptest` and `arbitrary` support for primitive types.
 //! - `op`: Implements the traits for various [op-alloy](https://github.com/alloy-rs/op-alloy)
 //!   types.
-//! - `reth-codec`: Enables db codec support for reth types including zstd compression for certain
+//! - `reth-codec`: Enables db codec support for evm types including zstd compression for certain
 //!   types.
 //! - `rpc-compat`: Adds RPC compatibility functions for the types in this crate, e.g. rpc type
 //!   conversions.
@@ -68,10 +68,10 @@
 //! ### Example
 //!
 //! ```rust
-//! # use reth_primitives_traits::{SealedBlock, RecoveredBlock};
-//! # use reth_primitives_traits::block::error::BlockRecoveryError;
-//! # fn example<B: reth_primitives_traits::Block>(sealed_block: SealedBlock<B>) -> Result<(), BlockRecoveryError<SealedBlock<B>>>
-//! # where B::Body: reth_primitives_traits::BlockBody<Transaction: reth_primitives_traits::SignedTransaction> {
+//! # use hanzo_evm_primitives_traits::{SealedBlock, RecoveredBlock};
+//! # use hanzo_evm_primitives_traits::block::error::BlockRecoveryError;
+//! # fn example<B: hanzo_evm_primitives_traits::Block>(sealed_block: SealedBlock<B>) -> Result<(), BlockRecoveryError<SealedBlock<B>>>
+//! # where B::Body: hanzo_evm_primitives_traits::BlockBody<Transaction: hanzo_evm_primitives_traits::SignedTransaction> {
 //! // Attempt to recover senders from a sealed block
 //! match sealed_block.try_recover() {
 //!     Ok(recovered) => {
@@ -106,9 +106,9 @@
 //! `serde-bincode-compat` feature) used to provide a bincode compatible serde representation.
 
 #![doc(
-    html_logo_url = "https://raw.githubusercontent.com/paradigmxyz/reth/main/assets/reth-docs.png",
+    html_logo_url = "https://raw.githubusercontent.com/hanzoai/evm/main/assets/evm-docs.png",
     html_favicon_url = "https://avatars0.githubusercontent.com/u/97369466?s=256",
-    issue_tracker_base_url = "https://github.com/paradigmxyz/reth/issues/"
+    issue_tracker_base_url = "https://github.com/hanzoai/evm/issues/"
 )]
 #![cfg_attr(not(test), warn(unused_crate_dependencies))]
 #![cfg_attr(docsrs, feature(doc_cfg))]
@@ -177,7 +177,7 @@ pub use header::{Header, SealedHeader, SealedHeaderFor};
 /// Bincode-compatible serde implementations for common abstracted types in Reth.
 ///
 /// `bincode` crate doesn't work with optionally serializable serde fields, but some of the
-/// Reth types require optional serialization for RPC compatibility. This module makes so that
+/// Hanzo EVM types require optional serialization for RPC compatibility. This module makes so that
 /// all fields are serialized.
 ///
 /// Read more: <https://github.com/bincode-org/bincode/issues/326>
@@ -213,16 +213,16 @@ impl<T> MaybeSerde for T {}
 
 /// Helper trait that requires database encoding implementation since `reth-codec` feature is
 /// enabled.
-#[cfg(feature = "reth-codec")]
-pub trait MaybeCompact: reth_codecs::Compact {}
+#[cfg(feature = "hanzo-evm-codec")]
+pub trait MaybeCompact: hanzo_evm_codecs::Compact {}
 /// Noop. Helper trait that would require database encoding implementation if `reth-codec` feature
 /// were enabled.
-#[cfg(not(feature = "reth-codec"))]
+#[cfg(not(feature = "hanzo-evm-codec"))]
 pub trait MaybeCompact {}
 
-#[cfg(feature = "reth-codec")]
-impl<T> MaybeCompact for T where T: reth_codecs::Compact {}
-#[cfg(not(feature = "reth-codec"))]
+#[cfg(feature = "hanzo-evm-codec")]
+impl<T> MaybeCompact for T where T: hanzo_evm_codecs::Compact {}
+#[cfg(not(feature = "hanzo-evm-codec"))]
 impl<T> MaybeCompact for T {}
 
 /// Helper trait that requires serde bincode compatibility implementation.

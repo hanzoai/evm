@@ -2762,8 +2762,8 @@ dependencies = [
  "alloy-eips",
  "alloy-genesis",
  "alloy-primitives",
- "reth-chainspec",
- "reth-network-peers",
+ "hanzo-evm-chainspec",
+ "hanzo-evm-network-peers",
  "serde",
 ]
 
@@ -3279,23 +3279,23 @@ dependencies = [
  "alloy-genesis",
  "alloy-primitives",
  "alloy-rlp",
+ "hanzo-evm-chainspec",
+ "hanzo-evm-consensus",
+ "hanzo-evm-db",
+ "hanzo-evm-db-api",
+ "hanzo-evm-db-common",
+ "hanzo-evm-eth-execution",
+ "hanzo-evm-ethereum-consensus",
+ "hanzo-evm-ethereum-primitives",
+ "hanzo-evm-execution",
+ "hanzo-evm-primitives-traits",
+ "hanzo-evm-provider",
+ "hanzo-evm-revm",
+ "hanzo-evm-stateless",
+ "hanzo-evm-tracing",
+ "hanzo-evm-trie",
+ "hanzo-evm-trie-db",
  "rayon",
- "reth-chainspec",
- "reth-consensus",
- "reth-db",
- "reth-db-api",
- "reth-db-common",
- "reth-ethereum-consensus",
- "reth-ethereum-primitives",
- "reth-evm",
- "reth-evm-ethereum",
- "reth-primitives-traits",
- "reth-provider",
- "reth-revm",
- "reth-stateless",
- "reth-tracing",
- "reth-trie",
- "reth-trie-db",
  "revm",
  "serde",
  "serde_json",
@@ -3521,8 +3521,8 @@ dependencies = [
  "clap",
  "eyre",
  "futures-util",
+ "hanzo-evm-ethereum",
  "reqwest",
- "reth-ethereum",
  "serde",
  "serde_json",
  "thiserror 2.0.18",
@@ -3535,8 +3535,8 @@ dependencies = [
  "alloy-rpc-types-beacon",
  "clap",
  "futures-util",
+ "hanzo-evm-ethereum",
  "mev-share-sse",
- "reth-ethereum",
  "tokio",
  "tracing",
 ]
@@ -3550,21 +3550,21 @@ dependencies = [
  "alloy-rpc-types",
  "bytes",
  "futures",
- "reth-chainspec",
- "reth-discv4",
- "reth-engine-primitives",
- "reth-eth-wire",
- "reth-eth-wire-types",
- "reth-ethereum-forks",
- "reth-network",
- "reth-network-api",
- "reth-network-peers",
- "reth-node-ethereum",
- "reth-payload-primitives",
- "reth-primitives",
- "reth-primitives-traits",
- "reth-provider",
- "reth-tracing",
+ "hanzo-evm-chainspec",
+ "hanzo-evm-discv4",
+ "hanzo-evm-engine-primitives",
+ "hanzo-evm-eth-wire",
+ "hanzo-evm-eth-wire-types",
+ "hanzo-evm-ethereum-forks",
+ "hanzo-evm-network",
+ "hanzo-evm-network-api",
+ "hanzo-evm-network-peers",
+ "hanzo-evm-node-ethereum",
+ "hanzo-evm-payload-primitives",
+ "hanzo-evm-primitives",
+ "hanzo-evm-primitives-traits",
+ "hanzo-evm-provider",
+ "hanzo-evm-tracing",
  "secp256k1 0.30.0",
  "serde",
  "serde_json",
@@ -3582,7 +3582,7 @@ dependencies = [
  "alloy-evm",
  "alloy-sol-types",
  "eyre",
- "reth-ethereum",
+ "hanzo-evm-ethereum",
 ]
 
 [[package]]
@@ -3593,7 +3593,7 @@ dependencies = [
  "alloy-primitives",
  "eyre",
  "futures-util",
- "reth-ethereum",
+ "hanzo-evm-ethereum",
  "serde_json",
  "tokio",
 ]
@@ -3607,11 +3607,11 @@ dependencies = [
  "alloy-primitives",
  "alloy-rpc-types",
  "eyre",
- "reth-basic-payload-builder",
- "reth-ethereum",
- "reth-ethereum-payload-builder",
- "reth-payload-builder",
- "reth-tracing",
+ "hanzo-evm-basic-payload-builder",
+ "hanzo-evm-ethereum",
+ "hanzo-evm-ethereum-payload-builder",
+ "hanzo-evm-payload-builder",
+ "hanzo-evm-tracing",
  "serde",
  "thiserror 2.0.18",
  "tokio",
@@ -3625,8 +3625,8 @@ dependencies = [
  "alloy-genesis",
  "alloy-primitives",
  "eyre",
- "reth-ethereum",
- "reth-tracing",
+ "hanzo-evm-ethereum",
+ "hanzo-evm-tracing",
  "tokio",
 ]
 
@@ -3640,7 +3640,7 @@ dependencies = [
  "alloy-rpc-types-eth",
  "clap",
  "futures-util",
- "reth-ethereum",
+ "hanzo-evm-ethereum",
 ]
 
 [[package]]
@@ -3648,8 +3648,8 @@ name = "example-custom-node-components"
 version = "0.0.0"
 dependencies = [
  "eyre",
- "reth-ethereum",
- "reth-tracing",
+ "hanzo-evm-ethereum",
+ "hanzo-evm-tracing",
 ]
 
 [[package]]
@@ -3659,10 +3659,10 @@ dependencies = [
  "alloy-eips",
  "eyre",
  "futures-util",
- "reth-basic-payload-builder",
- "reth-ethereum",
- "reth-ethereum-payload-builder",
- "reth-payload-builder",
+ "hanzo-evm-basic-payload-builder",
+ "hanzo-evm-ethereum",
+ "hanzo-evm-ethereum-payload-builder",
+ "hanzo-evm-payload-builder",
  "tracing",
 ]
 
@@ -3673,7 +3673,7 @@ dependencies = [
  "alloy-primitives",
  "eyre",
  "futures",
- "reth-ethereum",
+ "hanzo-evm-ethereum",
  "tokio",
  "tokio-stream",
  "tracing",
@@ -3684,8 +3684,8 @@ name = "example-custom-rpc-middleware"
 version = "0.0.0"
 dependencies = [
  "clap",
+ "hanzo-evm-ethereum",
  "jsonrpsee",
- "reth-ethereum",
  "tower",
  "tracing",
 ]
@@ -3696,7 +3696,7 @@ version = "0.0.0"
 dependencies = [
  "alloy-primitives",
  "eyre",
- "reth-ethereum",
+ "hanzo-evm-ethereum",
 ]
 
 [[package]]
@@ -3705,8 +3705,8 @@ version = "0.0.0"
 dependencies = [
  "eyre",
  "futures-util",
- "reth-e2e-test-utils",
- "reth-ethereum",
+ "hanzo-evm-e2e-test-utils",
+ "hanzo-evm-ethereum",
  "serde_json",
  "tokio",
 ]
@@ -3717,7 +3717,7 @@ version = "1.10.2"
 dependencies = [
  "alloy-primitives",
  "eyre",
- "reth-ethereum",
+ "hanzo-evm-ethereum",
 ]
 
 [[package]]
@@ -3727,10 +3727,10 @@ dependencies = [
  "alloy-consensus",
  "eyre",
  "futures",
- "reth-discv4",
- "reth-ecies",
- "reth-ethereum",
- "reth-network-peers",
+ "hanzo-evm-discv4",
+ "hanzo-evm-ecies",
+ "hanzo-evm-ethereum",
+ "hanzo-evm-network-peers",
  "secp256k1 0.30.0",
  "tokio",
 ]
@@ -3741,7 +3741,7 @@ version = "0.0.0"
 dependencies = [
  "eyre",
  "futures",
- "reth-ethereum",
+ "hanzo-evm-ethereum",
  "tokio",
 ]
 
@@ -3751,8 +3751,8 @@ version = "0.0.0"
 dependencies = [
  "eyre",
  "futures",
- "reth-ethereum",
- "reth-tracing",
+ "hanzo-evm-ethereum",
+ "hanzo-evm-tracing",
  "tokio",
 ]
 
@@ -3761,7 +3761,7 @@ name = "example-network-txpool"
 version = "0.0.0"
 dependencies = [
  "eyre",
- "reth-ethereum",
+ "hanzo-evm-ethereum",
  "tokio",
 ]
 
@@ -3769,7 +3769,7 @@ dependencies = [
 name = "example-node-builder-api"
 version = "0.0.0"
 dependencies = [
- "reth-ethereum",
+ "hanzo-evm-ethereum",
 ]
 
 [[package]]
@@ -3777,8 +3777,8 @@ name = "example-node-custom-rpc"
 version = "0.0.0"
 dependencies = [
  "clap",
+ "hanzo-evm-ethereum",
  "jsonrpsee",
- "reth-ethereum",
  "serde_json",
  "tokio",
 ]
@@ -3787,7 +3787,7 @@ dependencies = [
 name = "example-node-event-hooks"
 version = "0.0.0"
 dependencies = [
- "reth-ethereum",
+ "hanzo-evm-ethereum",
 ]
 
 [[package]]
@@ -3795,9 +3795,9 @@ name = "example-polygon-p2p"
 version = "0.0.0"
 dependencies = [
  "alloy-genesis",
- "reth-discv4",
- "reth-ethereum",
- "reth-tracing",
+ "hanzo-evm-discv4",
+ "hanzo-evm-ethereum",
+ "hanzo-evm-tracing",
  "secp256k1 0.30.0",
  "serde_json",
  "tokio",
@@ -3812,9 +3812,9 @@ dependencies = [
  "alloy-genesis",
  "alloy-primitives",
  "eyre",
+ "hanzo-evm-ethereum",
+ "hanzo-evm-tracing",
  "parking_lot",
- "reth-ethereum",
- "reth-tracing",
  "schnellru",
  "tokio",
 ]
@@ -3825,8 +3825,8 @@ version = "0.0.0"
 dependencies = [
  "eyre",
  "futures",
+ "hanzo-evm-ethereum",
  "jsonrpsee",
- "reth-ethereum",
  "tokio",
 ]
 
@@ -3840,7 +3840,7 @@ dependencies = [
  "clap",
  "eyre",
  "futures-util",
- "reth-ethereum",
+ "hanzo-evm-ethereum",
 ]
 
 [[package]]
@@ -3851,8 +3851,8 @@ dependencies = [
  "clap",
  "eyre",
  "futures",
+ "hanzo-evm-ethereum",
  "jsonrpsee",
- "reth-ethereum",
  "serde",
  "serde_json",
  "tokio",
@@ -4396,6 +4396,3252 @@ dependencies = [
  "cfg-if",
  "crunchy",
  "zerocopy",
+]
+
+[[package]]
+name = "hanzo-evm"
+version = "1.10.2"
+dependencies = [
+ "alloy-rpc-types",
+ "aquamarine",
+ "backon",
+ "clap",
+ "eyre",
+ "hanzo-evm-chainspec",
+ "hanzo-evm-cli-runner",
+ "hanzo-evm-cli-util",
+ "hanzo-evm-consensus",
+ "hanzo-evm-consensus-common",
+ "hanzo-evm-db",
+ "hanzo-evm-ethereum-cli",
+ "hanzo-evm-ethereum-payload-builder",
+ "hanzo-evm-ethereum-primitives",
+ "hanzo-evm-execution",
+ "hanzo-evm-network",
+ "hanzo-evm-network-api",
+ "hanzo-evm-node-api",
+ "hanzo-evm-node-builder",
+ "hanzo-evm-node-core",
+ "hanzo-evm-node-ethereum",
+ "hanzo-evm-node-metrics",
+ "hanzo-evm-payload-builder",
+ "hanzo-evm-payload-primitives",
+ "hanzo-evm-primitives",
+ "hanzo-evm-provider",
+ "hanzo-evm-ress-protocol",
+ "hanzo-evm-ress-provider",
+ "hanzo-evm-revm",
+ "hanzo-evm-rpc",
+ "hanzo-evm-rpc-api",
+ "hanzo-evm-rpc-builder",
+ "hanzo-evm-rpc-convert",
+ "hanzo-evm-rpc-eth-types",
+ "hanzo-evm-rpc-server-types",
+ "hanzo-evm-tasks",
+ "hanzo-evm-tokio-util",
+ "hanzo-evm-transaction-pool",
+ "tempfile",
+ "tokio",
+ "tracing",
+]
+
+[[package]]
+name = "hanzo-evm-basic-payload-builder"
+version = "1.10.2"
+dependencies = [
+ "alloy-consensus",
+ "alloy-eips",
+ "alloy-primitives",
+ "futures-core",
+ "futures-util",
+ "hanzo-evm-chain-state",
+ "hanzo-evm-metrics",
+ "hanzo-evm-payload-builder",
+ "hanzo-evm-payload-builder-primitives",
+ "hanzo-evm-payload-primitives",
+ "hanzo-evm-primitives-traits",
+ "hanzo-evm-revm",
+ "hanzo-evm-storage-api",
+ "hanzo-evm-tasks",
+ "metrics",
+ "tokio",
+ "tracing",
+]
+
+[[package]]
+name = "hanzo-evm-bench"
+version = "1.10.2"
+dependencies = [
+ "alloy-consensus",
+ "alloy-eips",
+ "alloy-json-rpc",
+ "alloy-network",
+ "alloy-primitives",
+ "alloy-provider",
+ "alloy-pubsub",
+ "alloy-rpc-client",
+ "alloy-rpc-types-engine",
+ "alloy-transport",
+ "alloy-transport-http",
+ "alloy-transport-ipc",
+ "alloy-transport-ws",
+ "async-trait",
+ "clap",
+ "color-eyre",
+ "csv",
+ "eyre",
+ "futures",
+ "hanzo-evm-chainspec",
+ "hanzo-evm-cli-runner",
+ "hanzo-evm-cli-util",
+ "hanzo-evm-engine-primitives",
+ "hanzo-evm-ethereum-primitives",
+ "hanzo-evm-fs-util",
+ "hanzo-evm-node-api",
+ "hanzo-evm-node-core",
+ "hanzo-evm-primitives-traits",
+ "hanzo-evm-rpc-api",
+ "hanzo-evm-tracing",
+ "humantime",
+ "op-alloy-consensus",
+ "op-alloy-rpc-types-engine",
+ "reqwest",
+ "serde",
+ "serde_json",
+ "thiserror 2.0.18",
+ "tokio",
+ "tower",
+ "tracing",
+ "url",
+]
+
+[[package]]
+name = "hanzo-evm-bench-compare"
+version = "1.10.2"
+dependencies = [
+ "alloy-primitives",
+ "alloy-provider",
+ "alloy-rpc-client",
+ "alloy-rpc-types-eth",
+ "alloy-transport-ws",
+ "chrono",
+ "clap",
+ "csv",
+ "ctrlc",
+ "eyre",
+ "hanzo-evm-chainspec",
+ "hanzo-evm-cli-runner",
+ "hanzo-evm-cli-util",
+ "hanzo-evm-node-core",
+ "hanzo-evm-tracing",
+ "nix 0.31.1",
+ "serde",
+ "serde_json",
+ "shellexpand",
+ "shlex",
+ "tokio",
+ "tracing",
+]
+
+[[package]]
+name = "hanzo-evm-chain-state"
+version = "1.10.2"
+dependencies = [
+ "alloy-consensus",
+ "alloy-eips",
+ "alloy-primitives",
+ "alloy-signer",
+ "alloy-signer-local",
+ "codspeed-criterion-compat",
+ "derive_more",
+ "hanzo-evm-chainspec",
+ "hanzo-evm-errors",
+ "hanzo-evm-ethereum-primitives",
+ "hanzo-evm-execution-types",
+ "hanzo-evm-metrics",
+ "hanzo-evm-primitives-traits",
+ "hanzo-evm-storage-api",
+ "hanzo-evm-testing-utils",
+ "hanzo-evm-trie",
+ "metrics",
+ "parking_lot",
+ "pin-project",
+ "rand 0.9.2",
+ "rayon",
+ "revm-database",
+ "revm-state",
+ "serde",
+ "tokio",
+ "tokio-stream",
+ "tracing",
+]
+
+[[package]]
+name = "hanzo-evm-chainspec"
+version = "1.10.2"
+dependencies = [
+ "alloy-chains",
+ "alloy-consensus",
+ "alloy-eips",
+ "alloy-evm",
+ "alloy-genesis",
+ "alloy-primitives",
+ "alloy-rlp",
+ "alloy-trie",
+ "auto_impl",
+ "derive_more",
+ "hanzo-evm-ethereum-forks",
+ "hanzo-evm-network-peers",
+ "hanzo-evm-primitives-traits",
+ "serde_json",
+]
+
+[[package]]
+name = "hanzo-evm-cli"
+version = "1.10.2"
+dependencies = [
+ "alloy-genesis",
+ "clap",
+ "eyre",
+ "hanzo-evm-cli-runner",
+ "hanzo-evm-db",
+ "serde_json",
+ "shellexpand",
+]
+
+[[package]]
+name = "hanzo-evm-cli-commands"
+version = "1.10.2"
+dependencies = [
+ "alloy-chains",
+ "alloy-consensus",
+ "alloy-eips",
+ "alloy-primitives",
+ "alloy-rlp",
+ "arbitrary",
+ "backon",
+ "clap",
+ "comfy-table",
+ "crossterm",
+ "eyre",
+ "fdlimit",
+ "futures",
+ "hanzo-evm-chainspec",
+ "hanzo-evm-cli",
+ "hanzo-evm-cli-runner",
+ "hanzo-evm-cli-util",
+ "hanzo-evm-codecs",
+ "hanzo-evm-config",
+ "hanzo-evm-consensus",
+ "hanzo-evm-db",
+ "hanzo-evm-db-api",
+ "hanzo-evm-db-common",
+ "hanzo-evm-discv4",
+ "hanzo-evm-discv5",
+ "hanzo-evm-downloaders",
+ "hanzo-evm-ecies",
+ "hanzo-evm-era",
+ "hanzo-evm-era-downloader",
+ "hanzo-evm-era-utils",
+ "hanzo-evm-eth-wire",
+ "hanzo-evm-ethereum-cli",
+ "hanzo-evm-ethereum-primitives",
+ "hanzo-evm-etl",
+ "hanzo-evm-execution",
+ "hanzo-evm-exex",
+ "hanzo-evm-fs-util",
+ "hanzo-evm-net-nat",
+ "hanzo-evm-network",
+ "hanzo-evm-network-p2p",
+ "hanzo-evm-network-peers",
+ "hanzo-evm-node-api",
+ "hanzo-evm-node-builder",
+ "hanzo-evm-node-core",
+ "hanzo-evm-node-events",
+ "hanzo-evm-node-metrics",
+ "hanzo-evm-primitives-traits",
+ "hanzo-evm-provider",
+ "hanzo-evm-prune",
+ "hanzo-evm-prune-types",
+ "hanzo-evm-revm",
+ "hanzo-evm-stages",
+ "hanzo-evm-stages-types",
+ "hanzo-evm-static-file",
+ "hanzo-evm-static-file-types",
+ "hanzo-evm-storage-api",
+ "hanzo-evm-tasks",
+ "hanzo-evm-trie",
+ "hanzo-evm-trie-common",
+ "hanzo-evm-trie-db",
+ "human_bytes",
+ "humantime",
+ "itertools 0.14.0",
+ "lz4",
+ "metrics",
+ "parking_lot",
+ "proptest",
+ "proptest-arbitrary-interop",
+ "ratatui",
+ "reqwest",
+ "secp256k1 0.30.0",
+ "serde",
+ "serde_json",
+ "tar",
+ "tempfile",
+ "tokio",
+ "tokio-stream",
+ "toml",
+ "tracing",
+ "url",
+ "zstd",
+]
+
+[[package]]
+name = "hanzo-evm-cli-runner"
+version = "1.10.2"
+dependencies = [
+ "hanzo-evm-tasks",
+ "tokio",
+ "tracing",
+]
+
+[[package]]
+name = "hanzo-evm-cli-util"
+version = "1.10.2"
+dependencies = [
+ "alloy-eips",
+ "alloy-primitives",
+ "cfg-if",
+ "eyre",
+ "hanzo-evm-fs-util",
+ "hanzo-evm-tracing",
+ "libc",
+ "rand 0.8.5",
+ "rand 0.9.2",
+ "secp256k1 0.30.0",
+ "serde",
+ "snmalloc-rs",
+ "thiserror 2.0.18",
+ "tikv-jemallocator",
+ "tracy-client",
+]
+
+[[package]]
+name = "hanzo-evm-codecs"
+version = "1.10.2"
+dependencies = [
+ "alloy-consensus",
+ "alloy-eips",
+ "alloy-genesis",
+ "alloy-primitives",
+ "alloy-trie",
+ "arbitrary",
+ "bytes",
+ "hanzo-evm-codecs-derive",
+ "hanzo-evm-zstd-compressors",
+ "modular-bitfield",
+ "op-alloy-consensus",
+ "proptest",
+ "proptest-arbitrary-interop",
+ "rstest",
+ "serde",
+ "serde_json",
+ "test-fuzz",
+ "visibility",
+]
+
+[[package]]
+name = "hanzo-evm-codecs-derive"
+version = "1.10.2"
+dependencies = [
+ "proc-macro2",
+ "quote",
+ "similar-asserts",
+ "syn 2.0.114",
+]
+
+[[package]]
+name = "hanzo-evm-config"
+version = "1.10.2"
+dependencies = [
+ "alloy-primitives",
+ "eyre",
+ "hanzo-evm-network-peers",
+ "hanzo-evm-network-types",
+ "hanzo-evm-prune-types",
+ "hanzo-evm-stages-types",
+ "hanzo-evm-static-file-types",
+ "humantime-serde",
+ "serde",
+ "tempfile",
+ "toml",
+ "url",
+]
+
+[[package]]
+name = "hanzo-evm-consensus"
+version = "1.10.2"
+dependencies = [
+ "alloy-consensus",
+ "alloy-primitives",
+ "auto_impl",
+ "hanzo-evm-execution-types",
+ "hanzo-evm-primitives-traits",
+ "thiserror 2.0.18",
+]
+
+[[package]]
+name = "hanzo-evm-consensus-common"
+version = "1.10.2"
+dependencies = [
+ "alloy-consensus",
+ "alloy-eips",
+ "alloy-primitives",
+ "hanzo-evm-chainspec",
+ "hanzo-evm-consensus",
+ "hanzo-evm-ethereum-primitives",
+ "hanzo-evm-primitives-traits",
+ "rand 0.9.2",
+]
+
+[[package]]
+name = "hanzo-evm-consensus-debug-client"
+version = "1.10.2"
+dependencies = [
+ "alloy-consensus",
+ "alloy-eips",
+ "alloy-json-rpc",
+ "alloy-primitives",
+ "alloy-provider",
+ "alloy-rpc-types-engine",
+ "alloy-transport",
+ "auto_impl",
+ "derive_more",
+ "eyre",
+ "futures",
+ "hanzo-evm-node-api",
+ "hanzo-evm-primitives-traits",
+ "hanzo-evm-tracing",
+ "reqwest",
+ "ringbuffer",
+ "serde",
+ "serde_json",
+ "tokio",
+]
+
+[[package]]
+name = "hanzo-evm-db"
+version = "1.10.2"
+dependencies = [
+ "alloy-consensus",
+ "alloy-primitives",
+ "arbitrary",
+ "assert_matches",
+ "codspeed-criterion-compat",
+ "derive_more",
+ "eyre",
+ "hanzo-evm-db-api",
+ "hanzo-evm-fs-util",
+ "hanzo-evm-libmdbx",
+ "hanzo-evm-metrics",
+ "hanzo-evm-nippy-jar",
+ "hanzo-evm-primitives-traits",
+ "hanzo-evm-prune-types",
+ "hanzo-evm-static-file-types",
+ "hanzo-evm-storage-errors",
+ "hanzo-evm-tracing",
+ "metrics",
+ "page_size",
+ "parking_lot",
+ "proptest",
+ "rustc-hash",
+ "serde",
+ "serde_json",
+ "strum",
+ "sysinfo",
+ "tempfile",
+ "thiserror 2.0.18",
+ "tracing",
+]
+
+[[package]]
+name = "hanzo-evm-db-api"
+version = "1.10.2"
+dependencies = [
+ "alloy-consensus",
+ "alloy-genesis",
+ "alloy-primitives",
+ "arbitrary",
+ "arrayvec",
+ "bytes",
+ "derive_more",
+ "hanzo-evm-codecs",
+ "hanzo-evm-db-models",
+ "hanzo-evm-ethereum-primitives",
+ "hanzo-evm-primitives-traits",
+ "hanzo-evm-prune-types",
+ "hanzo-evm-stages-types",
+ "hanzo-evm-storage-errors",
+ "hanzo-evm-trie-common",
+ "metrics",
+ "modular-bitfield",
+ "op-alloy-consensus",
+ "parity-scale-codec",
+ "proptest",
+ "proptest-arbitrary-interop",
+ "rand 0.9.2",
+ "roaring",
+ "serde",
+ "test-fuzz",
+]
+
+[[package]]
+name = "hanzo-evm-db-common"
+version = "1.10.2"
+dependencies = [
+ "alloy-consensus",
+ "alloy-genesis",
+ "alloy-primitives",
+ "boyer-moore-magiclen",
+ "eyre",
+ "hanzo-evm-chainspec",
+ "hanzo-evm-codecs",
+ "hanzo-evm-config",
+ "hanzo-evm-db",
+ "hanzo-evm-db-api",
+ "hanzo-evm-etl",
+ "hanzo-evm-execution-errors",
+ "hanzo-evm-fs-util",
+ "hanzo-evm-node-types",
+ "hanzo-evm-primitives-traits",
+ "hanzo-evm-provider",
+ "hanzo-evm-stages-types",
+ "hanzo-evm-static-file-types",
+ "hanzo-evm-trie",
+ "hanzo-evm-trie-db",
+ "serde",
+ "serde_json",
+ "thiserror 2.0.18",
+ "tracing",
+]
+
+[[package]]
+name = "hanzo-evm-db-models"
+version = "1.10.2"
+dependencies = [
+ "alloy-eips",
+ "alloy-primitives",
+ "arbitrary",
+ "bytes",
+ "hanzo-evm-codecs",
+ "hanzo-evm-primitives-traits",
+ "modular-bitfield",
+ "proptest",
+ "proptest-arbitrary-interop",
+ "serde",
+]
+
+[[package]]
+name = "hanzo-evm-discv4"
+version = "1.10.2"
+dependencies = [
+ "alloy-primitives",
+ "alloy-rlp",
+ "assert_matches",
+ "discv5",
+ "enr",
+ "hanzo-evm-ethereum-forks",
+ "hanzo-evm-net-banlist",
+ "hanzo-evm-net-nat",
+ "hanzo-evm-network-peers",
+ "hanzo-evm-tracing",
+ "itertools 0.14.0",
+ "parking_lot",
+ "rand 0.8.5",
+ "schnellru",
+ "secp256k1 0.30.0",
+ "serde",
+ "thiserror 2.0.18",
+ "tokio",
+ "tokio-stream",
+ "tracing",
+]
+
+[[package]]
+name = "hanzo-evm-discv5"
+version = "1.10.2"
+dependencies = [
+ "alloy-primitives",
+ "alloy-rlp",
+ "derive_more",
+ "discv5",
+ "enr",
+ "futures",
+ "hanzo-evm-chainspec",
+ "hanzo-evm-ethereum-forks",
+ "hanzo-evm-metrics",
+ "hanzo-evm-network-peers",
+ "hanzo-evm-tracing",
+ "itertools 0.14.0",
+ "metrics",
+ "rand 0.8.5",
+ "rand 0.9.2",
+ "secp256k1 0.30.0",
+ "thiserror 2.0.18",
+ "tokio",
+ "tracing",
+]
+
+[[package]]
+name = "hanzo-evm-dns-discovery"
+version = "1.10.2"
+dependencies = [
+ "alloy-chains",
+ "alloy-primitives",
+ "alloy-rlp",
+ "dashmap",
+ "data-encoding",
+ "enr",
+ "hanzo-evm-chainspec",
+ "hanzo-evm-ethereum-forks",
+ "hanzo-evm-network-peers",
+ "hanzo-evm-tokio-util",
+ "hanzo-evm-tracing",
+ "hickory-resolver",
+ "linked_hash_set",
+ "rand 0.9.2",
+ "schnellru",
+ "secp256k1 0.30.0",
+ "serde",
+ "serde_with",
+ "thiserror 2.0.18",
+ "tokio",
+ "tokio-stream",
+ "tracing",
+]
+
+[[package]]
+name = "hanzo-evm-downloaders"
+version = "1.10.2"
+dependencies = [
+ "alloy-consensus",
+ "alloy-eips",
+ "alloy-primitives",
+ "alloy-rlp",
+ "assert_matches",
+ "async-compression",
+ "futures",
+ "futures-util",
+ "hanzo-evm-chainspec",
+ "hanzo-evm-config",
+ "hanzo-evm-consensus",
+ "hanzo-evm-ethereum-primitives",
+ "hanzo-evm-metrics",
+ "hanzo-evm-network-p2p",
+ "hanzo-evm-network-peers",
+ "hanzo-evm-primitives-traits",
+ "hanzo-evm-provider",
+ "hanzo-evm-storage-api",
+ "hanzo-evm-tasks",
+ "hanzo-evm-testing-utils",
+ "hanzo-evm-tracing",
+ "itertools 0.14.0",
+ "metrics",
+ "pin-project",
+ "rand 0.9.2",
+ "rayon",
+ "tempfile",
+ "thiserror 2.0.18",
+ "tokio",
+ "tokio-stream",
+ "tokio-util",
+ "tracing",
+]
+
+[[package]]
+name = "hanzo-evm-e2e-test-utils"
+version = "1.10.2"
+dependencies = [
+ "alloy-consensus",
+ "alloy-eips",
+ "alloy-network",
+ "alloy-primitives",
+ "alloy-provider",
+ "alloy-rlp",
+ "alloy-rpc-types-engine",
+ "alloy-rpc-types-eth",
+ "alloy-signer",
+ "alloy-signer-local",
+ "derive_more",
+ "eyre",
+ "futures-util",
+ "hanzo-evm-chainspec",
+ "hanzo-evm-cli-commands",
+ "hanzo-evm-config",
+ "hanzo-evm-consensus",
+ "hanzo-evm-db",
+ "hanzo-evm-db-common",
+ "hanzo-evm-engine-local",
+ "hanzo-evm-engine-primitives",
+ "hanzo-evm-ethereum-primitives",
+ "hanzo-evm-network-api",
+ "hanzo-evm-network-p2p",
+ "hanzo-evm-network-peers",
+ "hanzo-evm-node-api",
+ "hanzo-evm-node-builder",
+ "hanzo-evm-node-core",
+ "hanzo-evm-node-ethereum",
+ "hanzo-evm-payload-builder",
+ "hanzo-evm-payload-builder-primitives",
+ "hanzo-evm-payload-primitives",
+ "hanzo-evm-primitives",
+ "hanzo-evm-primitives-traits",
+ "hanzo-evm-provider",
+ "hanzo-evm-rpc-api",
+ "hanzo-evm-rpc-builder",
+ "hanzo-evm-rpc-eth-api",
+ "hanzo-evm-rpc-server-types",
+ "hanzo-evm-stages-types",
+ "hanzo-evm-tasks",
+ "hanzo-evm-tokio-util",
+ "hanzo-evm-tracing",
+ "jsonrpsee",
+ "revm",
+ "serde_json",
+ "tempfile",
+ "tokio",
+ "tokio-stream",
+ "tracing",
+ "url",
+]
+
+[[package]]
+name = "hanzo-evm-ecies"
+version = "1.10.2"
+dependencies = [
+ "aes",
+ "alloy-primitives",
+ "alloy-rlp",
+ "block-padding",
+ "byteorder",
+ "cipher",
+ "concat-kdf",
+ "ctr",
+ "digest 0.10.7",
+ "futures",
+ "hanzo-evm-network-peers",
+ "hmac",
+ "pin-project",
+ "rand 0.8.5",
+ "secp256k1 0.30.0",
+ "sha2",
+ "thiserror 2.0.18",
+ "tokio",
+ "tokio-stream",
+ "tokio-util",
+ "tracing",
+]
+
+[[package]]
+name = "hanzo-evm-engine-local"
+version = "1.10.2"
+dependencies = [
+ "alloy-consensus",
+ "alloy-primitives",
+ "alloy-rpc-types-engine",
+ "eyre",
+ "futures-util",
+ "hanzo-evm-chainspec",
+ "hanzo-evm-engine-primitives",
+ "hanzo-evm-ethereum-engine-primitives",
+ "hanzo-evm-payload-builder",
+ "hanzo-evm-payload-primitives",
+ "hanzo-evm-primitives-traits",
+ "hanzo-evm-storage-api",
+ "hanzo-evm-transaction-pool",
+ "op-alloy-rpc-types-engine",
+ "tokio",
+ "tokio-stream",
+ "tracing",
+]
+
+[[package]]
+name = "hanzo-evm-engine-primitives"
+version = "1.10.2"
+dependencies = [
+ "alloy-consensus",
+ "alloy-eips",
+ "alloy-primitives",
+ "alloy-rpc-types-engine",
+ "auto_impl",
+ "futures",
+ "hanzo-evm-chain-state",
+ "hanzo-evm-errors",
+ "hanzo-evm-ethereum-primitives",
+ "hanzo-evm-execution",
+ "hanzo-evm-execution-types",
+ "hanzo-evm-payload-builder-primitives",
+ "hanzo-evm-payload-primitives",
+ "hanzo-evm-primitives-traits",
+ "hanzo-evm-trie-common",
+ "serde",
+ "thiserror 2.0.18",
+ "tokio",
+]
+
+[[package]]
+name = "hanzo-evm-engine-service"
+version = "1.10.2"
+dependencies = [
+ "alloy-eips",
+ "futures",
+ "hanzo-evm-chainspec",
+ "hanzo-evm-consensus",
+ "hanzo-evm-engine-primitives",
+ "hanzo-evm-engine-tree",
+ "hanzo-evm-eth-execution",
+ "hanzo-evm-ethereum-consensus",
+ "hanzo-evm-ethereum-engine-primitives",
+ "hanzo-evm-execution",
+ "hanzo-evm-exex-types",
+ "hanzo-evm-network-p2p",
+ "hanzo-evm-node-ethereum",
+ "hanzo-evm-node-types",
+ "hanzo-evm-payload-builder",
+ "hanzo-evm-primitives-traits",
+ "hanzo-evm-provider",
+ "hanzo-evm-prune",
+ "hanzo-evm-stages-api",
+ "hanzo-evm-tasks",
+ "hanzo-evm-trie-db",
+ "pin-project",
+ "tokio",
+ "tokio-stream",
+]
+
+[[package]]
+name = "hanzo-evm-engine-tree"
+version = "1.10.2"
+dependencies = [
+ "alloy-consensus",
+ "alloy-eip7928",
+ "alloy-eips",
+ "alloy-evm",
+ "alloy-primitives",
+ "alloy-rlp",
+ "alloy-rpc-types-engine",
+ "assert_matches",
+ "codspeed-criterion-compat",
+ "crossbeam-channel",
+ "derive_more",
+ "eyre",
+ "fixed-cache",
+ "futures",
+ "hanzo-evm-chain-state",
+ "hanzo-evm-chainspec",
+ "hanzo-evm-consensus",
+ "hanzo-evm-db",
+ "hanzo-evm-db-common",
+ "hanzo-evm-e2e-test-utils",
+ "hanzo-evm-engine-primitives",
+ "hanzo-evm-errors",
+ "hanzo-evm-eth-execution",
+ "hanzo-evm-ethereum-consensus",
+ "hanzo-evm-ethereum-engine-primitives",
+ "hanzo-evm-ethereum-primitives",
+ "hanzo-evm-execution",
+ "hanzo-evm-execution-types",
+ "hanzo-evm-exex-types",
+ "hanzo-evm-metrics",
+ "hanzo-evm-network-p2p",
+ "hanzo-evm-node-ethereum",
+ "hanzo-evm-payload-builder",
+ "hanzo-evm-payload-primitives",
+ "hanzo-evm-primitives-traits",
+ "hanzo-evm-provider",
+ "hanzo-evm-prune",
+ "hanzo-evm-prune-types",
+ "hanzo-evm-revm",
+ "hanzo-evm-stages",
+ "hanzo-evm-stages-api",
+ "hanzo-evm-static-file",
+ "hanzo-evm-tasks",
+ "hanzo-evm-testing-utils",
+ "hanzo-evm-tracing",
+ "hanzo-evm-trie",
+ "hanzo-evm-trie-common",
+ "hanzo-evm-trie-db",
+ "hanzo-evm-trie-parallel",
+ "hanzo-evm-trie-sparse",
+ "hanzo-evm-trie-sparse-parallel",
+ "metrics",
+ "metrics-util",
+ "moka",
+ "parking_lot",
+ "proptest",
+ "rand 0.8.5",
+ "rand 0.9.2",
+ "rayon",
+ "revm",
+ "revm-primitives",
+ "revm-state",
+ "schnellru",
+ "serde_json",
+ "smallvec",
+ "thiserror 2.0.18",
+ "tokio",
+ "tracing",
+]
+
+[[package]]
+name = "hanzo-evm-engine-util"
+version = "1.10.2"
+dependencies = [
+ "alloy-consensus",
+ "alloy-rpc-types-engine",
+ "eyre",
+ "futures",
+ "hanzo-evm-chainspec",
+ "hanzo-evm-engine-primitives",
+ "hanzo-evm-engine-tree",
+ "hanzo-evm-errors",
+ "hanzo-evm-execution",
+ "hanzo-evm-fs-util",
+ "hanzo-evm-payload-primitives",
+ "hanzo-evm-primitives-traits",
+ "hanzo-evm-revm",
+ "hanzo-evm-storage-api",
+ "itertools 0.14.0",
+ "pin-project",
+ "serde",
+ "serde_json",
+ "tokio",
+ "tokio-util",
+ "tracing",
+]
+
+[[package]]
+name = "hanzo-evm-era"
+version = "1.10.2"
+dependencies = [
+ "alloy-consensus",
+ "alloy-eips",
+ "alloy-primitives",
+ "alloy-rlp",
+ "ethereum_ssz 0.10.1",
+ "ethereum_ssz_derive 0.10.1",
+ "eyre",
+ "hanzo-evm-era-downloader",
+ "hanzo-evm-ethereum-primitives",
+ "rand 0.9.2",
+ "reqwest",
+ "snap",
+ "tempfile",
+ "test-case",
+ "thiserror 2.0.18",
+ "tokio",
+]
+
+[[package]]
+name = "hanzo-evm-era-downloader"
+version = "1.10.2"
+dependencies = [
+ "alloy-primitives",
+ "bytes",
+ "eyre",
+ "futures",
+ "futures-util",
+ "hanzo-evm-era",
+ "hanzo-evm-fs-util",
+ "reqwest",
+ "sha2",
+ "tempfile",
+ "test-case",
+ "tokio",
+]
+
+[[package]]
+name = "hanzo-evm-era-utils"
+version = "1.10.2"
+dependencies = [
+ "alloy-consensus",
+ "alloy-primitives",
+ "bytes",
+ "eyre",
+ "futures-util",
+ "hanzo-evm-db-api",
+ "hanzo-evm-db-common",
+ "hanzo-evm-era",
+ "hanzo-evm-era-downloader",
+ "hanzo-evm-etl",
+ "hanzo-evm-fs-util",
+ "hanzo-evm-primitives-traits",
+ "hanzo-evm-provider",
+ "hanzo-evm-stages-types",
+ "hanzo-evm-storage-api",
+ "reqwest",
+ "tempfile",
+ "tokio",
+ "tokio-util",
+ "tracing",
+]
+
+[[package]]
+name = "hanzo-evm-errors"
+version = "1.10.2"
+dependencies = [
+ "hanzo-evm-consensus",
+ "hanzo-evm-execution-errors",
+ "hanzo-evm-storage-errors",
+ "thiserror 2.0.18",
+]
+
+[[package]]
+name = "hanzo-evm-eth-execution"
+version = "1.10.2"
+dependencies = [
+ "alloy-consensus",
+ "alloy-eips",
+ "alloy-evm",
+ "alloy-genesis",
+ "alloy-primitives",
+ "alloy-rpc-types-engine",
+ "derive_more",
+ "hanzo-evm-chainspec",
+ "hanzo-evm-ethereum-forks",
+ "hanzo-evm-ethereum-primitives",
+ "hanzo-evm-execution",
+ "hanzo-evm-execution-types",
+ "hanzo-evm-primitives-traits",
+ "hanzo-evm-storage-errors",
+ "hanzo-evm-testing-utils",
+ "parking_lot",
+ "revm",
+ "secp256k1 0.30.0",
+]
+
+[[package]]
+name = "hanzo-evm-eth-wire"
+version = "1.10.2"
+dependencies = [
+ "alloy-chains",
+ "alloy-consensus",
+ "alloy-eips",
+ "alloy-primitives",
+ "alloy-rlp",
+ "arbitrary",
+ "async-stream",
+ "bytes",
+ "derive_more",
+ "futures",
+ "hanzo-evm-codecs",
+ "hanzo-evm-ecies",
+ "hanzo-evm-eth-wire-types",
+ "hanzo-evm-ethereum-forks",
+ "hanzo-evm-metrics",
+ "hanzo-evm-network-peers",
+ "hanzo-evm-primitives-traits",
+ "hanzo-evm-tracing",
+ "pin-project",
+ "proptest",
+ "proptest-arbitrary-interop",
+ "rand 0.8.5",
+ "rand 0.9.2",
+ "secp256k1 0.30.0",
+ "serde",
+ "snap",
+ "test-fuzz",
+ "thiserror 2.0.18",
+ "tokio",
+ "tokio-stream",
+ "tokio-util",
+ "tracing",
+]
+
+[[package]]
+name = "hanzo-evm-eth-wire-types"
+version = "1.10.2"
+dependencies = [
+ "alloy-chains",
+ "alloy-consensus",
+ "alloy-eips",
+ "alloy-genesis",
+ "alloy-hardforks",
+ "alloy-primitives",
+ "alloy-rlp",
+ "arbitrary",
+ "bytes",
+ "derive_more",
+ "hanzo-evm-chainspec",
+ "hanzo-evm-codecs-derive",
+ "hanzo-evm-ethereum-primitives",
+ "hanzo-evm-primitives-traits",
+ "proptest",
+ "proptest-arbitrary-interop",
+ "rand 0.9.2",
+ "serde",
+ "thiserror 2.0.18",
+]
+
+[[package]]
+name = "hanzo-evm-ethereum"
+version = "1.10.2"
+dependencies = [
+ "alloy-rpc-types-engine",
+ "alloy-rpc-types-eth",
+ "hanzo-evm-chainspec",
+ "hanzo-evm-cli-util",
+ "hanzo-evm-codecs",
+ "hanzo-evm-consensus",
+ "hanzo-evm-consensus-common",
+ "hanzo-evm-db",
+ "hanzo-evm-engine-local",
+ "hanzo-evm-eth-execution",
+ "hanzo-evm-eth-wire",
+ "hanzo-evm-ethereum-cli",
+ "hanzo-evm-ethereum-consensus",
+ "hanzo-evm-ethereum-primitives",
+ "hanzo-evm-execution",
+ "hanzo-evm-exex",
+ "hanzo-evm-network",
+ "hanzo-evm-network-api",
+ "hanzo-evm-node-api",
+ "hanzo-evm-node-builder",
+ "hanzo-evm-node-core",
+ "hanzo-evm-node-ethereum",
+ "hanzo-evm-primitives-traits",
+ "hanzo-evm-provider",
+ "hanzo-evm-revm",
+ "hanzo-evm-rpc",
+ "hanzo-evm-rpc-api",
+ "hanzo-evm-rpc-builder",
+ "hanzo-evm-rpc-eth-types",
+ "hanzo-evm-storage-api",
+ "hanzo-evm-tasks",
+ "hanzo-evm-transaction-pool",
+ "hanzo-evm-trie",
+ "hanzo-evm-trie-db",
+]
+
+[[package]]
+name = "hanzo-evm-ethereum-cli"
+version = "1.10.2"
+dependencies = [
+ "clap",
+ "eyre",
+ "hanzo-evm-chainspec",
+ "hanzo-evm-cli",
+ "hanzo-evm-cli-commands",
+ "hanzo-evm-cli-runner",
+ "hanzo-evm-db",
+ "hanzo-evm-node-api",
+ "hanzo-evm-node-builder",
+ "hanzo-evm-node-core",
+ "hanzo-evm-node-ethereum",
+ "hanzo-evm-node-metrics",
+ "hanzo-evm-rpc-server-types",
+ "hanzo-evm-tracing",
+ "tempfile",
+ "tracing",
+]
+
+[[package]]
+name = "hanzo-evm-ethereum-consensus"
+version = "1.10.2"
+dependencies = [
+ "alloy-consensus",
+ "alloy-eips",
+ "alloy-primitives",
+ "hanzo-evm-chainspec",
+ "hanzo-evm-consensus",
+ "hanzo-evm-consensus-common",
+ "hanzo-evm-ethereum-primitives",
+ "hanzo-evm-execution-types",
+ "hanzo-evm-primitives-traits",
+ "tracing",
+]
+
+[[package]]
+name = "hanzo-evm-ethereum-engine-primitives"
+version = "1.10.2"
+dependencies = [
+ "alloy-eips",
+ "alloy-primitives",
+ "alloy-rlp",
+ "alloy-rpc-types-engine",
+ "hanzo-evm-engine-primitives",
+ "hanzo-evm-ethereum-primitives",
+ "hanzo-evm-payload-primitives",
+ "hanzo-evm-primitives-traits",
+ "serde",
+ "serde_json",
+ "sha2",
+ "thiserror 2.0.18",
+]
+
+[[package]]
+name = "hanzo-evm-ethereum-forks"
+version = "1.10.2"
+dependencies = [
+ "alloy-eip2124",
+ "alloy-hardforks",
+ "alloy-primitives",
+ "arbitrary",
+ "auto_impl",
+ "once_cell",
+ "rustc-hash",
+]
+
+[[package]]
+name = "hanzo-evm-ethereum-payload-builder"
+version = "1.10.2"
+dependencies = [
+ "alloy-consensus",
+ "alloy-eips",
+ "alloy-primitives",
+ "alloy-rlp",
+ "alloy-rpc-types-engine",
+ "hanzo-evm-basic-payload-builder",
+ "hanzo-evm-chainspec",
+ "hanzo-evm-consensus-common",
+ "hanzo-evm-errors",
+ "hanzo-evm-eth-execution",
+ "hanzo-evm-ethereum-primitives",
+ "hanzo-evm-execution",
+ "hanzo-evm-payload-builder",
+ "hanzo-evm-payload-builder-primitives",
+ "hanzo-evm-payload-primitives",
+ "hanzo-evm-payload-validator",
+ "hanzo-evm-primitives-traits",
+ "hanzo-evm-revm",
+ "hanzo-evm-storage-api",
+ "hanzo-evm-transaction-pool",
+ "revm",
+ "tracing",
+]
+
+[[package]]
+name = "hanzo-evm-ethereum-primitives"
+version = "1.10.2"
+dependencies = [
+ "alloy-consensus",
+ "alloy-eips",
+ "alloy-primitives",
+ "alloy-rlp",
+ "alloy-rpc-types-eth",
+ "alloy-serde",
+ "arbitrary",
+ "bincode 1.3.3",
+ "derive_more",
+ "hanzo-evm-codecs",
+ "hanzo-evm-primitives-traits",
+ "hanzo-evm-zstd-compressors",
+ "modular-bitfield",
+ "proptest",
+ "proptest-arbitrary-interop",
+ "rand 0.8.5",
+ "rand 0.9.2",
+ "secp256k1 0.30.0",
+ "serde",
+ "serde_json",
+ "serde_with",
+]
+
+[[package]]
+name = "hanzo-evm-etl"
+version = "1.10.2"
+dependencies = [
+ "alloy-primitives",
+ "hanzo-evm-db-api",
+ "rayon",
+ "tempfile",
+]
+
+[[package]]
+name = "hanzo-evm-execution"
+version = "1.10.2"
+dependencies = [
+ "alloy-consensus",
+ "alloy-eips",
+ "alloy-evm",
+ "alloy-primitives",
+ "auto_impl",
+ "derive_more",
+ "futures-util",
+ "hanzo-evm-ethereum-primitives",
+ "hanzo-evm-execution-errors",
+ "hanzo-evm-execution-types",
+ "hanzo-evm-metrics",
+ "hanzo-evm-primitives-traits",
+ "hanzo-evm-storage-api",
+ "hanzo-evm-storage-errors",
+ "hanzo-evm-trie-common",
+ "metrics",
+ "rayon",
+ "revm",
+]
+
+[[package]]
+name = "hanzo-evm-execution-errors"
+version = "1.10.2"
+dependencies = [
+ "alloy-evm",
+ "alloy-primitives",
+ "alloy-rlp",
+ "hanzo-evm-storage-errors",
+ "nybbles",
+ "thiserror 2.0.18",
+]
+
+[[package]]
+name = "hanzo-evm-execution-types"
+version = "1.10.2"
+dependencies = [
+ "alloy-consensus",
+ "alloy-eips",
+ "alloy-evm",
+ "alloy-primitives",
+ "arbitrary",
+ "bincode 1.3.3",
+ "derive_more",
+ "hanzo-evm-ethereum-primitives",
+ "hanzo-evm-primitives-traits",
+ "hanzo-evm-trie-common",
+ "rand 0.9.2",
+ "revm",
+ "serde",
+ "serde_with",
+]
+
+[[package]]
+name = "hanzo-evm-exex"
+version = "1.10.2"
+dependencies = [
+ "alloy-consensus",
+ "alloy-eips",
+ "alloy-genesis",
+ "alloy-primitives",
+ "eyre",
+ "futures",
+ "hanzo-evm-chain-state",
+ "hanzo-evm-chainspec",
+ "hanzo-evm-config",
+ "hanzo-evm-db-common",
+ "hanzo-evm-eth-execution",
+ "hanzo-evm-ethereum-primitives",
+ "hanzo-evm-execution",
+ "hanzo-evm-exex-types",
+ "hanzo-evm-fs-util",
+ "hanzo-evm-metrics",
+ "hanzo-evm-node-api",
+ "hanzo-evm-node-core",
+ "hanzo-evm-payload-builder",
+ "hanzo-evm-primitives-traits",
+ "hanzo-evm-provider",
+ "hanzo-evm-prune-types",
+ "hanzo-evm-revm",
+ "hanzo-evm-stages-api",
+ "hanzo-evm-tasks",
+ "hanzo-evm-testing-utils",
+ "hanzo-evm-tracing",
+ "hanzo-evm-trie-common",
+ "itertools 0.14.0",
+ "metrics",
+ "parking_lot",
+ "rand 0.9.2",
+ "rmp-serde",
+ "secp256k1 0.30.0",
+ "tempfile",
+ "thiserror 2.0.18",
+ "tokio",
+ "tokio-util",
+ "tracing",
+]
+
+[[package]]
+name = "hanzo-evm-exex-test-utils"
+version = "1.10.2"
+dependencies = [
+ "alloy-eips",
+ "eyre",
+ "futures-util",
+ "hanzo-evm-chainspec",
+ "hanzo-evm-config",
+ "hanzo-evm-consensus",
+ "hanzo-evm-db",
+ "hanzo-evm-db-common",
+ "hanzo-evm-eth-execution",
+ "hanzo-evm-ethereum-primitives",
+ "hanzo-evm-execution-types",
+ "hanzo-evm-exex",
+ "hanzo-evm-network",
+ "hanzo-evm-node-api",
+ "hanzo-evm-node-builder",
+ "hanzo-evm-node-core",
+ "hanzo-evm-node-ethereum",
+ "hanzo-evm-payload-builder",
+ "hanzo-evm-primitives-traits",
+ "hanzo-evm-provider",
+ "hanzo-evm-tasks",
+ "hanzo-evm-transaction-pool",
+ "tempfile",
+ "thiserror 2.0.18",
+ "tokio",
+]
+
+[[package]]
+name = "hanzo-evm-exex-types"
+version = "1.10.2"
+dependencies = [
+ "alloy-eips",
+ "alloy-primitives",
+ "arbitrary",
+ "bincode 1.3.3",
+ "hanzo-evm-chain-state",
+ "hanzo-evm-ethereum-primitives",
+ "hanzo-evm-execution-types",
+ "hanzo-evm-primitives-traits",
+ "rand 0.9.2",
+ "serde",
+ "serde_with",
+]
+
+[[package]]
+name = "hanzo-evm-fs-util"
+version = "1.10.2"
+dependencies = [
+ "serde",
+ "serde_json",
+ "thiserror 2.0.18",
+]
+
+[[package]]
+name = "hanzo-evm-invalid-block-hooks"
+version = "1.10.2"
+dependencies = [
+ "alloy-consensus",
+ "alloy-eips",
+ "alloy-primitives",
+ "alloy-rlp",
+ "alloy-rpc-types-debug",
+ "eyre",
+ "futures",
+ "hanzo-evm-chainspec",
+ "hanzo-evm-engine-primitives",
+ "hanzo-evm-eth-execution",
+ "hanzo-evm-ethereum-primitives",
+ "hanzo-evm-execution",
+ "hanzo-evm-primitives-traits",
+ "hanzo-evm-provider",
+ "hanzo-evm-revm",
+ "hanzo-evm-rpc-api",
+ "hanzo-evm-testing-utils",
+ "hanzo-evm-tracing",
+ "hanzo-evm-trie",
+ "jsonrpsee",
+ "pretty_assertions",
+ "revm",
+ "revm-bytecode",
+ "revm-database",
+ "serde",
+ "serde_json",
+ "tempfile",
+]
+
+[[package]]
+name = "hanzo-evm-ipc"
+version = "1.10.2"
+dependencies = [
+ "bytes",
+ "futures",
+ "futures-util",
+ "hanzo-evm-tracing",
+ "interprocess",
+ "jsonrpsee",
+ "pin-project",
+ "rand 0.9.2",
+ "serde",
+ "serde_json",
+ "thiserror 2.0.18",
+ "tokio",
+ "tokio-stream",
+ "tokio-util",
+ "tower",
+ "tracing",
+]
+
+[[package]]
+name = "hanzo-evm-libmdbx"
+version = "1.10.2"
+dependencies = [
+ "bitflags 2.10.0",
+ "byteorder",
+ "codspeed-criterion-compat",
+ "dashmap",
+ "derive_more",
+ "hanzo-evm-mdbx-sys",
+ "parking_lot",
+ "rand 0.9.2",
+ "smallvec",
+ "tempfile",
+ "thiserror 2.0.18",
+ "tracing",
+]
+
+[[package]]
+name = "hanzo-evm-mdbx-sys"
+version = "1.10.2"
+dependencies = [
+ "bindgen",
+ "cc",
+]
+
+[[package]]
+name = "hanzo-evm-metrics"
+version = "1.10.2"
+dependencies = [
+ "futures",
+ "metrics",
+ "metrics-derive",
+ "tokio",
+ "tokio-util",
+]
+
+[[package]]
+name = "hanzo-evm-net-banlist"
+version = "1.10.2"
+dependencies = [
+ "alloy-primitives",
+ "ipnet",
+]
+
+[[package]]
+name = "hanzo-evm-net-nat"
+version = "1.10.2"
+dependencies = [
+ "futures-util",
+ "hanzo-evm-tracing",
+ "if-addrs",
+ "reqwest",
+ "serde_with",
+ "thiserror 2.0.18",
+ "tokio",
+ "tracing",
+]
+
+[[package]]
+name = "hanzo-evm-network"
+version = "1.10.2"
+dependencies = [
+ "alloy-consensus",
+ "alloy-eips",
+ "alloy-genesis",
+ "alloy-primitives",
+ "alloy-rlp",
+ "aquamarine",
+ "auto_impl",
+ "codspeed-criterion-compat",
+ "derive_more",
+ "discv5",
+ "enr",
+ "futures",
+ "hanzo-evm-chainspec",
+ "hanzo-evm-consensus",
+ "hanzo-evm-discv4",
+ "hanzo-evm-discv5",
+ "hanzo-evm-dns-discovery",
+ "hanzo-evm-ecies",
+ "hanzo-evm-eth-execution",
+ "hanzo-evm-eth-wire",
+ "hanzo-evm-eth-wire-types",
+ "hanzo-evm-ethereum-forks",
+ "hanzo-evm-ethereum-primitives",
+ "hanzo-evm-fs-util",
+ "hanzo-evm-metrics",
+ "hanzo-evm-net-banlist",
+ "hanzo-evm-network",
+ "hanzo-evm-network-api",
+ "hanzo-evm-network-p2p",
+ "hanzo-evm-network-peers",
+ "hanzo-evm-network-types",
+ "hanzo-evm-primitives-traits",
+ "hanzo-evm-provider",
+ "hanzo-evm-storage-api",
+ "hanzo-evm-tasks",
+ "hanzo-evm-tokio-util",
+ "hanzo-evm-tracing",
+ "hanzo-evm-transaction-pool",
+ "itertools 0.14.0",
+ "metrics",
+ "parking_lot",
+ "pin-project",
+ "rand 0.8.5",
+ "rand 0.9.2",
+ "rayon",
+ "rustc-hash",
+ "schnellru",
+ "secp256k1 0.30.0",
+ "serde",
+ "smallvec",
+ "thiserror 2.0.18",
+ "tokio",
+ "tokio-stream",
+ "tokio-util",
+ "tracing",
+ "url",
+]
+
+[[package]]
+name = "hanzo-evm-network-api"
+version = "1.10.2"
+dependencies = [
+ "alloy-consensus",
+ "alloy-primitives",
+ "alloy-rpc-types-admin",
+ "alloy-rpc-types-eth",
+ "auto_impl",
+ "derive_more",
+ "enr",
+ "futures",
+ "hanzo-evm-eth-wire-types",
+ "hanzo-evm-ethereum-forks",
+ "hanzo-evm-network-p2p",
+ "hanzo-evm-network-peers",
+ "hanzo-evm-network-types",
+ "hanzo-evm-tokio-util",
+ "serde",
+ "thiserror 2.0.18",
+ "tokio",
+ "tokio-stream",
+]
+
+[[package]]
+name = "hanzo-evm-network-p2p"
+version = "1.10.2"
+dependencies = [
+ "alloy-consensus",
+ "alloy-eips",
+ "alloy-primitives",
+ "auto_impl",
+ "derive_more",
+ "futures",
+ "hanzo-evm-consensus",
+ "hanzo-evm-eth-wire-types",
+ "hanzo-evm-ethereum-primitives",
+ "hanzo-evm-network-peers",
+ "hanzo-evm-network-types",
+ "hanzo-evm-primitives-traits",
+ "hanzo-evm-storage-errors",
+ "parking_lot",
+ "tokio",
+ "tracing",
+]
+
+[[package]]
+name = "hanzo-evm-network-peers"
+version = "1.10.2"
+dependencies = [
+ "alloy-primitives",
+ "alloy-rlp",
+ "enr",
+ "rand 0.8.5",
+ "rand 0.9.2",
+ "secp256k1 0.30.0",
+ "serde_json",
+ "serde_with",
+ "thiserror 2.0.18",
+ "tokio",
+ "url",
+]
+
+[[package]]
+name = "hanzo-evm-network-types"
+version = "1.10.2"
+dependencies = [
+ "alloy-eip2124",
+ "hanzo-evm-net-banlist",
+ "hanzo-evm-network-peers",
+ "humantime-serde",
+ "serde",
+ "serde_json",
+ "tracing",
+]
+
+[[package]]
+name = "hanzo-evm-nippy-jar"
+version = "1.10.2"
+dependencies = [
+ "anyhow",
+ "bincode 1.3.3",
+ "derive_more",
+ "hanzo-evm-fs-util",
+ "lz4_flex",
+ "memmap2",
+ "rand 0.9.2",
+ "serde",
+ "tempfile",
+ "thiserror 2.0.18",
+ "tracing",
+ "zstd",
+]
+
+[[package]]
+name = "hanzo-evm-node-api"
+version = "1.10.2"
+dependencies = [
+ "alloy-rpc-types-engine",
+ "eyre",
+ "hanzo-evm-basic-payload-builder",
+ "hanzo-evm-consensus",
+ "hanzo-evm-db-api",
+ "hanzo-evm-engine-primitives",
+ "hanzo-evm-execution",
+ "hanzo-evm-network-api",
+ "hanzo-evm-node-core",
+ "hanzo-evm-node-types",
+ "hanzo-evm-payload-builder",
+ "hanzo-evm-payload-builder-primitives",
+ "hanzo-evm-payload-primitives",
+ "hanzo-evm-provider",
+ "hanzo-evm-tasks",
+ "hanzo-evm-tokio-util",
+ "hanzo-evm-transaction-pool",
+]
+
+[[package]]
+name = "hanzo-evm-node-builder"
+version = "1.10.2"
+dependencies = [
+ "alloy-consensus",
+ "alloy-eips",
+ "alloy-primitives",
+ "alloy-provider",
+ "alloy-rpc-types",
+ "alloy-rpc-types-engine",
+ "aquamarine",
+ "eyre",
+ "fdlimit",
+ "futures",
+ "hanzo-evm-basic-payload-builder",
+ "hanzo-evm-chain-state",
+ "hanzo-evm-chainspec",
+ "hanzo-evm-config",
+ "hanzo-evm-consensus",
+ "hanzo-evm-consensus-debug-client",
+ "hanzo-evm-db",
+ "hanzo-evm-db-api",
+ "hanzo-evm-db-common",
+ "hanzo-evm-downloaders",
+ "hanzo-evm-engine-local",
+ "hanzo-evm-engine-primitives",
+ "hanzo-evm-engine-service",
+ "hanzo-evm-engine-tree",
+ "hanzo-evm-engine-util",
+ "hanzo-evm-eth-execution",
+ "hanzo-evm-ethereum-engine-primitives",
+ "hanzo-evm-execution",
+ "hanzo-evm-exex",
+ "hanzo-evm-fs-util",
+ "hanzo-evm-invalid-block-hooks",
+ "hanzo-evm-network",
+ "hanzo-evm-network-api",
+ "hanzo-evm-network-p2p",
+ "hanzo-evm-node-api",
+ "hanzo-evm-node-core",
+ "hanzo-evm-node-ethereum",
+ "hanzo-evm-node-ethstats",
+ "hanzo-evm-node-events",
+ "hanzo-evm-node-metrics",
+ "hanzo-evm-payload-builder",
+ "hanzo-evm-primitives-traits",
+ "hanzo-evm-provider",
+ "hanzo-evm-prune",
+ "hanzo-evm-rpc",
+ "hanzo-evm-rpc-api",
+ "hanzo-evm-rpc-builder",
+ "hanzo-evm-rpc-engine-api",
+ "hanzo-evm-rpc-eth-types",
+ "hanzo-evm-rpc-layer",
+ "hanzo-evm-stages",
+ "hanzo-evm-static-file",
+ "hanzo-evm-tasks",
+ "hanzo-evm-tokio-util",
+ "hanzo-evm-tracing",
+ "hanzo-evm-transaction-pool",
+ "hanzo-evm-trie-db",
+ "jsonrpsee",
+ "parking_lot",
+ "rayon",
+ "secp256k1 0.30.0",
+ "serde_json",
+ "tempfile",
+ "tokio",
+ "tokio-stream",
+ "tracing",
+]
+
+[[package]]
+name = "hanzo-evm-node-core"
+version = "1.10.2"
+dependencies = [
+ "alloy-consensus",
+ "alloy-eips",
+ "alloy-primitives",
+ "alloy-rpc-types-engine",
+ "clap",
+ "derive_more",
+ "dirs-next",
+ "eyre",
+ "futures",
+ "hanzo-evm-chainspec",
+ "hanzo-evm-cli-util",
+ "hanzo-evm-config",
+ "hanzo-evm-consensus",
+ "hanzo-evm-db",
+ "hanzo-evm-discv4",
+ "hanzo-evm-discv5",
+ "hanzo-evm-engine-local",
+ "hanzo-evm-engine-primitives",
+ "hanzo-evm-ethereum-forks",
+ "hanzo-evm-net-banlist",
+ "hanzo-evm-net-nat",
+ "hanzo-evm-network",
+ "hanzo-evm-network-p2p",
+ "hanzo-evm-network-peers",
+ "hanzo-evm-primitives-traits",
+ "hanzo-evm-prune-types",
+ "hanzo-evm-rpc-convert",
+ "hanzo-evm-rpc-eth-types",
+ "hanzo-evm-rpc-server-types",
+ "hanzo-evm-stages-types",
+ "hanzo-evm-storage-api",
+ "hanzo-evm-storage-errors",
+ "hanzo-evm-tracing",
+ "hanzo-evm-tracing-otlp",
+ "hanzo-evm-transaction-pool",
+ "humantime",
+ "ipnet",
+ "proptest",
+ "rand 0.9.2",
+ "secp256k1 0.30.0",
+ "serde",
+ "shellexpand",
+ "strum",
+ "thiserror 2.0.18",
+ "tokio",
+ "toml",
+ "tracing",
+ "url",
+ "vergen",
+ "vergen-git2",
+]
+
+[[package]]
+name = "hanzo-evm-node-ethereum"
+version = "1.10.2"
+dependencies = [
+ "alloy-consensus",
+ "alloy-contract",
+ "alloy-eips",
+ "alloy-genesis",
+ "alloy-network",
+ "alloy-primitives",
+ "alloy-provider",
+ "alloy-rpc-types-beacon",
+ "alloy-rpc-types-engine",
+ "alloy-rpc-types-eth",
+ "alloy-rpc-types-trace",
+ "alloy-signer",
+ "alloy-sol-types",
+ "eyre",
+ "futures",
+ "hanzo-evm-chainspec",
+ "hanzo-evm-db",
+ "hanzo-evm-e2e-test-utils",
+ "hanzo-evm-engine-local",
+ "hanzo-evm-engine-primitives",
+ "hanzo-evm-eth-execution",
+ "hanzo-evm-ethereum-consensus",
+ "hanzo-evm-ethereum-engine-primitives",
+ "hanzo-evm-ethereum-payload-builder",
+ "hanzo-evm-ethereum-primitives",
+ "hanzo-evm-execution",
+ "hanzo-evm-exex",
+ "hanzo-evm-network",
+ "hanzo-evm-node-api",
+ "hanzo-evm-node-builder",
+ "hanzo-evm-node-core",
+ "hanzo-evm-payload-primitives",
+ "hanzo-evm-primitives-traits",
+ "hanzo-evm-provider",
+ "hanzo-evm-revm",
+ "hanzo-evm-rpc",
+ "hanzo-evm-rpc-api",
+ "hanzo-evm-rpc-builder",
+ "hanzo-evm-rpc-eth-api",
+ "hanzo-evm-rpc-eth-types",
+ "hanzo-evm-rpc-server-types",
+ "hanzo-evm-stages-types",
+ "hanzo-evm-tasks",
+ "hanzo-evm-testing-utils",
+ "hanzo-evm-tracing",
+ "hanzo-evm-transaction-pool",
+ "jsonrpsee-core",
+ "rand 0.9.2",
+ "revm",
+ "serde",
+ "serde_json",
+ "similar-asserts",
+ "tempfile",
+ "tokio",
+]
+
+[[package]]
+name = "hanzo-evm-node-ethstats"
+version = "1.10.2"
+dependencies = [
+ "alloy-consensus",
+ "alloy-primitives",
+ "chrono",
+ "futures-util",
+ "hanzo-evm-chain-state",
+ "hanzo-evm-network-api",
+ "hanzo-evm-primitives-traits",
+ "hanzo-evm-storage-api",
+ "hanzo-evm-transaction-pool",
+ "serde",
+ "serde_json",
+ "thiserror 2.0.18",
+ "tokio",
+ "tokio-stream",
+ "tokio-tungstenite 0.28.0",
+ "tracing",
+ "url",
+]
+
+[[package]]
+name = "hanzo-evm-node-events"
+version = "1.10.2"
+dependencies = [
+ "alloy-consensus",
+ "alloy-eips",
+ "alloy-primitives",
+ "alloy-rpc-types-engine",
+ "derive_more",
+ "futures",
+ "hanzo-evm-engine-primitives",
+ "hanzo-evm-network-api",
+ "hanzo-evm-primitives-traits",
+ "hanzo-evm-prune-types",
+ "hanzo-evm-stages",
+ "hanzo-evm-static-file-types",
+ "hanzo-evm-storage-api",
+ "humantime",
+ "pin-project",
+ "tokio",
+ "tracing",
+]
+
+[[package]]
+name = "hanzo-evm-node-metrics"
+version = "1.10.2"
+dependencies = [
+ "bytes",
+ "eyre",
+ "hanzo-evm-fs-util",
+ "hanzo-evm-metrics",
+ "hanzo-evm-tasks",
+ "http",
+ "http-body-util",
+ "jemalloc_pprof",
+ "jsonrpsee-server",
+ "mappings",
+ "metrics",
+ "metrics-exporter-prometheus",
+ "metrics-process",
+ "metrics-util",
+ "pprof_util",
+ "procfs",
+ "reqwest",
+ "socket2 0.6.2",
+ "tempfile",
+ "tikv-jemalloc-ctl",
+ "tokio",
+ "tower",
+ "tracing",
+]
+
+[[package]]
+name = "hanzo-evm-node-types"
+version = "1.10.2"
+dependencies = [
+ "hanzo-evm-chainspec",
+ "hanzo-evm-db-api",
+ "hanzo-evm-engine-primitives",
+ "hanzo-evm-payload-primitives",
+ "hanzo-evm-primitives-traits",
+]
+
+[[package]]
+name = "hanzo-evm-payload-builder"
+version = "1.10.2"
+dependencies = [
+ "alloy-consensus",
+ "alloy-primitives",
+ "alloy-rpc-types",
+ "futures-util",
+ "hanzo-evm-chain-state",
+ "hanzo-evm-ethereum-engine-primitives",
+ "hanzo-evm-metrics",
+ "hanzo-evm-payload-builder-primitives",
+ "hanzo-evm-payload-primitives",
+ "hanzo-evm-primitives-traits",
+ "metrics",
+ "tokio",
+ "tokio-stream",
+ "tracing",
+]
+
+[[package]]
+name = "hanzo-evm-payload-builder-primitives"
+version = "1.10.2"
+dependencies = [
+ "hanzo-evm-payload-primitives",
+ "pin-project",
+ "tokio",
+ "tokio-stream",
+ "tracing",
+]
+
+[[package]]
+name = "hanzo-evm-payload-primitives"
+version = "1.10.2"
+dependencies = [
+ "alloy-consensus",
+ "alloy-eips",
+ "alloy-primitives",
+ "alloy-rpc-types-engine",
+ "assert_matches",
+ "auto_impl",
+ "either",
+ "hanzo-evm-chain-state",
+ "hanzo-evm-chainspec",
+ "hanzo-evm-errors",
+ "hanzo-evm-execution-types",
+ "hanzo-evm-primitives-traits",
+ "hanzo-evm-trie-common",
+ "op-alloy-rpc-types-engine",
+ "serde",
+ "thiserror 2.0.18",
+ "tokio",
+]
+
+[[package]]
+name = "hanzo-evm-payload-util"
+version = "1.10.2"
+dependencies = [
+ "alloy-consensus",
+ "alloy-primitives",
+ "hanzo-evm-transaction-pool",
+]
+
+[[package]]
+name = "hanzo-evm-payload-validator"
+version = "1.10.2"
+dependencies = [
+ "alloy-consensus",
+ "alloy-rpc-types-engine",
+ "hanzo-evm-primitives-traits",
+]
+
+[[package]]
+name = "hanzo-evm-primitives"
+version = "1.10.2"
+dependencies = [
+ "alloy-consensus",
+ "alloy-eips",
+ "alloy-genesis",
+ "alloy-primitives",
+ "alloy-rlp",
+ "arbitrary",
+ "c-kzg",
+ "codspeed-criterion-compat",
+ "hanzo-evm-codecs",
+ "hanzo-evm-ethereum-forks",
+ "hanzo-evm-ethereum-primitives",
+ "hanzo-evm-primitives-traits",
+ "hanzo-evm-static-file-types",
+ "once_cell",
+ "proptest",
+ "proptest-arbitrary-interop",
+]
+
+[[package]]
+name = "hanzo-evm-primitives-traits"
+version = "1.10.2"
+dependencies = [
+ "alloy-consensus",
+ "alloy-eips",
+ "alloy-genesis",
+ "alloy-primitives",
+ "alloy-rlp",
+ "alloy-rpc-types-eth",
+ "alloy-trie",
+ "arbitrary",
+ "auto_impl",
+ "bincode 1.3.3",
+ "byteorder",
+ "bytes",
+ "dashmap",
+ "derive_more",
+ "hanzo-evm-chainspec",
+ "hanzo-evm-codecs",
+ "modular-bitfield",
+ "once_cell",
+ "op-alloy-consensus",
+ "proptest",
+ "proptest-arbitrary-interop",
+ "rand 0.8.5",
+ "rand 0.9.2",
+ "rayon",
+ "revm-bytecode",
+ "revm-primitives",
+ "revm-state",
+ "secp256k1 0.30.0",
+ "serde",
+ "serde_json",
+ "serde_with",
+ "thiserror 2.0.18",
+]
+
+[[package]]
+name = "hanzo-evm-provider"
+version = "1.10.2"
+dependencies = [
+ "alloy-consensus",
+ "alloy-eips",
+ "alloy-primitives",
+ "alloy-rpc-types-engine",
+ "assert_matches",
+ "eyre",
+ "hanzo-evm-chain-state",
+ "hanzo-evm-chainspec",
+ "hanzo-evm-codecs",
+ "hanzo-evm-db",
+ "hanzo-evm-db-api",
+ "hanzo-evm-errors",
+ "hanzo-evm-ethereum-engine-primitives",
+ "hanzo-evm-ethereum-primitives",
+ "hanzo-evm-execution-types",
+ "hanzo-evm-fs-util",
+ "hanzo-evm-metrics",
+ "hanzo-evm-nippy-jar",
+ "hanzo-evm-node-types",
+ "hanzo-evm-primitives-traits",
+ "hanzo-evm-prune-types",
+ "hanzo-evm-stages-types",
+ "hanzo-evm-static-file-types",
+ "hanzo-evm-storage-api",
+ "hanzo-evm-storage-errors",
+ "hanzo-evm-tasks",
+ "hanzo-evm-testing-utils",
+ "hanzo-evm-tracing",
+ "hanzo-evm-trie",
+ "hanzo-evm-trie-db",
+ "itertools 0.14.0",
+ "metrics",
+ "notify",
+ "parking_lot",
+ "rand 0.9.2",
+ "rayon",
+ "revm-database",
+ "revm-database-interface",
+ "revm-state",
+ "rocksdb",
+ "strum",
+ "tempfile",
+ "tokio",
+ "tracing",
+]
+
+[[package]]
+name = "hanzo-evm-prune"
+version = "1.10.2"
+dependencies = [
+ "alloy-consensus",
+ "alloy-eips",
+ "alloy-primitives",
+ "assert_matches",
+ "hanzo-evm-config",
+ "hanzo-evm-db",
+ "hanzo-evm-db-api",
+ "hanzo-evm-errors",
+ "hanzo-evm-exex-types",
+ "hanzo-evm-metrics",
+ "hanzo-evm-primitives-traits",
+ "hanzo-evm-provider",
+ "hanzo-evm-prune-types",
+ "hanzo-evm-stages",
+ "hanzo-evm-stages-types",
+ "hanzo-evm-static-file-types",
+ "hanzo-evm-storage-api",
+ "hanzo-evm-testing-utils",
+ "hanzo-evm-tokio-util",
+ "hanzo-evm-tracing",
+ "itertools 0.14.0",
+ "metrics",
+ "rayon",
+ "rustc-hash",
+ "thiserror 2.0.18",
+ "tokio",
+ "tracing",
+]
+
+[[package]]
+name = "hanzo-evm-prune-db"
+version = "1.10.2"
+
+[[package]]
+name = "hanzo-evm-prune-types"
+version = "1.10.2"
+dependencies = [
+ "alloy-primitives",
+ "arbitrary",
+ "assert_matches",
+ "derive_more",
+ "hanzo-evm-codecs",
+ "modular-bitfield",
+ "proptest",
+ "proptest-arbitrary-interop",
+ "serde",
+ "serde_json",
+ "strum",
+ "thiserror 2.0.18",
+ "toml",
+ "tracing",
+]
+
+[[package]]
+name = "hanzo-evm-ress-protocol"
+version = "1.10.2"
+dependencies = [
+ "alloy-consensus",
+ "alloy-primitives",
+ "alloy-rlp",
+ "arbitrary",
+ "futures",
+ "hanzo-evm-eth-wire",
+ "hanzo-evm-ethereum-primitives",
+ "hanzo-evm-network",
+ "hanzo-evm-network-api",
+ "hanzo-evm-provider",
+ "hanzo-evm-ress-protocol",
+ "hanzo-evm-storage-errors",
+ "hanzo-evm-tracing",
+ "proptest",
+ "proptest-arbitrary-interop",
+ "strum",
+ "strum_macros",
+ "tokio",
+ "tokio-stream",
+ "tracing",
+]
+
+[[package]]
+name = "hanzo-evm-ress-provider"
+version = "1.10.2"
+dependencies = [
+ "alloy-consensus",
+ "alloy-primitives",
+ "eyre",
+ "futures",
+ "hanzo-evm-chain-state",
+ "hanzo-evm-errors",
+ "hanzo-evm-ethereum-primitives",
+ "hanzo-evm-execution",
+ "hanzo-evm-node-api",
+ "hanzo-evm-primitives-traits",
+ "hanzo-evm-ress-protocol",
+ "hanzo-evm-revm",
+ "hanzo-evm-storage-api",
+ "hanzo-evm-tasks",
+ "hanzo-evm-tokio-util",
+ "hanzo-evm-trie",
+ "parking_lot",
+ "schnellru",
+ "tokio",
+ "tracing",
+]
+
+[[package]]
+name = "hanzo-evm-revm"
+version = "1.10.2"
+dependencies = [
+ "alloy-consensus",
+ "alloy-primitives",
+ "hanzo-evm-ethereum-forks",
+ "hanzo-evm-primitives-traits",
+ "hanzo-evm-storage-api",
+ "hanzo-evm-storage-errors",
+ "hanzo-evm-trie",
+ "revm",
+]
+
+[[package]]
+name = "hanzo-evm-rpc"
+version = "1.10.2"
+dependencies = [
+ "alloy-consensus",
+ "alloy-dyn-abi",
+ "alloy-eip7928",
+ "alloy-eips",
+ "alloy-evm",
+ "alloy-genesis",
+ "alloy-network",
+ "alloy-primitives",
+ "alloy-rlp",
+ "alloy-rpc-client",
+ "alloy-rpc-types",
+ "alloy-rpc-types-admin",
+ "alloy-rpc-types-beacon",
+ "alloy-rpc-types-debug",
+ "alloy-rpc-types-engine",
+ "alloy-rpc-types-eth",
+ "alloy-rpc-types-mev",
+ "alloy-rpc-types-trace",
+ "alloy-rpc-types-txpool",
+ "alloy-serde",
+ "alloy-signer",
+ "alloy-signer-local",
+ "async-trait",
+ "derive_more",
+ "dyn-clone",
+ "futures",
+ "hanzo-evm-chain-state",
+ "hanzo-evm-chainspec",
+ "hanzo-evm-consensus",
+ "hanzo-evm-consensus-common",
+ "hanzo-evm-db-api",
+ "hanzo-evm-engine-primitives",
+ "hanzo-evm-errors",
+ "hanzo-evm-eth-execution",
+ "hanzo-evm-ethereum-engine-primitives",
+ "hanzo-evm-ethereum-primitives",
+ "hanzo-evm-execution",
+ "hanzo-evm-execution-types",
+ "hanzo-evm-metrics",
+ "hanzo-evm-network-api",
+ "hanzo-evm-network-peers",
+ "hanzo-evm-network-types",
+ "hanzo-evm-node-api",
+ "hanzo-evm-primitives-traits",
+ "hanzo-evm-provider",
+ "hanzo-evm-revm",
+ "hanzo-evm-rpc-api",
+ "hanzo-evm-rpc-convert",
+ "hanzo-evm-rpc-engine-api",
+ "hanzo-evm-rpc-eth-api",
+ "hanzo-evm-rpc-eth-types",
+ "hanzo-evm-rpc-server-types",
+ "hanzo-evm-storage-api",
+ "hanzo-evm-tasks",
+ "hanzo-evm-testing-utils",
+ "hanzo-evm-transaction-pool",
+ "hanzo-evm-trie-common",
+ "itertools 0.14.0",
+ "jsonrpsee",
+ "jsonrpsee-types",
+ "parking_lot",
+ "pin-project",
+ "rand 0.9.2",
+ "revm",
+ "revm-inspectors",
+ "revm-primitives",
+ "serde",
+ "serde_json",
+ "sha2",
+ "thiserror 2.0.18",
+ "tokio",
+ "tokio-stream",
+ "tracing",
+ "tracing-futures",
+]
+
+[[package]]
+name = "hanzo-evm-rpc-api"
+version = "1.10.2"
+dependencies = [
+ "alloy-eip7928",
+ "alloy-eips",
+ "alloy-genesis",
+ "alloy-json-rpc",
+ "alloy-primitives",
+ "alloy-rpc-types",
+ "alloy-rpc-types-admin",
+ "alloy-rpc-types-anvil",
+ "alloy-rpc-types-beacon",
+ "alloy-rpc-types-debug",
+ "alloy-rpc-types-engine",
+ "alloy-rpc-types-eth",
+ "alloy-rpc-types-mev",
+ "alloy-rpc-types-trace",
+ "alloy-rpc-types-txpool",
+ "alloy-serde",
+ "hanzo-evm-chain-state",
+ "hanzo-evm-engine-primitives",
+ "hanzo-evm-network-peers",
+ "hanzo-evm-rpc-eth-api",
+ "hanzo-evm-trie-common",
+ "jsonrpsee",
+ "serde_json",
+ "tokio",
+]
+
+[[package]]
+name = "hanzo-evm-rpc-api-testing-util"
+version = "1.10.2"
+dependencies = [
+ "alloy-eips",
+ "alloy-primitives",
+ "alloy-rpc-types-eth",
+ "alloy-rpc-types-trace",
+ "futures",
+ "hanzo-evm-ethereum-primitives",
+ "hanzo-evm-rpc-api",
+ "hanzo-evm-rpc-eth-api",
+ "jsonrpsee",
+ "jsonrpsee-http-client",
+ "serde_json",
+ "similar-asserts",
+ "tokio",
+]
+
+[[package]]
+name = "hanzo-evm-rpc-builder"
+version = "1.10.2"
+dependencies = [
+ "alloy-eips",
+ "alloy-network",
+ "alloy-primitives",
+ "alloy-provider",
+ "alloy-rpc-types-engine",
+ "alloy-rpc-types-eth",
+ "alloy-rpc-types-trace",
+ "clap",
+ "dyn-clone",
+ "hanzo-evm-chain-state",
+ "hanzo-evm-chainspec",
+ "hanzo-evm-consensus",
+ "hanzo-evm-engine-primitives",
+ "hanzo-evm-eth-execution",
+ "hanzo-evm-ethereum-engine-primitives",
+ "hanzo-evm-ethereum-primitives",
+ "hanzo-evm-execution",
+ "hanzo-evm-ipc",
+ "hanzo-evm-metrics",
+ "hanzo-evm-network-api",
+ "hanzo-evm-network-peers",
+ "hanzo-evm-node-core",
+ "hanzo-evm-node-ethereum",
+ "hanzo-evm-payload-builder",
+ "hanzo-evm-primitives-traits",
+ "hanzo-evm-provider",
+ "hanzo-evm-rpc",
+ "hanzo-evm-rpc-api",
+ "hanzo-evm-rpc-engine-api",
+ "hanzo-evm-rpc-eth-api",
+ "hanzo-evm-rpc-eth-types",
+ "hanzo-evm-rpc-layer",
+ "hanzo-evm-rpc-server-types",
+ "hanzo-evm-storage-api",
+ "hanzo-evm-tasks",
+ "hanzo-evm-tokio-util",
+ "hanzo-evm-tracing",
+ "hanzo-evm-transaction-pool",
+ "http",
+ "jsonrpsee",
+ "metrics",
+ "pin-project",
+ "serde",
+ "serde_json",
+ "thiserror 2.0.18",
+ "tokio",
+ "tokio-util",
+ "tower",
+ "tower-http",
+ "tracing",
+]
+
+[[package]]
+name = "hanzo-evm-rpc-convert"
+version = "1.10.2"
+dependencies = [
+ "alloy-consensus",
+ "alloy-evm",
+ "alloy-json-rpc",
+ "alloy-network",
+ "alloy-primitives",
+ "alloy-rpc-types-eth",
+ "alloy-signer",
+ "auto_impl",
+ "dyn-clone",
+ "hanzo-evm-ethereum-primitives",
+ "hanzo-evm-execution",
+ "hanzo-evm-primitives-traits",
+ "jsonrpsee-types",
+ "op-alloy-consensus",
+ "op-alloy-network",
+ "op-alloy-rpc-types",
+ "serde_json",
+ "thiserror 2.0.18",
+]
+
+[[package]]
+name = "hanzo-evm-rpc-e2e-tests"
+version = "1.10.2"
+dependencies = [
+ "alloy-genesis",
+ "alloy-rpc-types-engine",
+ "eyre",
+ "futures-util",
+ "hanzo-evm-chainspec",
+ "hanzo-evm-e2e-test-utils",
+ "hanzo-evm-node-api",
+ "hanzo-evm-node-ethereum",
+ "hanzo-evm-rpc-api",
+ "hanzo-evm-tracing",
+ "jsonrpsee",
+ "serde_json",
+ "tokio",
+ "tracing",
+]
+
+[[package]]
+name = "hanzo-evm-rpc-engine-api"
+version = "1.10.2"
+dependencies = [
+ "alloy-eips",
+ "alloy-primitives",
+ "alloy-rlp",
+ "alloy-rpc-types-engine",
+ "assert_matches",
+ "async-trait",
+ "hanzo-evm-chainspec",
+ "hanzo-evm-engine-primitives",
+ "hanzo-evm-ethereum-engine-primitives",
+ "hanzo-evm-ethereum-primitives",
+ "hanzo-evm-metrics",
+ "hanzo-evm-network-api",
+ "hanzo-evm-node-ethereum",
+ "hanzo-evm-payload-builder",
+ "hanzo-evm-payload-builder-primitives",
+ "hanzo-evm-payload-primitives",
+ "hanzo-evm-primitives-traits",
+ "hanzo-evm-provider",
+ "hanzo-evm-rpc-api",
+ "hanzo-evm-storage-api",
+ "hanzo-evm-tasks",
+ "hanzo-evm-testing-utils",
+ "hanzo-evm-transaction-pool",
+ "jsonrpsee-core",
+ "jsonrpsee-types",
+ "metrics",
+ "serde",
+ "thiserror 2.0.18",
+ "tokio",
+ "tracing",
+]
+
+[[package]]
+name = "hanzo-evm-rpc-eth-api"
+version = "1.10.2"
+dependencies = [
+ "alloy-consensus",
+ "alloy-dyn-abi",
+ "alloy-eips",
+ "alloy-evm",
+ "alloy-json-rpc",
+ "alloy-network",
+ "alloy-primitives",
+ "alloy-rlp",
+ "alloy-rpc-types-eth",
+ "alloy-rpc-types-mev",
+ "alloy-serde",
+ "async-trait",
+ "auto_impl",
+ "dyn-clone",
+ "futures",
+ "hanzo-evm-chain-state",
+ "hanzo-evm-chainspec",
+ "hanzo-evm-errors",
+ "hanzo-evm-execution",
+ "hanzo-evm-network-api",
+ "hanzo-evm-node-api",
+ "hanzo-evm-primitives-traits",
+ "hanzo-evm-revm",
+ "hanzo-evm-rpc-convert",
+ "hanzo-evm-rpc-eth-types",
+ "hanzo-evm-rpc-server-types",
+ "hanzo-evm-storage-api",
+ "hanzo-evm-tasks",
+ "hanzo-evm-transaction-pool",
+ "hanzo-evm-trie-common",
+ "jsonrpsee",
+ "jsonrpsee-types",
+ "parking_lot",
+ "revm",
+ "revm-inspectors",
+ "tokio",
+ "tracing",
+]
+
+[[package]]
+name = "hanzo-evm-rpc-eth-types"
+version = "1.10.2"
+dependencies = [
+ "alloy-consensus",
+ "alloy-eips",
+ "alloy-evm",
+ "alloy-network",
+ "alloy-primitives",
+ "alloy-rpc-client",
+ "alloy-rpc-types-eth",
+ "alloy-sol-types",
+ "alloy-transport",
+ "derive_more",
+ "futures",
+ "hanzo-evm-chain-state",
+ "hanzo-evm-chainspec",
+ "hanzo-evm-errors",
+ "hanzo-evm-ethereum-primitives",
+ "hanzo-evm-execution",
+ "hanzo-evm-execution-types",
+ "hanzo-evm-metrics",
+ "hanzo-evm-primitives-traits",
+ "hanzo-evm-revm",
+ "hanzo-evm-rpc-convert",
+ "hanzo-evm-rpc-server-types",
+ "hanzo-evm-storage-api",
+ "hanzo-evm-tasks",
+ "hanzo-evm-transaction-pool",
+ "hanzo-evm-trie",
+ "itertools 0.14.0",
+ "jsonrpsee-core",
+ "jsonrpsee-types",
+ "metrics",
+ "rand 0.9.2",
+ "reqwest",
+ "revm",
+ "revm-inspectors",
+ "schnellru",
+ "serde",
+ "serde_json",
+ "thiserror 2.0.18",
+ "tokio",
+ "tokio-stream",
+ "tracing",
+ "url",
+]
+
+[[package]]
+name = "hanzo-evm-rpc-layer"
+version = "1.10.2"
+dependencies = [
+ "alloy-rpc-types-engine",
+ "http",
+ "http-body-util",
+ "jsonrpsee",
+ "jsonrpsee-http-client",
+ "pin-project",
+ "reqwest",
+ "tokio",
+ "tower",
+ "tower-http",
+ "tracing",
+]
+
+[[package]]
+name = "hanzo-evm-rpc-server-types"
+version = "1.10.2"
+dependencies = [
+ "alloy-eips",
+ "alloy-primitives",
+ "alloy-rpc-types-engine",
+ "hanzo-evm-errors",
+ "hanzo-evm-network-api",
+ "jsonrpsee-core",
+ "jsonrpsee-types",
+ "serde",
+ "strum",
+]
+
+[[package]]
+name = "hanzo-evm-stages"
+version = "1.10.2"
+dependencies = [
+ "alloy-consensus",
+ "alloy-eips",
+ "alloy-genesis",
+ "alloy-primitives",
+ "alloy-rlp",
+ "assert_matches",
+ "bincode 1.3.3",
+ "codspeed-criterion-compat",
+ "eyre",
+ "futures-util",
+ "hanzo-evm-chainspec",
+ "hanzo-evm-codecs",
+ "hanzo-evm-config",
+ "hanzo-evm-consensus",
+ "hanzo-evm-db",
+ "hanzo-evm-db-api",
+ "hanzo-evm-db-common",
+ "hanzo-evm-downloaders",
+ "hanzo-evm-era",
+ "hanzo-evm-era-downloader",
+ "hanzo-evm-era-utils",
+ "hanzo-evm-eth-execution",
+ "hanzo-evm-ethereum-consensus",
+ "hanzo-evm-ethereum-primitives",
+ "hanzo-evm-etl",
+ "hanzo-evm-execution",
+ "hanzo-evm-execution-types",
+ "hanzo-evm-exex",
+ "hanzo-evm-fs-util",
+ "hanzo-evm-network-p2p",
+ "hanzo-evm-network-peers",
+ "hanzo-evm-primitives-traits",
+ "hanzo-evm-provider",
+ "hanzo-evm-prune",
+ "hanzo-evm-prune-types",
+ "hanzo-evm-revm",
+ "hanzo-evm-stages-api",
+ "hanzo-evm-static-file",
+ "hanzo-evm-static-file-types",
+ "hanzo-evm-storage-api",
+ "hanzo-evm-storage-errors",
+ "hanzo-evm-tasks",
+ "hanzo-evm-testing-utils",
+ "hanzo-evm-tracing",
+ "hanzo-evm-trie",
+ "hanzo-evm-trie-db",
+ "itertools 0.14.0",
+ "num-traits",
+ "paste",
+ "rand 0.9.2",
+ "rayon",
+ "reqwest",
+ "tempfile",
+ "thiserror 2.0.18",
+ "tokio",
+ "tracing",
+]
+
+[[package]]
+name = "hanzo-evm-stages-api"
+version = "1.10.2"
+dependencies = [
+ "alloy-eips",
+ "alloy-primitives",
+ "aquamarine",
+ "assert_matches",
+ "auto_impl",
+ "futures-util",
+ "hanzo-evm-chainspec",
+ "hanzo-evm-consensus",
+ "hanzo-evm-db",
+ "hanzo-evm-db-api",
+ "hanzo-evm-errors",
+ "hanzo-evm-metrics",
+ "hanzo-evm-network-p2p",
+ "hanzo-evm-primitives-traits",
+ "hanzo-evm-provider",
+ "hanzo-evm-prune",
+ "hanzo-evm-stages-types",
+ "hanzo-evm-static-file",
+ "hanzo-evm-static-file-types",
+ "hanzo-evm-testing-utils",
+ "hanzo-evm-tokio-util",
+ "metrics",
+ "thiserror 2.0.18",
+ "tokio",
+ "tokio-stream",
+ "tracing",
+]
+
+[[package]]
+name = "hanzo-evm-stages-types"
+version = "1.10.2"
+dependencies = [
+ "alloy-primitives",
+ "arbitrary",
+ "bytes",
+ "hanzo-evm-codecs",
+ "hanzo-evm-trie-common",
+ "modular-bitfield",
+ "proptest",
+ "proptest-arbitrary-interop",
+ "rand 0.9.2",
+ "serde",
+]
+
+[[package]]
+name = "hanzo-evm-stateless"
+version = "1.10.2"
+dependencies = [
+ "alloy-consensus",
+ "alloy-genesis",
+ "alloy-primitives",
+ "alloy-rlp",
+ "alloy-rpc-types-debug",
+ "alloy-trie",
+ "hanzo-evm-chainspec",
+ "hanzo-evm-consensus",
+ "hanzo-evm-errors",
+ "hanzo-evm-ethereum-consensus",
+ "hanzo-evm-ethereum-primitives",
+ "hanzo-evm-execution",
+ "hanzo-evm-primitives-traits",
+ "hanzo-evm-revm",
+ "hanzo-evm-trie-common",
+ "hanzo-evm-trie-sparse",
+ "itertools 0.14.0",
+ "serde",
+ "serde_with",
+ "thiserror 2.0.18",
+]
+
+[[package]]
+name = "hanzo-evm-static-file"
+version = "1.10.2"
+dependencies = [
+ "alloy-primitives",
+ "assert_matches",
+ "hanzo-evm-codecs",
+ "hanzo-evm-db-api",
+ "hanzo-evm-primitives-traits",
+ "hanzo-evm-provider",
+ "hanzo-evm-prune-types",
+ "hanzo-evm-stages",
+ "hanzo-evm-stages-types",
+ "hanzo-evm-static-file-types",
+ "hanzo-evm-storage-errors",
+ "hanzo-evm-testing-utils",
+ "hanzo-evm-tokio-util",
+ "parking_lot",
+ "rayon",
+ "tempfile",
+ "tracing",
+]
+
+[[package]]
+name = "hanzo-evm-static-file-types"
+version = "1.10.2"
+dependencies = [
+ "alloy-primitives",
+ "clap",
+ "derive_more",
+ "fixed-map",
+ "hanzo-evm-nippy-jar",
+ "hanzo-evm-stages-types",
+ "insta",
+ "serde",
+ "serde_json",
+ "strum",
+ "tempfile",
+ "tracing",
+]
+
+[[package]]
+name = "hanzo-evm-storage-api"
+version = "1.10.2"
+dependencies = [
+ "alloy-consensus",
+ "alloy-eips",
+ "alloy-primitives",
+ "alloy-rpc-types-engine",
+ "auto_impl",
+ "hanzo-evm-chainspec",
+ "hanzo-evm-db-api",
+ "hanzo-evm-db-models",
+ "hanzo-evm-ethereum-primitives",
+ "hanzo-evm-execution-types",
+ "hanzo-evm-primitives-traits",
+ "hanzo-evm-prune-types",
+ "hanzo-evm-stages-types",
+ "hanzo-evm-storage-errors",
+ "hanzo-evm-trie-common",
+ "revm-database",
+ "serde_json",
+]
+
+[[package]]
+name = "hanzo-evm-storage-errors"
+version = "1.10.2"
+dependencies = [
+ "alloy-eips",
+ "alloy-primitives",
+ "alloy-rlp",
+ "derive_more",
+ "hanzo-evm-primitives-traits",
+ "hanzo-evm-prune-types",
+ "hanzo-evm-static-file-types",
+ "revm-database-interface",
+ "revm-state",
+ "thiserror 2.0.18",
+]
+
+[[package]]
+name = "hanzo-evm-storage-rpc-provider"
+version = "1.10.2"
+dependencies = [
+ "alloy-consensus",
+ "alloy-eips",
+ "alloy-network",
+ "alloy-primitives",
+ "alloy-provider",
+ "alloy-rpc-types",
+ "alloy-rpc-types-engine",
+ "dashmap",
+ "hanzo-evm-chainspec",
+ "hanzo-evm-db-api",
+ "hanzo-evm-errors",
+ "hanzo-evm-execution-types",
+ "hanzo-evm-node-types",
+ "hanzo-evm-primitives",
+ "hanzo-evm-provider",
+ "hanzo-evm-prune-types",
+ "hanzo-evm-rpc-convert",
+ "hanzo-evm-stages-types",
+ "hanzo-evm-storage-api",
+ "hanzo-evm-trie",
+ "revm",
+ "tokio",
+ "tracing",
+]
+
+[[package]]
+name = "hanzo-evm-tasks"
+version = "1.10.2"
+dependencies = [
+ "auto_impl",
+ "dyn-clone",
+ "futures-util",
+ "hanzo-evm-metrics",
+ "metrics",
+ "pin-project",
+ "rayon",
+ "thiserror 2.0.18",
+ "tokio",
+ "tracing",
+ "tracing-futures",
+]
+
+[[package]]
+name = "hanzo-evm-testing-utils"
+version = "1.10.2"
+dependencies = [
+ "alloy-consensus",
+ "alloy-eips",
+ "alloy-genesis",
+ "alloy-primitives",
+ "alloy-rlp",
+ "hanzo-evm-ethereum-primitives",
+ "hanzo-evm-primitives-traits",
+ "rand 0.8.5",
+ "rand 0.9.2",
+ "secp256k1 0.30.0",
+]
+
+[[package]]
+name = "hanzo-evm-tokio-util"
+version = "1.10.2"
+dependencies = [
+ "tokio",
+ "tokio-stream",
+ "tracing",
+]
+
+[[package]]
+name = "hanzo-evm-tracing"
+version = "1.10.2"
+dependencies = [
+ "clap",
+ "eyre",
+ "hanzo-evm-tracing-otlp",
+ "rolling-file",
+ "tracing",
+ "tracing-appender",
+ "tracing-journald",
+ "tracing-logfmt",
+ "tracing-samply",
+ "tracing-subscriber 0.3.22",
+ "tracing-tracy",
+ "tracy-client",
+]
+
+[[package]]
+name = "hanzo-evm-tracing-otlp"
+version = "1.10.2"
+dependencies = [
+ "clap",
+ "eyre",
+ "opentelemetry",
+ "opentelemetry-appender-tracing",
+ "opentelemetry-otlp",
+ "opentelemetry-semantic-conventions",
+ "opentelemetry_sdk",
+ "tracing",
+ "tracing-opentelemetry",
+ "tracing-subscriber 0.3.22",
+ "url",
+]
+
+[[package]]
+name = "hanzo-evm-transaction-pool"
+version = "1.10.2"
+dependencies = [
+ "alloy-consensus",
+ "alloy-eips",
+ "alloy-primitives",
+ "alloy-rlp",
+ "aquamarine",
+ "assert_matches",
+ "auto_impl",
+ "bitflags 2.10.0",
+ "codspeed-criterion-compat",
+ "futures",
+ "futures-util",
+ "hanzo-evm-chain-state",
+ "hanzo-evm-chainspec",
+ "hanzo-evm-eth-execution",
+ "hanzo-evm-eth-wire-types",
+ "hanzo-evm-ethereum-primitives",
+ "hanzo-evm-execution",
+ "hanzo-evm-execution-types",
+ "hanzo-evm-fs-util",
+ "hanzo-evm-metrics",
+ "hanzo-evm-primitives-traits",
+ "hanzo-evm-provider",
+ "hanzo-evm-storage-api",
+ "hanzo-evm-tasks",
+ "hanzo-evm-tracing",
+ "metrics",
+ "parking_lot",
+ "paste",
+ "pin-project",
+ "proptest",
+ "proptest-arbitrary-interop",
+ "rand 0.9.2",
+ "revm",
+ "revm-interpreter",
+ "revm-primitives",
+ "rustc-hash",
+ "schnellru",
+ "serde",
+ "serde_json",
+ "smallvec",
+ "tempfile",
+ "thiserror 2.0.18",
+ "tokio",
+ "tokio-stream",
+ "tracing",
+]
+
+[[package]]
+name = "hanzo-evm-trie"
+version = "1.10.2"
+dependencies = [
+ "alloy-consensus",
+ "alloy-eips",
+ "alloy-primitives",
+ "alloy-rlp",
+ "alloy-trie",
+ "assert_matches",
+ "auto_impl",
+ "codspeed-criterion-compat",
+ "hanzo-evm-ethereum-primitives",
+ "hanzo-evm-execution-errors",
+ "hanzo-evm-metrics",
+ "hanzo-evm-primitives-traits",
+ "hanzo-evm-stages-types",
+ "hanzo-evm-storage-errors",
+ "hanzo-evm-tracing",
+ "hanzo-evm-trie-common",
+ "hanzo-evm-trie-sparse",
+ "itertools 0.14.0",
+ "metrics",
+ "parking_lot",
+ "pretty_assertions",
+ "proptest",
+ "proptest-arbitrary-interop",
+ "rand 0.9.2",
+ "revm-database",
+ "revm-state",
+ "tracing",
+ "triehash",
+]
+
+[[package]]
+name = "hanzo-evm-trie-common"
+version = "1.10.2"
+dependencies = [
+ "alloy-consensus",
+ "alloy-genesis",
+ "alloy-primitives",
+ "alloy-rlp",
+ "alloy-rpc-types-eth",
+ "alloy-serde",
+ "alloy-trie",
+ "arbitrary",
+ "arrayvec",
+ "bincode 1.3.3",
+ "bytes",
+ "codspeed-criterion-compat",
+ "derive_more",
+ "hanzo-evm-codecs",
+ "hanzo-evm-primitives-traits",
+ "hash-db",
+ "itertools 0.14.0",
+ "nybbles",
+ "plain_hasher",
+ "proptest",
+ "proptest-arbitrary-interop",
+ "rayon",
+ "revm-database",
+ "revm-state",
+ "serde",
+ "serde_json",
+ "serde_with",
+]
+
+[[package]]
+name = "hanzo-evm-trie-db"
+version = "1.10.2"
+dependencies = [
+ "alloy-consensus",
+ "alloy-primitives",
+ "alloy-rlp",
+ "hanzo-evm-chainspec",
+ "hanzo-evm-db",
+ "hanzo-evm-db-api",
+ "hanzo-evm-execution-errors",
+ "hanzo-evm-metrics",
+ "hanzo-evm-primitives-traits",
+ "hanzo-evm-provider",
+ "hanzo-evm-stages-types",
+ "hanzo-evm-storage-api",
+ "hanzo-evm-storage-errors",
+ "hanzo-evm-trie",
+ "hanzo-evm-trie-common",
+ "metrics",
+ "parking_lot",
+ "proptest",
+ "proptest-arbitrary-interop",
+ "revm",
+ "revm-database",
+ "serde_json",
+ "similar-asserts",
+ "tracing",
+ "triehash",
+]
+
+[[package]]
+name = "hanzo-evm-trie-parallel"
+version = "1.10.2"
+dependencies = [
+ "alloy-primitives",
+ "alloy-rlp",
+ "codspeed-criterion-compat",
+ "crossbeam-channel",
+ "derive_more",
+ "hanzo-evm-execution-errors",
+ "hanzo-evm-metrics",
+ "hanzo-evm-primitives-traits",
+ "hanzo-evm-provider",
+ "hanzo-evm-storage-errors",
+ "hanzo-evm-trie",
+ "hanzo-evm-trie-common",
+ "hanzo-evm-trie-db",
+ "hanzo-evm-trie-sparse",
+ "itertools 0.14.0",
+ "metrics",
+ "proptest",
+ "proptest-arbitrary-interop",
+ "rand 0.9.2",
+ "rayon",
+ "thiserror 2.0.18",
+ "tokio",
+ "tracing",
+]
+
+[[package]]
+name = "hanzo-evm-trie-sparse"
+version = "1.10.2"
+dependencies = [
+ "alloy-primitives",
+ "alloy-rlp",
+ "alloy-trie",
+ "arbitrary",
+ "assert_matches",
+ "auto_impl",
+ "codspeed-criterion-compat",
+ "hanzo-evm-execution-errors",
+ "hanzo-evm-metrics",
+ "hanzo-evm-primitives-traits",
+ "hanzo-evm-provider",
+ "hanzo-evm-storage-api",
+ "hanzo-evm-testing-utils",
+ "hanzo-evm-tracing",
+ "hanzo-evm-trie",
+ "hanzo-evm-trie-common",
+ "hanzo-evm-trie-db",
+ "itertools 0.14.0",
+ "metrics",
+ "pretty_assertions",
+ "proptest",
+ "proptest-arbitrary-interop",
+ "rand 0.8.5",
+ "rand 0.9.2",
+ "rayon",
+ "tracing",
+]
+
+[[package]]
+name = "hanzo-evm-trie-sparse-parallel"
+version = "1.10.2"
+dependencies = [
+ "alloy-primitives",
+ "alloy-rlp",
+ "alloy-trie",
+ "arbitrary",
+ "assert_matches",
+ "hanzo-evm-execution-errors",
+ "hanzo-evm-metrics",
+ "hanzo-evm-primitives-traits",
+ "hanzo-evm-provider",
+ "hanzo-evm-tracing",
+ "hanzo-evm-trie",
+ "hanzo-evm-trie-common",
+ "hanzo-evm-trie-db",
+ "hanzo-evm-trie-sparse",
+ "itertools 0.14.0",
+ "metrics",
+ "pretty_assertions",
+ "proptest",
+ "proptest-arbitrary-interop",
+ "rand 0.8.5",
+ "rand 0.9.2",
+ "rayon",
+ "smallvec",
+ "tracing",
+]
+
+[[package]]
+name = "hanzo-evm-zstd-compressors"
+version = "1.10.2"
+dependencies = [
+ "zstd",
 ]
 
 [[package]]
@@ -7502,3252 +10748,6 @@ name = "resolv-conf"
 version = "0.7.6"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "1e061d1b48cb8d38042de4ae0a7a6401009d6143dc80d2e2d6f31f0bdd6470c7"
-
-[[package]]
-name = "reth"
-version = "1.10.2"
-dependencies = [
- "alloy-rpc-types",
- "aquamarine",
- "backon",
- "clap",
- "eyre",
- "reth-chainspec",
- "reth-cli-runner",
- "reth-cli-util",
- "reth-consensus",
- "reth-consensus-common",
- "reth-db",
- "reth-ethereum-cli",
- "reth-ethereum-payload-builder",
- "reth-ethereum-primitives",
- "reth-evm",
- "reth-network",
- "reth-network-api",
- "reth-node-api",
- "reth-node-builder",
- "reth-node-core",
- "reth-node-ethereum",
- "reth-node-metrics",
- "reth-payload-builder",
- "reth-payload-primitives",
- "reth-primitives",
- "reth-provider",
- "reth-ress-protocol",
- "reth-ress-provider",
- "reth-revm",
- "reth-rpc",
- "reth-rpc-api",
- "reth-rpc-builder",
- "reth-rpc-convert",
- "reth-rpc-eth-types",
- "reth-rpc-server-types",
- "reth-tasks",
- "reth-tokio-util",
- "reth-transaction-pool",
- "tempfile",
- "tokio",
- "tracing",
-]
-
-[[package]]
-name = "reth-basic-payload-builder"
-version = "1.10.2"
-dependencies = [
- "alloy-consensus",
- "alloy-eips",
- "alloy-primitives",
- "futures-core",
- "futures-util",
- "metrics",
- "reth-chain-state",
- "reth-metrics",
- "reth-payload-builder",
- "reth-payload-builder-primitives",
- "reth-payload-primitives",
- "reth-primitives-traits",
- "reth-revm",
- "reth-storage-api",
- "reth-tasks",
- "tokio",
- "tracing",
-]
-
-[[package]]
-name = "reth-bench"
-version = "1.10.2"
-dependencies = [
- "alloy-consensus",
- "alloy-eips",
- "alloy-json-rpc",
- "alloy-network",
- "alloy-primitives",
- "alloy-provider",
- "alloy-pubsub",
- "alloy-rpc-client",
- "alloy-rpc-types-engine",
- "alloy-transport",
- "alloy-transport-http",
- "alloy-transport-ipc",
- "alloy-transport-ws",
- "async-trait",
- "clap",
- "color-eyre",
- "csv",
- "eyre",
- "futures",
- "humantime",
- "op-alloy-consensus",
- "op-alloy-rpc-types-engine",
- "reqwest",
- "reth-chainspec",
- "reth-cli-runner",
- "reth-cli-util",
- "reth-engine-primitives",
- "reth-ethereum-primitives",
- "reth-fs-util",
- "reth-node-api",
- "reth-node-core",
- "reth-primitives-traits",
- "reth-rpc-api",
- "reth-tracing",
- "serde",
- "serde_json",
- "thiserror 2.0.18",
- "tokio",
- "tower",
- "tracing",
- "url",
-]
-
-[[package]]
-name = "reth-bench-compare"
-version = "1.10.2"
-dependencies = [
- "alloy-primitives",
- "alloy-provider",
- "alloy-rpc-client",
- "alloy-rpc-types-eth",
- "alloy-transport-ws",
- "chrono",
- "clap",
- "csv",
- "ctrlc",
- "eyre",
- "nix 0.31.1",
- "reth-chainspec",
- "reth-cli-runner",
- "reth-cli-util",
- "reth-node-core",
- "reth-tracing",
- "serde",
- "serde_json",
- "shellexpand",
- "shlex",
- "tokio",
- "tracing",
-]
-
-[[package]]
-name = "reth-chain-state"
-version = "1.10.2"
-dependencies = [
- "alloy-consensus",
- "alloy-eips",
- "alloy-primitives",
- "alloy-signer",
- "alloy-signer-local",
- "codspeed-criterion-compat",
- "derive_more",
- "metrics",
- "parking_lot",
- "pin-project",
- "rand 0.9.2",
- "rayon",
- "reth-chainspec",
- "reth-errors",
- "reth-ethereum-primitives",
- "reth-execution-types",
- "reth-metrics",
- "reth-primitives-traits",
- "reth-storage-api",
- "reth-testing-utils",
- "reth-trie",
- "revm-database",
- "revm-state",
- "serde",
- "tokio",
- "tokio-stream",
- "tracing",
-]
-
-[[package]]
-name = "reth-chainspec"
-version = "1.10.2"
-dependencies = [
- "alloy-chains",
- "alloy-consensus",
- "alloy-eips",
- "alloy-evm",
- "alloy-genesis",
- "alloy-primitives",
- "alloy-rlp",
- "alloy-trie",
- "auto_impl",
- "derive_more",
- "reth-ethereum-forks",
- "reth-network-peers",
- "reth-primitives-traits",
- "serde_json",
-]
-
-[[package]]
-name = "reth-cli"
-version = "1.10.2"
-dependencies = [
- "alloy-genesis",
- "clap",
- "eyre",
- "reth-cli-runner",
- "reth-db",
- "serde_json",
- "shellexpand",
-]
-
-[[package]]
-name = "reth-cli-commands"
-version = "1.10.2"
-dependencies = [
- "alloy-chains",
- "alloy-consensus",
- "alloy-eips",
- "alloy-primitives",
- "alloy-rlp",
- "arbitrary",
- "backon",
- "clap",
- "comfy-table",
- "crossterm",
- "eyre",
- "fdlimit",
- "futures",
- "human_bytes",
- "humantime",
- "itertools 0.14.0",
- "lz4",
- "metrics",
- "parking_lot",
- "proptest",
- "proptest-arbitrary-interop",
- "ratatui",
- "reqwest",
- "reth-chainspec",
- "reth-cli",
- "reth-cli-runner",
- "reth-cli-util",
- "reth-codecs",
- "reth-config",
- "reth-consensus",
- "reth-db",
- "reth-db-api",
- "reth-db-common",
- "reth-discv4",
- "reth-discv5",
- "reth-downloaders",
- "reth-ecies",
- "reth-era",
- "reth-era-downloader",
- "reth-era-utils",
- "reth-eth-wire",
- "reth-ethereum-cli",
- "reth-ethereum-primitives",
- "reth-etl",
- "reth-evm",
- "reth-exex",
- "reth-fs-util",
- "reth-net-nat",
- "reth-network",
- "reth-network-p2p",
- "reth-network-peers",
- "reth-node-api",
- "reth-node-builder",
- "reth-node-core",
- "reth-node-events",
- "reth-node-metrics",
- "reth-primitives-traits",
- "reth-provider",
- "reth-prune",
- "reth-prune-types",
- "reth-revm",
- "reth-stages",
- "reth-stages-types",
- "reth-static-file",
- "reth-static-file-types",
- "reth-storage-api",
- "reth-tasks",
- "reth-trie",
- "reth-trie-common",
- "reth-trie-db",
- "secp256k1 0.30.0",
- "serde",
- "serde_json",
- "tar",
- "tempfile",
- "tokio",
- "tokio-stream",
- "toml",
- "tracing",
- "url",
- "zstd",
-]
-
-[[package]]
-name = "reth-cli-runner"
-version = "1.10.2"
-dependencies = [
- "reth-tasks",
- "tokio",
- "tracing",
-]
-
-[[package]]
-name = "reth-cli-util"
-version = "1.10.2"
-dependencies = [
- "alloy-eips",
- "alloy-primitives",
- "cfg-if",
- "eyre",
- "libc",
- "rand 0.8.5",
- "rand 0.9.2",
- "reth-fs-util",
- "reth-tracing",
- "secp256k1 0.30.0",
- "serde",
- "snmalloc-rs",
- "thiserror 2.0.18",
- "tikv-jemallocator",
- "tracy-client",
-]
-
-[[package]]
-name = "reth-codecs"
-version = "1.10.2"
-dependencies = [
- "alloy-consensus",
- "alloy-eips",
- "alloy-genesis",
- "alloy-primitives",
- "alloy-trie",
- "arbitrary",
- "bytes",
- "modular-bitfield",
- "op-alloy-consensus",
- "proptest",
- "proptest-arbitrary-interop",
- "reth-codecs-derive",
- "reth-zstd-compressors",
- "rstest",
- "serde",
- "serde_json",
- "test-fuzz",
- "visibility",
-]
-
-[[package]]
-name = "reth-codecs-derive"
-version = "1.10.2"
-dependencies = [
- "proc-macro2",
- "quote",
- "similar-asserts",
- "syn 2.0.114",
-]
-
-[[package]]
-name = "reth-config"
-version = "1.10.2"
-dependencies = [
- "alloy-primitives",
- "eyre",
- "humantime-serde",
- "reth-network-peers",
- "reth-network-types",
- "reth-prune-types",
- "reth-stages-types",
- "reth-static-file-types",
- "serde",
- "tempfile",
- "toml",
- "url",
-]
-
-[[package]]
-name = "reth-consensus"
-version = "1.10.2"
-dependencies = [
- "alloy-consensus",
- "alloy-primitives",
- "auto_impl",
- "reth-execution-types",
- "reth-primitives-traits",
- "thiserror 2.0.18",
-]
-
-[[package]]
-name = "reth-consensus-common"
-version = "1.10.2"
-dependencies = [
- "alloy-consensus",
- "alloy-eips",
- "alloy-primitives",
- "rand 0.9.2",
- "reth-chainspec",
- "reth-consensus",
- "reth-ethereum-primitives",
- "reth-primitives-traits",
-]
-
-[[package]]
-name = "reth-consensus-debug-client"
-version = "1.10.2"
-dependencies = [
- "alloy-consensus",
- "alloy-eips",
- "alloy-json-rpc",
- "alloy-primitives",
- "alloy-provider",
- "alloy-rpc-types-engine",
- "alloy-transport",
- "auto_impl",
- "derive_more",
- "eyre",
- "futures",
- "reqwest",
- "reth-node-api",
- "reth-primitives-traits",
- "reth-tracing",
- "ringbuffer",
- "serde",
- "serde_json",
- "tokio",
-]
-
-[[package]]
-name = "reth-db"
-version = "1.10.2"
-dependencies = [
- "alloy-consensus",
- "alloy-primitives",
- "arbitrary",
- "assert_matches",
- "codspeed-criterion-compat",
- "derive_more",
- "eyre",
- "metrics",
- "page_size",
- "parking_lot",
- "proptest",
- "reth-db-api",
- "reth-fs-util",
- "reth-libmdbx",
- "reth-metrics",
- "reth-nippy-jar",
- "reth-primitives-traits",
- "reth-prune-types",
- "reth-static-file-types",
- "reth-storage-errors",
- "reth-tracing",
- "rustc-hash",
- "serde",
- "serde_json",
- "strum",
- "sysinfo",
- "tempfile",
- "thiserror 2.0.18",
- "tracing",
-]
-
-[[package]]
-name = "reth-db-api"
-version = "1.10.2"
-dependencies = [
- "alloy-consensus",
- "alloy-genesis",
- "alloy-primitives",
- "arbitrary",
- "arrayvec",
- "bytes",
- "derive_more",
- "metrics",
- "modular-bitfield",
- "op-alloy-consensus",
- "parity-scale-codec",
- "proptest",
- "proptest-arbitrary-interop",
- "rand 0.9.2",
- "reth-codecs",
- "reth-db-models",
- "reth-ethereum-primitives",
- "reth-primitives-traits",
- "reth-prune-types",
- "reth-stages-types",
- "reth-storage-errors",
- "reth-trie-common",
- "roaring",
- "serde",
- "test-fuzz",
-]
-
-[[package]]
-name = "reth-db-common"
-version = "1.10.2"
-dependencies = [
- "alloy-consensus",
- "alloy-genesis",
- "alloy-primitives",
- "boyer-moore-magiclen",
- "eyre",
- "reth-chainspec",
- "reth-codecs",
- "reth-config",
- "reth-db",
- "reth-db-api",
- "reth-etl",
- "reth-execution-errors",
- "reth-fs-util",
- "reth-node-types",
- "reth-primitives-traits",
- "reth-provider",
- "reth-stages-types",
- "reth-static-file-types",
- "reth-trie",
- "reth-trie-db",
- "serde",
- "serde_json",
- "thiserror 2.0.18",
- "tracing",
-]
-
-[[package]]
-name = "reth-db-models"
-version = "1.10.2"
-dependencies = [
- "alloy-eips",
- "alloy-primitives",
- "arbitrary",
- "bytes",
- "modular-bitfield",
- "proptest",
- "proptest-arbitrary-interop",
- "reth-codecs",
- "reth-primitives-traits",
- "serde",
-]
-
-[[package]]
-name = "reth-discv4"
-version = "1.10.2"
-dependencies = [
- "alloy-primitives",
- "alloy-rlp",
- "assert_matches",
- "discv5",
- "enr",
- "itertools 0.14.0",
- "parking_lot",
- "rand 0.8.5",
- "reth-ethereum-forks",
- "reth-net-banlist",
- "reth-net-nat",
- "reth-network-peers",
- "reth-tracing",
- "schnellru",
- "secp256k1 0.30.0",
- "serde",
- "thiserror 2.0.18",
- "tokio",
- "tokio-stream",
- "tracing",
-]
-
-[[package]]
-name = "reth-discv5"
-version = "1.10.2"
-dependencies = [
- "alloy-primitives",
- "alloy-rlp",
- "derive_more",
- "discv5",
- "enr",
- "futures",
- "itertools 0.14.0",
- "metrics",
- "rand 0.8.5",
- "rand 0.9.2",
- "reth-chainspec",
- "reth-ethereum-forks",
- "reth-metrics",
- "reth-network-peers",
- "reth-tracing",
- "secp256k1 0.30.0",
- "thiserror 2.0.18",
- "tokio",
- "tracing",
-]
-
-[[package]]
-name = "reth-dns-discovery"
-version = "1.10.2"
-dependencies = [
- "alloy-chains",
- "alloy-primitives",
- "alloy-rlp",
- "dashmap",
- "data-encoding",
- "enr",
- "hickory-resolver",
- "linked_hash_set",
- "rand 0.9.2",
- "reth-chainspec",
- "reth-ethereum-forks",
- "reth-network-peers",
- "reth-tokio-util",
- "reth-tracing",
- "schnellru",
- "secp256k1 0.30.0",
- "serde",
- "serde_with",
- "thiserror 2.0.18",
- "tokio",
- "tokio-stream",
- "tracing",
-]
-
-[[package]]
-name = "reth-downloaders"
-version = "1.10.2"
-dependencies = [
- "alloy-consensus",
- "alloy-eips",
- "alloy-primitives",
- "alloy-rlp",
- "assert_matches",
- "async-compression",
- "futures",
- "futures-util",
- "itertools 0.14.0",
- "metrics",
- "pin-project",
- "rand 0.9.2",
- "rayon",
- "reth-chainspec",
- "reth-config",
- "reth-consensus",
- "reth-ethereum-primitives",
- "reth-metrics",
- "reth-network-p2p",
- "reth-network-peers",
- "reth-primitives-traits",
- "reth-provider",
- "reth-storage-api",
- "reth-tasks",
- "reth-testing-utils",
- "reth-tracing",
- "tempfile",
- "thiserror 2.0.18",
- "tokio",
- "tokio-stream",
- "tokio-util",
- "tracing",
-]
-
-[[package]]
-name = "reth-e2e-test-utils"
-version = "1.10.2"
-dependencies = [
- "alloy-consensus",
- "alloy-eips",
- "alloy-network",
- "alloy-primitives",
- "alloy-provider",
- "alloy-rlp",
- "alloy-rpc-types-engine",
- "alloy-rpc-types-eth",
- "alloy-signer",
- "alloy-signer-local",
- "derive_more",
- "eyre",
- "futures-util",
- "jsonrpsee",
- "reth-chainspec",
- "reth-cli-commands",
- "reth-config",
- "reth-consensus",
- "reth-db",
- "reth-db-common",
- "reth-engine-local",
- "reth-engine-primitives",
- "reth-ethereum-primitives",
- "reth-network-api",
- "reth-network-p2p",
- "reth-network-peers",
- "reth-node-api",
- "reth-node-builder",
- "reth-node-core",
- "reth-node-ethereum",
- "reth-payload-builder",
- "reth-payload-builder-primitives",
- "reth-payload-primitives",
- "reth-primitives",
- "reth-primitives-traits",
- "reth-provider",
- "reth-rpc-api",
- "reth-rpc-builder",
- "reth-rpc-eth-api",
- "reth-rpc-server-types",
- "reth-stages-types",
- "reth-tasks",
- "reth-tokio-util",
- "reth-tracing",
- "revm",
- "serde_json",
- "tempfile",
- "tokio",
- "tokio-stream",
- "tracing",
- "url",
-]
-
-[[package]]
-name = "reth-ecies"
-version = "1.10.2"
-dependencies = [
- "aes",
- "alloy-primitives",
- "alloy-rlp",
- "block-padding",
- "byteorder",
- "cipher",
- "concat-kdf",
- "ctr",
- "digest 0.10.7",
- "futures",
- "hmac",
- "pin-project",
- "rand 0.8.5",
- "reth-network-peers",
- "secp256k1 0.30.0",
- "sha2",
- "thiserror 2.0.18",
- "tokio",
- "tokio-stream",
- "tokio-util",
- "tracing",
-]
-
-[[package]]
-name = "reth-engine-local"
-version = "1.10.2"
-dependencies = [
- "alloy-consensus",
- "alloy-primitives",
- "alloy-rpc-types-engine",
- "eyre",
- "futures-util",
- "op-alloy-rpc-types-engine",
- "reth-chainspec",
- "reth-engine-primitives",
- "reth-ethereum-engine-primitives",
- "reth-payload-builder",
- "reth-payload-primitives",
- "reth-primitives-traits",
- "reth-storage-api",
- "reth-transaction-pool",
- "tokio",
- "tokio-stream",
- "tracing",
-]
-
-[[package]]
-name = "reth-engine-primitives"
-version = "1.10.2"
-dependencies = [
- "alloy-consensus",
- "alloy-eips",
- "alloy-primitives",
- "alloy-rpc-types-engine",
- "auto_impl",
- "futures",
- "reth-chain-state",
- "reth-errors",
- "reth-ethereum-primitives",
- "reth-evm",
- "reth-execution-types",
- "reth-payload-builder-primitives",
- "reth-payload-primitives",
- "reth-primitives-traits",
- "reth-trie-common",
- "serde",
- "thiserror 2.0.18",
- "tokio",
-]
-
-[[package]]
-name = "reth-engine-service"
-version = "1.10.2"
-dependencies = [
- "alloy-eips",
- "futures",
- "pin-project",
- "reth-chainspec",
- "reth-consensus",
- "reth-engine-primitives",
- "reth-engine-tree",
- "reth-ethereum-consensus",
- "reth-ethereum-engine-primitives",
- "reth-evm",
- "reth-evm-ethereum",
- "reth-exex-types",
- "reth-network-p2p",
- "reth-node-ethereum",
- "reth-node-types",
- "reth-payload-builder",
- "reth-primitives-traits",
- "reth-provider",
- "reth-prune",
- "reth-stages-api",
- "reth-tasks",
- "reth-trie-db",
- "tokio",
- "tokio-stream",
-]
-
-[[package]]
-name = "reth-engine-tree"
-version = "1.10.2"
-dependencies = [
- "alloy-consensus",
- "alloy-eip7928",
- "alloy-eips",
- "alloy-evm",
- "alloy-primitives",
- "alloy-rlp",
- "alloy-rpc-types-engine",
- "assert_matches",
- "codspeed-criterion-compat",
- "crossbeam-channel",
- "derive_more",
- "eyre",
- "fixed-cache",
- "futures",
- "metrics",
- "metrics-util",
- "moka",
- "parking_lot",
- "proptest",
- "rand 0.8.5",
- "rand 0.9.2",
- "rayon",
- "reth-chain-state",
- "reth-chainspec",
- "reth-consensus",
- "reth-db",
- "reth-db-common",
- "reth-e2e-test-utils",
- "reth-engine-primitives",
- "reth-errors",
- "reth-ethereum-consensus",
- "reth-ethereum-engine-primitives",
- "reth-ethereum-primitives",
- "reth-evm",
- "reth-evm-ethereum",
- "reth-execution-types",
- "reth-exex-types",
- "reth-metrics",
- "reth-network-p2p",
- "reth-node-ethereum",
- "reth-payload-builder",
- "reth-payload-primitives",
- "reth-primitives-traits",
- "reth-provider",
- "reth-prune",
- "reth-prune-types",
- "reth-revm",
- "reth-stages",
- "reth-stages-api",
- "reth-static-file",
- "reth-tasks",
- "reth-testing-utils",
- "reth-tracing",
- "reth-trie",
- "reth-trie-common",
- "reth-trie-db",
- "reth-trie-parallel",
- "reth-trie-sparse",
- "reth-trie-sparse-parallel",
- "revm",
- "revm-primitives",
- "revm-state",
- "schnellru",
- "serde_json",
- "smallvec",
- "thiserror 2.0.18",
- "tokio",
- "tracing",
-]
-
-[[package]]
-name = "reth-engine-util"
-version = "1.10.2"
-dependencies = [
- "alloy-consensus",
- "alloy-rpc-types-engine",
- "eyre",
- "futures",
- "itertools 0.14.0",
- "pin-project",
- "reth-chainspec",
- "reth-engine-primitives",
- "reth-engine-tree",
- "reth-errors",
- "reth-evm",
- "reth-fs-util",
- "reth-payload-primitives",
- "reth-primitives-traits",
- "reth-revm",
- "reth-storage-api",
- "serde",
- "serde_json",
- "tokio",
- "tokio-util",
- "tracing",
-]
-
-[[package]]
-name = "reth-era"
-version = "1.10.2"
-dependencies = [
- "alloy-consensus",
- "alloy-eips",
- "alloy-primitives",
- "alloy-rlp",
- "ethereum_ssz 0.10.1",
- "ethereum_ssz_derive 0.10.1",
- "eyre",
- "rand 0.9.2",
- "reqwest",
- "reth-era-downloader",
- "reth-ethereum-primitives",
- "snap",
- "tempfile",
- "test-case",
- "thiserror 2.0.18",
- "tokio",
-]
-
-[[package]]
-name = "reth-era-downloader"
-version = "1.10.2"
-dependencies = [
- "alloy-primitives",
- "bytes",
- "eyre",
- "futures",
- "futures-util",
- "reqwest",
- "reth-era",
- "reth-fs-util",
- "sha2",
- "tempfile",
- "test-case",
- "tokio",
-]
-
-[[package]]
-name = "reth-era-utils"
-version = "1.10.2"
-dependencies = [
- "alloy-consensus",
- "alloy-primitives",
- "bytes",
- "eyre",
- "futures-util",
- "reqwest",
- "reth-db-api",
- "reth-db-common",
- "reth-era",
- "reth-era-downloader",
- "reth-etl",
- "reth-fs-util",
- "reth-primitives-traits",
- "reth-provider",
- "reth-stages-types",
- "reth-storage-api",
- "tempfile",
- "tokio",
- "tokio-util",
- "tracing",
-]
-
-[[package]]
-name = "reth-errors"
-version = "1.10.2"
-dependencies = [
- "reth-consensus",
- "reth-execution-errors",
- "reth-storage-errors",
- "thiserror 2.0.18",
-]
-
-[[package]]
-name = "reth-eth-wire"
-version = "1.10.2"
-dependencies = [
- "alloy-chains",
- "alloy-consensus",
- "alloy-eips",
- "alloy-primitives",
- "alloy-rlp",
- "arbitrary",
- "async-stream",
- "bytes",
- "derive_more",
- "futures",
- "pin-project",
- "proptest",
- "proptest-arbitrary-interop",
- "rand 0.8.5",
- "rand 0.9.2",
- "reth-codecs",
- "reth-ecies",
- "reth-eth-wire-types",
- "reth-ethereum-forks",
- "reth-metrics",
- "reth-network-peers",
- "reth-primitives-traits",
- "reth-tracing",
- "secp256k1 0.30.0",
- "serde",
- "snap",
- "test-fuzz",
- "thiserror 2.0.18",
- "tokio",
- "tokio-stream",
- "tokio-util",
- "tracing",
-]
-
-[[package]]
-name = "reth-eth-wire-types"
-version = "1.10.2"
-dependencies = [
- "alloy-chains",
- "alloy-consensus",
- "alloy-eips",
- "alloy-genesis",
- "alloy-hardforks",
- "alloy-primitives",
- "alloy-rlp",
- "arbitrary",
- "bytes",
- "derive_more",
- "proptest",
- "proptest-arbitrary-interop",
- "rand 0.9.2",
- "reth-chainspec",
- "reth-codecs-derive",
- "reth-ethereum-primitives",
- "reth-primitives-traits",
- "serde",
- "thiserror 2.0.18",
-]
-
-[[package]]
-name = "reth-ethereum"
-version = "1.10.2"
-dependencies = [
- "alloy-rpc-types-engine",
- "alloy-rpc-types-eth",
- "reth-chainspec",
- "reth-cli-util",
- "reth-codecs",
- "reth-consensus",
- "reth-consensus-common",
- "reth-db",
- "reth-engine-local",
- "reth-eth-wire",
- "reth-ethereum-cli",
- "reth-ethereum-consensus",
- "reth-ethereum-primitives",
- "reth-evm",
- "reth-evm-ethereum",
- "reth-exex",
- "reth-network",
- "reth-network-api",
- "reth-node-api",
- "reth-node-builder",
- "reth-node-core",
- "reth-node-ethereum",
- "reth-primitives-traits",
- "reth-provider",
- "reth-revm",
- "reth-rpc",
- "reth-rpc-api",
- "reth-rpc-builder",
- "reth-rpc-eth-types",
- "reth-storage-api",
- "reth-tasks",
- "reth-transaction-pool",
- "reth-trie",
- "reth-trie-db",
-]
-
-[[package]]
-name = "reth-ethereum-cli"
-version = "1.10.2"
-dependencies = [
- "clap",
- "eyre",
- "reth-chainspec",
- "reth-cli",
- "reth-cli-commands",
- "reth-cli-runner",
- "reth-db",
- "reth-node-api",
- "reth-node-builder",
- "reth-node-core",
- "reth-node-ethereum",
- "reth-node-metrics",
- "reth-rpc-server-types",
- "reth-tracing",
- "tempfile",
- "tracing",
-]
-
-[[package]]
-name = "reth-ethereum-consensus"
-version = "1.10.2"
-dependencies = [
- "alloy-consensus",
- "alloy-eips",
- "alloy-primitives",
- "reth-chainspec",
- "reth-consensus",
- "reth-consensus-common",
- "reth-ethereum-primitives",
- "reth-execution-types",
- "reth-primitives-traits",
- "tracing",
-]
-
-[[package]]
-name = "reth-ethereum-engine-primitives"
-version = "1.10.2"
-dependencies = [
- "alloy-eips",
- "alloy-primitives",
- "alloy-rlp",
- "alloy-rpc-types-engine",
- "reth-engine-primitives",
- "reth-ethereum-primitives",
- "reth-payload-primitives",
- "reth-primitives-traits",
- "serde",
- "serde_json",
- "sha2",
- "thiserror 2.0.18",
-]
-
-[[package]]
-name = "reth-ethereum-forks"
-version = "1.10.2"
-dependencies = [
- "alloy-eip2124",
- "alloy-hardforks",
- "alloy-primitives",
- "arbitrary",
- "auto_impl",
- "once_cell",
- "rustc-hash",
-]
-
-[[package]]
-name = "reth-ethereum-payload-builder"
-version = "1.10.2"
-dependencies = [
- "alloy-consensus",
- "alloy-eips",
- "alloy-primitives",
- "alloy-rlp",
- "alloy-rpc-types-engine",
- "reth-basic-payload-builder",
- "reth-chainspec",
- "reth-consensus-common",
- "reth-errors",
- "reth-ethereum-primitives",
- "reth-evm",
- "reth-evm-ethereum",
- "reth-payload-builder",
- "reth-payload-builder-primitives",
- "reth-payload-primitives",
- "reth-payload-validator",
- "reth-primitives-traits",
- "reth-revm",
- "reth-storage-api",
- "reth-transaction-pool",
- "revm",
- "tracing",
-]
-
-[[package]]
-name = "reth-ethereum-primitives"
-version = "1.10.2"
-dependencies = [
- "alloy-consensus",
- "alloy-eips",
- "alloy-primitives",
- "alloy-rlp",
- "alloy-rpc-types-eth",
- "alloy-serde",
- "arbitrary",
- "bincode 1.3.3",
- "derive_more",
- "modular-bitfield",
- "proptest",
- "proptest-arbitrary-interop",
- "rand 0.8.5",
- "rand 0.9.2",
- "reth-codecs",
- "reth-primitives-traits",
- "reth-zstd-compressors",
- "secp256k1 0.30.0",
- "serde",
- "serde_json",
- "serde_with",
-]
-
-[[package]]
-name = "reth-etl"
-version = "1.10.2"
-dependencies = [
- "alloy-primitives",
- "rayon",
- "reth-db-api",
- "tempfile",
-]
-
-[[package]]
-name = "reth-evm"
-version = "1.10.2"
-dependencies = [
- "alloy-consensus",
- "alloy-eips",
- "alloy-evm",
- "alloy-primitives",
- "auto_impl",
- "derive_more",
- "futures-util",
- "metrics",
- "rayon",
- "reth-ethereum-primitives",
- "reth-execution-errors",
- "reth-execution-types",
- "reth-metrics",
- "reth-primitives-traits",
- "reth-storage-api",
- "reth-storage-errors",
- "reth-trie-common",
- "revm",
-]
-
-[[package]]
-name = "reth-evm-ethereum"
-version = "1.10.2"
-dependencies = [
- "alloy-consensus",
- "alloy-eips",
- "alloy-evm",
- "alloy-genesis",
- "alloy-primitives",
- "alloy-rpc-types-engine",
- "derive_more",
- "parking_lot",
- "reth-chainspec",
- "reth-ethereum-forks",
- "reth-ethereum-primitives",
- "reth-evm",
- "reth-execution-types",
- "reth-primitives-traits",
- "reth-storage-errors",
- "reth-testing-utils",
- "revm",
- "secp256k1 0.30.0",
-]
-
-[[package]]
-name = "reth-execution-errors"
-version = "1.10.2"
-dependencies = [
- "alloy-evm",
- "alloy-primitives",
- "alloy-rlp",
- "nybbles",
- "reth-storage-errors",
- "thiserror 2.0.18",
-]
-
-[[package]]
-name = "reth-execution-types"
-version = "1.10.2"
-dependencies = [
- "alloy-consensus",
- "alloy-eips",
- "alloy-evm",
- "alloy-primitives",
- "arbitrary",
- "bincode 1.3.3",
- "derive_more",
- "rand 0.9.2",
- "reth-ethereum-primitives",
- "reth-primitives-traits",
- "reth-trie-common",
- "revm",
- "serde",
- "serde_with",
-]
-
-[[package]]
-name = "reth-exex"
-version = "1.10.2"
-dependencies = [
- "alloy-consensus",
- "alloy-eips",
- "alloy-genesis",
- "alloy-primitives",
- "eyre",
- "futures",
- "itertools 0.14.0",
- "metrics",
- "parking_lot",
- "rand 0.9.2",
- "reth-chain-state",
- "reth-chainspec",
- "reth-config",
- "reth-db-common",
- "reth-ethereum-primitives",
- "reth-evm",
- "reth-evm-ethereum",
- "reth-exex-types",
- "reth-fs-util",
- "reth-metrics",
- "reth-node-api",
- "reth-node-core",
- "reth-payload-builder",
- "reth-primitives-traits",
- "reth-provider",
- "reth-prune-types",
- "reth-revm",
- "reth-stages-api",
- "reth-tasks",
- "reth-testing-utils",
- "reth-tracing",
- "reth-trie-common",
- "rmp-serde",
- "secp256k1 0.30.0",
- "tempfile",
- "thiserror 2.0.18",
- "tokio",
- "tokio-util",
- "tracing",
-]
-
-[[package]]
-name = "reth-exex-test-utils"
-version = "1.10.2"
-dependencies = [
- "alloy-eips",
- "eyre",
- "futures-util",
- "reth-chainspec",
- "reth-config",
- "reth-consensus",
- "reth-db",
- "reth-db-common",
- "reth-ethereum-primitives",
- "reth-evm-ethereum",
- "reth-execution-types",
- "reth-exex",
- "reth-network",
- "reth-node-api",
- "reth-node-builder",
- "reth-node-core",
- "reth-node-ethereum",
- "reth-payload-builder",
- "reth-primitives-traits",
- "reth-provider",
- "reth-tasks",
- "reth-transaction-pool",
- "tempfile",
- "thiserror 2.0.18",
- "tokio",
-]
-
-[[package]]
-name = "reth-exex-types"
-version = "1.10.2"
-dependencies = [
- "alloy-eips",
- "alloy-primitives",
- "arbitrary",
- "bincode 1.3.3",
- "rand 0.9.2",
- "reth-chain-state",
- "reth-ethereum-primitives",
- "reth-execution-types",
- "reth-primitives-traits",
- "serde",
- "serde_with",
-]
-
-[[package]]
-name = "reth-fs-util"
-version = "1.10.2"
-dependencies = [
- "serde",
- "serde_json",
- "thiserror 2.0.18",
-]
-
-[[package]]
-name = "reth-invalid-block-hooks"
-version = "1.10.2"
-dependencies = [
- "alloy-consensus",
- "alloy-eips",
- "alloy-primitives",
- "alloy-rlp",
- "alloy-rpc-types-debug",
- "eyre",
- "futures",
- "jsonrpsee",
- "pretty_assertions",
- "reth-chainspec",
- "reth-engine-primitives",
- "reth-ethereum-primitives",
- "reth-evm",
- "reth-evm-ethereum",
- "reth-primitives-traits",
- "reth-provider",
- "reth-revm",
- "reth-rpc-api",
- "reth-testing-utils",
- "reth-tracing",
- "reth-trie",
- "revm",
- "revm-bytecode",
- "revm-database",
- "serde",
- "serde_json",
- "tempfile",
-]
-
-[[package]]
-name = "reth-ipc"
-version = "1.10.2"
-dependencies = [
- "bytes",
- "futures",
- "futures-util",
- "interprocess",
- "jsonrpsee",
- "pin-project",
- "rand 0.9.2",
- "reth-tracing",
- "serde",
- "serde_json",
- "thiserror 2.0.18",
- "tokio",
- "tokio-stream",
- "tokio-util",
- "tower",
- "tracing",
-]
-
-[[package]]
-name = "reth-libmdbx"
-version = "1.10.2"
-dependencies = [
- "bitflags 2.10.0",
- "byteorder",
- "codspeed-criterion-compat",
- "dashmap",
- "derive_more",
- "parking_lot",
- "rand 0.9.2",
- "reth-mdbx-sys",
- "smallvec",
- "tempfile",
- "thiserror 2.0.18",
- "tracing",
-]
-
-[[package]]
-name = "reth-mdbx-sys"
-version = "1.10.2"
-dependencies = [
- "bindgen",
- "cc",
-]
-
-[[package]]
-name = "reth-metrics"
-version = "1.10.2"
-dependencies = [
- "futures",
- "metrics",
- "metrics-derive",
- "tokio",
- "tokio-util",
-]
-
-[[package]]
-name = "reth-net-banlist"
-version = "1.10.2"
-dependencies = [
- "alloy-primitives",
- "ipnet",
-]
-
-[[package]]
-name = "reth-net-nat"
-version = "1.10.2"
-dependencies = [
- "futures-util",
- "if-addrs",
- "reqwest",
- "reth-tracing",
- "serde_with",
- "thiserror 2.0.18",
- "tokio",
- "tracing",
-]
-
-[[package]]
-name = "reth-network"
-version = "1.10.2"
-dependencies = [
- "alloy-consensus",
- "alloy-eips",
- "alloy-genesis",
- "alloy-primitives",
- "alloy-rlp",
- "aquamarine",
- "auto_impl",
- "codspeed-criterion-compat",
- "derive_more",
- "discv5",
- "enr",
- "futures",
- "itertools 0.14.0",
- "metrics",
- "parking_lot",
- "pin-project",
- "rand 0.8.5",
- "rand 0.9.2",
- "rayon",
- "reth-chainspec",
- "reth-consensus",
- "reth-discv4",
- "reth-discv5",
- "reth-dns-discovery",
- "reth-ecies",
- "reth-eth-wire",
- "reth-eth-wire-types",
- "reth-ethereum-forks",
- "reth-ethereum-primitives",
- "reth-evm-ethereum",
- "reth-fs-util",
- "reth-metrics",
- "reth-net-banlist",
- "reth-network",
- "reth-network-api",
- "reth-network-p2p",
- "reth-network-peers",
- "reth-network-types",
- "reth-primitives-traits",
- "reth-provider",
- "reth-storage-api",
- "reth-tasks",
- "reth-tokio-util",
- "reth-tracing",
- "reth-transaction-pool",
- "rustc-hash",
- "schnellru",
- "secp256k1 0.30.0",
- "serde",
- "smallvec",
- "thiserror 2.0.18",
- "tokio",
- "tokio-stream",
- "tokio-util",
- "tracing",
- "url",
-]
-
-[[package]]
-name = "reth-network-api"
-version = "1.10.2"
-dependencies = [
- "alloy-consensus",
- "alloy-primitives",
- "alloy-rpc-types-admin",
- "alloy-rpc-types-eth",
- "auto_impl",
- "derive_more",
- "enr",
- "futures",
- "reth-eth-wire-types",
- "reth-ethereum-forks",
- "reth-network-p2p",
- "reth-network-peers",
- "reth-network-types",
- "reth-tokio-util",
- "serde",
- "thiserror 2.0.18",
- "tokio",
- "tokio-stream",
-]
-
-[[package]]
-name = "reth-network-p2p"
-version = "1.10.2"
-dependencies = [
- "alloy-consensus",
- "alloy-eips",
- "alloy-primitives",
- "auto_impl",
- "derive_more",
- "futures",
- "parking_lot",
- "reth-consensus",
- "reth-eth-wire-types",
- "reth-ethereum-primitives",
- "reth-network-peers",
- "reth-network-types",
- "reth-primitives-traits",
- "reth-storage-errors",
- "tokio",
- "tracing",
-]
-
-[[package]]
-name = "reth-network-peers"
-version = "1.10.2"
-dependencies = [
- "alloy-primitives",
- "alloy-rlp",
- "enr",
- "rand 0.8.5",
- "rand 0.9.2",
- "secp256k1 0.30.0",
- "serde_json",
- "serde_with",
- "thiserror 2.0.18",
- "tokio",
- "url",
-]
-
-[[package]]
-name = "reth-network-types"
-version = "1.10.2"
-dependencies = [
- "alloy-eip2124",
- "humantime-serde",
- "reth-net-banlist",
- "reth-network-peers",
- "serde",
- "serde_json",
- "tracing",
-]
-
-[[package]]
-name = "reth-nippy-jar"
-version = "1.10.2"
-dependencies = [
- "anyhow",
- "bincode 1.3.3",
- "derive_more",
- "lz4_flex",
- "memmap2",
- "rand 0.9.2",
- "reth-fs-util",
- "serde",
- "tempfile",
- "thiserror 2.0.18",
- "tracing",
- "zstd",
-]
-
-[[package]]
-name = "reth-node-api"
-version = "1.10.2"
-dependencies = [
- "alloy-rpc-types-engine",
- "eyre",
- "reth-basic-payload-builder",
- "reth-consensus",
- "reth-db-api",
- "reth-engine-primitives",
- "reth-evm",
- "reth-network-api",
- "reth-node-core",
- "reth-node-types",
- "reth-payload-builder",
- "reth-payload-builder-primitives",
- "reth-payload-primitives",
- "reth-provider",
- "reth-tasks",
- "reth-tokio-util",
- "reth-transaction-pool",
-]
-
-[[package]]
-name = "reth-node-builder"
-version = "1.10.2"
-dependencies = [
- "alloy-consensus",
- "alloy-eips",
- "alloy-primitives",
- "alloy-provider",
- "alloy-rpc-types",
- "alloy-rpc-types-engine",
- "aquamarine",
- "eyre",
- "fdlimit",
- "futures",
- "jsonrpsee",
- "parking_lot",
- "rayon",
- "reth-basic-payload-builder",
- "reth-chain-state",
- "reth-chainspec",
- "reth-config",
- "reth-consensus",
- "reth-consensus-debug-client",
- "reth-db",
- "reth-db-api",
- "reth-db-common",
- "reth-downloaders",
- "reth-engine-local",
- "reth-engine-primitives",
- "reth-engine-service",
- "reth-engine-tree",
- "reth-engine-util",
- "reth-ethereum-engine-primitives",
- "reth-evm",
- "reth-evm-ethereum",
- "reth-exex",
- "reth-fs-util",
- "reth-invalid-block-hooks",
- "reth-network",
- "reth-network-api",
- "reth-network-p2p",
- "reth-node-api",
- "reth-node-core",
- "reth-node-ethereum",
- "reth-node-ethstats",
- "reth-node-events",
- "reth-node-metrics",
- "reth-payload-builder",
- "reth-primitives-traits",
- "reth-provider",
- "reth-prune",
- "reth-rpc",
- "reth-rpc-api",
- "reth-rpc-builder",
- "reth-rpc-engine-api",
- "reth-rpc-eth-types",
- "reth-rpc-layer",
- "reth-stages",
- "reth-static-file",
- "reth-tasks",
- "reth-tokio-util",
- "reth-tracing",
- "reth-transaction-pool",
- "reth-trie-db",
- "secp256k1 0.30.0",
- "serde_json",
- "tempfile",
- "tokio",
- "tokio-stream",
- "tracing",
-]
-
-[[package]]
-name = "reth-node-core"
-version = "1.10.2"
-dependencies = [
- "alloy-consensus",
- "alloy-eips",
- "alloy-primitives",
- "alloy-rpc-types-engine",
- "clap",
- "derive_more",
- "dirs-next",
- "eyre",
- "futures",
- "humantime",
- "ipnet",
- "proptest",
- "rand 0.9.2",
- "reth-chainspec",
- "reth-cli-util",
- "reth-config",
- "reth-consensus",
- "reth-db",
- "reth-discv4",
- "reth-discv5",
- "reth-engine-local",
- "reth-engine-primitives",
- "reth-ethereum-forks",
- "reth-net-banlist",
- "reth-net-nat",
- "reth-network",
- "reth-network-p2p",
- "reth-network-peers",
- "reth-primitives-traits",
- "reth-prune-types",
- "reth-rpc-convert",
- "reth-rpc-eth-types",
- "reth-rpc-server-types",
- "reth-stages-types",
- "reth-storage-api",
- "reth-storage-errors",
- "reth-tracing",
- "reth-tracing-otlp",
- "reth-transaction-pool",
- "secp256k1 0.30.0",
- "serde",
- "shellexpand",
- "strum",
- "thiserror 2.0.18",
- "tokio",
- "toml",
- "tracing",
- "url",
- "vergen",
- "vergen-git2",
-]
-
-[[package]]
-name = "reth-node-ethereum"
-version = "1.10.2"
-dependencies = [
- "alloy-consensus",
- "alloy-contract",
- "alloy-eips",
- "alloy-genesis",
- "alloy-network",
- "alloy-primitives",
- "alloy-provider",
- "alloy-rpc-types-beacon",
- "alloy-rpc-types-engine",
- "alloy-rpc-types-eth",
- "alloy-rpc-types-trace",
- "alloy-signer",
- "alloy-sol-types",
- "eyre",
- "futures",
- "jsonrpsee-core",
- "rand 0.9.2",
- "reth-chainspec",
- "reth-db",
- "reth-e2e-test-utils",
- "reth-engine-local",
- "reth-engine-primitives",
- "reth-ethereum-consensus",
- "reth-ethereum-engine-primitives",
- "reth-ethereum-payload-builder",
- "reth-ethereum-primitives",
- "reth-evm",
- "reth-evm-ethereum",
- "reth-exex",
- "reth-network",
- "reth-node-api",
- "reth-node-builder",
- "reth-node-core",
- "reth-payload-primitives",
- "reth-primitives-traits",
- "reth-provider",
- "reth-revm",
- "reth-rpc",
- "reth-rpc-api",
- "reth-rpc-builder",
- "reth-rpc-eth-api",
- "reth-rpc-eth-types",
- "reth-rpc-server-types",
- "reth-stages-types",
- "reth-tasks",
- "reth-testing-utils",
- "reth-tracing",
- "reth-transaction-pool",
- "revm",
- "serde",
- "serde_json",
- "similar-asserts",
- "tempfile",
- "tokio",
-]
-
-[[package]]
-name = "reth-node-ethstats"
-version = "1.10.2"
-dependencies = [
- "alloy-consensus",
- "alloy-primitives",
- "chrono",
- "futures-util",
- "reth-chain-state",
- "reth-network-api",
- "reth-primitives-traits",
- "reth-storage-api",
- "reth-transaction-pool",
- "serde",
- "serde_json",
- "thiserror 2.0.18",
- "tokio",
- "tokio-stream",
- "tokio-tungstenite 0.28.0",
- "tracing",
- "url",
-]
-
-[[package]]
-name = "reth-node-events"
-version = "1.10.2"
-dependencies = [
- "alloy-consensus",
- "alloy-eips",
- "alloy-primitives",
- "alloy-rpc-types-engine",
- "derive_more",
- "futures",
- "humantime",
- "pin-project",
- "reth-engine-primitives",
- "reth-network-api",
- "reth-primitives-traits",
- "reth-prune-types",
- "reth-stages",
- "reth-static-file-types",
- "reth-storage-api",
- "tokio",
- "tracing",
-]
-
-[[package]]
-name = "reth-node-metrics"
-version = "1.10.2"
-dependencies = [
- "bytes",
- "eyre",
- "http",
- "http-body-util",
- "jemalloc_pprof",
- "jsonrpsee-server",
- "mappings",
- "metrics",
- "metrics-exporter-prometheus",
- "metrics-process",
- "metrics-util",
- "pprof_util",
- "procfs",
- "reqwest",
- "reth-fs-util",
- "reth-metrics",
- "reth-tasks",
- "socket2 0.6.2",
- "tempfile",
- "tikv-jemalloc-ctl",
- "tokio",
- "tower",
- "tracing",
-]
-
-[[package]]
-name = "reth-node-types"
-version = "1.10.2"
-dependencies = [
- "reth-chainspec",
- "reth-db-api",
- "reth-engine-primitives",
- "reth-payload-primitives",
- "reth-primitives-traits",
-]
-
-[[package]]
-name = "reth-payload-builder"
-version = "1.10.2"
-dependencies = [
- "alloy-consensus",
- "alloy-primitives",
- "alloy-rpc-types",
- "futures-util",
- "metrics",
- "reth-chain-state",
- "reth-ethereum-engine-primitives",
- "reth-metrics",
- "reth-payload-builder-primitives",
- "reth-payload-primitives",
- "reth-primitives-traits",
- "tokio",
- "tokio-stream",
- "tracing",
-]
-
-[[package]]
-name = "reth-payload-builder-primitives"
-version = "1.10.2"
-dependencies = [
- "pin-project",
- "reth-payload-primitives",
- "tokio",
- "tokio-stream",
- "tracing",
-]
-
-[[package]]
-name = "reth-payload-primitives"
-version = "1.10.2"
-dependencies = [
- "alloy-consensus",
- "alloy-eips",
- "alloy-primitives",
- "alloy-rpc-types-engine",
- "assert_matches",
- "auto_impl",
- "either",
- "op-alloy-rpc-types-engine",
- "reth-chain-state",
- "reth-chainspec",
- "reth-errors",
- "reth-execution-types",
- "reth-primitives-traits",
- "reth-trie-common",
- "serde",
- "thiserror 2.0.18",
- "tokio",
-]
-
-[[package]]
-name = "reth-payload-util"
-version = "1.10.2"
-dependencies = [
- "alloy-consensus",
- "alloy-primitives",
- "reth-transaction-pool",
-]
-
-[[package]]
-name = "reth-payload-validator"
-version = "1.10.2"
-dependencies = [
- "alloy-consensus",
- "alloy-rpc-types-engine",
- "reth-primitives-traits",
-]
-
-[[package]]
-name = "reth-primitives"
-version = "1.10.2"
-dependencies = [
- "alloy-consensus",
- "alloy-eips",
- "alloy-genesis",
- "alloy-primitives",
- "alloy-rlp",
- "arbitrary",
- "c-kzg",
- "codspeed-criterion-compat",
- "once_cell",
- "proptest",
- "proptest-arbitrary-interop",
- "reth-codecs",
- "reth-ethereum-forks",
- "reth-ethereum-primitives",
- "reth-primitives-traits",
- "reth-static-file-types",
-]
-
-[[package]]
-name = "reth-primitives-traits"
-version = "1.10.2"
-dependencies = [
- "alloy-consensus",
- "alloy-eips",
- "alloy-genesis",
- "alloy-primitives",
- "alloy-rlp",
- "alloy-rpc-types-eth",
- "alloy-trie",
- "arbitrary",
- "auto_impl",
- "bincode 1.3.3",
- "byteorder",
- "bytes",
- "dashmap",
- "derive_more",
- "modular-bitfield",
- "once_cell",
- "op-alloy-consensus",
- "proptest",
- "proptest-arbitrary-interop",
- "rand 0.8.5",
- "rand 0.9.2",
- "rayon",
- "reth-chainspec",
- "reth-codecs",
- "revm-bytecode",
- "revm-primitives",
- "revm-state",
- "secp256k1 0.30.0",
- "serde",
- "serde_json",
- "serde_with",
- "thiserror 2.0.18",
-]
-
-[[package]]
-name = "reth-provider"
-version = "1.10.2"
-dependencies = [
- "alloy-consensus",
- "alloy-eips",
- "alloy-primitives",
- "alloy-rpc-types-engine",
- "assert_matches",
- "eyre",
- "itertools 0.14.0",
- "metrics",
- "notify",
- "parking_lot",
- "rand 0.9.2",
- "rayon",
- "reth-chain-state",
- "reth-chainspec",
- "reth-codecs",
- "reth-db",
- "reth-db-api",
- "reth-errors",
- "reth-ethereum-engine-primitives",
- "reth-ethereum-primitives",
- "reth-execution-types",
- "reth-fs-util",
- "reth-metrics",
- "reth-nippy-jar",
- "reth-node-types",
- "reth-primitives-traits",
- "reth-prune-types",
- "reth-stages-types",
- "reth-static-file-types",
- "reth-storage-api",
- "reth-storage-errors",
- "reth-tasks",
- "reth-testing-utils",
- "reth-tracing",
- "reth-trie",
- "reth-trie-db",
- "revm-database",
- "revm-database-interface",
- "revm-state",
- "rocksdb",
- "strum",
- "tempfile",
- "tokio",
- "tracing",
-]
-
-[[package]]
-name = "reth-prune"
-version = "1.10.2"
-dependencies = [
- "alloy-consensus",
- "alloy-eips",
- "alloy-primitives",
- "assert_matches",
- "itertools 0.14.0",
- "metrics",
- "rayon",
- "reth-config",
- "reth-db",
- "reth-db-api",
- "reth-errors",
- "reth-exex-types",
- "reth-metrics",
- "reth-primitives-traits",
- "reth-provider",
- "reth-prune-types",
- "reth-stages",
- "reth-stages-types",
- "reth-static-file-types",
- "reth-storage-api",
- "reth-testing-utils",
- "reth-tokio-util",
- "reth-tracing",
- "rustc-hash",
- "thiserror 2.0.18",
- "tokio",
- "tracing",
-]
-
-[[package]]
-name = "reth-prune-db"
-version = "1.10.2"
-
-[[package]]
-name = "reth-prune-types"
-version = "1.10.2"
-dependencies = [
- "alloy-primitives",
- "arbitrary",
- "assert_matches",
- "derive_more",
- "modular-bitfield",
- "proptest",
- "proptest-arbitrary-interop",
- "reth-codecs",
- "serde",
- "serde_json",
- "strum",
- "thiserror 2.0.18",
- "toml",
- "tracing",
-]
-
-[[package]]
-name = "reth-ress-protocol"
-version = "1.10.2"
-dependencies = [
- "alloy-consensus",
- "alloy-primitives",
- "alloy-rlp",
- "arbitrary",
- "futures",
- "proptest",
- "proptest-arbitrary-interop",
- "reth-eth-wire",
- "reth-ethereum-primitives",
- "reth-network",
- "reth-network-api",
- "reth-provider",
- "reth-ress-protocol",
- "reth-storage-errors",
- "reth-tracing",
- "strum",
- "strum_macros",
- "tokio",
- "tokio-stream",
- "tracing",
-]
-
-[[package]]
-name = "reth-ress-provider"
-version = "1.10.2"
-dependencies = [
- "alloy-consensus",
- "alloy-primitives",
- "eyre",
- "futures",
- "parking_lot",
- "reth-chain-state",
- "reth-errors",
- "reth-ethereum-primitives",
- "reth-evm",
- "reth-node-api",
- "reth-primitives-traits",
- "reth-ress-protocol",
- "reth-revm",
- "reth-storage-api",
- "reth-tasks",
- "reth-tokio-util",
- "reth-trie",
- "schnellru",
- "tokio",
- "tracing",
-]
-
-[[package]]
-name = "reth-revm"
-version = "1.10.2"
-dependencies = [
- "alloy-consensus",
- "alloy-primitives",
- "reth-ethereum-forks",
- "reth-primitives-traits",
- "reth-storage-api",
- "reth-storage-errors",
- "reth-trie",
- "revm",
-]
-
-[[package]]
-name = "reth-rpc"
-version = "1.10.2"
-dependencies = [
- "alloy-consensus",
- "alloy-dyn-abi",
- "alloy-eip7928",
- "alloy-eips",
- "alloy-evm",
- "alloy-genesis",
- "alloy-network",
- "alloy-primitives",
- "alloy-rlp",
- "alloy-rpc-client",
- "alloy-rpc-types",
- "alloy-rpc-types-admin",
- "alloy-rpc-types-beacon",
- "alloy-rpc-types-debug",
- "alloy-rpc-types-engine",
- "alloy-rpc-types-eth",
- "alloy-rpc-types-mev",
- "alloy-rpc-types-trace",
- "alloy-rpc-types-txpool",
- "alloy-serde",
- "alloy-signer",
- "alloy-signer-local",
- "async-trait",
- "derive_more",
- "dyn-clone",
- "futures",
- "itertools 0.14.0",
- "jsonrpsee",
- "jsonrpsee-types",
- "parking_lot",
- "pin-project",
- "rand 0.9.2",
- "reth-chain-state",
- "reth-chainspec",
- "reth-consensus",
- "reth-consensus-common",
- "reth-db-api",
- "reth-engine-primitives",
- "reth-errors",
- "reth-ethereum-engine-primitives",
- "reth-ethereum-primitives",
- "reth-evm",
- "reth-evm-ethereum",
- "reth-execution-types",
- "reth-metrics",
- "reth-network-api",
- "reth-network-peers",
- "reth-network-types",
- "reth-node-api",
- "reth-primitives-traits",
- "reth-provider",
- "reth-revm",
- "reth-rpc-api",
- "reth-rpc-convert",
- "reth-rpc-engine-api",
- "reth-rpc-eth-api",
- "reth-rpc-eth-types",
- "reth-rpc-server-types",
- "reth-storage-api",
- "reth-tasks",
- "reth-testing-utils",
- "reth-transaction-pool",
- "reth-trie-common",
- "revm",
- "revm-inspectors",
- "revm-primitives",
- "serde",
- "serde_json",
- "sha2",
- "thiserror 2.0.18",
- "tokio",
- "tokio-stream",
- "tracing",
- "tracing-futures",
-]
-
-[[package]]
-name = "reth-rpc-api"
-version = "1.10.2"
-dependencies = [
- "alloy-eip7928",
- "alloy-eips",
- "alloy-genesis",
- "alloy-json-rpc",
- "alloy-primitives",
- "alloy-rpc-types",
- "alloy-rpc-types-admin",
- "alloy-rpc-types-anvil",
- "alloy-rpc-types-beacon",
- "alloy-rpc-types-debug",
- "alloy-rpc-types-engine",
- "alloy-rpc-types-eth",
- "alloy-rpc-types-mev",
- "alloy-rpc-types-trace",
- "alloy-rpc-types-txpool",
- "alloy-serde",
- "jsonrpsee",
- "reth-chain-state",
- "reth-engine-primitives",
- "reth-network-peers",
- "reth-rpc-eth-api",
- "reth-trie-common",
- "serde_json",
- "tokio",
-]
-
-[[package]]
-name = "reth-rpc-api-testing-util"
-version = "1.10.2"
-dependencies = [
- "alloy-eips",
- "alloy-primitives",
- "alloy-rpc-types-eth",
- "alloy-rpc-types-trace",
- "futures",
- "jsonrpsee",
- "jsonrpsee-http-client",
- "reth-ethereum-primitives",
- "reth-rpc-api",
- "reth-rpc-eth-api",
- "serde_json",
- "similar-asserts",
- "tokio",
-]
-
-[[package]]
-name = "reth-rpc-builder"
-version = "1.10.2"
-dependencies = [
- "alloy-eips",
- "alloy-network",
- "alloy-primitives",
- "alloy-provider",
- "alloy-rpc-types-engine",
- "alloy-rpc-types-eth",
- "alloy-rpc-types-trace",
- "clap",
- "dyn-clone",
- "http",
- "jsonrpsee",
- "metrics",
- "pin-project",
- "reth-chain-state",
- "reth-chainspec",
- "reth-consensus",
- "reth-engine-primitives",
- "reth-ethereum-engine-primitives",
- "reth-ethereum-primitives",
- "reth-evm",
- "reth-evm-ethereum",
- "reth-ipc",
- "reth-metrics",
- "reth-network-api",
- "reth-network-peers",
- "reth-node-core",
- "reth-node-ethereum",
- "reth-payload-builder",
- "reth-primitives-traits",
- "reth-provider",
- "reth-rpc",
- "reth-rpc-api",
- "reth-rpc-engine-api",
- "reth-rpc-eth-api",
- "reth-rpc-eth-types",
- "reth-rpc-layer",
- "reth-rpc-server-types",
- "reth-storage-api",
- "reth-tasks",
- "reth-tokio-util",
- "reth-tracing",
- "reth-transaction-pool",
- "serde",
- "serde_json",
- "thiserror 2.0.18",
- "tokio",
- "tokio-util",
- "tower",
- "tower-http",
- "tracing",
-]
-
-[[package]]
-name = "reth-rpc-convert"
-version = "1.10.2"
-dependencies = [
- "alloy-consensus",
- "alloy-evm",
- "alloy-json-rpc",
- "alloy-network",
- "alloy-primitives",
- "alloy-rpc-types-eth",
- "alloy-signer",
- "auto_impl",
- "dyn-clone",
- "jsonrpsee-types",
- "op-alloy-consensus",
- "op-alloy-network",
- "op-alloy-rpc-types",
- "reth-ethereum-primitives",
- "reth-evm",
- "reth-primitives-traits",
- "serde_json",
- "thiserror 2.0.18",
-]
-
-[[package]]
-name = "reth-rpc-e2e-tests"
-version = "1.10.2"
-dependencies = [
- "alloy-genesis",
- "alloy-rpc-types-engine",
- "eyre",
- "futures-util",
- "jsonrpsee",
- "reth-chainspec",
- "reth-e2e-test-utils",
- "reth-node-api",
- "reth-node-ethereum",
- "reth-rpc-api",
- "reth-tracing",
- "serde_json",
- "tokio",
- "tracing",
-]
-
-[[package]]
-name = "reth-rpc-engine-api"
-version = "1.10.2"
-dependencies = [
- "alloy-eips",
- "alloy-primitives",
- "alloy-rlp",
- "alloy-rpc-types-engine",
- "assert_matches",
- "async-trait",
- "jsonrpsee-core",
- "jsonrpsee-types",
- "metrics",
- "reth-chainspec",
- "reth-engine-primitives",
- "reth-ethereum-engine-primitives",
- "reth-ethereum-primitives",
- "reth-metrics",
- "reth-network-api",
- "reth-node-ethereum",
- "reth-payload-builder",
- "reth-payload-builder-primitives",
- "reth-payload-primitives",
- "reth-primitives-traits",
- "reth-provider",
- "reth-rpc-api",
- "reth-storage-api",
- "reth-tasks",
- "reth-testing-utils",
- "reth-transaction-pool",
- "serde",
- "thiserror 2.0.18",
- "tokio",
- "tracing",
-]
-
-[[package]]
-name = "reth-rpc-eth-api"
-version = "1.10.2"
-dependencies = [
- "alloy-consensus",
- "alloy-dyn-abi",
- "alloy-eips",
- "alloy-evm",
- "alloy-json-rpc",
- "alloy-network",
- "alloy-primitives",
- "alloy-rlp",
- "alloy-rpc-types-eth",
- "alloy-rpc-types-mev",
- "alloy-serde",
- "async-trait",
- "auto_impl",
- "dyn-clone",
- "futures",
- "jsonrpsee",
- "jsonrpsee-types",
- "parking_lot",
- "reth-chain-state",
- "reth-chainspec",
- "reth-errors",
- "reth-evm",
- "reth-network-api",
- "reth-node-api",
- "reth-primitives-traits",
- "reth-revm",
- "reth-rpc-convert",
- "reth-rpc-eth-types",
- "reth-rpc-server-types",
- "reth-storage-api",
- "reth-tasks",
- "reth-transaction-pool",
- "reth-trie-common",
- "revm",
- "revm-inspectors",
- "tokio",
- "tracing",
-]
-
-[[package]]
-name = "reth-rpc-eth-types"
-version = "1.10.2"
-dependencies = [
- "alloy-consensus",
- "alloy-eips",
- "alloy-evm",
- "alloy-network",
- "alloy-primitives",
- "alloy-rpc-client",
- "alloy-rpc-types-eth",
- "alloy-sol-types",
- "alloy-transport",
- "derive_more",
- "futures",
- "itertools 0.14.0",
- "jsonrpsee-core",
- "jsonrpsee-types",
- "metrics",
- "rand 0.9.2",
- "reqwest",
- "reth-chain-state",
- "reth-chainspec",
- "reth-errors",
- "reth-ethereum-primitives",
- "reth-evm",
- "reth-execution-types",
- "reth-metrics",
- "reth-primitives-traits",
- "reth-revm",
- "reth-rpc-convert",
- "reth-rpc-server-types",
- "reth-storage-api",
- "reth-tasks",
- "reth-transaction-pool",
- "reth-trie",
- "revm",
- "revm-inspectors",
- "schnellru",
- "serde",
- "serde_json",
- "thiserror 2.0.18",
- "tokio",
- "tokio-stream",
- "tracing",
- "url",
-]
-
-[[package]]
-name = "reth-rpc-layer"
-version = "1.10.2"
-dependencies = [
- "alloy-rpc-types-engine",
- "http",
- "http-body-util",
- "jsonrpsee",
- "jsonrpsee-http-client",
- "pin-project",
- "reqwest",
- "tokio",
- "tower",
- "tower-http",
- "tracing",
-]
-
-[[package]]
-name = "reth-rpc-server-types"
-version = "1.10.2"
-dependencies = [
- "alloy-eips",
- "alloy-primitives",
- "alloy-rpc-types-engine",
- "jsonrpsee-core",
- "jsonrpsee-types",
- "reth-errors",
- "reth-network-api",
- "serde",
- "strum",
-]
-
-[[package]]
-name = "reth-stages"
-version = "1.10.2"
-dependencies = [
- "alloy-consensus",
- "alloy-eips",
- "alloy-genesis",
- "alloy-primitives",
- "alloy-rlp",
- "assert_matches",
- "bincode 1.3.3",
- "codspeed-criterion-compat",
- "eyre",
- "futures-util",
- "itertools 0.14.0",
- "num-traits",
- "paste",
- "rand 0.9.2",
- "rayon",
- "reqwest",
- "reth-chainspec",
- "reth-codecs",
- "reth-config",
- "reth-consensus",
- "reth-db",
- "reth-db-api",
- "reth-db-common",
- "reth-downloaders",
- "reth-era",
- "reth-era-downloader",
- "reth-era-utils",
- "reth-ethereum-consensus",
- "reth-ethereum-primitives",
- "reth-etl",
- "reth-evm",
- "reth-evm-ethereum",
- "reth-execution-types",
- "reth-exex",
- "reth-fs-util",
- "reth-network-p2p",
- "reth-network-peers",
- "reth-primitives-traits",
- "reth-provider",
- "reth-prune",
- "reth-prune-types",
- "reth-revm",
- "reth-stages-api",
- "reth-static-file",
- "reth-static-file-types",
- "reth-storage-api",
- "reth-storage-errors",
- "reth-tasks",
- "reth-testing-utils",
- "reth-tracing",
- "reth-trie",
- "reth-trie-db",
- "tempfile",
- "thiserror 2.0.18",
- "tokio",
- "tracing",
-]
-
-[[package]]
-name = "reth-stages-api"
-version = "1.10.2"
-dependencies = [
- "alloy-eips",
- "alloy-primitives",
- "aquamarine",
- "assert_matches",
- "auto_impl",
- "futures-util",
- "metrics",
- "reth-chainspec",
- "reth-consensus",
- "reth-db",
- "reth-db-api",
- "reth-errors",
- "reth-metrics",
- "reth-network-p2p",
- "reth-primitives-traits",
- "reth-provider",
- "reth-prune",
- "reth-stages-types",
- "reth-static-file",
- "reth-static-file-types",
- "reth-testing-utils",
- "reth-tokio-util",
- "thiserror 2.0.18",
- "tokio",
- "tokio-stream",
- "tracing",
-]
-
-[[package]]
-name = "reth-stages-types"
-version = "1.10.2"
-dependencies = [
- "alloy-primitives",
- "arbitrary",
- "bytes",
- "modular-bitfield",
- "proptest",
- "proptest-arbitrary-interop",
- "rand 0.9.2",
- "reth-codecs",
- "reth-trie-common",
- "serde",
-]
-
-[[package]]
-name = "reth-stateless"
-version = "1.10.2"
-dependencies = [
- "alloy-consensus",
- "alloy-genesis",
- "alloy-primitives",
- "alloy-rlp",
- "alloy-rpc-types-debug",
- "alloy-trie",
- "itertools 0.14.0",
- "reth-chainspec",
- "reth-consensus",
- "reth-errors",
- "reth-ethereum-consensus",
- "reth-ethereum-primitives",
- "reth-evm",
- "reth-primitives-traits",
- "reth-revm",
- "reth-trie-common",
- "reth-trie-sparse",
- "serde",
- "serde_with",
- "thiserror 2.0.18",
-]
-
-[[package]]
-name = "reth-static-file"
-version = "1.10.2"
-dependencies = [
- "alloy-primitives",
- "assert_matches",
- "parking_lot",
- "rayon",
- "reth-codecs",
- "reth-db-api",
- "reth-primitives-traits",
- "reth-provider",
- "reth-prune-types",
- "reth-stages",
- "reth-stages-types",
- "reth-static-file-types",
- "reth-storage-errors",
- "reth-testing-utils",
- "reth-tokio-util",
- "tempfile",
- "tracing",
-]
-
-[[package]]
-name = "reth-static-file-types"
-version = "1.10.2"
-dependencies = [
- "alloy-primitives",
- "clap",
- "derive_more",
- "fixed-map",
- "insta",
- "reth-nippy-jar",
- "reth-stages-types",
- "serde",
- "serde_json",
- "strum",
- "tempfile",
- "tracing",
-]
-
-[[package]]
-name = "reth-storage-api"
-version = "1.10.2"
-dependencies = [
- "alloy-consensus",
- "alloy-eips",
- "alloy-primitives",
- "alloy-rpc-types-engine",
- "auto_impl",
- "reth-chainspec",
- "reth-db-api",
- "reth-db-models",
- "reth-ethereum-primitives",
- "reth-execution-types",
- "reth-primitives-traits",
- "reth-prune-types",
- "reth-stages-types",
- "reth-storage-errors",
- "reth-trie-common",
- "revm-database",
- "serde_json",
-]
-
-[[package]]
-name = "reth-storage-errors"
-version = "1.10.2"
-dependencies = [
- "alloy-eips",
- "alloy-primitives",
- "alloy-rlp",
- "derive_more",
- "reth-primitives-traits",
- "reth-prune-types",
- "reth-static-file-types",
- "revm-database-interface",
- "revm-state",
- "thiserror 2.0.18",
-]
-
-[[package]]
-name = "reth-storage-rpc-provider"
-version = "1.10.2"
-dependencies = [
- "alloy-consensus",
- "alloy-eips",
- "alloy-network",
- "alloy-primitives",
- "alloy-provider",
- "alloy-rpc-types",
- "alloy-rpc-types-engine",
- "dashmap",
- "reth-chainspec",
- "reth-db-api",
- "reth-errors",
- "reth-execution-types",
- "reth-node-types",
- "reth-primitives",
- "reth-provider",
- "reth-prune-types",
- "reth-rpc-convert",
- "reth-stages-types",
- "reth-storage-api",
- "reth-trie",
- "revm",
- "tokio",
- "tracing",
-]
-
-[[package]]
-name = "reth-tasks"
-version = "1.10.2"
-dependencies = [
- "auto_impl",
- "dyn-clone",
- "futures-util",
- "metrics",
- "pin-project",
- "rayon",
- "reth-metrics",
- "thiserror 2.0.18",
- "tokio",
- "tracing",
- "tracing-futures",
-]
-
-[[package]]
-name = "reth-testing-utils"
-version = "1.10.2"
-dependencies = [
- "alloy-consensus",
- "alloy-eips",
- "alloy-genesis",
- "alloy-primitives",
- "alloy-rlp",
- "rand 0.8.5",
- "rand 0.9.2",
- "reth-ethereum-primitives",
- "reth-primitives-traits",
- "secp256k1 0.30.0",
-]
-
-[[package]]
-name = "reth-tokio-util"
-version = "1.10.2"
-dependencies = [
- "tokio",
- "tokio-stream",
- "tracing",
-]
-
-[[package]]
-name = "reth-tracing"
-version = "1.10.2"
-dependencies = [
- "clap",
- "eyre",
- "reth-tracing-otlp",
- "rolling-file",
- "tracing",
- "tracing-appender",
- "tracing-journald",
- "tracing-logfmt",
- "tracing-samply",
- "tracing-subscriber 0.3.22",
- "tracing-tracy",
- "tracy-client",
-]
-
-[[package]]
-name = "reth-tracing-otlp"
-version = "1.10.2"
-dependencies = [
- "clap",
- "eyre",
- "opentelemetry",
- "opentelemetry-appender-tracing",
- "opentelemetry-otlp",
- "opentelemetry-semantic-conventions",
- "opentelemetry_sdk",
- "tracing",
- "tracing-opentelemetry",
- "tracing-subscriber 0.3.22",
- "url",
-]
-
-[[package]]
-name = "reth-transaction-pool"
-version = "1.10.2"
-dependencies = [
- "alloy-consensus",
- "alloy-eips",
- "alloy-primitives",
- "alloy-rlp",
- "aquamarine",
- "assert_matches",
- "auto_impl",
- "bitflags 2.10.0",
- "codspeed-criterion-compat",
- "futures",
- "futures-util",
- "metrics",
- "parking_lot",
- "paste",
- "pin-project",
- "proptest",
- "proptest-arbitrary-interop",
- "rand 0.9.2",
- "reth-chain-state",
- "reth-chainspec",
- "reth-eth-wire-types",
- "reth-ethereum-primitives",
- "reth-evm",
- "reth-evm-ethereum",
- "reth-execution-types",
- "reth-fs-util",
- "reth-metrics",
- "reth-primitives-traits",
- "reth-provider",
- "reth-storage-api",
- "reth-tasks",
- "reth-tracing",
- "revm",
- "revm-interpreter",
- "revm-primitives",
- "rustc-hash",
- "schnellru",
- "serde",
- "serde_json",
- "smallvec",
- "tempfile",
- "thiserror 2.0.18",
- "tokio",
- "tokio-stream",
- "tracing",
-]
-
-[[package]]
-name = "reth-trie"
-version = "1.10.2"
-dependencies = [
- "alloy-consensus",
- "alloy-eips",
- "alloy-primitives",
- "alloy-rlp",
- "alloy-trie",
- "assert_matches",
- "auto_impl",
- "codspeed-criterion-compat",
- "itertools 0.14.0",
- "metrics",
- "parking_lot",
- "pretty_assertions",
- "proptest",
- "proptest-arbitrary-interop",
- "rand 0.9.2",
- "reth-ethereum-primitives",
- "reth-execution-errors",
- "reth-metrics",
- "reth-primitives-traits",
- "reth-stages-types",
- "reth-storage-errors",
- "reth-tracing",
- "reth-trie-common",
- "reth-trie-sparse",
- "revm-database",
- "revm-state",
- "tracing",
- "triehash",
-]
-
-[[package]]
-name = "reth-trie-common"
-version = "1.10.2"
-dependencies = [
- "alloy-consensus",
- "alloy-genesis",
- "alloy-primitives",
- "alloy-rlp",
- "alloy-rpc-types-eth",
- "alloy-serde",
- "alloy-trie",
- "arbitrary",
- "arrayvec",
- "bincode 1.3.3",
- "bytes",
- "codspeed-criterion-compat",
- "derive_more",
- "hash-db",
- "itertools 0.14.0",
- "nybbles",
- "plain_hasher",
- "proptest",
- "proptest-arbitrary-interop",
- "rayon",
- "reth-codecs",
- "reth-primitives-traits",
- "revm-database",
- "revm-state",
- "serde",
- "serde_json",
- "serde_with",
-]
-
-[[package]]
-name = "reth-trie-db"
-version = "1.10.2"
-dependencies = [
- "alloy-consensus",
- "alloy-primitives",
- "alloy-rlp",
- "metrics",
- "parking_lot",
- "proptest",
- "proptest-arbitrary-interop",
- "reth-chainspec",
- "reth-db",
- "reth-db-api",
- "reth-execution-errors",
- "reth-metrics",
- "reth-primitives-traits",
- "reth-provider",
- "reth-stages-types",
- "reth-storage-api",
- "reth-storage-errors",
- "reth-trie",
- "reth-trie-common",
- "revm",
- "revm-database",
- "serde_json",
- "similar-asserts",
- "tracing",
- "triehash",
-]
-
-[[package]]
-name = "reth-trie-parallel"
-version = "1.10.2"
-dependencies = [
- "alloy-primitives",
- "alloy-rlp",
- "codspeed-criterion-compat",
- "crossbeam-channel",
- "derive_more",
- "itertools 0.14.0",
- "metrics",
- "proptest",
- "proptest-arbitrary-interop",
- "rand 0.9.2",
- "rayon",
- "reth-execution-errors",
- "reth-metrics",
- "reth-primitives-traits",
- "reth-provider",
- "reth-storage-errors",
- "reth-trie",
- "reth-trie-common",
- "reth-trie-db",
- "reth-trie-sparse",
- "thiserror 2.0.18",
- "tokio",
- "tracing",
-]
-
-[[package]]
-name = "reth-trie-sparse"
-version = "1.10.2"
-dependencies = [
- "alloy-primitives",
- "alloy-rlp",
- "alloy-trie",
- "arbitrary",
- "assert_matches",
- "auto_impl",
- "codspeed-criterion-compat",
- "itertools 0.14.0",
- "metrics",
- "pretty_assertions",
- "proptest",
- "proptest-arbitrary-interop",
- "rand 0.8.5",
- "rand 0.9.2",
- "rayon",
- "reth-execution-errors",
- "reth-metrics",
- "reth-primitives-traits",
- "reth-provider",
- "reth-storage-api",
- "reth-testing-utils",
- "reth-tracing",
- "reth-trie",
- "reth-trie-common",
- "reth-trie-db",
- "tracing",
-]
-
-[[package]]
-name = "reth-trie-sparse-parallel"
-version = "1.10.2"
-dependencies = [
- "alloy-primitives",
- "alloy-rlp",
- "alloy-trie",
- "arbitrary",
- "assert_matches",
- "itertools 0.14.0",
- "metrics",
- "pretty_assertions",
- "proptest",
- "proptest-arbitrary-interop",
- "rand 0.8.5",
- "rand 0.9.2",
- "rayon",
- "reth-execution-errors",
- "reth-metrics",
- "reth-primitives-traits",
- "reth-provider",
- "reth-tracing",
- "reth-trie",
- "reth-trie-common",
- "reth-trie-db",
- "reth-trie-sparse",
- "smallvec",
- "tracing",
-]
-
-[[package]]
-name = "reth-zstd-compressors"
-version = "1.10.2"
-dependencies = [
- "zstd",
-]
 
 [[package]]
 name = "revm"

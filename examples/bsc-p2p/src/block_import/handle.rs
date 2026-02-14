@@ -1,9 +1,9 @@
 use std::task::{Context, Poll};
 
-use reth_engine_primitives::EngineTypes;
-use reth_network::import::BlockImportError;
-use reth_network_api::PeerId;
-use reth_payload_primitives::PayloadTypes;
+use hanzo_evm_engine_primitives::EngineTypes;
+use hanzo_evm_network::import::BlockImportError;
+use hanzo_evm_network_api::PeerId;
+use hanzo_evm_payload_primitives::PayloadTypes;
 use tokio::sync::mpsc::{UnboundedReceiver, UnboundedSender};
 
 use super::service::{BlockMsg, ImportEvent, IncomingBlock, Outcome};

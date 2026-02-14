@@ -2,10 +2,10 @@ use alloc::collections::{BTreeMap, BTreeSet};
 use alloy_primitives::{map::B256Map, Address, BlockNumber, B256};
 use auto_impl::auto_impl;
 use core::ops::RangeBounds;
-use reth_db_api::models::BlockNumberAddress;
-use reth_db_models::AccountBeforeTx;
-use reth_primitives_traits::{Account, StorageEntry};
-use reth_storage_errors::provider::ProviderResult;
+use hanzo_evm_db_api::models::BlockNumberAddress;
+use hanzo_evm_db_models::AccountBeforeTx;
+use hanzo_evm_primitives_traits::{Account, StorageEntry};
+use hanzo_evm_storage_errors::provider::ProviderResult;
 
 /// Hashing Writer
 #[auto_impl(&, Box)]
@@ -30,7 +30,7 @@ pub trait HashingWriter: Send {
         range: impl RangeBounds<BlockNumber>,
     ) -> ProviderResult<BTreeMap<B256, Option<Account>>>;
 
-    /// Inserts all accounts into [`AccountsHistory`][reth_db_api::tables::AccountsHistory] table.
+    /// Inserts all accounts into [`AccountsHistory`][hanzo_evm_db_api::tables::AccountsHistory] table.
     ///
     /// # Returns
     ///

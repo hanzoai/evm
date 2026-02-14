@@ -11,7 +11,7 @@ use alloy_rpc_types_trace::{
 };
 use futures::{Stream, StreamExt};
 use jsonrpsee::core::client::Error as RpcError;
-use reth_rpc_api::clients::TraceApiClient;
+use hanzo_evm_rpc_api::clients::TraceApiClient;
 use std::{
     pin::Pin,
     task::{Context, Poll},

@@ -1,10 +1,10 @@
 use crate::common::{AccessRights, CliNodeTypes, Environment, EnvironmentArgs};
 use clap::{Parser, Subcommand};
-use reth_chainspec::{EthChainSpec, EthereumHardforks};
-use reth_cli::chainspec::ChainSpecParser;
-use reth_cli_runner::CliContext;
-use reth_db::version::{get_db_version, DatabaseVersionError, DB_VERSION};
-use reth_db_common::DbTool;
+use hanzo_evm_chainspec::{EthChainSpec, EthereumHardforks};
+use hanzo_evm_cli::chainspec::ChainSpecParser;
+use hanzo_evm_cli_runner::CliContext;
+use hanzo_evm_db::version::{get_db_version, DatabaseVersionError, DB_VERSION};
+use hanzo_evm_db_common::DbTool;
 use std::{
     io::{self, Write},
     sync::Arc,
@@ -23,7 +23,7 @@ mod stats;
 /// DB List TUI
 mod tui;
 
-/// `reth db` command
+/// `evm db` command
 #[derive(Debug, Parser)]
 pub struct Command<C: ChainSpecParser> {
     #[command(flatten)]
@@ -34,7 +34,7 @@ pub struct Command<C: ChainSpecParser> {
 }
 
 #[derive(Subcommand, Debug)]
-/// `reth db` subcommands
+/// `evm db` subcommands
 pub enum Subcommands {
     /// Lists all the tables, their entry count and their size
     Stats(stats::Command),
@@ -222,14 +222,14 @@ impl<C: ChainSpecParser> Command<C> {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use reth_ethereum_cli::chainspec::{EthereumChainSpecParser, SUPPORTED_CHAINS};
+    use hanzo_evm_ethereum_cli::chainspec::{EthereumChainSpecParser, SUPPORTED_CHAINS};
     use std::path::Path;
 
     #[test]
     fn parse_stats_globals() {
         let path = format!("../{}", SUPPORTED_CHAINS[0]);
         let cmd = Command::<EthereumChainSpecParser>::try_parse_from([
-            "reth",
+            "evm",
             "--datadir",
             &path,
             "stats",

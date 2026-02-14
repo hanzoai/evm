@@ -1,7 +1,7 @@
 use crate::{Consensus, ConsensusError, FullConsensus, HeaderValidator, ReceiptRootBloom};
 use core::sync::atomic::{AtomicBool, Ordering};
-use reth_execution_types::BlockExecutionResult;
-use reth_primitives_traits::{Block, NodePrimitives, RecoveredBlock, SealedBlock, SealedHeader};
+use hanzo_evm_execution_types::BlockExecutionResult;
+use hanzo_evm_primitives_traits::{Block, NodePrimitives, RecoveredBlock, SealedBlock, SealedHeader};
 
 /// Consensus engine implementation for testing
 #[derive(Debug)]

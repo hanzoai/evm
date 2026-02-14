@@ -10,8 +10,8 @@ use alloy_primitives::{
     BlockHash, Bytes, B256,
 };
 use alloy_rlp::{BytesMut, Decodable, Encodable, RlpDecodable, RlpEncodable};
-use reth_eth_wire::{message::RequestPair, protocol::Protocol, Capability};
-use reth_ethereum_primitives::BlockBody;
+use hanzo_evm_eth_wire::{message::RequestPair, protocol::Protocol, Capability};
+use hanzo_evm_ethereum_primitives::BlockBody;
 
 /// An Ress protocol message, containing a message ID and payload.
 #[derive(PartialEq, Eq, Clone, Debug)]

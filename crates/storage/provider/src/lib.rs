@@ -5,9 +5,9 @@
 //! - `test-utils`: Export utilities for testing
 
 #![doc(
-    html_logo_url = "https://raw.githubusercontent.com/paradigmxyz/reth/main/assets/reth-docs.png",
+    html_logo_url = "https://raw.githubusercontent.com/hanzoai/evm/main/assets/evm-docs.png",
     html_favicon_url = "https://avatars0.githubusercontent.com/u/97369466?s=256",
-    issue_tracker_base_url = "https://github.com/paradigmxyz/reth/issues/"
+    issue_tracker_base_url = "https://github.com/hanzoai/evm/issues/"
 )]
 #![cfg_attr(not(test), warn(unused_crate_dependencies))]
 #![cfg_attr(docsrs, feature(doc_cfg))]
@@ -38,21 +38,21 @@ pub mod test_utils;
 pub mod either_writer;
 pub use either_writer::*;
 
-pub use reth_chain_state::{
+pub use hanzo_evm_chain_state::{
     CanonStateNotification, CanonStateNotificationSender, CanonStateNotificationStream,
     CanonStateNotifications, CanonStateSubscriptions,
 };
-pub use reth_execution_types::*;
+pub use hanzo_evm_execution_types::*;
 /// Re-export `OriginalValuesKnown`
 pub use revm_database::states::OriginalValuesKnown;
 // reexport traits to avoid breaking changes
-pub use reth_static_file_types as static_file;
-pub use reth_storage_api::{
+pub use hanzo_evm_static_file_types as static_file;
+pub use hanzo_evm_storage_api::{
     HistoryWriter, MetadataProvider, MetadataWriter, StateWriteConfig, StatsReader,
     StorageSettings, StorageSettingsCache,
 };
 /// Re-export provider error.
-pub use reth_storage_errors::provider::{ProviderError, ProviderResult};
+pub use hanzo_evm_storage_errors::provider::{ProviderError, ProviderResult};
 pub use static_file::StaticFileSegment;
 
 /// Converts a [`RangeBounds`](std::ops::RangeBounds) into a concrete [`Range`](std::ops::Range)

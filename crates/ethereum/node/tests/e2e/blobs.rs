@@ -1,17 +1,17 @@
 use crate::utils::eth_payload_attributes;
 use alloy_eips::Decodable2718;
 use alloy_genesis::Genesis;
-use reth_chainspec::{ChainSpecBuilder, MAINNET};
-use reth_e2e_test_utils::{
+use hanzo_evm_chainspec::{ChainSpecBuilder, MAINNET};
+use hanzo_evm_e2e_test_utils::{
     node::NodeTestContext, transaction::TransactionTestContext, wallet::Wallet,
 };
-use reth_ethereum_engine_primitives::BlobSidecars;
-use reth_ethereum_primitives::PooledTransactionVariant;
-use reth_node_builder::{NodeBuilder, NodeHandle};
-use reth_node_core::{args::RpcServerArgs, node_config::NodeConfig};
-use reth_node_ethereum::EthereumNode;
-use reth_tasks::TaskManager;
-use reth_transaction_pool::TransactionPool;
+use hanzo_evm_ethereum_engine_primitives::BlobSidecars;
+use hanzo_evm_ethereum_primitives::PooledTransactionVariant;
+use hanzo_evm_node_builder::{NodeBuilder, NodeHandle};
+use hanzo_evm_node_core::{args::RpcServerArgs, node_config::NodeConfig};
+use hanzo_evm_node_ethereum::EthereumNode;
+use hanzo_evm_tasks::TaskManager;
+use hanzo_evm_transaction_pool::TransactionPool;
 use std::{
     sync::Arc,
     time::{Duration, SystemTime, UNIX_EPOCH},
@@ -19,7 +19,7 @@ use std::{
 
 #[tokio::test]
 async fn can_handle_blobs() -> eyre::Result<()> {
-    reth_tracing::init_test_tracing();
+    hanzo_evm_tracing::init_test_tracing();
     let tasks = TaskManager::current();
     let exec = tasks.executor();
 
@@ -91,7 +91,7 @@ async fn can_handle_blobs() -> eyre::Result<()> {
 
 #[tokio::test]
 async fn can_send_legacy_sidecar_post_activation() -> eyre::Result<()> {
-    reth_tracing::init_test_tracing();
+    hanzo_evm_tracing::init_test_tracing();
     let tasks = TaskManager::current();
     let exec = tasks.executor();
 
@@ -145,7 +145,7 @@ async fn can_send_legacy_sidecar_post_activation() -> eyre::Result<()> {
 
 #[tokio::test]
 async fn blob_conversion_at_osaka() -> eyre::Result<()> {
-    reth_tracing::init_test_tracing();
+    hanzo_evm_tracing::init_test_tracing();
     let tasks = TaskManager::current();
     let exec = tasks.executor();
 

@@ -138,7 +138,7 @@ impl Default for DebugArgs {
 /// Create a [`InvalidBlockSelection`] from a selection.
 ///
 /// ```
-/// use reth_node_core::args::{InvalidBlockHookType, InvalidBlockSelection};
+/// use hanzo_evm_node_core::args::{InvalidBlockHookType, InvalidBlockSelection};
 /// let config: InvalidBlockSelection = vec![InvalidBlockHookType::Witness].into();
 /// ```
 #[derive(Debug, Clone, PartialEq, Eq, derive_more::Deref)]
@@ -162,7 +162,7 @@ impl InvalidBlockSelection {
     /// Create a selection from the [`InvalidBlockHookType`] string identifiers
     ///
     /// ```
-    /// use reth_node_core::args::{InvalidBlockHookType, InvalidBlockSelection};
+    /// use hanzo_evm_node_core::args::{InvalidBlockHookType, InvalidBlockSelection};
     /// let selection = vec!["witness", "prestate", "opcode"];
     /// let config = InvalidBlockSelection::try_from_selection(selection).unwrap();
     /// assert_eq!(
@@ -178,7 +178,7 @@ impl InvalidBlockSelection {
     /// Create a unique selection from the [`InvalidBlockHookType`] string identifiers
     ///
     /// ```
-    /// use reth_node_core::args::{InvalidBlockHookType, InvalidBlockSelection};
+    /// use hanzo_evm_node_core::args::{InvalidBlockHookType, InvalidBlockSelection};
     /// let selection = vec!["witness", "prestate", "opcode", "witness", "prestate"];
     /// let config = InvalidBlockSelection::try_from_selection(selection).unwrap();
     /// assert_eq!(
@@ -353,7 +353,7 @@ mod tests {
     #[test]
     fn test_parse_default_debug_args() {
         let default_args = DebugArgs::default();
-        let args = CommandParser::<DebugArgs>::parse_from(["reth"]).args;
+        let args = CommandParser::<DebugArgs>::parse_from(["evm"]).args;
         assert_eq!(args, default_args);
     }
 
@@ -364,7 +364,7 @@ mod tests {
             ..Default::default()
         };
         let args =
-            CommandParser::<DebugArgs>::parse_from(["reth", "--debug.invalid-block-hook", ""]).args;
+            CommandParser::<DebugArgs>::parse_from(["evm", "--debug.invalid-block-hook", ""]).args;
         assert_eq!(args, expected_args);
     }
 
@@ -375,7 +375,7 @@ mod tests {
             ..Default::default()
         };
         let args = CommandParser::<DebugArgs>::parse_from([
-            "reth",
+            "evm",
             "--debug.invalid-block-hook",
             "witness",
         ])
@@ -390,7 +390,7 @@ mod tests {
             ..Default::default()
         };
         let args = CommandParser::<DebugArgs>::parse_from([
-            "reth",
+            "evm",
             "--debug.invalid-block-hook",
             "witness,prestate",
         ])
@@ -398,7 +398,7 @@ mod tests {
         assert_eq!(args, expected_args);
 
         let args = CommandParser::<DebugArgs>::parse_from([
-            "reth",
+            "evm",
             "--debug.invalid-block-hook",
             "witness,prestate,prestate",
         ])
@@ -406,7 +406,7 @@ mod tests {
         assert_eq!(args, expected_args);
 
         let args = CommandParser::<DebugArgs>::parse_from([
-            "reth",
+            "evm",
             "--debug.invalid-block-hook",
             "witness,witness,prestate",
         ])
@@ -414,7 +414,7 @@ mod tests {
         assert_eq!(args, expected_args);
 
         let args = CommandParser::<DebugArgs>::parse_from([
-            "reth",
+            "evm",
             "--debug.invalid-block-hook",
             "prestate,witness,prestate",
         ])

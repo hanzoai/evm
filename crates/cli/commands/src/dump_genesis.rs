@@ -2,8 +2,8 @@
 use std::sync::Arc;
 
 use clap::Parser;
-use reth_chainspec::EthChainSpec;
-use reth_cli::chainspec::ChainSpecParser;
+use hanzo_evm_chainspec::EthChainSpec;
+use hanzo_evm_cli::chainspec::ChainSpecParser;
 
 /// Dumps genesis block JSON configuration to stdout
 #[derive(Debug, Parser)]
@@ -39,16 +39,16 @@ impl<C: ChainSpecParser> DumpGenesisCommand<C> {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use reth_ethereum_cli::chainspec::{EthereumChainSpecParser, SUPPORTED_CHAINS};
+    use hanzo_evm_ethereum_cli::chainspec::{EthereumChainSpecParser, SUPPORTED_CHAINS};
 
     #[test]
     fn parse_dump_genesis_command_chain_args() {
         for chain in SUPPORTED_CHAINS {
             let args: DumpGenesisCommand<EthereumChainSpecParser> =
-                DumpGenesisCommand::parse_from(["reth", "--chain", chain]);
+                DumpGenesisCommand::parse_from(["evm", "--chain", chain]);
             assert_eq!(
                 Ok(args.chain.chain),
-                chain.parse::<reth_chainspec::Chain>(),
+                chain.parse::<hanzo_evm_chainspec::Chain>(),
                 "failed to parse chain {chain}"
             );
         }

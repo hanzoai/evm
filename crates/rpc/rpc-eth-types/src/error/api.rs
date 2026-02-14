@@ -1,11 +1,11 @@
 //! Helper traits to wrap generic l1 errors, in network specific error type configured in
-//! `reth_rpc_eth_api::EthApiTypes`.
+//! `hanzo_evm_rpc_eth_api::EthApiTypes`.
 
 use crate::{simulate::EthSimulateError, EthApiError, RevertError};
 use alloy_primitives::Bytes;
-use reth_errors::ProviderError;
-use reth_evm::{ConfigureEvm, EvmErrorFor, HaltReasonFor};
-use reth_revm::db::bal::EvmDatabaseError;
+use hanzo_evm_errors::ProviderError;
+use hanzo_evm_execution::{ConfigureEvm, EvmErrorFor, HaltReasonFor};
+use hanzo_evm_revm::db::bal::EvmDatabaseError;
 use revm::{context::result::ExecutionResult, context_interface::result::HaltReason};
 
 use super::RpcInvalidTransactionError;

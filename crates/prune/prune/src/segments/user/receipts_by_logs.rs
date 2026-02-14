@@ -4,12 +4,12 @@ use crate::{
     PrunerError,
 };
 use alloy_consensus::TxReceipt;
-use reth_db_api::{table::Value, tables, transaction::DbTxMut};
-use reth_primitives_traits::NodePrimitives;
-use reth_provider::{
+use hanzo_evm_db_api::{table::Value, tables, transaction::DbTxMut};
+use hanzo_evm_primitives_traits::NodePrimitives;
+use hanzo_evm_provider::{
     BlockReader, DBProvider, NodePrimitivesProvider, PruneCheckpointWriter, TransactionsProvider,
 };
-use reth_prune_types::{
+use hanzo_evm_prune_types::{
     PruneCheckpoint, PruneMode, PrunePurpose, PruneSegment, ReceiptsLogPruneConfig, SegmentOutput,
     MINIMUM_UNWIND_SAFE_DISTANCE,
 };
@@ -235,19 +235,19 @@ mod tests {
     use crate::segments::{user::ReceiptsByLogs, PruneInput, PruneLimiter, Segment};
     use alloy_primitives::B256;
     use assert_matches::assert_matches;
-    use reth_db_api::{cursor::DbCursorRO, tables, transaction::DbTx};
-    use reth_primitives_traits::InMemorySize;
-    use reth_provider::{BlockReader, DBProvider, DatabaseProviderFactory, PruneCheckpointReader};
-    use reth_prune_types::{PruneMode, PruneSegment, ReceiptsLogPruneConfig};
-    use reth_stages::test_utils::{StorageKind, TestStageDB};
-    use reth_testing_utils::generators::{
+    use hanzo_evm_db_api::{cursor::DbCursorRO, tables, transaction::DbTx};
+    use hanzo_evm_primitives_traits::InMemorySize;
+    use hanzo_evm_provider::{BlockReader, DBProvider, DatabaseProviderFactory, PruneCheckpointReader};
+    use hanzo_evm_prune_types::{PruneMode, PruneSegment, ReceiptsLogPruneConfig};
+    use hanzo_evm_stages::test_utils::{StorageKind, TestStageDB};
+    use hanzo_evm_testing_utils::generators::{
         self, random_block_range, random_eoa_account, random_log, random_receipt, BlockRangeParams,
     };
     use std::collections::BTreeMap;
 
     #[test]
     fn prune_receipts_by_logs() {
-        reth_tracing::init_test_tracing();
+        hanzo_evm_tracing::init_test_tracing();
 
         let db = TestStageDB::default();
         let mut rng = generators::rng();

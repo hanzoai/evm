@@ -1,6 +1,6 @@
 use std::fmt;
 
-use reth_node_api::{FullNodeComponents, NodeAddOns};
+use hanzo_evm_node_api::{FullNodeComponents, NodeAddOns};
 
 use crate::node::FullNode;
 

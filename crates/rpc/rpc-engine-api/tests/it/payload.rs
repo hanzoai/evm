@@ -8,9 +8,9 @@ use alloy_rpc_types_engine::{
     PayloadError,
 };
 use assert_matches::assert_matches;
-use reth_ethereum_primitives::{Block, TransactionSigned};
-use reth_primitives_traits::{proofs, SealedBlock};
-use reth_testing_utils::generators::{
+use hanzo_evm_ethereum_primitives::{Block, TransactionSigned};
+use hanzo_evm_primitives_traits::{proofs, SealedBlock};
+use hanzo_evm_testing_utils::generators::{
     self, random_block, random_block_range, BlockParams, BlockRangeParams, Rng,
 };
 

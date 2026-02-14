@@ -6,13 +6,13 @@ use alloy_primitives::{
 };
 use alloy_rlp::Decodable;
 use alloy_trie::{BranchNodeCompact, TrieMask, EMPTY_ROOT_HASH};
-use reth_execution_errors::{SparseTrieError, SparseTrieErrorKind, SparseTrieResult};
-use reth_trie_common::{
+use hanzo_evm_execution_errors::{SparseTrieError, SparseTrieErrorKind, SparseTrieResult};
+use hanzo_evm_trie_common::{
     prefix_set::{PrefixSet, PrefixSetMut},
     BranchNodeMasks, BranchNodeMasksMap, BranchNodeRef, ExtensionNodeRef, LeafNodeRef, Nibbles,
     ProofTrieNode, RlpNode, TrieNode,
 };
-use reth_trie_sparse::{
+use hanzo_evm_trie_sparse::{
     provider::{RevealedNode, TrieNodeProvider},
     LeafLookup, LeafLookupError, RlpNodeStackItem, SparseNode, SparseNodeType, SparseTrie,
     SparseTrieExt, SparseTrieUpdates,
@@ -1247,10 +1247,10 @@ impl SparseTrieExt for ParallelSparseTrie {
 
     fn update_leaves(
         &mut self,
-        updates: &mut alloy_primitives::map::B256Map<reth_trie_sparse::LeafUpdate>,
+        updates: &mut alloy_primitives::map::B256Map<hanzo_evm_trie_sparse::LeafUpdate>,
         mut proof_required_fn: impl FnMut(B256, u8),
     ) -> SparseTrieResult<()> {
-        use reth_trie_sparse::{provider::NoRevealProvider, LeafUpdate};
+        use hanzo_evm_trie_sparse::{provider::NoRevealProvider, LeafUpdate};
 
         // Collect keys upfront since we mutate `updates` during iteration.
         // On success, entries are removed; on blinded node failure, they're re-inserted.
@@ -3539,25 +3539,25 @@ mod tests {
     use itertools::Itertools;
     use proptest::{prelude::*, sample::SizeRange};
     use proptest_arbitrary_interop::arb;
-    use reth_execution_errors::{SparseTrieError, SparseTrieErrorKind};
-    use reth_primitives_traits::Account;
-    use reth_provider::{test_utils::create_test_provider_factory, TrieWriter};
-    use reth_trie::{
+    use hanzo_evm_execution_errors::{SparseTrieError, SparseTrieErrorKind};
+    use hanzo_evm_primitives_traits::Account;
+    use hanzo_evm_provider::{test_utils::create_test_provider_factory, TrieWriter};
+    use hanzo_evm_trie::{
         hashed_cursor::{noop::NoopHashedCursor, HashedPostStateCursor},
         node_iter::{TrieElement, TrieNodeIter},
         trie_cursor::{noop::NoopAccountTrieCursor, TrieCursor, TrieCursorFactory},
         walker::TrieWalker,
         HashedPostState,
     };
-    use reth_trie_common::{
+    use hanzo_evm_trie_common::{
         prefix_set::PrefixSetMut,
         proof::{ProofNodes, ProofRetainer},
         updates::TrieUpdates,
         BranchNode, BranchNodeMasks, BranchNodeMasksMap, ExtensionNode, HashBuilder, LeafNode,
         ProofTrieNode, RlpNode, TrieMask, TrieNode, EMPTY_ROOT_HASH,
     };
-    use reth_trie_db::DatabaseTrieCursorFactory;
-    use reth_trie_sparse::{
+    use hanzo_evm_trie_db::DatabaseTrieCursorFactory;
+    use hanzo_evm_trie_sparse::{
         provider::{DefaultTrieNodeProvider, RevealedNode, TrieNodeProvider},
         LeafLookup, LeafLookupError, SerialSparseTrie, SparseNode, SparseTrie, SparseTrieExt,
         SparseTrieUpdates,
@@ -7762,7 +7762,7 @@ mod tests {
 
     #[test]
     fn test_mainnet_block_24185431_storage_0x6ba784ee() {
-        reth_tracing::init_test_tracing();
+        hanzo_evm_tracing::init_test_tracing();
 
         // Reveal branch at 0x3 with full state
         let mut branch_0x3_hashes = vec![
@@ -8029,7 +8029,7 @@ mod tests {
         // the value must be removed when that path becomes a pruned root.
         // This catches the bug where is_strict_descendant fails to remove p == pruned_root.
 
-        use reth_trie_sparse::provider::DefaultTrieNodeProvider;
+        use hanzo_evm_trie_sparse::provider::DefaultTrieNodeProvider;
 
         let provider = DefaultTrieNodeProvider;
         let mut parallel = ParallelSparseTrie::default();
@@ -8370,7 +8370,7 @@ mod tests {
     #[test]
     fn test_update_leaves_successful_update() {
         use alloy_primitives::map::B256Map;
-        use reth_trie_sparse::LeafUpdate;
+        use hanzo_evm_trie_sparse::LeafUpdate;
         use std::cell::RefCell;
 
         let provider = DefaultTrieNodeProvider;
@@ -8405,7 +8405,7 @@ mod tests {
     #[test]
     fn test_update_leaves_insert_new_leaf() {
         use alloy_primitives::map::B256Map;
-        use reth_trie_sparse::LeafUpdate;
+        use hanzo_evm_trie_sparse::LeafUpdate;
         use std::cell::RefCell;
 
         let mut trie = ParallelSparseTrie::default();
@@ -8442,7 +8442,7 @@ mod tests {
     #[test]
     fn test_update_leaves_blinded_node() {
         use alloy_primitives::map::B256Map;
-        use reth_trie_sparse::LeafUpdate;
+        use hanzo_evm_trie_sparse::LeafUpdate;
         use std::cell::RefCell;
 
         // Create a trie with a blinded node
@@ -8518,7 +8518,7 @@ mod tests {
     #[test]
     fn test_update_leaves_removal() {
         use alloy_primitives::map::B256Map;
-        use reth_trie_sparse::LeafUpdate;
+        use hanzo_evm_trie_sparse::LeafUpdate;
         use std::cell::RefCell;
 
         let provider = DefaultTrieNodeProvider;
@@ -8551,7 +8551,7 @@ mod tests {
     #[test]
     fn test_update_leaves_removal_blinded() {
         use alloy_primitives::map::B256Map;
-        use reth_trie_sparse::LeafUpdate;
+        use hanzo_evm_trie_sparse::LeafUpdate;
         use std::cell::RefCell;
 
         // Create a trie with a blinded node
@@ -8635,7 +8635,7 @@ mod tests {
     #[test]
     fn test_update_leaves_removal_branch_collapse_blinded() {
         use alloy_primitives::map::B256Map;
-        use reth_trie_sparse::LeafUpdate;
+        use hanzo_evm_trie_sparse::LeafUpdate;
         use std::cell::RefCell;
 
         // Create a branch node at root with two children:
@@ -8740,7 +8740,7 @@ mod tests {
     #[test]
     fn test_update_leaves_touched() {
         use alloy_primitives::map::B256Map;
-        use reth_trie_sparse::LeafUpdate;
+        use hanzo_evm_trie_sparse::LeafUpdate;
         use std::cell::RefCell;
 
         let provider = DefaultTrieNodeProvider;
@@ -8784,7 +8784,7 @@ mod tests {
     #[test]
     fn test_update_leaves_touched_nonexistent() {
         use alloy_primitives::map::B256Map;
-        use reth_trie_sparse::LeafUpdate;
+        use hanzo_evm_trie_sparse::LeafUpdate;
         use std::cell::RefCell;
 
         let mut trie = ParallelSparseTrie::default();
@@ -8830,7 +8830,7 @@ mod tests {
     #[test]
     fn test_update_leaves_touched_blinded() {
         use alloy_primitives::map::B256Map;
-        use reth_trie_sparse::LeafUpdate;
+        use hanzo_evm_trie_sparse::LeafUpdate;
         use std::cell::RefCell;
 
         // Create a trie with a blinded node
@@ -8899,7 +8899,7 @@ mod tests {
     #[test]
     fn test_update_leaves_deduplication() {
         use alloy_primitives::map::B256Map;
-        use reth_trie_sparse::LeafUpdate;
+        use hanzo_evm_trie_sparse::LeafUpdate;
         use std::cell::RefCell;
 
         // Create a trie with a blinded node
@@ -8971,7 +8971,7 @@ mod tests {
     #[test]
     fn test_update_leaves_node_not_found_in_provider_atomicity() {
         use alloy_primitives::map::B256Map;
-        use reth_trie_sparse::LeafUpdate;
+        use hanzo_evm_trie_sparse::LeafUpdate;
         use std::cell::RefCell;
 
         // Create a trie with retain_updates enabled (this triggers the code path that

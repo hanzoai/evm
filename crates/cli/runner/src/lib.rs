@@ -1,16 +1,16 @@
 //! A tokio based CLI runner.
 
 #![doc(
-    html_logo_url = "https://raw.githubusercontent.com/paradigmxyz/reth/main/assets/reth-docs.png",
+    html_logo_url = "https://raw.githubusercontent.com/hanzoai/evm/main/assets/evm-docs.png",
     html_favicon_url = "https://avatars0.githubusercontent.com/u/97369466?s=256",
-    issue_tracker_base_url = "https://github.com/paradigmxyz/reth/issues/"
+    issue_tracker_base_url = "https://github.com/hanzoai/evm/issues/"
 )]
 #![cfg_attr(not(test), warn(unused_crate_dependencies))]
 #![cfg_attr(docsrs, feature(doc_cfg))]
 
 //! Entrypoint for running commands.
 
-use reth_tasks::{TaskExecutor, TaskManager};
+use hanzo_evm_tasks::{TaskExecutor, TaskManager};
 use std::{future::Future, pin::pin, sync::mpsc, time::Duration};
 use tracing::{debug, error, trace};
 
@@ -62,7 +62,7 @@ impl CliRunner {
     ) -> Result<(), E>
     where
         F: Future<Output = Result<(), E>>,
-        E: Send + Sync + From<std::io::Error> + From<reth_tasks::PanickedTaskError> + 'static,
+        E: Send + Sync + From<std::io::Error> + From<hanzo_evm_tasks::PanickedTaskError> + 'static,
     {
         let AsyncCliRunner { context, mut task_manager, tokio_runtime } =
             AsyncCliRunner::new(self.tokio_runtime);
@@ -74,9 +74,9 @@ impl CliRunner {
         ));
 
         if command_res.is_err() {
-            error!(target: "reth::cli", "shutting down due to error");
+            error!(target: "evm::cli", "shutting down due to error");
         } else {
-            debug!(target: "reth::cli", "shutting down gracefully");
+            debug!(target: "evm::cli", "shutting down gracefully");
             // after the command has finished or exit signal was received we shutdown the task
             // manager which fires the shutdown signal to all tasks spawned via the task
             // executor and awaiting on tasks spawned with graceful shutdown
@@ -97,7 +97,7 @@ impl CliRunner {
     ) -> Result<(), E>
     where
         F: Future<Output = Result<(), E>> + Send + 'static,
-        E: Send + Sync + From<std::io::Error> + From<reth_tasks::PanickedTaskError> + 'static,
+        E: Send + Sync + From<std::io::Error> + From<hanzo_evm_tasks::PanickedTaskError> + 'static,
     {
         let AsyncCliRunner { context, mut task_manager, tokio_runtime } =
             AsyncCliRunner::new(self.tokio_runtime);
@@ -116,9 +116,9 @@ impl CliRunner {
         ));
 
         if command_res.is_err() {
-            error!(target: "reth::cli", "shutting down due to error");
+            error!(target: "evm::cli", "shutting down due to error");
         } else {
-            debug!(target: "reth::cli", "shutting down gracefully");
+            debug!(target: "evm::cli", "shutting down gracefully");
             task_manager.graceful_shutdown_with_timeout(self.config.graceful_shutdown_timeout);
         }
 
@@ -235,7 +235,7 @@ pub fn tokio_runtime() -> Result<tokio::runtime::Runtime, std::io::Error> {
 async fn run_to_completion_or_panic<F, E>(tasks: &mut TaskManager, fut: F) -> Result<(), E>
 where
     F: Future<Output = Result<(), E>>,
-    E: Send + Sync + From<reth_tasks::PanickedTaskError> + 'static,
+    E: Send + Sync + From<hanzo_evm_tasks::PanickedTaskError> + 'static,
 {
     {
         let fut = pin!(fut);
@@ -271,10 +271,10 @@ where
 
         tokio::select! {
             _ = ctrl_c => {
-                trace!(target: "reth::cli", "Received ctrl-c");
+                trace!(target: "evm::cli", "Received ctrl-c");
             },
             _ = sigterm => {
-                trace!(target: "reth::cli", "Received SIGTERM");
+                trace!(target: "evm::cli", "Received SIGTERM");
             },
             res = fut => res?,
         }
@@ -287,7 +287,7 @@ where
 
         tokio::select! {
             _ = ctrl_c => {
-                trace!(target: "reth::cli", "Received ctrl-c");
+                trace!(target: "evm::cli", "Received ctrl-c");
             },
             res = fut => res?,
         }
@@ -315,7 +315,7 @@ fn tokio_shutdown(rt: tokio::runtime::Runtime, wait: bool) {
 
     if wait {
         let _ = rx.recv_timeout(Duration::from_secs(5)).inspect_err(|err| {
-            debug!(target: "reth::cli", %err, "tokio runtime shutdown timed out");
+            debug!(target: "evm::cli", %err, "tokio runtime shutdown timed out");
         });
     }
 }

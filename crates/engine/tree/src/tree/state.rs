@@ -6,8 +6,8 @@ use alloy_primitives::{
     map::{B256Map, B256Set},
     BlockNumber, B256,
 };
-use reth_chain_state::{DeferredTrieData, EthPrimitives, ExecutedBlock, LazyOverlay};
-use reth_primitives_traits::{AlloyBlockHeader, NodePrimitives, SealedHeader};
+use hanzo_evm_chain_state::{DeferredTrieData, EthPrimitives, ExecutedBlock, LazyOverlay};
+use hanzo_evm_primitives_traits::{AlloyBlockHeader, NodePrimitives, SealedHeader};
 use std::{
     collections::{btree_map, hash_map, BTreeMap, VecDeque},
     ops::Bound,
@@ -454,7 +454,7 @@ pub struct PreparedCanonicalOverlay {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use reth_chain_state::test_utils::TestBlockBuilder;
+    use hanzo_evm_chain_state::test_utils::TestBlockBuilder;
 
     #[test]
     fn test_tree_state_normal_descendant() {

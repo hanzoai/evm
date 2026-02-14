@@ -5,10 +5,10 @@ use alloy_consensus::{ReceiptEnvelope, Transaction};
 use alloy_eips::eip7840::BlobParams;
 use alloy_primitives::{Address, TxKind};
 use alloy_rpc_types_eth::{Log, TransactionReceipt};
-use reth_chainspec::EthChainSpec;
-use reth_ethereum_primitives::Receipt;
-use reth_primitives_traits::{NodePrimitives, TransactionMeta};
-use reth_rpc_convert::transaction::{ConvertReceiptInput, ReceiptConverter};
+use hanzo_evm_chainspec::EthChainSpec;
+use hanzo_evm_ethereum_primitives::Receipt;
+use hanzo_evm_primitives_traits::{NodePrimitives, TransactionMeta};
+use hanzo_evm_rpc_convert::transaction::{ConvertReceiptInput, ReceiptConverter};
 use std::sync::Arc;
 
 /// Builds an [`TransactionReceipt`] obtaining the inner receipt envelope from the given closure.

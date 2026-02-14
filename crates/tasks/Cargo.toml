@@ -1,5 +1,5 @@
 [package]
-name = "reth-tasks"
+name = "hanzo-evm-tasks"
 version.workspace = true
 edition.workspace = true
 rust-version.workspace = true
@@ -18,7 +18,7 @@ tracing-futures.workspace = true
 futures-util = { workspace = true, features = ["std"] }
 
 # metrics
-reth-metrics.workspace = true
+hanzo-evm-metrics.workspace = true
 metrics.workspace = true
 
 # misc

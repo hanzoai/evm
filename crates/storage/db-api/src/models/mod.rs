@@ -7,12 +7,12 @@ use crate::{
 use alloy_consensus::Header;
 use alloy_genesis::GenesisAccount;
 use alloy_primitives::{Address, Bytes, Log, B256, U256};
-use reth_codecs::{add_arbitrary_tests, Compact};
-use reth_ethereum_primitives::{Receipt, TransactionSigned, TxType};
-use reth_primitives_traits::{Account, Bytecode, StorageEntry};
-use reth_prune_types::{PruneCheckpoint, PruneSegment};
-use reth_stages_types::StageCheckpoint;
-use reth_trie_common::{StorageTrieEntry, StoredNibbles, StoredNibblesSubKey, *};
+use hanzo_evm_codecs::{add_arbitrary_tests, Compact};
+use hanzo_evm_ethereum_primitives::{Receipt, TransactionSigned, TxType};
+use hanzo_evm_primitives_traits::{Account, Bytecode, StorageEntry};
+use hanzo_evm_prune_types::{PruneCheckpoint, PruneSegment};
+use hanzo_evm_stages_types::StageCheckpoint;
+use hanzo_evm_trie_common::{StorageTrieEntry, StoredNibbles, StoredNibblesSubKey, *};
 use serde::{Deserialize, Serialize};
 
 pub mod accounts;
@@ -26,7 +26,7 @@ pub use accounts::*;
 pub use blocks::*;
 pub use integer_list::IntegerList;
 pub use metadata::*;
-pub use reth_db_models::{
+pub use hanzo_evm_db_models::{
     AccountBeforeTx, ClientVersion, StaticFileBlockWithdrawals, StorageBeforeTx,
     StoredBlockBodyIndices, StoredBlockWithdrawals,
 };
@@ -322,10 +322,10 @@ mod tests {
     #[test]
     fn test_ensure_backwards_compatibility() {
         use super::*;
-        use reth_codecs::{test_utils::UnusedBits, validate_bitflag_backwards_compat};
-        use reth_primitives_traits::Account;
-        use reth_prune_types::{PruneCheckpoint, PruneMode, PruneSegment};
-        use reth_stages_types::{
+        use hanzo_evm_codecs::{test_utils::UnusedBits, validate_bitflag_backwards_compat};
+        use hanzo_evm_primitives_traits::Account;
+        use hanzo_evm_prune_types::{PruneCheckpoint, PruneMode, PruneSegment};
+        use hanzo_evm_stages_types::{
             AccountHashingCheckpoint, CheckpointBlockRange, EntitiesCheckpoint,
             ExecutionCheckpoint, HeadersCheckpoint, IndexHistoryCheckpoint, StageCheckpoint,
             StageUnitCheckpoint, StorageHashingCheckpoint,

@@ -1,6 +1,6 @@
 use crate::backfill::{BackfillAction, BackfillEvent, BackfillSync};
 use futures::Stream;
-use reth_stages_api::{ControlFlow, PipelineTarget};
+use hanzo_evm_stages_api::{ControlFlow, PipelineTarget};
 use std::{
     fmt::{Display, Formatter, Result},
     pin::Pin,

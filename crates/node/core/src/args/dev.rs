@@ -79,7 +79,7 @@ mod tests {
 
     #[test]
     fn test_parse_dev_args() {
-        let args = CommandParser::<DevArgs>::parse_from(["reth"]).args;
+        let args = CommandParser::<DevArgs>::parse_from(["evm"]).args;
         assert_eq!(
             args,
             DevArgs {
@@ -90,7 +90,7 @@ mod tests {
             }
         );
 
-        let args = CommandParser::<DevArgs>::parse_from(["reth", "--dev"]).args;
+        let args = CommandParser::<DevArgs>::parse_from(["evm", "--dev"]).args;
         assert_eq!(
             args,
             DevArgs {
@@ -101,7 +101,7 @@ mod tests {
             }
         );
 
-        let args = CommandParser::<DevArgs>::parse_from(["reth", "--auto-mine"]).args;
+        let args = CommandParser::<DevArgs>::parse_from(["evm", "--auto-mine"]).args;
         assert_eq!(
             args,
             DevArgs {
@@ -113,7 +113,7 @@ mod tests {
         );
 
         let args = CommandParser::<DevArgs>::parse_from([
-            "reth",
+            "evm",
             "--dev",
             "--dev.block-max-transactions",
             "2",
@@ -130,7 +130,7 @@ mod tests {
         );
 
         let args =
-            CommandParser::<DevArgs>::parse_from(["reth", "--dev", "--dev.block-time", "1s"]).args;
+            CommandParser::<DevArgs>::parse_from(["evm", "--dev", "--dev.block-time", "1s"]).args;
         assert_eq!(
             args,
             DevArgs {
@@ -145,7 +145,7 @@ mod tests {
     #[test]
     fn test_parse_dev_args_conflicts() {
         let args = CommandParser::<DevArgs>::try_parse_from([
-            "reth",
+            "evm",
             "--dev",
             "--dev.block-max-transactions",
             "2",
@@ -158,7 +158,7 @@ mod tests {
     #[test]
     fn dev_args_default_sanity_check() {
         let default_args = DevArgs::default();
-        let args = CommandParser::<DevArgs>::parse_from(["reth"]).args;
+        let args = CommandParser::<DevArgs>::parse_from(["evm"]).args;
         assert_eq!(args, default_args);
     }
 }

@@ -1,4 +1,4 @@
-//! Helper functions for `reth_rpc_eth_api::EthFilterApiServer` implementation.
+//! Helper functions for `hanzo_evm_rpc_eth_api::EthFilterApiServer` implementation.
 //!
 //! Log parsing for building filter.
 
@@ -6,10 +6,10 @@ use alloy_consensus::TxReceipt;
 use alloy_eips::{eip2718::Encodable2718, BlockNumHash};
 use alloy_primitives::TxHash;
 use alloy_rpc_types_eth::{Filter, Log};
-use reth_chainspec::ChainInfo;
-use reth_errors::ProviderError;
-use reth_primitives_traits::{BlockBody, RecoveredBlock, SignedTransaction};
-use reth_storage_api::{BlockReader, ProviderBlock};
+use hanzo_evm_chainspec::ChainInfo;
+use hanzo_evm_errors::ProviderError;
+use hanzo_evm_primitives_traits::{BlockBody, RecoveredBlock, SignedTransaction};
+use hanzo_evm_storage_api::{BlockReader, ProviderBlock};
 use std::sync::Arc;
 use thiserror::Error;
 

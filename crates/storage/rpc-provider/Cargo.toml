@@ -1,30 +1,30 @@
 [package]
-name = "reth-storage-rpc-provider"
+name = "hanzo-evm-storage-rpc-provider"
 version.workspace = true
 edition.workspace = true
 rust-version.workspace = true
 license.workspace = true
 homepage.workspace = true
 repository.workspace = true
-description = "RPC-based blockchain provider for reth that fetches data via RPC calls"
+description = "RPC-based blockchain provider for Hanzo EVM that fetches data via RPC calls"
 
 [lints]
 workspace = true
 
 [dependencies]
-# reth
-reth-storage-api.workspace = true
-reth-chainspec.workspace = true
-reth-primitives.workspace = true
-reth-provider.workspace = true
-reth-errors.workspace = true
-reth-execution-types.workspace = true
-reth-prune-types.workspace = true
-reth-node-types.workspace = true
-reth-trie.workspace = true
-reth-stages-types.workspace = true
-reth-db-api.workspace = true
-reth-rpc-convert.workspace = true
+# evm
+hanzo-evm-storage-api.workspace = true
+hanzo-evm-chainspec.workspace = true
+hanzo-evm-primitives.workspace = true
+hanzo-evm-provider.workspace = true
+hanzo-evm-errors.workspace = true
+hanzo-evm-execution-types.workspace = true
+hanzo-evm-prune-types.workspace = true
+hanzo-evm-node-types.workspace = true
+hanzo-evm-trie.workspace = true
+hanzo-evm-stages-types.workspace = true
+hanzo-evm-db-api.workspace = true
+hanzo-evm-rpc-convert.workspace = true
 
 # alloy
 alloy-provider = { workspace = true, features = ["debug-api"] }

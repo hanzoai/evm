@@ -2,16 +2,16 @@
 
 use boyer_moore_magiclen::BMByte;
 use eyre::Result;
-use reth_db_api::{
+use hanzo_evm_db_api::{
     cursor::{DbCursorRO, DbDupCursorRO},
     database::Database,
     table::{Decode, Decompress, DupSort, Table, TableRow},
     transaction::{DbTx, DbTxMut},
     DatabaseError, RawTable, TableRawRow,
 };
-use reth_fs_util as fs;
-use reth_node_types::NodeTypesWithDB;
-use reth_provider::{providers::ProviderNodeTypes, ChainSpecProvider, DBProvider, ProviderFactory};
+use hanzo_evm_fs_util as fs;
+use hanzo_evm_node_types::NodeTypesWithDB;
+use hanzo_evm_provider::{providers::ProviderNodeTypes, ChainSpecProvider, DBProvider, ProviderFactory};
 use std::{path::Path, rc::Rc, sync::Arc};
 use tracing::info;
 
@@ -138,17 +138,17 @@ impl<N: ProviderNodeTypes> DbTool<N> {
         exex_wal_path: P,
     ) -> Result<()> {
         let db_path = db_path.as_ref();
-        info!(target: "reth::cli", "Dropping database at {:?}", db_path);
+        info!(target: "evm::cli", "Dropping database at {:?}", db_path);
         fs::remove_dir_all(db_path)?;
 
         let static_files_path = static_files_path.as_ref();
-        info!(target: "reth::cli", "Dropping static files at {:?}", static_files_path);
+        info!(target: "evm::cli", "Dropping static files at {:?}", static_files_path);
         fs::remove_dir_all(static_files_path)?;
         fs::create_dir_all(static_files_path)?;
 
         if exex_wal_path.as_ref().exists() {
             let exex_wal_path = exex_wal_path.as_ref();
-            info!(target: "reth::cli", "Dropping ExEx WAL at {:?}", exex_wal_path);
+            info!(target: "evm::cli", "Dropping ExEx WAL at {:?}", exex_wal_path);
             fs::remove_dir_all(exex_wal_path)?;
         }
 

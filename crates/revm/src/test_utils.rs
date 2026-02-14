@@ -4,13 +4,13 @@ use alloy_primitives::{
     map::{AddressMap, B256Map, HashMap},
     Address, BlockNumber, Bytes, StorageKey, B256, U256,
 };
-use reth_primitives_traits::{Account, Bytecode};
-use reth_storage_api::{
+use hanzo_evm_primitives_traits::{Account, Bytecode};
+use hanzo_evm_storage_api::{
     AccountReader, BlockHashReader, BytecodeReader, HashedPostStateProvider, StateProofProvider,
     StateProvider, StateRootProvider, StorageRootProvider,
 };
-use reth_storage_errors::provider::ProviderResult;
-use reth_trie::{
+use hanzo_evm_storage_errors::provider::ProviderResult;
+use hanzo_evm_trie::{
     updates::TrieUpdates, AccountProof, HashedPostState, HashedStorage, KeccakKeyHasher,
     MultiProof, MultiProofTargets, StorageMultiProof, StorageProof, TrieInput,
 };

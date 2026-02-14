@@ -1,13 +1,13 @@
 //! Possible errors when interacting with the network.
 
 use crate::session::PendingSessionHandshakeError;
-use reth_dns_discovery::resolver::ResolveError;
-use reth_ecies::ECIESErrorImpl;
-use reth_eth_wire::{
+use hanzo_evm_dns_discovery::resolver::ResolveError;
+use hanzo_evm_ecies::ECIESErrorImpl;
+use hanzo_evm_eth_wire::{
     errors::{EthHandshakeError, EthStreamError, P2PHandshakeError, P2PStreamError},
     DisconnectReason,
 };
-use reth_network_types::BackoffKind;
+use hanzo_evm_network_types::BackoffKind;
 use std::{fmt, io, io::ErrorKind, net::SocketAddr};
 
 /// Service kind.
@@ -57,10 +57,10 @@ pub enum NetworkError {
     Discovery(SocketAddr, io::Error),
     /// An error occurred with discovery v5 node.
     #[error("discv5 error, {0}")]
-    Discv5Error(#[from] reth_discv5::Error),
+    Discv5Error(#[from] hanzo_evm_discv5::Error),
     /// Error when setting up the DNS resolver failed
     ///
-    /// See also [`DnsResolver`](reth_dns_discovery::DnsResolver::from_system_conf)
+    /// See also [`DnsResolver`](hanzo_evm_dns_discovery::DnsResolver::from_system_conf)
     #[error("failed to configure DNS resolver: {0}")]
     DnsResolver(#[from] ResolveError),
 }

@@ -1,5 +1,5 @@
 [package]
-name = "reth-node-api"
+name = "hanzo-evm-node-api"
 version.workspace = true
 edition.workspace = true
 rust-version.workspace = true
@@ -11,22 +11,22 @@ repository.workspace = true
 workspace = true
 
 [dependencies]
-# reth
-reth-basic-payload-builder.workspace = true
-reth-db-api.workspace = true
-reth-consensus.workspace = true
-reth-evm.workspace = true
-reth-provider.workspace = true
-reth-engine-primitives.workspace = true
-reth-transaction-pool.workspace = true
-reth-payload-builder.workspace = true
-reth-payload-builder-primitives.workspace = true
-reth-payload-primitives.workspace = true
-reth-tasks.workspace = true
-reth-network-api.workspace = true
-reth-node-types.workspace = true
-reth-node-core.workspace = true
-reth-tokio-util.workspace = true
+# evm
+hanzo-evm-basic-payload-builder.workspace = true
+hanzo-evm-db-api.workspace = true
+hanzo-evm-consensus.workspace = true
+hanzo-evm-execution.workspace = true
+hanzo-evm-provider.workspace = true
+hanzo-evm-engine-primitives.workspace = true
+hanzo-evm-transaction-pool.workspace = true
+hanzo-evm-payload-builder.workspace = true
+hanzo-evm-payload-builder-primitives.workspace = true
+hanzo-evm-payload-primitives.workspace = true
+hanzo-evm-tasks.workspace = true
+hanzo-evm-network-api.workspace = true
+hanzo-evm-node-types.workspace = true
+hanzo-evm-node-core.workspace = true
+hanzo-evm-tokio-util.workspace = true
 
 alloy-rpc-types-engine.workspace = true
 

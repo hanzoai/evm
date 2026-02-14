@@ -1,6 +1,6 @@
 use super::ExceedsSessionLimit;
-use reth_network_api::Direction;
-use reth_network_types::SessionLimits;
+use hanzo_evm_network_api::Direction;
+use hanzo_evm_network_types::SessionLimits;
 
 /// Keeps track of all sessions.
 #[derive(Debug)]

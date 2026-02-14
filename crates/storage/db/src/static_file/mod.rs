@@ -1,7 +1,7 @@
-//! reth's static file database table import and access
+//! evm's static file database table import and access
 
-use reth_nippy_jar::{NippyJar, NippyJarError};
-use reth_static_file_types::{
+use hanzo_evm_nippy_jar::{NippyJar, NippyJarError};
+use hanzo_evm_static_file_types::{
     SegmentHeader, SegmentRangeInclusive, StaticFileMap, StaticFileSegment,
 };
 use std::path::Path;
@@ -23,11 +23,11 @@ type SortedStaticFiles = StaticFileMap<Vec<(SegmentRangeInclusive, SegmentHeader
 /// segment headers as presented in the file configuration.
 pub fn iter_static_files(path: &Path) -> Result<SortedStaticFiles, NippyJarError> {
     if !path.exists() {
-        reth_fs_util::create_dir_all(path).map_err(|err| NippyJarError::Custom(err.to_string()))?;
+        hanzo_evm_fs_util::create_dir_all(path).map_err(|err| NippyJarError::Custom(err.to_string()))?;
     }
 
     let mut static_files = SortedStaticFiles::default();
-    let entries = reth_fs_util::read_dir(path)
+    let entries = hanzo_evm_fs_util::read_dir(path)
         .map_err(|err| NippyJarError::Custom(err.to_string()))?
         .filter_map(Result::ok);
     for entry in entries {

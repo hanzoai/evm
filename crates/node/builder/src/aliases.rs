@@ -1,6 +1,6 @@
-use reth_network::NetworkPrimitives;
-use reth_node_api::BlockBody;
-use reth_provider::BlockReader;
+use hanzo_evm_network::NetworkPrimitives;
+use hanzo_evm_node_api::BlockBody;
+use hanzo_evm_provider::BlockReader;
 
 /// This is a type alias to make type bounds simpler, when we have a [`NetworkPrimitives`] and need
 /// a [`BlockReader`] whose associated types match the [`NetworkPrimitives`] associated types.

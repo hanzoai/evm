@@ -3,8 +3,8 @@
 mod cache;
 pub use cache::BlockCache;
 mod storage;
-use reth_ethereum_primitives::EthPrimitives;
-use reth_node_api::NodePrimitives;
+use hanzo_evm_ethereum_primitives::EthPrimitives;
+use hanzo_evm_node_api::NodePrimitives;
 pub use storage::Storage;
 mod metrics;
 use metrics::Metrics;
@@ -22,8 +22,8 @@ use std::{
 use alloy_eips::BlockNumHash;
 use alloy_primitives::B256;
 use parking_lot::{RwLock, RwLockReadGuard};
-use reth_exex_types::ExExNotification;
-use reth_tracing::tracing::{debug, instrument};
+use hanzo_evm_exex_types::ExExNotification;
+use hanzo_evm_tracing::tracing::{debug, instrument};
 
 /// WAL is a write-ahead log (WAL) that stores the notifications sent to ExExes.
 ///
@@ -238,9 +238,9 @@ mod tests {
     use crate::wal::{cache::CachedBlock, error::WalResult, Wal};
     use alloy_primitives::B256;
     use itertools::Itertools;
-    use reth_exex_types::ExExNotification;
-    use reth_provider::Chain;
-    use reth_testing_utils::generators::{
+    use hanzo_evm_exex_types::ExExNotification;
+    use hanzo_evm_provider::Chain;
+    use hanzo_evm_testing_utils::generators::{
         self, random_block, random_block_range, BlockParams, BlockRangeParams,
     };
     use std::{collections::BTreeMap, sync::Arc};
@@ -266,7 +266,7 @@ mod tests {
 
     #[test]
     fn test_wal() -> eyre::Result<()> {
-        reth_tracing::init_test_tracing();
+        hanzo_evm_tracing::init_test_tracing();
 
         let mut rng = generators::rng();
 

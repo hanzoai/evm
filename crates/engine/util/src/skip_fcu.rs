@@ -1,8 +1,8 @@
 //! Stream wrapper that skips specified number of FCUs.
 
 use futures::{Stream, StreamExt};
-use reth_engine_primitives::{BeaconEngineMessage, OnForkChoiceUpdated};
-use reth_payload_primitives::PayloadTypes;
+use hanzo_evm_engine_primitives::{BeaconEngineMessage, OnForkChoiceUpdated};
+use hanzo_evm_payload_primitives::PayloadTypes;
 use std::{
     pin::Pin,
     task::{ready, Context, Poll},

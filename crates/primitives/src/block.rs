@@ -1,7 +1,7 @@
 use alloy_consensus::Header;
-use reth_ethereum_primitives::TransactionSigned;
+use hanzo_evm_ethereum_primitives::TransactionSigned;
 #[cfg(any(test, feature = "arbitrary"))]
-pub use reth_primitives_traits::test_utils::{generate_valid_header, valid_header_strategy};
+pub use hanzo_evm_primitives_traits::test_utils::{generate_valid_header, valid_header_strategy};
 
 /// Ethereum full block.
 ///
@@ -14,16 +14,16 @@ pub type Block<T = TransactionSigned, H = Header> = alloy_consensus::Block<T, H>
 pub type BlockBody<T = TransactionSigned, H = Header> = alloy_consensus::BlockBody<T, H>;
 
 /// Ethereum sealed block type
-pub type SealedBlock<B = Block> = reth_primitives_traits::block::SealedBlock<B>;
+pub type SealedBlock<B = Block> = hanzo_evm_primitives_traits::block::SealedBlock<B>;
 
 /// Helper type for constructing the block
 #[deprecated(note = "Use `SealedBlock` instead")]
-pub type SealedBlockFor<B = Block> = reth_primitives_traits::block::SealedBlock<B>;
+pub type SealedBlockFor<B = Block> = hanzo_evm_primitives_traits::block::SealedBlock<B>;
 
 /// Ethereum recovered block
 #[deprecated(note = "Use `RecoveredBlock` instead")]
-pub type BlockWithSenders<B = Block> = reth_primitives_traits::block::RecoveredBlock<B>;
+pub type BlockWithSenders<B = Block> = hanzo_evm_primitives_traits::block::RecoveredBlock<B>;
 
 /// Ethereum recovered block
 #[deprecated(note = "Use `RecoveredBlock` instead")]
-pub type SealedBlockWithSenders<B = Block> = reth_primitives_traits::block::RecoveredBlock<B>;
+pub type SealedBlockWithSenders<B = Block> = hanzo_evm_primitives_traits::block::RecoveredBlock<B>;

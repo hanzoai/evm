@@ -20,7 +20,7 @@ pub type SealedHeaderFor<N> = SealedHeader<<N as NodePrimitives>::BlockHeader>;
 /// [`SealedHeader::hash`] computes the hash if it has not been computed yet.
 #[derive(Debug, Clone, AsRef, Deref)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
-#[cfg_attr(any(test, feature = "reth-codec"), reth_codecs::add_arbitrary_tests(rlp))]
+#[cfg_attr(any(test, feature = "hanzo-evm-codec"), hanzo_evm_codecs::add_arbitrary_tests(rlp))]
 pub struct SealedHeader<H = Header> {
     /// Block hash
     #[cfg_attr(feature = "serde", serde(skip))]
@@ -284,7 +284,7 @@ pub(super) mod serde_bincode_compat {
     ///
     /// Intended to use with the [`serde_with::serde_as`] macro in the following way:
     /// ```rust
-    /// use reth_primitives_traits::{serde_bincode_compat, SealedHeader};
+    /// use hanzo_evm_primitives_traits::{serde_bincode_compat, SealedHeader};
     /// use serde::{Deserialize, Serialize};
     /// use serde_with::serde_as;
     ///

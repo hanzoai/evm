@@ -83,7 +83,7 @@ mod tests {
 
     #[test]
     fn test_default_rocksdb_args() {
-        let args = CommandParser::<RocksDbArgs>::parse_from(["reth"]).args;
+        let args = CommandParser::<RocksDbArgs>::parse_from(["evm"]).args;
         assert_eq!(args, RocksDbArgs::default());
         assert!(!args.all);
         assert!(args.tx_hash.is_none());
@@ -93,7 +93,7 @@ mod tests {
 
     #[test]
     fn test_parse_all_flag() {
-        let args = CommandParser::<RocksDbArgs>::parse_from(["reth", "--rocksdb.all"]).args;
+        let args = CommandParser::<RocksDbArgs>::parse_from(["evm", "--rocksdb.all"]).args;
         assert!(args.all);
         assert!(args.tx_hash.is_none());
     }
@@ -101,7 +101,7 @@ mod tests {
     #[test]
     fn test_parse_individual_flags() {
         let args = CommandParser::<RocksDbArgs>::parse_from([
-            "reth",
+            "evm",
             "--rocksdb.tx-hash=true",
             "--rocksdb.storages-history=false",
             "--rocksdb.account-history=true",

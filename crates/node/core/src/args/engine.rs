@@ -1,7 +1,7 @@
 //! clap [Args](clap::Args) for engine purposes
 
 use clap::{builder::Resettable, Args};
-use reth_engine_primitives::{
+use hanzo_evm_engine_primitives::{
     TreeConfig, DEFAULT_MULTIPROOF_TASK_CHUNK_SIZE, DEFAULT_SPARSE_TRIE_MAX_STORAGE_TRIES,
     DEFAULT_SPARSE_TRIE_PRUNE_DEPTH,
 };
@@ -471,7 +471,7 @@ mod tests {
     #[test]
     fn test_parse_engine_args() {
         let default_args = EngineArgs::default();
-        let args = CommandParser::<EngineArgs>::parse_from(["reth"]).args;
+        let args = CommandParser::<EngineArgs>::parse_from(["evm"]).args;
         assert_eq!(args, default_args);
     }
 
@@ -509,7 +509,7 @@ mod tests {
         };
 
         let parsed_args = CommandParser::<EngineArgs>::parse_from([
-            "reth",
+            "evm",
             "--engine.persistence-threshold",
             "100",
             "--engine.memory-block-buffer-target",

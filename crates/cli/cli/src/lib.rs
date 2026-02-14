@@ -1,36 +1,36 @@
-//! Cli abstraction for reth based nodes.
+//! Cli abstraction for evm based nodes.
 
 #![doc(
-    html_logo_url = "https://raw.githubusercontent.com/paradigmxyz/reth/main/assets/reth-docs.png",
+    html_logo_url = "https://raw.githubusercontent.com/hanzoai/evm/main/assets/evm-docs.png",
     html_favicon_url = "https://avatars0.githubusercontent.com/u/97369466?s=256",
-    issue_tracker_base_url = "https://github.com/paradigmxyz/reth/issues/"
+    issue_tracker_base_url = "https://github.com/hanzoai/evm/issues/"
 )]
 #![cfg_attr(not(test), warn(unused_crate_dependencies))]
 #![cfg_attr(docsrs, feature(doc_cfg))]
 
 use clap::{Error, Parser};
-use reth_cli_runner::CliRunner;
-use reth_db::ClientVersion;
+use hanzo_evm_cli_runner::CliRunner;
+use hanzo_evm_db::ClientVersion;
 use std::{borrow::Cow, ffi::OsString};
 
 /// The chainspec module defines the different chainspecs that can be used by the node.
 pub mod chainspec;
 use crate::chainspec::ChainSpecParser;
 
-/// Reth based node cli.
+/// Hanzo EVM based node cli.
 ///
 /// This trait is supposed to be implemented by the main struct of the CLI.
 ///
 /// It provides commonly used functionality for running commands and information about the CL, such
 /// as the name and version.
-pub trait RethCli: Sized {
+pub trait EvmCli: Sized {
     /// The associated `ChainSpecParser` type
     type ChainSpecParser: ChainSpecParser;
 
-    /// The name of the implementation, eg. `reth`.
+    /// The name of the implementation, eg. `evm`.
     fn name(&self) -> Cow<'static, str>;
 
-    /// The version of the node, such as `reth/v1.0.0`
+    /// The version of the node, such as `evm/v1.0.0`
     fn version(&self) -> Cow<'static, str>;
 
     /// Parse args from iterator from [`std::env::args_os()`].
@@ -38,7 +38,7 @@ pub trait RethCli: Sized {
     where
         Self: Parser,
     {
-        <Self as RethCli>::try_parse_from(std::env::args_os())
+        <Self as EvmCli>::try_parse_from(std::env::args_os())
     }
 
     /// Parse args from the given iterator.

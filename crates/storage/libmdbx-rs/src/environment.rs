@@ -188,7 +188,7 @@ impl Environment {
     /// of used pages as well as free pages in this environment.
     ///
     /// ```
-    /// # use reth_libmdbx::Environment;
+    /// # use hanzo_evm_libmdbx::Environment;
     /// let dir = tempfile::tempdir().unwrap();
     /// let env = Environment::builder().open(dir.path()).unwrap();
     /// let info = env.info().unwrap();

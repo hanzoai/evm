@@ -18,26 +18,26 @@ use alloy_rpc_types_eth::{
     BlockId, Bundle, EthCallResponse, StateContext, TransactionInfo,
 };
 use futures::Future;
-use reth_errors::{ProviderError, RethError};
-use reth_evm::{
+use hanzo_evm_errors::{ProviderError, EvmError};
+use hanzo_evm_execution::{
     env::BlockEnvironment, execute::BlockBuilder, ConfigureEvm, Evm, EvmEnvFor, HaltReasonFor,
     InspectorFor, TransactionEnv, TxEnvFor,
 };
-use reth_node_api::BlockBody;
-use reth_primitives_traits::Recovered;
-use reth_revm::{
+use hanzo_evm_node_api::BlockBody;
+use hanzo_evm_primitives_traits::Recovered;
+use hanzo_evm_revm::{
     cancelled::CancelOnDrop,
     database::StateProviderDatabase,
     db::{bal::EvmDatabaseError, State},
 };
-use reth_rpc_convert::{RpcConvert, RpcTxReq};
-use reth_rpc_eth_types::{
+use hanzo_evm_rpc_convert::{RpcConvert, RpcTxReq};
+use hanzo_evm_rpc_eth_types::{
     cache::db::StateProviderTraitObjWrapper,
     error::{AsEthApiError, FromEthApiError},
     simulate::{self, EthSimulateError},
     EthApiError, StateCacheDb,
 };
-use reth_storage_api::{BlockIdReader, ProviderTx, StateProviderBox};
+use hanzo_evm_storage_api::{BlockIdReader, ProviderTx, StateProviderBox};
 use revm::{
     context::Block,
     context_interface::{result::ResultAndState, Transaction},
@@ -128,16 +128,16 @@ pub trait EthCall: EstimateCall + Call + LoadPendingBlock + LoadBlock + FullEthA
                     }
 
                     let mut evm_env = this
-                        .evm_config()
+                        .hanzo_evm_config()
                         .next_evm_env(&parent, &this.next_env_attributes(&parent)?)
-                        .map_err(RethError::other)
+                        .map_err(EvmError::other)
                         .map_err(Self::Error::from_eth_err)?;
 
                     // Always disable EIP-3607
                     evm_env.cfg_env.disable_eip3607 = true;
 
                     if !validation {
-                        // If not explicitly required, we disable nonce check <https://github.com/paradigmxyz/reth/issues/16108>
+                        // If not explicitly required, we disable nonce check <https://github.com/hanzoai/evm/issues/16108>
                         evm_env.cfg_env.disable_nonce_check = true;
                         evm_env.cfg_env.disable_base_fee = true;
                         evm_env.cfg_env.tx_gas_limit_cap = Some(u64::MAX);
@@ -204,9 +204,9 @@ pub trait EthCall: EstimateCall + Call + LoadPendingBlock + LoadBlock + FullEthA
                     };
 
                     let ctx = this
-                        .evm_config()
+                        .hanzo_evm_config()
                         .context_for_next_block(&parent, this.next_env_attributes(&parent)?)
-                        .map_err(RethError::other)
+                        .map_err(EvmError::other)
                         .map_err(Self::Error::from_eth_err)?;
                     let map_err = |e: EthApiError| -> Self::Error {
                         match e.as_simulate_error() {
@@ -220,9 +220,9 @@ pub trait EthCall: EstimateCall + Call + LoadPendingBlock + LoadBlock + FullEthA
                         // and included in logs
                         let inspector = TransferInspector::new(false).with_logs(true);
                         let evm = this
-                            .evm_config()
+                            .hanzo_evm_config()
                             .evm_with_env_and_inspector(&mut db, evm_env, inspector);
-                        let mut builder = this.evm_config().create_block_builder(evm, &parent, ctx);
+                        let mut builder = this.hanzo_evm_config().create_block_builder(evm, &parent, ctx);
 
                         if let Some(ref state_overrides) = state_overrides {
                             simulate::apply_precompile_overrides(
@@ -241,8 +241,8 @@ pub trait EthCall: EstimateCall + Call + LoadPendingBlock + LoadBlock + FullEthA
                         )
                         .map_err(map_err)?
                     } else {
-                        let evm = this.evm_config().evm_with_env(&mut db, evm_env);
-                        let mut builder = this.evm_config().create_block_builder(evm, &parent, ctx);
+                        let evm = this.hanzo_evm_config().evm_with_env(&mut db, evm_env);
+                        let mut builder = this.hanzo_evm_config().create_block_builder(evm, &parent, ctx);
 
                         if let Some(ref state_overrides) = state_overrides {
                             simulate::apply_precompile_overrides(
@@ -363,7 +363,7 @@ pub trait EthCall: EstimateCall + Call + LoadPendingBlock + LoadBlock + FullEthA
                     // to be replayed
                     let block_transactions = block.transactions_recovered().take(num_txs);
                     for tx in block_transactions {
-                        let tx_env = RpcNodeCore::evm_config(&this).tx_env(tx);
+                        let tx_env = RpcNodeCore::hanzo_evm_config(&this).tx_env(tx);
                         let res = this.transact(&mut db, evm_env.clone(), tx_env)?;
                         db.commit(res.state);
                     }
@@ -581,13 +581,13 @@ pub trait Call:
     where
         DB: Database<Error = EvmDatabaseError<ProviderError>> + fmt::Debug,
     {
-        let mut evm = self.evm_config().evm_with_env(db, evm_env);
+        let mut evm = self.hanzo_evm_config().evm_with_env(db, evm_env);
         let res = evm.transact(tx_env).map_err(Self::Error::from_evm_err)?;
 
         Ok(res)
     }
 
-    /// Executes the [`reth_evm::EvmEnv`] against the given [Database] without committing state
+    /// Executes the [`hanzo_evm_execution::EvmEnv`] against the given [Database] without committing state
     /// changes.
     fn transact_with_inspector<DB, I>(
         &self,
@@ -600,7 +600,7 @@ pub trait Call:
         DB: Database<Error = EvmDatabaseError<ProviderError>> + fmt::Debug,
         I: InspectorFor<Self::Evm, DB>,
     {
-        let mut evm = self.evm_config().evm_with_env_and_inspector(db, evm_env, inspector);
+        let mut evm = self.hanzo_evm_config().evm_with_env_and_inspector(db, evm_env, inspector);
         let res = evm.transact(tx_env).map_err(Self::Error::from_evm_err)?;
 
         Ok(res)
@@ -663,7 +663,7 @@ pub trait Call:
     /// Prepares the state and env for the given [`RpcTxReq`] at the given [`BlockId`] and
     /// executes the closure on a new task returning the result of the closure.
     ///
-    /// This returns the configured [`reth_evm::EvmEnv`] for the given [`RpcTxReq`] at
+    /// This returns the configured [`hanzo_evm_execution::EvmEnv`] for the given [`RpcTxReq`] at
     /// the given [`BlockId`] and with configured call settings: `prepare_call_env`.
     ///
     /// This is primarily used by `eth_call`.
@@ -713,7 +713,7 @@ pub trait Call:
     /// and the database that points to the beginning of the transaction.
     ///
     /// Note: Implementers should use a threadpool where blocking is allowed, such as
-    /// [`BlockingTaskPool`](reth_tasks::pool::BlockingTaskPool).
+    /// [`BlockingTaskPool`](hanzo_evm_tasks::pool::BlockingTaskPool).
     fn spawn_replay_transaction<F, R>(
         &self,
         hash: B256,
@@ -749,7 +749,7 @@ pub trait Call:
                 // replay all transactions prior to the targeted transaction
                 this.replay_transactions_until(&mut db, evm_env.clone(), block_txs, *tx.tx_hash())?;
 
-                let tx_env = RpcNodeCore::evm_config(&this).tx_env(tx);
+                let tx_env = RpcNodeCore::hanzo_evm_config(&this).tx_env(tx);
 
                 let res = this.transact(&mut db, evm_env, tx_env)?;
                 f(tx_info, res, db)
@@ -777,7 +777,7 @@ pub trait Call:
         DB: Database<Error = EvmDatabaseError<ProviderError>> + DatabaseCommit + core::fmt::Debug,
         I: IntoIterator<Item = Recovered<&'a ProviderTx<Self::Provider>>>,
     {
-        let mut evm = self.evm_config().evm_with_env(db, evm_env);
+        let mut evm = self.hanzo_evm_config().evm_with_env(db, evm_env);
         let mut index = 0;
         for tx in transactions {
             if *tx.tx_hash() == target_tx_hash {
@@ -785,7 +785,7 @@ pub trait Call:
                 break
             }
 
-            let tx_env = self.evm_config().tx_env(tx);
+            let tx_env = self.hanzo_evm_config().tx_env(tx);
             evm.transact_commit(tx_env).map_err(Self::Error::from_evm_err)?;
             index += 1;
         }
@@ -794,7 +794,7 @@ pub trait Call:
 
     ///
     /// All `TxEnv` fields are derived from the given [`RpcTxReq`], if fields are
-    /// `None`, they fall back to the [`reth_evm::EvmEnv`]'s settings.
+    /// `None`, they fall back to the [`hanzo_evm_execution::EvmEnv`]'s settings.
     fn create_txn_env(
         &self,
         evm_env: &EvmEnvFor<Self::Evm>,
@@ -813,7 +813,7 @@ pub trait Call:
         Ok(self.converter().tx_env(request, evm_env)?)
     }
 
-    /// Prepares the [`reth_evm::EvmEnv`] for execution of calls.
+    /// Prepares the [`hanzo_evm_execution::EvmEnv`] for execution of calls.
     ///
     /// Does not commit any changes to the underlying database.
     ///
@@ -853,11 +853,11 @@ pub trait Call:
         }
 
         // Disable block gas limit check to allow executing transactions with higher gas limit (call
-        // gas limit): https://github.com/paradigmxyz/reth/issues/18577
+        // gas limit): https://github.com/hanzoai/evm/issues/18577
         evm_env.cfg_env.disable_block_gas_limit = true;
 
         // Disabled because eth_call is sometimes used with eoa senders
-        // See <https://github.com/paradigmxyz/reth/issues/1959>
+        // See <https://github.com/hanzoai/evm/issues/1959>
         evm_env.cfg_env.disable_eip3607 = true;
 
         // The basefee should be ignored for eth_call
@@ -870,7 +870,7 @@ pub trait Call:
 
         // Disable additional fee charges, e.g. opstack operator fee charge
         // See:
-        // <https://github.com/paradigmxyz/reth/issues/18470>
+        // <https://github.com/hanzoai/evm/issues/18470>
         evm_env.cfg_env.disable_fee_charge = true;
 
         evm_env.cfg_env.memory_limit = self.evm_memory_limit();

@@ -1,16 +1,16 @@
-//! MDBX implementation for reth's database abstraction layer.
+//! MDBX implementation for evm's database abstraction layer.
 //!
 //! This crate is an implementation of `reth-db-api` for MDBX, as well as a few other common
 //! database types.
 //!
 //! # Overview
 //!
-//! An overview of the current data model of reth can be found in the [`mod@tables`] module.
+//! An overview of the current data model of evm can be found in the [`mod@tables`] module.
 
 #![doc(
-    html_logo_url = "https://raw.githubusercontent.com/paradigmxyz/reth/main/assets/reth-docs.png",
+    html_logo_url = "https://raw.githubusercontent.com/hanzoai/evm/main/assets/evm-docs.png",
     html_favicon_url = "https://avatars0.githubusercontent.com/u/97369466?s=256",
-    issue_tracker_base_url = "https://github.com/paradigmxyz/reth/issues/"
+    issue_tracker_base_url = "https://github.com/hanzoai/evm/issues/"
 )]
 #![cfg_attr(not(test), warn(unused_crate_dependencies))]
 #![cfg_attr(docsrs, feature(doc_cfg))]
@@ -27,7 +27,7 @@ pub mod version;
 #[cfg(feature = "mdbx")]
 pub mod mdbx;
 
-pub use reth_storage_errors::db::{DatabaseError, DatabaseWriteOperation};
+pub use hanzo_evm_storage_errors::db::{DatabaseError, DatabaseWriteOperation};
 #[cfg(feature = "mdbx")]
 pub use utils::is_database_empty;
 
@@ -35,7 +35,7 @@ pub use utils::is_database_empty;
 pub use mdbx::{create_db, init_db, open_db, open_db_read_only, DatabaseEnv, DatabaseEnvKind};
 
 pub use models::ClientVersion;
-pub use reth_db_api::*;
+pub use hanzo_evm_db_api::*;
 
 /// Collection of database test utilities
 #[cfg(any(test, feature = "test-utils"))]
@@ -43,8 +43,8 @@ pub mod test_utils {
     use super::*;
     use crate::mdbx::DatabaseArguments;
     use parking_lot::RwLock;
-    use reth_db_api::{database::Database, database_metrics::DatabaseMetrics};
-    use reth_fs_util;
+    use hanzo_evm_db_api::{database::Database, database_metrics::DatabaseMetrics};
+    use hanzo_evm_fs_util;
     use std::{
         fmt::Formatter,
         path::{Path, PathBuf},
@@ -83,7 +83,7 @@ pub mod test_utils {
         fn drop(&mut self) {
             if let Some(db) = self.db.take() {
                 drop(db);
-                let _ = reth_fs_util::remove_dir_all(&self.path);
+                let _ = hanzo_evm_fs_util::remove_dir_all(&self.path);
             }
         }
     }
@@ -151,7 +151,7 @@ pub mod test_utils {
     /// Create `static_files` path for testing
     #[track_caller]
     pub fn create_test_static_files_dir() -> (TempDir, PathBuf) {
-        let temp_dir = TempDir::with_prefix("reth-test-static-").expect(ERROR_TEMPDIR);
+        let temp_dir = TempDir::with_prefix("evm-test-static-").expect(ERROR_TEMPDIR);
         let path = temp_dir.path().to_path_buf();
         (temp_dir, path)
     }
@@ -159,14 +159,14 @@ pub mod test_utils {
     /// Create `rocksdb` path for testing
     #[track_caller]
     pub fn create_test_rocksdb_dir() -> (TempDir, PathBuf) {
-        let temp_dir = TempDir::with_prefix("reth-test-rocksdb-").expect(ERROR_TEMPDIR);
+        let temp_dir = TempDir::with_prefix("evm-test-rocksdb-").expect(ERROR_TEMPDIR);
         let path = temp_dir.path().to_path_buf();
         (temp_dir, path)
     }
 
     /// Get a temporary directory path to use for the database
     pub fn tempdir_path() -> PathBuf {
-        let builder = tempfile::Builder::new().prefix("reth-test-").rand_bytes(8).tempdir();
+        let builder = tempfile::Builder::new().prefix("evm-test-").rand_bytes(8).tempdir();
         builder.expect(ERROR_TEMPDIR).keep()
     }
 
@@ -229,10 +229,10 @@ mod tests {
         version::{db_version_file_path, DatabaseVersionError},
     };
     use assert_matches::assert_matches;
-    use reth_db_api::{
+    use hanzo_evm_db_api::{
         cursor::DbCursorRO, database::Database, models::ClientVersion, transaction::DbTx,
     };
-    use reth_libmdbx::MaxReadTransactionDuration;
+    use hanzo_evm_libmdbx::MaxReadTransactionDuration;
     use std::time::Duration;
     use tempfile::tempdir;
 
@@ -275,7 +275,7 @@ mod tests {
 
         // Database is not empty, version file is malformed
         {
-            reth_fs_util::write(path.path().join(db_version_file_path(&path)), "invalid-version")
+            hanzo_evm_fs_util::write(path.path().join(db_version_file_path(&path)), "invalid-version")
                 .unwrap();
             let db = init_db(&path, args.clone());
             assert!(db.is_err());
@@ -287,7 +287,7 @@ mod tests {
 
         // Database is not empty, version file contains not matching version
         {
-            reth_fs_util::write(path.path().join(db_version_file_path(&path)), "0").unwrap();
+            hanzo_evm_fs_util::write(path.path().join(db_version_file_path(&path)), "0").unwrap();
             let db = init_db(&path, args);
             assert!(db.is_err());
             assert_matches!(

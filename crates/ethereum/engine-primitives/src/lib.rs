@@ -1,9 +1,9 @@
 //! Ethereum specific engine API types and impls.
 
 #![doc(
-    html_logo_url = "https://raw.githubusercontent.com/paradigmxyz/reth/main/assets/reth-docs.png",
+    html_logo_url = "https://raw.githubusercontent.com/hanzoai/evm/main/assets/evm-docs.png",
     html_favicon_url = "https://avatars0.githubusercontent.com/u/97369466?s=256",
-    issue_tracker_base_url = "https://github.com/paradigmxyz/reth/issues/"
+    issue_tracker_base_url = "https://github.com/hanzoai/evm/issues/"
 )]
 #![cfg_attr(not(test), warn(unused_crate_dependencies))]
 #![cfg_attr(docsrs, feature(doc_cfg))]
@@ -23,9 +23,9 @@ pub use alloy_rpc_types_engine::{
     ExecutionPayloadEnvelopeV5, ExecutionPayloadEnvelopeV6, ExecutionPayloadV1,
     PayloadAttributes as EthPayloadAttributes,
 };
-use reth_engine_primitives::EngineTypes;
-use reth_payload_primitives::{BuiltPayload, PayloadTypes};
-use reth_primitives_traits::{NodePrimitives, SealedBlock};
+use hanzo_evm_engine_primitives::EngineTypes;
+use hanzo_evm_payload_primitives::{BuiltPayload, PayloadTypes};
+use hanzo_evm_primitives_traits::{NodePrimitives, SealedBlock};
 
 /// The types used in the default mainnet ethereum beacon consensus engine.
 #[derive(Debug, Default, Clone, serde::Deserialize, serde::Serialize)]
@@ -38,7 +38,7 @@ impl<
         T: PayloadTypes<
             ExecutionData = ExecutionData,
             BuiltPayload: BuiltPayload<
-                Primitives: NodePrimitives<Block = reth_ethereum_primitives::Block>,
+                Primitives: NodePrimitives<Block = hanzo_evm_ethereum_primitives::Block>,
             >,
         >,
     > PayloadTypes for EthEngineTypes<T>
@@ -62,7 +62,7 @@ impl<
 impl<T> EngineTypes for EthEngineTypes<T>
 where
     T: PayloadTypes<ExecutionData = ExecutionData>,
-    T::BuiltPayload: BuiltPayload<Primitives: NodePrimitives<Block = reth_ethereum_primitives::Block>>
+    T::BuiltPayload: BuiltPayload<Primitives: NodePrimitives<Block = hanzo_evm_ethereum_primitives::Block>>
         + TryInto<ExecutionPayloadV1>
         + TryInto<ExecutionPayloadEnvelopeV2>
         + TryInto<ExecutionPayloadEnvelopeV3>

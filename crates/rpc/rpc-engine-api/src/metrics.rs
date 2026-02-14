@@ -1,5 +1,5 @@
 use metrics::{Counter, Histogram};
-use reth_metrics::Metrics;
+use hanzo_evm_metrics::Metrics;
 
 /// All beacon consensus engine metrics
 #[derive(Default)]

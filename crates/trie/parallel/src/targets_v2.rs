@@ -1,7 +1,7 @@
 //! V2 multiproof targets and chunking.
 
 use alloy_primitives::{map::B256Map, B256};
-use reth_trie::proof_v2;
+use hanzo_evm_trie::proof_v2;
 
 /// A set of account and storage V2 proof targets. The account and storage targets do not need to
 /// necessarily overlap.

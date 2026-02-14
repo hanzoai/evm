@@ -1,6 +1,6 @@
 //! Tracks peer discovery for [`Discv5`](crate::Discv5).
 use metrics::{Counter, Gauge};
-use reth_metrics::Metrics;
+use hanzo_evm_metrics::Metrics;
 
 use crate::NetworkStackId;
 
@@ -28,7 +28,7 @@ pub struct DiscoveredPeersMetrics {
     /// socket in their node record which is reachable from the local node. Only these peers make
     /// it into [`discv5::Discv5`]'s kbuckets and will hence be included in queries.
     ///
-    /// Note: the definition of 'discovered' is not exactly synonymous in `reth_discv4::Discv4`.
+    /// Note: the definition of 'discovered' is not exactly synonymous in `hanzo_evm_discv4::Discv4`.
     inserted_kbucket_peers_raw_total: Counter,
 
     ////////////////////////////////////////////////////////////////////////////////////////////////

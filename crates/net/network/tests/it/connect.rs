@@ -2,28 +2,28 @@
 
 use alloy_primitives::map::HashSet;
 use futures::StreamExt;
-use reth_chainspec::{MAINNET, SEPOLIA};
-use reth_discv4::Discv4Config;
-use reth_eth_wire::{DisconnectReason, EthNetworkPrimitives, HeadersDirection};
-use reth_network::{
+use hanzo_evm_chainspec::{MAINNET, SEPOLIA};
+use hanzo_evm_discv4::Discv4Config;
+use hanzo_evm_eth_wire::{DisconnectReason, EthNetworkPrimitives, HeadersDirection};
+use hanzo_evm_network::{
     test_utils::{NetworkEventStream, PeerConfig, Testnet},
     BlockDownloaderProvider, NetworkConfigBuilder, NetworkEvent, NetworkEventListenerProvider,
     NetworkManager, PeersConfig,
 };
-use reth_network_api::{
+use hanzo_evm_network_api::{
     events::{PeerEvent, SessionInfo},
     NetworkInfo, Peers, PeersInfo,
 };
-use reth_network_p2p::{
+use hanzo_evm_network_p2p::{
     headers::client::{HeadersClient, HeadersRequest},
     sync::{NetworkSyncUpdater, SyncState},
 };
-use reth_network_peers::{mainnet_nodes, NodeRecord, TrustedPeer};
-use reth_network_types::peers::config::PeerBackoffDurations;
-use reth_provider::test_utils::MockEthProvider;
-use reth_storage_api::noop::NoopProvider;
-use reth_tracing::init_test_tracing;
-use reth_transaction_pool::test_utils::testing_pool;
+use hanzo_evm_network_peers::{mainnet_nodes, NodeRecord, TrustedPeer};
+use hanzo_evm_network_types::peers::config::PeerBackoffDurations;
+use hanzo_evm_provider::test_utils::MockEthProvider;
+use hanzo_evm_storage_api::noop::NoopProvider;
+use hanzo_evm_tracing::init_test_tracing;
+use hanzo_evm_transaction_pool::test_utils::testing_pool;
 use secp256k1::SecretKey;
 use std::time::Duration;
 use tokio::task;
@@ -31,7 +31,7 @@ use url::Host;
 
 #[tokio::test(flavor = "multi_thread")]
 async fn test_establish_connections() {
-    reth_tracing::init_test_tracing();
+    hanzo_evm_tracing::init_test_tracing();
 
     for _ in 0..3 {
         let net = Testnet::create(3).await;
@@ -90,7 +90,7 @@ async fn test_establish_connections() {
 
 #[tokio::test(flavor = "multi_thread")]
 async fn test_already_connected() {
-    reth_tracing::init_test_tracing();
+    hanzo_evm_tracing::init_test_tracing();
     let mut net = Testnet::default();
 
     let secret_key = SecretKey::new(&mut rand_08::thread_rng());
@@ -134,7 +134,7 @@ async fn test_already_connected() {
 
 #[tokio::test(flavor = "multi_thread")]
 async fn test_get_peer() {
-    reth_tracing::init_test_tracing();
+    hanzo_evm_tracing::init_test_tracing();
 
     let mut net = Testnet::default();
     let secret_key = SecretKey::new(&mut rand_08::thread_rng());
@@ -168,7 +168,7 @@ async fn test_get_peer() {
 
 #[tokio::test(flavor = "multi_thread")]
 async fn test_get_peer_by_id() {
-    reth_tracing::init_test_tracing();
+    hanzo_evm_tracing::init_test_tracing();
     let mut net = Testnet::default();
 
     let secret_key = SecretKey::new(&mut rand_08::thread_rng());
@@ -203,7 +203,7 @@ async fn test_get_peer_by_id() {
 #[tokio::test(flavor = "multi_thread")]
 #[ignore]
 async fn test_connect_with_boot_nodes() {
-    reth_tracing::init_test_tracing();
+    hanzo_evm_tracing::init_test_tracing();
     let secret_key = SecretKey::new(&mut rand_08::thread_rng());
     let mut discv4 = Discv4Config::builder();
     discv4.add_boot_nodes(mainnet_nodes());
@@ -224,7 +224,7 @@ async fn test_connect_with_boot_nodes() {
 #[tokio::test(flavor = "multi_thread")]
 #[ignore]
 async fn test_connect_with_builder() {
-    reth_tracing::init_test_tracing();
+    hanzo_evm_tracing::init_test_tracing();
     let secret_key = SecretKey::new(&mut rand_08::thread_rng());
     let mut discv4 = Discv4Config::builder();
     discv4.add_boot_nodes(mainnet_nodes());
@@ -261,7 +261,7 @@ async fn test_connect_with_builder() {
 #[tokio::test(flavor = "multi_thread")]
 #[ignore]
 async fn test_connect_to_trusted_peer() {
-    reth_tracing::init_test_tracing();
+    hanzo_evm_tracing::init_test_tracing();
     let secret_key = SecretKey::new(&mut rand_08::thread_rng());
     let discv4 = Discv4Config::builder();
 
@@ -315,7 +315,7 @@ async fn test_connect_to_trusted_peer() {
 
 #[tokio::test(flavor = "multi_thread")]
 async fn test_shutdown() {
-    reth_tracing::init_test_tracing();
+    hanzo_evm_tracing::init_test_tracing();
     let net = Testnet::create(3).await;
 
     let mut handles = net.handles();
@@ -552,7 +552,7 @@ async fn test_disconnect_incoming_when_exceeded_incoming_connections() {
 
 #[tokio::test(flavor = "multi_thread")]
 async fn test_always_accept_incoming_connections_from_trusted_peers() {
-    reth_tracing::init_test_tracing();
+    hanzo_evm_tracing::init_test_tracing();
     let peer1 = new_random_peer(10, vec![]).await;
     let peer2 = new_random_peer(0, vec![]).await;
 
@@ -597,7 +597,7 @@ async fn test_always_accept_incoming_connections_from_trusted_peers() {
 
 #[tokio::test(flavor = "multi_thread")]
 async fn test_rejected_by_already_connect() {
-    reth_tracing::init_test_tracing();
+    hanzo_evm_tracing::init_test_tracing();
     let other_peer1 = new_random_peer(10, vec![]).await;
     let other_peer2 = new_random_peer(10, vec![]).await;
 
@@ -654,7 +654,7 @@ async fn new_random_peer(
 
 #[tokio::test(flavor = "multi_thread")]
 async fn test_connect_many() {
-    reth_tracing::init_test_tracing();
+    hanzo_evm_tracing::init_test_tracing();
 
     let provider = MockEthProvider::default().with_genesis_block();
     let net = Testnet::create_with(5, provider).await;
@@ -673,7 +673,7 @@ async fn test_connect_many() {
 
 #[tokio::test(flavor = "multi_thread")]
 async fn test_disconnect_then_connect() {
-    reth_tracing::init_test_tracing();
+    hanzo_evm_tracing::init_test_tracing();
 
     let net = Testnet::create(2).await;
 
@@ -703,7 +703,7 @@ async fn test_disconnect_then_connect() {
 
 #[tokio::test(flavor = "multi_thread")]
 async fn test_connect_peer_in_different_network_should_fail() {
-    reth_tracing::init_test_tracing();
+    hanzo_evm_tracing::init_test_tracing();
 
     // peer in mainnet.
     let peer = new_random_peer(10, vec![]).await;
@@ -741,7 +741,7 @@ async fn test_connect_peer_in_different_network_should_fail() {
 
 #[tokio::test(flavor = "multi_thread")]
 async fn test_reconnect_trusted() {
-    reth_tracing::init_test_tracing();
+    hanzo_evm_tracing::init_test_tracing();
 
     let net = Testnet::create(2).await;
 

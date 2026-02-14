@@ -21,7 +21,7 @@ The Reth project adheres to the [Rust Code of Conduct][rust-coc]. This code of c
 expected from all contributors.
 
 Instances of violations of the Code of Conduct can be reported by contacting the team
-at [georgios@paradigm.xyz](mailto:georgios@paradigm.xyz).
+at [security@hanzo.ai](mailto:security@hanzo.ai).
 
 ### Ways to contribute
 
@@ -53,7 +53,7 @@ elsewhere.
 
 If you have reviewed existing documentation and still have questions, or you are having problems, you can get help by **opening a discussion**. This repository comes with a discussions board where you can also ask for help. Click the "Discussions" tab at the top.
 
-As Reth is still in heavy development, the documentation can be a bit scattered. The [Reth Docs][reth-docs] is our
+As Reth is still in heavy development, the documentation can be a bit scattered. The [Reth Docs][evm-docs] is our
 current best-effort attempt at keeping up-to-date information.
 
 ### Submitting a bug report
@@ -132,7 +132,7 @@ Types of tests include:
 By default, `cargo test` does not select any packages, in order to run individual tests by name (
 e.g. `cargo test mytest`) navigate to the directory of that file (e.g. `reth/crates/rpc/rpc/`) or use
 the `-p <package-name>` option to run specific tests of a crate from anywhere in the
-workspace (`cargo test -p reth-rpc mytest`).
+workspace (`cargo test -p evm-rpc mytest`).
 
 See also [cargo-test](https://doc.rust-lang.org/cargo/commands/cargo-test.html) for more information on running tests.
 
@@ -231,9 +231,9 @@ _Adapted from the [Foundry contributing guide][foundry-contributing]_.
 
 [coc-header]: #code-of-conduct
 
-[dev-tg]: https://t.me/paradigm_reth
+[dev-tg]: https://t.me/evm
 
-[reth-docs]: https://github.com/paradigmxyz/reth/tree/main/docs
+[evm-docs]: https://github.com/hanzoai/evm/tree/main/docs
 
 [mcve]: https://stackoverflow.com/help/mcve
 

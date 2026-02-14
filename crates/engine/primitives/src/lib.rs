@@ -1,9 +1,9 @@
 //! Traits, validation methods, and helper types used to abstract over engine types.
 
 #![doc(
-    html_logo_url = "https://raw.githubusercontent.com/paradigmxyz/reth/main/assets/reth-docs.png",
+    html_logo_url = "https://raw.githubusercontent.com/hanzoai/evm/main/assets/evm-docs.png",
     html_favicon_url = "https://avatars0.githubusercontent.com/u/97369466?s=256",
-    issue_tracker_base_url = "https://github.com/paradigmxyz/reth/issues/"
+    issue_tracker_base_url = "https://github.com/hanzoai/evm/issues/"
 )]
 #![cfg_attr(not(test), warn(unused_crate_dependencies))]
 #![cfg_attr(docsrs, feature(doc_cfg))]
@@ -12,19 +12,19 @@
 extern crate alloc;
 
 use alloy_consensus::BlockHeader;
-use reth_errors::ConsensusError;
-use reth_payload_primitives::{
+use hanzo_evm_errors::ConsensusError;
+use hanzo_evm_payload_primitives::{
     EngineApiMessageVersion, EngineObjectValidationError, InvalidPayloadAttributesError,
     NewPayloadError, PayloadAttributes, PayloadOrAttributes, PayloadTypes,
 };
-use reth_primitives_traits::{Block, RecoveredBlock, SealedBlock};
-use reth_trie_common::HashedPostState;
+use hanzo_evm_primitives_traits::{Block, RecoveredBlock, SealedBlock};
+use hanzo_evm_trie_common::HashedPostState;
 use serde::{de::DeserializeOwned, Serialize};
 
-// Re-export [`ExecutionPayload`] moved to `reth_payload_primitives`
+// Re-export [`ExecutionPayload`] moved to `hanzo_evm_payload_primitives`
 #[cfg(feature = "std")]
-pub use reth_evm::{ConfigureEngineEvm, ExecutableTxIterator, ExecutableTxTuple};
-pub use reth_payload_primitives::ExecutionPayload;
+pub use hanzo_evm_execution::{ConfigureEngineEvm, ExecutableTxIterator, ExecutableTxTuple};
+pub use hanzo_evm_payload_primitives::ExecutionPayload;
 
 mod error;
 pub use error::*;

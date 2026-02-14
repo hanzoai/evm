@@ -1,38 +1,38 @@
 [package]
-name = "reth-provider"
+name = "hanzo-evm-provider"
 version.workspace = true
 edition.workspace = true
 rust-version.workspace = true
 license.workspace = true
 homepage.workspace = true
 repository.workspace = true
-description = "Reth storage provider."
+description = "Hanzo EVM storage provider."
 
 [lints]
 workspace = true
 
 [dependencies]
-# reth
-reth-chainspec.workspace = true
-reth-execution-types.workspace = true
-reth-ethereum-primitives = { workspace = true, features = ["reth-codec"] }
-reth-primitives-traits = { workspace = true, features = ["reth-codec", "secp256k1", "dashmap"] }
-reth-errors.workspace = true
-reth-storage-errors.workspace = true
-reth-storage-api = { workspace = true, features = ["std", "db-api"] }
-reth-db = { workspace = true, features = ["mdbx"] }
-reth-db-api.workspace = true
-reth-prune-types.workspace = true
-reth-stages-types.workspace = true
-reth-tasks.workspace = true
-reth-trie = { workspace = true, features = ["metrics"] }
-reth-trie-db = { workspace = true, features = ["metrics"] }
-reth-nippy-jar.workspace = true
-reth-codecs.workspace = true
-reth-chain-state.workspace = true
-reth-node-types.workspace = true
-reth-static-file-types = { workspace = true, features = ["std"] }
-reth-fs-util.workspace = true
+# evm
+hanzo-evm-chainspec.workspace = true
+hanzo-evm-execution-types.workspace = true
+hanzo-evm-ethereum-primitives = { workspace = true, features = ["hanzo-evm-codec"] }
+hanzo-evm-primitives-traits = { workspace = true, features = ["hanzo-evm-codec", "secp256k1", "dashmap"] }
+hanzo-evm-errors.workspace = true
+hanzo-evm-storage-errors.workspace = true
+hanzo-evm-storage-api = { workspace = true, features = ["std", "db-api"] }
+hanzo-evm-db = { workspace = true, features = ["mdbx"] }
+hanzo-evm-db-api.workspace = true
+hanzo-evm-prune-types.workspace = true
+hanzo-evm-stages-types.workspace = true
+hanzo-evm-tasks.workspace = true
+hanzo-evm-trie = { workspace = true, features = ["metrics"] }
+hanzo-evm-trie-db = { workspace = true, features = ["metrics"] }
+hanzo-evm-nippy-jar.workspace = true
+hanzo-evm-codecs.workspace = true
+hanzo-evm-chain-state.workspace = true
+hanzo-evm-node-types.workspace = true
+hanzo-evm-static-file-types = { workspace = true, features = ["std"] }
+hanzo-evm-fs-util.workspace = true
 
 # ethereum
 alloy-eips.workspace = true
@@ -46,7 +46,7 @@ revm-state = { workspace = true, optional = true }
 tracing.workspace = true
 
 # metrics
-reth-metrics.workspace = true
+hanzo-evm-metrics.workspace = true
 metrics.workspace = true
 
 # misc
@@ -57,7 +57,7 @@ strum.workspace = true
 eyre.workspace = true
 
 # test-utils
-reth-ethereum-engine-primitives = { workspace = true, optional = true }
+hanzo-evm-ethereum-engine-primitives = { workspace = true, optional = true }
 tokio = { workspace = true, features = ["sync"], optional = true }
 
 # parallel utils
@@ -68,14 +68,14 @@ rayon.workspace = true
 rocksdb = { workspace = true, features = ["jemalloc"], optional = true }
 
 [dev-dependencies]
-reth-db = { workspace = true, features = ["test-utils"] }
-reth-primitives-traits = { workspace = true, features = ["arbitrary", "test-utils"] }
-reth-chain-state = { workspace = true, features = ["test-utils"] }
-reth-trie = { workspace = true, features = ["test-utils"] }
-reth-testing-utils.workspace = true
-reth-ethereum-engine-primitives.workspace = true
-reth-ethereum-primitives.workspace = true
-reth-tracing.workspace = true
+hanzo-evm-db = { workspace = true, features = ["test-utils"] }
+hanzo-evm-primitives-traits = { workspace = true, features = ["arbitrary", "test-utils"] }
+hanzo-evm-chain-state = { workspace = true, features = ["test-utils"] }
+hanzo-evm-trie = { workspace = true, features = ["test-utils"] }
+hanzo-evm-testing-utils.workspace = true
+hanzo-evm-ethereum-engine-primitives.workspace = true
+hanzo-evm-ethereum-primitives.workspace = true
+hanzo-evm-tracing.workspace = true
 
 revm-database-interface.workspace = true
 revm-state.workspace = true
@@ -87,22 +87,22 @@ rand.workspace = true
 tokio = { workspace = true, features = ["sync", "macros", "rt-multi-thread"] }
 
 [features]
-rocksdb = ["reth-storage-api/rocksdb", "dep:rocksdb"]
+rocksdb = ["hanzo-evm-storage-api/rocksdb", "dep:rocksdb"]
 edge = ["rocksdb"]
 test-utils = [
-    "reth-db/test-utils",
-    "reth-nippy-jar/test-utils",
-    "reth-trie/test-utils",
-    "reth-chain-state/test-utils",
-    "reth-ethereum-engine-primitives",
-    "reth-ethereum-primitives/test-utils",
-    "reth-chainspec/test-utils",
-    "reth-primitives-traits/test-utils",
-    "reth-codecs/test-utils",
-    "reth-db-api/test-utils",
-    "reth-trie-db/test-utils",
-    "reth-prune-types/test-utils",
-    "reth-stages-types/test-utils",
+    "hanzo-evm-db/test-utils",
+    "hanzo-evm-nippy-jar/test-utils",
+    "hanzo-evm-trie/test-utils",
+    "hanzo-evm-chain-state/test-utils",
+    "hanzo-evm-ethereum-engine-primitives",
+    "hanzo-evm-ethereum-primitives/test-utils",
+    "hanzo-evm-chainspec/test-utils",
+    "hanzo-evm-primitives-traits/test-utils",
+    "hanzo-evm-codecs/test-utils",
+    "hanzo-evm-db-api/test-utils",
+    "hanzo-evm-trie-db/test-utils",
+    "hanzo-evm-prune-types/test-utils",
+    "hanzo-evm-stages-types/test-utils",
     "revm-state",
     "tokio",
 ]

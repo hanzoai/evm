@@ -4,7 +4,7 @@
 //! cargo run -p example-beacon-api-sidecar-fetcher -- node --full
 //! ```
 //!
-//! This launches a regular reth instance and subscribes to payload attributes event stream.
+//! This launches a regular evm instance and subscribes to payload attributes event stream.
 //!
 //! **NOTE**: This expects that the CL client is running an http server on `localhost:5052` and is
 //! configured to emit payload attributes events.
@@ -22,7 +22,7 @@ use alloy_primitives::B256;
 use clap::Parser;
 use futures_util::{stream::FuturesUnordered, StreamExt};
 use mined_sidecar::MinedSidecarStream;
-use reth_ethereum::{
+use hanzo_evm_ethereum::{
     cli::{chainspec::EthereumChainSpecParser, interface::Cli},
     node::{builder::NodeHandle, EthereumNode},
     provider::CanonStateSubscriptions,
@@ -37,7 +37,7 @@ fn main() {
             let NodeHandle { node, node_exit_future } =
                 builder.node(EthereumNode::default()).launch().await?;
 
-            let notifications: reth_ethereum::provider::CanonStateNotificationStream =
+            let notifications: hanzo_evm_ethereum::provider::CanonStateNotificationStream =
                 node.provider.canonical_state_stream();
 
             let pool = node.pool.clone();
@@ -71,7 +71,7 @@ fn main() {
         .unwrap();
 }
 
-/// Our custom cli args extension that adds one flag to reth default CLI.
+/// Our custom cli args extension that adds one flag to evm default CLI.
 #[derive(Debug, Clone, clap::Parser)]
 pub struct BeaconSidecarConfig {
     /// Beacon Node http server address

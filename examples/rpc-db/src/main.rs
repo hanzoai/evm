@@ -16,7 +16,7 @@
 
 use std::{path::Path, sync::Arc};
 
-use reth_ethereum::{
+use hanzo_evm_ethereum::{
     chainspec::ChainSpecBuilder,
     consensus::EthBeaconConsensus,
     network::api::noop::NoopNetwork,
@@ -28,7 +28,7 @@ use reth_ethereum::{
         ProviderFactory,
     },
     rpc::{
-        builder::{RethRpcModule, RpcModuleBuilder, RpcServerConfig, TransportRpcModuleConfig},
+        builder::{EvmRpcModule, RpcModuleBuilder, RpcServerConfig, TransportRpcModuleConfig},
         EthApiBuilder,
     },
     tasks::TokioTaskExecutor,
@@ -42,7 +42,7 @@ pub mod myrpc_ext;
 #[tokio::main]
 async fn main() -> eyre::Result<()> {
     // 1. Set up the DB
-    let db_path = std::env::var("RETH_DB_PATH")?;
+    let db_path = std::env::var("EVM_DB_PATH")?;
     let db_path = Path::new(&db_path);
     let db = open_db_read_only(
         db_path.join("db").as_path(),
@@ -67,7 +67,7 @@ async fn main() -> eyre::Result<()> {
         .with_noop_pool()
         .with_noop_network()
         .with_executor(Box::new(TokioTaskExecutor::default()))
-        .with_evm_config(EthEvmConfig::new(spec.clone()))
+        .with_hanzo_evm_config(EthEvmConfig::new(spec.clone()))
         .with_consensus(EthBeaconConsensus::new(spec.clone()));
 
     let eth_api = EthApiBuilder::new(
@@ -79,7 +79,7 @@ async fn main() -> eyre::Result<()> {
     .build();
 
     // Pick which namespaces to expose.
-    let config = TransportRpcModuleConfig::default().with_http([RethRpcModule::Eth]);
+    let config = TransportRpcModuleConfig::default().with_http([EvmRpcModule::Eth]);
 
     let mut server = rpc_builder.build(config, eth_api, Default::default());
 

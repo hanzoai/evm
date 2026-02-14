@@ -5,7 +5,7 @@ use futures::TryStreamExt;
 use jsonrpsee::{
     core::SubscriptionResult, proc_macros::rpc, PendingSubscriptionSink, SubscriptionMessage,
 };
-use reth_ethereum::{
+use hanzo_evm_ethereum::{
     exex::{ExExContext, ExExEvent, ExExNotification},
     node::{api::FullNodeComponents, builder::NodeHandleFor, EthereumNode},
 };
@@ -161,7 +161,7 @@ async fn my_exex<Node: FullNodeComponents>(
 }
 
 fn main() -> eyre::Result<()> {
-    reth_ethereum::cli::Cli::parse_args().run(|builder, _| async move {
+    hanzo_evm_ethereum::cli::Cli::parse_args().run(|builder, _| async move {
         let (subscriptions_tx, subscriptions_rx) = mpsc::unbounded_channel::<SubscriptionRequest>();
         let rpc = StorageWatcherRpc::new(subscriptions_tx);
 

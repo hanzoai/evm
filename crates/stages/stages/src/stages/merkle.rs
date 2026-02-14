@@ -1,22 +1,22 @@
 use alloy_consensus::{constants::KECCAK_EMPTY, BlockHeader};
 use alloy_primitives::{BlockNumber, Sealable, B256};
-use reth_codecs::Compact;
-use reth_consensus::ConsensusError;
-use reth_db_api::{
+use hanzo_evm_codecs::Compact;
+use hanzo_evm_consensus::ConsensusError;
+use hanzo_evm_db_api::{
     tables,
     transaction::{DbTx, DbTxMut},
 };
-use reth_primitives_traits::{GotExpected, SealedHeader};
-use reth_provider::{
+use hanzo_evm_primitives_traits::{GotExpected, SealedHeader};
+use hanzo_evm_provider::{
     ChangeSetReader, DBProvider, HeaderProvider, ProviderError, StageCheckpointReader,
     StageCheckpointWriter, StatsReader, StorageChangeSetReader, TrieWriter,
 };
-use reth_stages_api::{
+use hanzo_evm_stages_api::{
     BlockErrorKind, EntitiesCheckpoint, ExecInput, ExecOutput, MerkleCheckpoint, Stage,
     StageCheckpoint, StageError, StageId, StorageRootMerkleCheckpoint, UnwindInput, UnwindOutput,
 };
-use reth_trie::{IntermediateStateRootState, StateRoot, StateRootProgress, StoredSubNode};
-use reth_trie_db::DatabaseStateRoot;
+use hanzo_evm_trie::{IntermediateStateRootState, StateRoot, StateRootProgress, StoredSubNode};
+use hanzo_evm_trie_db::DatabaseStateRoot;
 use std::fmt::Debug;
 use tracing::*;
 
@@ -26,16 +26,16 @@ use tracing::*;
 /// with just basic logs.
 pub const INVALID_STATE_ROOT_ERROR_MESSAGE: &str = r#"
 Invalid state root error on stage verification!
-This is an error that likely requires a report to the reth team with additional information.
+This is an error that likely requires a report to the evm team with additional information.
 Please include the following information in your report:
  * This error message
  * The state root of the block that was rejected
- * The output of `reth db stats --checksum` from the database that was being used. This will take a long time to run!
+ * The output of `evm db stats --checksum` from the database that was being used. This will take a long time to run!
  * 50-100 lines of logs before and after the first occurrence of the log message with the state root of the block that was rejected.
  * The debug logs from __the same time period__. To find the default location for these logs, run:
-   `reth --help | grep -A 4 'log.file.directory'`
+   `evm --help | grep -A 4 'log.file.directory'`
 
-Once you have this information, please submit a github issue at https://github.com/paradigmxyz/reth/issues/new
+Once you have this information, please submit a github issue at https://github.com/hanzoai/evm/issues/new
 "#;
 
 /// The default threshold (in number of blocks) for switching from incremental trie building
@@ -449,16 +449,16 @@ mod tests {
     };
     use alloy_primitives::{keccak256, U256};
     use assert_matches::assert_matches;
-    use reth_db_api::cursor::{DbCursorRO, DbCursorRW, DbDupCursorRO};
-    use reth_primitives_traits::{SealedBlock, StorageEntry};
-    use reth_provider::{providers::StaticFileWriter, StaticFileProviderFactory};
-    use reth_stages_api::StageUnitCheckpoint;
-    use reth_static_file_types::StaticFileSegment;
-    use reth_testing_utils::generators::{
+    use hanzo_evm_db_api::cursor::{DbCursorRO, DbCursorRW, DbDupCursorRO};
+    use hanzo_evm_primitives_traits::{SealedBlock, StorageEntry};
+    use hanzo_evm_provider::{providers::StaticFileWriter, StaticFileProviderFactory};
+    use hanzo_evm_stages_api::StageUnitCheckpoint;
+    use hanzo_evm_static_file_types::StaticFileSegment;
+    use hanzo_evm_testing_utils::generators::{
         self, random_block, random_block_range, random_changeset_range,
         random_contract_account_range, BlockParams, BlockRangeParams,
     };
-    use reth_trie::test_utils::{state_root, state_root_prehashed};
+    use hanzo_evm_trie::test_utils::{state_root, state_root_prehashed};
     use std::collections::BTreeMap;
 
     stage_test_suite_ext!(MerkleTestRunner, merkle);
@@ -636,7 +636,7 @@ mod tests {
     }
 
     impl ExecuteStageTestRunner for MerkleTestRunner {
-        type Seed = Vec<SealedBlock<reth_ethereum_primitives::Block>>;
+        type Seed = Vec<SealedBlock<hanzo_evm_ethereum_primitives::Block>>;
 
         fn seed_execution(&mut self, input: ExecInput) -> Result<Self::Seed, TestRunnerError> {
             let stage_progress = input.checkpoint().block_number;
@@ -681,7 +681,7 @@ mod tests {
                     .into_iter()
                     .map(|(address, account)| (address, (account, std::iter::empty()))),
             );
-            let sealed_head = SealedBlock::<reth_ethereum_primitives::Block>::from_sealed_parts(
+            let sealed_head = SealedBlock::<hanzo_evm_ethereum_primitives::Block>::from_sealed_parts(
                 SealedHeader::seal_slow(header),
                 body,
             );

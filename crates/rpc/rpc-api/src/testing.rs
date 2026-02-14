@@ -18,7 +18,7 @@ pub use alloy_rpc_types_engine::{TestingBuildBlockRequestV1, TESTING_BUILD_BLOCK
 /// add `testing` to the `--http.api` flag:
 ///
 /// ```sh
-/// reth node --http --http.api eth,testing
+/// evm node --http --http.api eth,testing
 /// ```
 ///
 /// **Warning:** Never expose this on public-facing RPC endpoints without proper

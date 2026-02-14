@@ -3,7 +3,7 @@
 use alloc::{boxed::Box, string::ToString};
 use alloy_primitives::{Bytes, B256};
 use nybbles::Nibbles;
-use reth_storage_errors::{db::DatabaseError, provider::ProviderError};
+use hanzo_evm_storage_errors::{db::DatabaseError, provider::ProviderError};
 use thiserror::Error;
 
 /// State root errors.

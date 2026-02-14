@@ -1123,7 +1123,7 @@ pub mod serde_bincode_compat {
     ///
     /// Intended to use with the [`serde_with::serde_as`] macro in the following way:
     /// ```rust
-    /// use reth_trie_common::{serde_bincode_compat, updates::TrieUpdates};
+    /// use hanzo_evm_trie_common::{serde_bincode_compat, updates::TrieUpdates};
     /// use serde::{Deserialize, Serialize};
     /// use serde_with::serde_as;
     ///
@@ -1187,7 +1187,7 @@ pub mod serde_bincode_compat {
     ///
     /// Intended to use with the [`serde_with::serde_as`] macro in the following way:
     /// ```rust
-    /// use reth_trie_common::{serde_bincode_compat, updates::StorageTrieUpdates};
+    /// use hanzo_evm_trie_common::{serde_bincode_compat, updates::StorageTrieUpdates};
     /// use serde::{Deserialize, Serialize};
     /// use serde_with::serde_as;
     ///
@@ -1250,7 +1250,7 @@ pub mod serde_bincode_compat {
     ///
     /// Intended to use with the [`serde_with::serde_as`] macro in the following way:
     /// ```rust
-    /// use reth_trie_common::{serde_bincode_compat, updates::TrieUpdatesSorted};
+    /// use hanzo_evm_trie_common::{serde_bincode_compat, updates::TrieUpdatesSorted};
     /// use serde::{Deserialize, Serialize};
     /// use serde_with::serde_as;
     ///
@@ -1314,7 +1314,7 @@ pub mod serde_bincode_compat {
     ///
     /// Intended to use with the [`serde_with::serde_as`] macro in the following way:
     /// ```rust
-    /// use reth_trie_common::{serde_bincode_compat, updates::StorageTrieUpdatesSorted};
+    /// use hanzo_evm_trie_common::{serde_bincode_compat, updates::StorageTrieUpdatesSorted};
     /// use serde::{Deserialize, Serialize};
     /// use serde_with::serde_as;
     ///

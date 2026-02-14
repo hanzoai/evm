@@ -1,13 +1,13 @@
 use std::sync::Arc;
 
-use reth_chain_state::CanonStateNotification;
-use reth_execution_types::Chain;
-use reth_primitives_traits::NodePrimitives;
+use hanzo_evm_chain_state::CanonStateNotification;
+use hanzo_evm_execution_types::Chain;
+use hanzo_evm_primitives_traits::NodePrimitives;
 
 /// Notifications sent to an `ExEx`.
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
-pub enum ExExNotification<N: NodePrimitives = reth_chain_state::EthPrimitives> {
+pub enum ExExNotification<N: NodePrimitives = hanzo_evm_chain_state::EthPrimitives> {
     /// Chain got committed without a reorg, and only the new chain is returned.
     ChainCommitted {
         /// The new chain after commit.
@@ -73,8 +73,8 @@ impl<P: NodePrimitives> From<CanonStateNotification<P>> for ExExNotification<P> 
 /// Bincode-compatible [`ExExNotification`] serde implementation.
 #[cfg(all(feature = "serde", feature = "serde-bincode-compat"))]
 pub(super) mod serde_bincode_compat {
-    use reth_execution_types::serde_bincode_compat::Chain;
-    use reth_primitives_traits::NodePrimitives;
+    use hanzo_evm_execution_types::serde_bincode_compat::Chain;
+    use hanzo_evm_primitives_traits::NodePrimitives;
     use serde::{Deserialize, Deserializer, Serialize, Serializer};
     use serde_with::{DeserializeAs, SerializeAs};
     use std::sync::Arc;
@@ -83,8 +83,8 @@ pub(super) mod serde_bincode_compat {
     ///
     /// Intended to use with the [`serde_with::serde_as`] macro in the following way:
     /// ```rust
-    /// use reth_exex_types::{serde_bincode_compat, ExExNotification};
-    /// use reth_primitives_traits::NodePrimitives;
+    /// use hanzo_evm_exex_types::{serde_bincode_compat, ExExNotification};
+    /// use hanzo_evm_primitives_traits::NodePrimitives;
     /// use serde::{Deserialize, Serialize};
     /// use serde_with::serde_as;
     ///
@@ -197,8 +197,8 @@ pub(super) mod serde_bincode_compat {
         use super::super::{serde_bincode_compat, ExExNotification};
         use arbitrary::Arbitrary;
         use rand::Rng;
-        use reth_execution_types::Chain;
-        use reth_primitives_traits::RecoveredBlock;
+        use hanzo_evm_execution_types::Chain;
+        use hanzo_evm_primitives_traits::RecoveredBlock;
         use serde::{Deserialize, Serialize};
         use serde_with::serde_as;
         use std::{collections::BTreeMap, sync::Arc};
@@ -209,7 +209,7 @@ pub(super) mod serde_bincode_compat {
             #[derive(Debug, PartialEq, Eq, Serialize, Deserialize)]
             struct Data {
                 #[serde_as(
-                    as = "serde_bincode_compat::ExExNotification<'_, reth_ethereum_primitives::EthPrimitives>"
+                    as = "serde_bincode_compat::ExExNotification<'_, hanzo_evm_ethereum_primitives::EthPrimitives>"
                 )]
                 notification: ExExNotification,
             }

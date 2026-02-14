@@ -1,4 +1,4 @@
-//! Helper types for `reth_rpc_eth_api::EthApiServer` implementation.
+//! Helper types for `hanzo_evm_rpc_eth_api::EthApiServer` implementation.
 //!
 //! Types used in block building.
 
@@ -9,18 +9,18 @@ use alloy_consensus::BlockHeader;
 use alloy_eips::{BlockId, BlockNumberOrTag};
 use alloy_primitives::{BlockHash, TxHash, B256};
 use derive_more::Constructor;
-use reth_chain_state::{BlockState, ExecutedBlock};
-use reth_ethereum_primitives::Receipt;
-use reth_evm::{ConfigureEvm, EvmEnvFor};
-use reth_primitives_traits::{
+use hanzo_evm_chain_state::{BlockState, ExecutedBlock};
+use hanzo_evm_ethereum_primitives::Receipt;
+use hanzo_evm_execution::{ConfigureEvm, EvmEnvFor};
+use hanzo_evm_primitives_traits::{
     Block, BlockTy, IndexedTx, NodePrimitives, ReceiptTy, RecoveredBlock, SealedHeader,
 };
-use reth_rpc_convert::{RpcConvert, RpcTypes};
+use hanzo_evm_rpc_convert::{RpcConvert, RpcTypes};
 
-/// Configured [`reth_evm::EvmEnv`] for a pending block.
+/// Configured [`hanzo_evm_execution::EvmEnv`] for a pending block.
 #[derive(Debug, Clone, Constructor)]
 pub struct PendingBlockEnv<Evm: ConfigureEvm> {
-    /// Configured [`reth_evm::EvmEnv`] for the pending block.
+    /// Configured [`hanzo_evm_execution::EvmEnv`] for the pending block.
     pub evm_env: EvmEnvFor<Evm>,
     /// Origin block for the config
     pub origin: PendingBlockEnvOrigin<BlockTy<Evm::Primitives>, ReceiptTy<Evm::Primitives>>,
@@ -28,7 +28,7 @@ pub struct PendingBlockEnv<Evm: ConfigureEvm> {
 
 /// The origin for a configured [`PendingBlockEnv`]
 #[derive(Clone, Debug)]
-pub enum PendingBlockEnvOrigin<B: Block = reth_ethereum_primitives::Block, R = Receipt> {
+pub enum PendingBlockEnvOrigin<B: Block = hanzo_evm_ethereum_primitives::Block, R = Receipt> {
     /// The pending block as received from the CL.
     ActualPending(Arc<RecoveredBlock<B>>, Arc<Vec<R>>),
     /// The _modified_ header of the latest block.

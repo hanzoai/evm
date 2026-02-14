@@ -2,7 +2,7 @@
 
 use futures::Stream;
 use pin_project::pin_project;
-use reth_network_api::NetworkInfo;
+use hanzo_evm_network_api::NetworkInfo;
 use std::{
     future::Future,
     pin::Pin,
@@ -60,7 +60,7 @@ mod tests {
     use super::*;
     use alloy_rpc_types_admin::EthProtocolInfo;
     use futures::stream;
-    use reth_network_api::{NetworkError, NetworkStatus};
+    use hanzo_evm_network_api::{NetworkError, NetworkStatus};
     use std::{
         net::{IpAddr, SocketAddr},
         sync::{

@@ -1,4 +1,4 @@
-# This workflow auto-publishes Reth to external package managers such as
+# This workflow auto-publishes Hanzo EVM to external package managers such as
 # Homebrew when a release is published.
 
 name: release externally
@@ -16,5 +16,5 @@ jobs:
         with:
           token: ${{ secrets.HOMEBREW }}
           no_fork: true
-          tap: paradigmxyz/brew
-          formula: reth
+          tap: hanzoai/brew
+          formula: evm

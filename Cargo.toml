@@ -3,15 +3,15 @@ version = "1.10.2"
 edition = "2024"
 rust-version = "1.88"
 license = "MIT OR Apache-2.0"
-homepage = "https://paradigmxyz.github.io/reth"
-repository = "https://github.com/paradigmxyz/reth"
+homepage = "https://hanzoai.github.io/evm"
+repository = "https://github.com/hanzoai/evm"
 exclude = [".github/"]
 
 [workspace]
 members = [
-    "bin/reth-bench/",
-    "bin/reth-bench-compare/",
-    "bin/reth/",
+    "bin/hanzo-evm-bench/",
+    "bin/hanzo-evm-bench-compare/",
+    "bin/hanzo-evm/",
     "crates/storage/rpc-provider/",
     "crates/chain-state/",
     "crates/chainspec/",
@@ -38,11 +38,11 @@ members = [
     "crates/ethereum/cli/",
     "crates/ethereum/consensus/",
     "crates/ethereum/engine-primitives/",
-    "crates/ethereum/evm",
+    "crates/ethereum/hanzo-evm",
+    "crates/ethereum/hanzo-evm/hanzo-evm",
     "crates/ethereum/node",
     "crates/ethereum/payload/",
     "crates/ethereum/primitives/",
-    "crates/ethereum/reth/",
     "crates/etl/",
     "crates/evm/evm",
     "crates/evm/execution-errors",
@@ -160,7 +160,7 @@ members = [
     "testing/runner",
     "crates/tracing-otlp",
 ]
-default-members = ["bin/reth"]
+default-members = ["bin/hanzo-evm"]
 exclude = ["docs/cli"]
 
 # Explicitly set the resolver to version 2, which is the default for packages with edition >= 2021
@@ -317,127 +317,127 @@ codegen-units = 1
 incremental = false
 
 [workspace.dependencies]
-# reth
-reth = { path = "bin/reth" }
-reth-storage-rpc-provider = { path = "crates/storage/rpc-provider" }
-reth-basic-payload-builder = { path = "crates/payload/basic" }
-reth-bench = { path = "bin/reth-bench" }
-reth-bench-compare = { path = "bin/reth-bench-compare" }
-reth-chain-state = { path = "crates/chain-state" }
-reth-chainspec = { path = "crates/chainspec", default-features = false }
-reth-cli = { path = "crates/cli/cli" }
-reth-cli-commands = { path = "crates/cli/commands" }
-reth-cli-runner = { path = "crates/cli/runner" }
-reth-cli-util = { path = "crates/cli/util" }
-reth-codecs = { path = "crates/storage/codecs" }
-reth-codecs-derive = { path = "crates/storage/codecs/derive" }
-reth-config = { path = "crates/config", default-features = false }
-reth-consensus = { path = "crates/consensus/consensus", default-features = false }
-reth-consensus-common = { path = "crates/consensus/common", default-features = false }
-reth-consensus-debug-client = { path = "crates/consensus/debug-client" }
-reth-db = { path = "crates/storage/db", default-features = false }
-reth-db-api = { path = "crates/storage/db-api" }
-reth-db-common = { path = "crates/storage/db-common" }
-reth-db-models = { path = "crates/storage/db-models", default-features = false }
-reth-discv4 = { path = "crates/net/discv4" }
-reth-discv5 = { path = "crates/net/discv5" }
-reth-dns-discovery = { path = "crates/net/dns" }
-reth-downloaders = { path = "crates/net/downloaders" }
-reth-e2e-test-utils = { path = "crates/e2e-test-utils" }
-reth-ecies = { path = "crates/net/ecies" }
-reth-engine-local = { path = "crates/engine/local" }
-reth-engine-primitives = { path = "crates/engine/primitives", default-features = false }
-reth-engine-tree = { path = "crates/engine/tree" }
-reth-engine-service = { path = "crates/engine/service" }
-reth-engine-util = { path = "crates/engine/util" }
-reth-era = { path = "crates/era" }
-reth-era-downloader = { path = "crates/era-downloader" }
-reth-era-utils = { path = "crates/era-utils" }
-reth-errors = { path = "crates/errors" }
-reth-eth-wire = { path = "crates/net/eth-wire" }
-reth-eth-wire-types = { path = "crates/net/eth-wire-types" }
-reth-ethereum-payload-builder = { path = "crates/ethereum/payload" }
-reth-ethereum-cli = { path = "crates/ethereum/cli", default-features = false }
-reth-ethereum-consensus = { path = "crates/ethereum/consensus", default-features = false }
-reth-ethereum-engine-primitives = { path = "crates/ethereum/engine-primitives", default-features = false }
-reth-ethereum-forks = { path = "crates/ethereum/hardforks", default-features = false }
-reth-ethereum-primitives = { path = "crates/ethereum/primitives", default-features = false }
-reth-ethereum = { path = "crates/ethereum/reth" }
-reth-etl = { path = "crates/etl" }
-reth-evm = { path = "crates/evm/evm", default-features = false }
-reth-evm-ethereum = { path = "crates/ethereum/evm", default-features = false }
-reth-execution-errors = { path = "crates/evm/execution-errors", default-features = false }
-reth-execution-types = { path = "crates/evm/execution-types", default-features = false }
-reth-exex = { path = "crates/exex/exex" }
-reth-exex-test-utils = { path = "crates/exex/test-utils" }
-reth-exex-types = { path = "crates/exex/types" }
-reth-fs-util = { path = "crates/fs-util" }
-reth-invalid-block-hooks = { path = "crates/engine/invalid-block-hooks" }
-reth-ipc = { path = "crates/rpc/ipc" }
-reth-libmdbx = { path = "crates/storage/libmdbx-rs" }
-reth-mdbx-sys = { path = "crates/storage/libmdbx-rs/mdbx-sys" }
-reth-metrics = { path = "crates/metrics" }
-reth-net-banlist = { path = "crates/net/banlist" }
-reth-net-nat = { path = "crates/net/nat" }
-reth-network = { path = "crates/net/network" }
-reth-network-api = { path = "crates/net/network-api" }
-reth-network-p2p = { path = "crates/net/p2p" }
-reth-network-peers = { path = "crates/net/peers", default-features = false }
-reth-network-types = { path = "crates/net/network-types" }
-reth-nippy-jar = { path = "crates/storage/nippy-jar" }
-reth-node-api = { path = "crates/node/api" }
-reth-node-builder = { path = "crates/node/builder" }
-reth-node-core = { path = "crates/node/core" }
-reth-node-ethereum = { path = "crates/ethereum/node" }
-reth-node-ethstats = { path = "crates/node/ethstats" }
-reth-node-events = { path = "crates/node/events" }
-reth-node-metrics = { path = "crates/node/metrics" }
-reth-node-types = { path = "crates/node/types" }
-reth-payload-builder = { path = "crates/payload/builder" }
-reth-payload-builder-primitives = { path = "crates/payload/builder-primitives" }
-reth-payload-primitives = { path = "crates/payload/primitives" }
-reth-payload-validator = { path = "crates/payload/validator" }
-reth-payload-util = { path = "crates/payload/util" }
-reth-primitives = { path = "crates/primitives", default-features = false }
-reth-primitives-traits = { path = "crates/primitives-traits", default-features = false }
-reth-provider = { path = "crates/storage/provider" }
-reth-prune = { path = "crates/prune/prune" }
-reth-prune-types = { path = "crates/prune/types", default-features = false }
-reth-revm = { path = "crates/revm", default-features = false }
-reth-rpc = { path = "crates/rpc/rpc" }
-reth-rpc-api = { path = "crates/rpc/rpc-api" }
-reth-rpc-api-testing-util = { path = "crates/rpc/rpc-testing-util" }
-reth-rpc-builder = { path = "crates/rpc/rpc-builder" }
-reth-rpc-e2e-tests = { path = "crates/rpc/rpc-e2e-tests" }
-reth-rpc-engine-api = { path = "crates/rpc/rpc-engine-api" }
-reth-rpc-eth-api = { path = "crates/rpc/rpc-eth-api" }
-reth-rpc-eth-types = { path = "crates/rpc/rpc-eth-types", default-features = false }
-reth-rpc-layer = { path = "crates/rpc/rpc-layer" }
-reth-rpc-server-types = { path = "crates/rpc/rpc-server-types" }
-reth-rpc-convert = { path = "crates/rpc/rpc-convert" }
-reth-stages = { path = "crates/stages/stages" }
-reth-stages-api = { path = "crates/stages/api" }
-reth-stages-types = { path = "crates/stages/types", default-features = false }
-reth-stateless = { path = "crates/stateless", default-features = false }
-reth-static-file = { path = "crates/static-file/static-file" }
-reth-static-file-types = { path = "crates/static-file/types", default-features = false }
-reth-storage-api = { path = "crates/storage/storage-api", default-features = false }
-reth-storage-errors = { path = "crates/storage/errors", default-features = false }
-reth-tasks = { path = "crates/tasks" }
-reth-testing-utils = { path = "testing/testing-utils" }
-reth-tokio-util = { path = "crates/tokio-util" }
-reth-tracing = { path = "crates/tracing", default-features = false }
-reth-tracing-otlp = { path = "crates/tracing-otlp" }
-reth-transaction-pool = { path = "crates/transaction-pool" }
-reth-trie = { path = "crates/trie/trie" }
-reth-trie-common = { path = "crates/trie/common", default-features = false }
-reth-trie-db = { path = "crates/trie/db" }
-reth-trie-parallel = { path = "crates/trie/parallel" }
-reth-trie-sparse = { path = "crates/trie/sparse", default-features = false }
-reth-trie-sparse-parallel = { path = "crates/trie/sparse-parallel" }
-reth-zstd-compressors = { path = "crates/storage/zstd-compressors", default-features = false }
-reth-ress-protocol = { path = "crates/ress/protocol" }
-reth-ress-provider = { path = "crates/ress/provider" }
+# evm
+evm = { path = "bin/evm" }
+hanzo-evm-storage-rpc-provider = { path = "crates/storage/rpc-provider" }
+hanzo-evm-basic-payload-builder = { path = "crates/payload/basic" }
+hanzo-evm-bench = { path = "bin/hanzo-evm-bench" }
+hanzo-evm-bench-compare = { path = "bin/hanzo-evm-bench-compare" }
+hanzo-evm-chain-state = { path = "crates/chain-state" }
+hanzo-evm-chainspec = { path = "crates/chainspec", default-features = false }
+hanzo-evm-cli = { path = "crates/cli/cli" }
+hanzo-evm-cli-commands = { path = "crates/cli/commands" }
+hanzo-evm-cli-runner = { path = "crates/cli/runner" }
+hanzo-evm-cli-util = { path = "crates/cli/util" }
+hanzo-evm-codecs = { path = "crates/storage/codecs" }
+hanzo-evm-codecs-derive = { path = "crates/storage/codecs/derive" }
+hanzo-evm-config = { path = "crates/config", default-features = false }
+hanzo-evm-consensus = { path = "crates/consensus/consensus", default-features = false }
+hanzo-evm-consensus-common = { path = "crates/consensus/common", default-features = false }
+hanzo-evm-consensus-debug-client = { path = "crates/consensus/debug-client" }
+hanzo-evm-db = { path = "crates/storage/db", default-features = false }
+hanzo-evm-db-api = { path = "crates/storage/db-api" }
+hanzo-evm-db-common = { path = "crates/storage/db-common" }
+hanzo-evm-db-models = { path = "crates/storage/db-models", default-features = false }
+hanzo-evm-discv4 = { path = "crates/net/discv4" }
+hanzo-evm-discv5 = { path = "crates/net/discv5" }
+hanzo-evm-dns-discovery = { path = "crates/net/dns" }
+hanzo-evm-downloaders = { path = "crates/net/downloaders" }
+hanzo-evm-e2e-test-utils = { path = "crates/e2e-test-utils" }
+hanzo-evm-ecies = { path = "crates/net/ecies" }
+hanzo-evm-engine-local = { path = "crates/engine/local" }
+hanzo-evm-engine-primitives = { path = "crates/engine/primitives", default-features = false }
+hanzo-evm-engine-tree = { path = "crates/engine/tree" }
+hanzo-evm-engine-service = { path = "crates/engine/service" }
+hanzo-evm-engine-util = { path = "crates/engine/util" }
+hanzo-evm-era = { path = "crates/era" }
+hanzo-evm-era-downloader = { path = "crates/era-downloader" }
+hanzo-evm-era-utils = { path = "crates/era-utils" }
+hanzo-evm-errors = { path = "crates/errors" }
+hanzo-evm-eth-wire = { path = "crates/net/eth-wire" }
+hanzo-evm-eth-wire-types = { path = "crates/net/eth-wire-types" }
+hanzo-evm-ethereum-payload-builder = { path = "crates/ethereum/payload" }
+hanzo-evm-ethereum-cli = { path = "crates/ethereum/cli", default-features = false }
+hanzo-evm-ethereum-consensus = { path = "crates/ethereum/consensus", default-features = false }
+hanzo-evm-ethereum-engine-primitives = { path = "crates/ethereum/engine-primitives", default-features = false }
+hanzo-evm-ethereum-forks = { path = "crates/ethereum/hardforks", default-features = false }
+hanzo-evm-ethereum-primitives = { path = "crates/ethereum/primitives", default-features = false }
+hanzo-evm-ethereum = { path = "crates/ethereum/hanzo-evm/hanzo-evm" }
+hanzo-evm-etl = { path = "crates/etl" }
+hanzo-evm-execution = { path = "crates/evm/evm", default-features = false }
+hanzo-evm-eth-execution = { path = "crates/ethereum/hanzo-evm", default-features = false }
+hanzo-evm-execution-errors = { path = "crates/evm/execution-errors", default-features = false }
+hanzo-evm-execution-types = { path = "crates/evm/execution-types", default-features = false }
+hanzo-evm-exex = { path = "crates/exex/exex" }
+hanzo-evm-exex-test-utils = { path = "crates/exex/test-utils" }
+hanzo-evm-exex-types = { path = "crates/exex/types" }
+hanzo-evm-fs-util = { path = "crates/fs-util" }
+hanzo-evm-invalid-block-hooks = { path = "crates/engine/invalid-block-hooks" }
+hanzo-evm-ipc = { path = "crates/rpc/ipc" }
+hanzo-evm-libmdbx = { path = "crates/storage/libmdbx-rs" }
+hanzo-evm-mdbx-sys = { path = "crates/storage/libmdbx-rs/mdbx-sys" }
+hanzo-evm-metrics = { path = "crates/metrics" }
+hanzo-evm-net-banlist = { path = "crates/net/banlist" }
+hanzo-evm-net-nat = { path = "crates/net/nat" }
+hanzo-evm-network = { path = "crates/net/network" }
+hanzo-evm-network-api = { path = "crates/net/network-api" }
+hanzo-evm-network-p2p = { path = "crates/net/p2p" }
+hanzo-evm-network-peers = { path = "crates/net/peers", default-features = false }
+hanzo-evm-network-types = { path = "crates/net/network-types" }
+hanzo-evm-nippy-jar = { path = "crates/storage/nippy-jar" }
+hanzo-evm-node-api = { path = "crates/node/api" }
+hanzo-evm-node-builder = { path = "crates/node/builder" }
+hanzo-evm-node-core = { path = "crates/node/core" }
+hanzo-evm-node-ethereum = { path = "crates/ethereum/node" }
+hanzo-evm-node-ethstats = { path = "crates/node/ethstats" }
+hanzo-evm-node-events = { path = "crates/node/events" }
+hanzo-evm-node-metrics = { path = "crates/node/metrics" }
+hanzo-evm-node-types = { path = "crates/node/types" }
+hanzo-evm-payload-builder = { path = "crates/payload/builder" }
+hanzo-evm-payload-builder-primitives = { path = "crates/payload/builder-primitives" }
+hanzo-evm-payload-primitives = { path = "crates/payload/primitives" }
+hanzo-evm-payload-validator = { path = "crates/payload/validator" }
+hanzo-evm-payload-util = { path = "crates/payload/util" }
+hanzo-evm-primitives = { path = "crates/primitives", default-features = false }
+hanzo-evm-primitives-traits = { path = "crates/primitives-traits", default-features = false }
+hanzo-evm-provider = { path = "crates/storage/provider" }
+hanzo-evm-prune = { path = "crates/prune/prune" }
+hanzo-evm-prune-types = { path = "crates/prune/types", default-features = false }
+hanzo-evm-revm = { path = "crates/revm", default-features = false }
+hanzo-evm-rpc = { path = "crates/rpc/rpc" }
+hanzo-evm-rpc-api = { path = "crates/rpc/rpc-api" }
+hanzo-evm-rpc-api-testing-util = { path = "crates/rpc/rpc-testing-util" }
+hanzo-evm-rpc-builder = { path = "crates/rpc/rpc-builder" }
+hanzo-evm-rpc-e2e-tests = { path = "crates/rpc/rpc-e2e-tests" }
+hanzo-evm-rpc-engine-api = { path = "crates/rpc/rpc-engine-api" }
+hanzo-evm-rpc-eth-api = { path = "crates/rpc/rpc-eth-api" }
+hanzo-evm-rpc-eth-types = { path = "crates/rpc/rpc-eth-types", default-features = false }
+hanzo-evm-rpc-layer = { path = "crates/rpc/rpc-layer" }
+hanzo-evm-rpc-server-types = { path = "crates/rpc/rpc-server-types" }
+hanzo-evm-rpc-convert = { path = "crates/rpc/rpc-convert" }
+hanzo-evm-stages = { path = "crates/stages/stages" }
+hanzo-evm-stages-api = { path = "crates/stages/api" }
+hanzo-evm-stages-types = { path = "crates/stages/types", default-features = false }
+hanzo-evm-stateless = { path = "crates/stateless", default-features = false }
+hanzo-evm-static-file = { path = "crates/static-file/static-file" }
+hanzo-evm-static-file-types = { path = "crates/static-file/types", default-features = false }
+hanzo-evm-storage-api = { path = "crates/storage/storage-api", default-features = false }
+hanzo-evm-storage-errors = { path = "crates/storage/errors", default-features = false }
+hanzo-evm-tasks = { path = "crates/tasks" }
+hanzo-evm-testing-utils = { path = "testing/testing-utils" }
+hanzo-evm-tokio-util = { path = "crates/tokio-util" }
+hanzo-evm-tracing = { path = "crates/tracing", default-features = false }
+hanzo-evm-tracing-otlp = { path = "crates/tracing-otlp" }
+hanzo-evm-transaction-pool = { path = "crates/transaction-pool" }
+hanzo-evm-trie = { path = "crates/trie/trie" }
+hanzo-evm-trie-common = { path = "crates/trie/common", default-features = false }
+hanzo-evm-trie-db = { path = "crates/trie/db" }
+hanzo-evm-trie-parallel = { path = "crates/trie/parallel" }
+hanzo-evm-trie-sparse = { path = "crates/trie/sparse", default-features = false }
+hanzo-evm-trie-sparse-parallel = { path = "crates/trie/sparse-parallel" }
+hanzo-evm-zstd-compressors = { path = "crates/storage/zstd-compressors", default-features = false }
+hanzo-evm-ress-protocol = { path = "crates/ress/protocol" }
+hanzo-evm-ress-provider = { path = "crates/ress/provider" }
 
 # revm
 revm = { version = "34.0.0", default-features = false }
@@ -748,18 +748,18 @@ ipnet = "2.11"
 # op-alloy-rpc-types-engine = { git = "https://github.com/alloy-rs/op-alloy", rev = "a79d6fc" }
 # op-alloy-rpc-jsonrpsee = { git = "https://github.com/alloy-rs/op-alloy", rev = "a79d6fc" }
 #
-# revm-inspectors = { git = "https://github.com/paradigmxyz/revm-inspectors", rev = "1207e33" }
+# revm-inspectors = { git = "https://github.com/hanzoai/revm-inspectors", rev = "1207e33" }
 #
-# jsonrpsee = { git = "https://github.com/paradigmxyz/jsonrpsee", branch = "matt/make-rpc-service-pub" }
-# jsonrpsee-core = { git = "https://github.com/paradigmxyz/jsonrpsee", branch = "matt/make-rpc-service-pub" }
-# jsonrpsee-server = { git = "https://github.com/paradigmxyz/jsonrpsee", branch = "matt/make-rpc-service-pub" }
-# jsonrpsee-http-client = { git = "https://github.com/paradigmxyz/jsonrpsee", branch = "matt/make-rpc-service-pub" }
-# jsonrpsee-types = { git = "https://github.com/paradigmxyz/jsonrpsee", branch = "matt/make-rpc-service-pub" }
+# jsonrpsee = { git = "https://github.com/hanzoai/jsonrpsee", branch = "matt/make-rpc-service-pub" }
+# jsonrpsee-core = { git = "https://github.com/hanzoai/jsonrpsee", branch = "matt/make-rpc-service-pub" }
+# jsonrpsee-server = { git = "https://github.com/hanzoai/jsonrpsee", branch = "matt/make-rpc-service-pub" }
+# jsonrpsee-http-client = { git = "https://github.com/hanzoai/jsonrpsee", branch = "matt/make-rpc-service-pub" }
+# jsonrpsee-types = { git = "https://github.com/hanzoai/jsonrpsee", branch = "matt/make-rpc-service-pub" }
 
 # alloy-evm = { git = "https://github.com/alloy-rs/evm", rev = "df124c0" }
 # alloy-op-evm = { git = "https://github.com/alloy-rs/evm", rev = "df124c0" }
 
-# revm-inspectors = { git = "https://github.com/paradigmxyz/revm-inspectors", rev = "3020ea8" }
+# revm-inspectors = { git = "https://github.com/hanzoai/revm-inspectors", rev = "3020ea8" }
 
 # alloy-evm = { git = "https://github.com/alloy-rs/evm", rev = "072c248" }
 # alloy-op-evm = { git = "https://github.com/alloy-rs/evm", rev = "072c248" }

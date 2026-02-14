@@ -2,7 +2,7 @@ use crate::{EraMeta, BLOCKS_PER_FILE};
 use alloy_primitives::{hex, hex::ToHexExt, BlockNumber};
 use eyre::{eyre, OptionExt};
 use futures_util::{stream, Stream};
-use reth_fs_util as fs;
+use hanzo_evm_fs_util as fs;
 use sha2::{Digest, Sha256};
 use std::{fmt::Debug, io, io::BufRead, path::Path, str::FromStr};
 

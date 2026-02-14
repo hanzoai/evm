@@ -1,5 +1,5 @@
 use crate::SparseSubtrie;
-use reth_trie_common::Nibbles;
+use hanzo_evm_trie_common::Nibbles;
 
 /// Tracks the state of the lower subtries.
 ///

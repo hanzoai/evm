@@ -1,8 +1,8 @@
 //! Metadata provider trait for reading and writing node metadata.
 
 use alloc::vec::Vec;
-use reth_db_api::models::StorageSettings;
-use reth_storage_errors::provider::{ProviderError, ProviderResult};
+use hanzo_evm_db_api::models::StorageSettings;
+use hanzo_evm_storage_errors::provider::{ProviderError, ProviderResult};
 
 /// Metadata keys.
 pub mod keys {

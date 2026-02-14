@@ -8,25 +8,25 @@ use alloy_eips::eip7840::BlobParams;
 use alloy_primitives::{B256, U256};
 use alloy_rpc_types_eth::BlockNumberOrTag;
 use futures::Future;
-use reth_chain_state::{BlockState, ComputedTrieData, ExecutedBlock};
-use reth_chainspec::{ChainSpecProvider, EthChainSpec};
-use reth_errors::{BlockExecutionError, BlockValidationError, ProviderError, RethError};
-use reth_evm::{
+use hanzo_evm_chain_state::{BlockState, ComputedTrieData, ExecutedBlock};
+use hanzo_evm_chainspec::{ChainSpecProvider, EthChainSpec};
+use hanzo_evm_errors::{BlockExecutionError, BlockValidationError, ProviderError, EvmError};
+use hanzo_evm_execution::{
     execute::{BlockBuilder, BlockBuilderOutcome, BlockExecutionOutput},
     ConfigureEvm, Evm, NextBlockEnvAttributes,
 };
-use reth_primitives_traits::{transaction::error::InvalidTransactionError, HeaderTy, SealedHeader};
-use reth_revm::{database::StateProviderDatabase, db::State};
-use reth_rpc_convert::RpcConvert;
-use reth_rpc_eth_types::{
+use hanzo_evm_primitives_traits::{transaction::error::InvalidTransactionError, HeaderTy, SealedHeader};
+use hanzo_evm_revm::{database::StateProviderDatabase, db::State};
+use hanzo_evm_rpc_convert::RpcConvert;
+use hanzo_evm_rpc_eth_types::{
     block::BlockAndReceipts, builder::config::PendingBlockKind, EthApiError, PendingBlock,
     PendingBlockEnv, PendingBlockEnvOrigin,
 };
-use reth_storage_api::{
+use hanzo_evm_storage_api::{
     noop::NoopProvider, BlockReader, BlockReaderIdExt, ProviderHeader, ProviderTx, ReceiptProvider,
     StateProviderBox, StateProviderFactory,
 };
-use reth_transaction_pool::{
+use hanzo_evm_transaction_pool::{
     error::InvalidPoolTransactionError, BestTransactions, BestTransactionsAttributes,
     PoolTransaction, TransactionPool,
 };
@@ -72,9 +72,9 @@ pub trait LoadPendingBlock:
             // thus this will not fail when looking up the total
             // difficulty value for the blockenv.
             let evm_env = self
-                .evm_config()
+                .hanzo_evm_config()
                 .evm_env(block.header())
-                .map_err(RethError::other)
+                .map_err(EvmError::other)
                 .map_err(Self::Error::from_eth_err)?;
 
             return Ok(PendingBlockEnv::new(
@@ -92,9 +92,9 @@ pub trait LoadPendingBlock:
             .ok_or(EthApiError::HeaderNotFound(BlockNumberOrTag::Latest.into()))?;
 
         let evm_env = self
-            .evm_config()
+            .hanzo_evm_config()
             .next_evm_env(&latest, &self.next_env_attributes(&latest)?)
-            .map_err(RethError::other)
+            .map_err(EvmError::other)
             .map_err(Self::Error::from_eth_err)?;
 
         Ok(PendingBlockEnv::new(evm_env, PendingBlockEnvOrigin::DerivedFromLatest(latest)))
@@ -240,9 +240,9 @@ pub trait LoadPendingBlock:
         let mut db = State::builder().with_database(state).with_bundle_update().build();
 
         let mut builder = self
-            .evm_config()
+            .hanzo_evm_config()
             .builder_for_next_block(&mut db, parent, self.next_env_attributes(parent)?)
-            .map_err(RethError::other)
+            .map_err(EvmError::other)
             .map_err(Self::Error::from_eth_err)?;
 
         builder.apply_pre_execution_changes().map_err(Self::Error::from_eth_err)?;
@@ -427,7 +427,7 @@ mod tests {
     use super::*;
     use alloy_consensus::Header;
     use alloy_primitives::B256;
-    use reth_primitives_traits::SealedHeader;
+    use hanzo_evm_primitives_traits::SealedHeader;
 
     #[test]
     fn pending_env_keeps_parent_beacon_root() {

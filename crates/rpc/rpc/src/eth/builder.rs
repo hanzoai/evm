@@ -2,23 +2,23 @@
 
 use crate::{eth::core::EthApiInner, EthApi};
 use alloy_network::Ethereum;
-use reth_chain_state::CanonStateSubscriptions;
-use reth_chainspec::ChainSpecProvider;
-use reth_primitives_traits::HeaderTy;
-use reth_rpc_convert::{RpcConvert, RpcConverter};
-use reth_rpc_eth_api::{
+use hanzo_evm_chain_state::CanonStateSubscriptions;
+use hanzo_evm_chainspec::ChainSpecProvider;
+use hanzo_evm_primitives_traits::HeaderTy;
+use hanzo_evm_rpc_convert::{RpcConvert, RpcConverter};
+use hanzo_evm_rpc_eth_api::{
     helpers::pending_block::PendingEnvBuilder, node::RpcNodeCoreAdapter, RpcNodeCore,
 };
-use reth_rpc_eth_types::{
+use hanzo_evm_rpc_eth_types::{
     builder::config::PendingBlockKind, fee_history::fee_history_cache_new_blocks_task,
     receipt::EthReceiptConverter, EthStateCache, EthStateCacheConfig, FeeHistoryCache,
     FeeHistoryCacheConfig, ForwardConfig, GasCap, GasPriceOracle, GasPriceOracleConfig,
 };
-use reth_rpc_server_types::constants::{
+use hanzo_evm_rpc_server_types::constants::{
     DEFAULT_ETH_PROOF_WINDOW, DEFAULT_MAX_BLOCKING_IO_REQUEST, DEFAULT_MAX_SIMULATE_BLOCKS,
     DEFAULT_PROOF_PERMITS,
 };
-use reth_tasks::{pool::BlockingTaskPool, TaskSpawner, TokioTaskExecutor};
+use hanzo_evm_tasks::{pool::BlockingTaskPool, TaskSpawner, TokioTaskExecutor};
 use std::{sync::Arc, time::Duration};
 
 /// A helper to build the `EthApi` handler instance.
@@ -60,8 +60,8 @@ where
         RpcNodeCore<Provider: ChainSpecProvider<ChainSpec = ChainSpec>, Evm = EvmConfig>,
 {
     /// Creates a new `EthApiBuilder` instance.
-    pub fn new(provider: Provider, pool: Pool, network: Network, evm_config: EvmConfig) -> Self {
-        Self::new_with_components(RpcNodeCoreAdapter::new(provider, pool, network, evm_config))
+    pub fn new(provider: Provider, pool: Pool, network: Network, hanzo_evm_config: EvmConfig) -> Self {
+        Self::new_with_components(RpcNodeCoreAdapter::new(provider, pool, network, hanzo_evm_config))
     }
 }
 

@@ -15,20 +15,20 @@ mod metrics;
 #[cfg(test)]
 mod writer_tests;
 
-use reth_nippy_jar::NippyJar;
-use reth_static_file_types::{SegmentHeader, StaticFileSegment};
-use reth_storage_errors::provider::{ProviderError, ProviderResult};
+use hanzo_evm_nippy_jar::NippyJar;
+use hanzo_evm_static_file_types::{SegmentHeader, StaticFileSegment};
+use hanzo_evm_storage_errors::provider::{ProviderError, ProviderResult};
 use std::{ops::Deref, sync::Arc};
 
 /// Alias type for each specific `NippyJar`.
 type LoadedJarRef<'a> =
-    reth_primitives_traits::dashmap::mapref::one::Ref<'a, (u64, StaticFileSegment), LoadedJar>;
+    hanzo_evm_primitives_traits::dashmap::mapref::one::Ref<'a, (u64, StaticFileSegment), LoadedJar>;
 
 /// Helper type to reuse an associated static file mmap handle on created cursors.
 #[derive(Debug)]
 pub struct LoadedJar {
     jar: NippyJar<SegmentHeader>,
-    mmap_handle: Arc<reth_nippy_jar::DataReader>,
+    mmap_handle: Arc<hanzo_evm_nippy_jar::DataReader>,
 }
 
 impl LoadedJar {
@@ -43,7 +43,7 @@ impl LoadedJar {
     }
 
     /// Returns a clone of the mmap handle that can be used to instantiate a cursor.
-    fn mmap_handle(&self) -> Arc<reth_nippy_jar::DataReader> {
+    fn mmap_handle(&self) -> Arc<hanzo_evm_nippy_jar::DataReader> {
         self.mmap_handle.clone()
     }
 
@@ -74,20 +74,20 @@ mod tests {
     use alloy_consensus::{Header, SignableTransaction, Transaction, TxLegacy};
     use alloy_primitives::{Address, BlockHash, Signature, TxNumber, B256, U160, U256};
     use rand::seq::SliceRandom;
-    use reth_db::{
+    use hanzo_evm_db::{
         models::{AccountBeforeTx, StorageBeforeTx},
         test_utils::create_test_static_files_dir,
     };
-    use reth_db_api::{transaction::DbTxMut, CanonicalHeaders, HeaderNumbers, Headers};
-    use reth_ethereum_primitives::{EthPrimitives, Receipt, TransactionSigned};
-    use reth_primitives_traits::Account;
-    use reth_static_file_types::{
+    use hanzo_evm_db_api::{transaction::DbTxMut, CanonicalHeaders, HeaderNumbers, Headers};
+    use hanzo_evm_ethereum_primitives::{EthPrimitives, Receipt, TransactionSigned};
+    use hanzo_evm_primitives_traits::Account;
+    use hanzo_evm_static_file_types::{
         find_fixed_range, SegmentRangeInclusive, DEFAULT_BLOCKS_PER_STATIC_FILE,
     };
-    use reth_storage_api::{
+    use hanzo_evm_storage_api::{
         ChangeSetReader, ReceiptProvider, StorageChangeSetReader, TransactionsProvider,
     };
-    use reth_testing_utils::generators::{self, random_header_range};
+    use hanzo_evm_testing_utils::generators::{self, random_header_range};
     use std::{collections::BTreeMap, fmt::Debug, fs, ops::Range, path::Path};
 
     fn assert_eyre<T: PartialEq + Debug>(got: T, expected: T, msg: &str) -> eyre::Result<()> {

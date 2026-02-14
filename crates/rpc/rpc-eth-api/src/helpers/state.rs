@@ -9,18 +9,18 @@ use alloy_primitives::{Address, Bytes, B256, U256};
 use alloy_rpc_types_eth::{Account, AccountInfo, EIP1186AccountProofResponse};
 use alloy_serde::JsonStorageKey;
 use futures::Future;
-use reth_errors::RethError;
-use reth_evm::{ConfigureEvm, EvmEnvFor};
-use reth_primitives_traits::SealedHeaderFor;
-use reth_rpc_convert::RpcConvert;
-use reth_rpc_eth_types::{
+use hanzo_evm_errors::EvmError;
+use hanzo_evm_execution::{ConfigureEvm, EvmEnvFor};
+use hanzo_evm_primitives_traits::SealedHeaderFor;
+use hanzo_evm_rpc_convert::RpcConvert;
+use hanzo_evm_rpc_eth_types::{
     error::FromEvmError, EthApiError, PendingBlockEnv, RpcInvalidTransactionError,
 };
-use reth_storage_api::{
+use hanzo_evm_storage_api::{
     BlockIdReader, BlockNumReader, BlockReaderIdExt, StateProvider, StateProviderBox,
     StateProviderFactory,
 };
-use reth_transaction_pool::TransactionPool;
+use hanzo_evm_transaction_pool::TransactionPool;
 
 /// Helper methods for `eth_` methods relating to state (accounts).
 pub trait EthState: LoadState + SpawnBlocking {
@@ -100,7 +100,7 @@ pub trait EthState: LoadState + SpawnBlocking {
             let _permit = self
                 .acquire_owned_tracing()
                 .await
-                .map_err(RethError::other)
+                .map_err(EvmError::other)
                 .map_err(EthApiError::Internal)?;
 
             let chain_info = self.chain_info().map_err(Self::Error::from_eth_err)?;
@@ -214,7 +214,7 @@ pub trait LoadState:
     /// Returns the state at the given [`BlockId`] enum.
     ///
     /// Note: if not [`BlockNumberOrTag::Pending`](alloy_eips::BlockNumberOrTag) then this
-    /// will only return canonical state. See also <https://github.com/paradigmxyz/reth/issues/4515>
+    /// will only return canonical state. See also <https://github.com/hanzoai/evm/issues/4515>
     fn state_at_block_id(
         &self,
         at: BlockId,
@@ -262,9 +262,9 @@ pub trait LoadState:
         &self,
         header: &SealedHeaderFor<Self::Primitives>,
     ) -> Result<EvmEnvFor<Self::Evm>, Self::Error> {
-        self.evm_config()
+        self.hanzo_evm_config()
             .evm_env(header)
-            .map_err(RethError::other)
+            .map_err(EvmError::other)
             .map_err(Self::Error::from_eth_err)
     }
 

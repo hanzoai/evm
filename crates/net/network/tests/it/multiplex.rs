@@ -9,16 +9,16 @@ use std::{
 
 use alloy_primitives::bytes::BytesMut;
 use futures::{Stream, StreamExt};
-use reth_eth_wire::{
+use hanzo_evm_eth_wire::{
     capability::SharedCapabilities, multiplex::ProtocolConnection, protocol::Protocol,
 };
-use reth_network::{
+use hanzo_evm_network::{
     protocol::{ConnectionHandler, OnNotSupported, ProtocolHandler},
     test_utils::{NetworkEventStream, Testnet},
     NetworkConfigBuilder, NetworkEventListenerProvider, NetworkManager,
 };
-use reth_network_api::{Direction, NetworkInfo, PeerId, Peers};
-use reth_provider::{noop::NoopProvider, test_utils::MockEthProvider};
+use hanzo_evm_network_api::{Direction, NetworkInfo, PeerId, Peers};
+use hanzo_evm_provider::{noop::NoopProvider, test_utils::MockEthProvider};
 use secp256k1::SecretKey;
 use tokio::sync::{mpsc, oneshot};
 use tokio_stream::wrappers::UnboundedReceiverStream;
@@ -29,7 +29,7 @@ use crate::multiplex::proto::{PingPongProtoMessage, PingPongProtoMessageKind};
 mod proto {
     use super::*;
     use alloy_primitives::bytes::{Buf, BufMut};
-    use reth_eth_wire::Capability;
+    use hanzo_evm_eth_wire::Capability;
 
     #[repr(u8)]
     #[derive(Clone, Copy, Debug, PartialEq, Eq)]
@@ -279,7 +279,7 @@ impl Stream for PingPongProtoConnection {
 
 #[tokio::test(flavor = "multi_thread")]
 async fn test_connect_to_non_multiplex_peer() {
-    reth_tracing::init_test_tracing();
+    hanzo_evm_tracing::init_test_tracing();
 
     let net = Testnet::create(1).await;
 
@@ -320,7 +320,7 @@ async fn test_connect_to_non_multiplex_peer() {
 
 #[tokio::test(flavor = "multi_thread")]
 async fn test_proto_multiplex() {
-    reth_tracing::init_test_tracing();
+    hanzo_evm_tracing::init_test_tracing();
     let provider = MockEthProvider::default();
     let mut net = Testnet::create_with(2, provider.clone()).await;
 

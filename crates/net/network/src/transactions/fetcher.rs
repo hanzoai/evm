@@ -40,15 +40,15 @@ use alloy_primitives::TxHash;
 use derive_more::{Constructor, Deref};
 use futures::{stream::FuturesUnordered, Future, FutureExt, Stream, StreamExt};
 use pin_project::pin_project;
-use reth_eth_wire::{
+use hanzo_evm_eth_wire::{
     DedupPayload, GetPooledTransactions, HandleMempoolData, HandleVersionedMempoolData,
     PartiallyValidData, RequestTxHashes, ValidAnnouncementData,
 };
-use reth_eth_wire_types::{EthNetworkPrimitives, NetworkPrimitives};
-use reth_network_api::PeerRequest;
-use reth_network_p2p::error::{RequestError, RequestResult};
-use reth_network_peers::PeerId;
-use reth_primitives_traits::SignedTransaction;
+use hanzo_evm_eth_wire_types::{EthNetworkPrimitives, NetworkPrimitives};
+use hanzo_evm_network_api::PeerRequest;
+use hanzo_evm_network_p2p::error::{RequestError, RequestResult};
+use hanzo_evm_network_peers::PeerId;
+use hanzo_evm_primitives_traits::SignedTransaction;
 use schnellru::ByLength;
 use std::{
     collections::HashMap,
@@ -245,7 +245,7 @@ impl<N: NetworkPrimitives> TransactionFetcher<N> {
     }
 
     /// Packages hashes for a [`GetPooledTxRequest`] from an
-    /// [`Eth68`](reth_eth_wire::EthVersion::Eth68) announcement up to limit as defined by protocol
+    /// [`Eth68`](hanzo_evm_eth_wire::EthVersion::Eth68) announcement up to limit as defined by protocol
     /// version 68. Takes a [`RequestTxHashes`] buffer as parameter for filling with hashes to
     /// request.
     ///
@@ -311,7 +311,7 @@ impl<N: NetworkPrimitives> TransactionFetcher<N> {
     }
 
     /// Packages hashes for a [`GetPooledTxRequest`] from an
-    /// [`Eth66`](reth_eth_wire::EthVersion::Eth66) announcement up to limit as defined by
+    /// [`Eth66`](hanzo_evm_eth_wire::EthVersion::Eth66) announcement up to limit as defined by
     /// protocol version 66. Takes a [`RequestTxHashes`] buffer as parameter for filling with
     /// hashes to request.
     ///
@@ -760,7 +760,7 @@ impl<N: NetworkPrimitives> TransactionFetcher<N> {
     /// Returns the limit to enforce when looking for any pending hash with an idle fallback peer.
     ///
     /// Returns `Some(limit)` if [`TransactionFetcher`] and the
-    /// [`TransactionPool`](reth_transaction_pool::TransactionPool) are operating close to full
+    /// [`TransactionPool`](hanzo_evm_transaction_pool::TransactionPool) are operating close to full
     /// capacity. Returns `None`, unlimited, if they are not that busy.
     pub fn search_breadth_budget_find_idle_fallback_peer(
         &self,
@@ -799,7 +799,7 @@ impl<N: NetworkPrimitives> TransactionFetcher<N> {
     /// peer and hashes pending fetch.
     ///
     /// Returns `Some(limit)` if [`TransactionFetcher`] and the
-    /// [`TransactionPool`](reth_transaction_pool::TransactionPool) are operating close to full
+    /// [`TransactionPool`](hanzo_evm_transaction_pool::TransactionPool) are operating close to full
     /// capacity. Returns `None`, unlimited, if they are not that busy.
     pub fn search_breadth_budget_find_intersection_pending_hashes_and_hashes_seen_by_peer(
         &self,
@@ -902,7 +902,7 @@ impl<N: NetworkPrimitives> TransactionFetcher<N> {
                 let valid_payload = verified_payload.dedup();
 
                 // todo: validate based on announced tx size/type and report peer for sending
-                // invalid response <https://github.com/paradigmxyz/reth/issues/6529>. requires
+                // invalid response <https://github.com/hanzoai/evm/issues/6529>. requires
                 // passing the rlp encoded length down from active session along with the decoded
                 // tx.
 
@@ -1020,8 +1020,8 @@ impl TxFetchMetadata {
     }
 
     /// Returns the size of the transaction, if its hash has been received in any
-    /// [`Eth68`](reth_eth_wire::EthVersion::Eth68) announcement. If the transaction hash has only
-    /// been seen in [`Eth66`](reth_eth_wire::EthVersion::Eth66) announcements so far, this will
+    /// [`Eth68`](hanzo_evm_eth_wire::EthVersion::Eth68) announcement. If the transaction hash has only
+    /// been seen in [`Eth66`](hanzo_evm_eth_wire::EthVersion::Eth66) announcements so far, this will
     /// return `None`.
     pub const fn tx_encoded_len(&self) -> Option<usize> {
         self.tx_encoded_length
@@ -1286,8 +1286,8 @@ mod test {
     use alloy_primitives::{hex, B256};
     use alloy_rlp::Decodable;
     use derive_more::IntoIterator;
-    use reth_eth_wire_types::EthVersion;
-    use reth_ethereum_primitives::TransactionSigned;
+    use hanzo_evm_eth_wire_types::EthVersion;
+    use hanzo_evm_ethereum_primitives::TransactionSigned;
     use std::{collections::HashSet, str::FromStr};
 
     #[derive(IntoIterator)]
@@ -1315,7 +1315,7 @@ mod test {
 
     #[test]
     fn pack_eth68_request() {
-        reth_tracing::init_test_tracing();
+        hanzo_evm_tracing::init_test_tracing();
 
         // RIG TEST
 
@@ -1366,7 +1366,7 @@ mod test {
 
     #[tokio::test]
     async fn test_on_fetch_pending_hashes() {
-        reth_tracing::init_test_tracing();
+        hanzo_evm_tracing::init_test_tracing();
 
         let tx_fetcher = &mut TransactionFetcher::default();
 

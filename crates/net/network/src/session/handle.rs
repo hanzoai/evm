@@ -5,14 +5,14 @@ use crate::{
     session::{conn::EthRlpxConnection, Direction, SessionId},
     PendingSessionHandshakeError,
 };
-use reth_ecies::ECIESError;
-use reth_eth_wire::{
+use hanzo_evm_ecies::ECIESError;
+use hanzo_evm_eth_wire::{
     errors::EthStreamError, Capabilities, DisconnectReason, EthVersion, NetworkPrimitives,
     UnifiedStatus,
 };
-use reth_network_api::PeerInfo;
-use reth_network_peers::{NodeRecord, PeerId};
-use reth_network_types::PeerKind;
+use hanzo_evm_network_api::PeerInfo;
+use hanzo_evm_network_peers::{NodeRecord, PeerId};
+use hanzo_evm_network_types::PeerKind;
 use std::{io, net::SocketAddr, sync::Arc, time::Instant};
 use tokio::sync::{
     mpsc::{self, error::SendError},

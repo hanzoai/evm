@@ -9,14 +9,14 @@ use alloy_sol_types::{ContractError, RevertReason};
 use alloy_transport::{RpcError, TransportErrorKind};
 pub use api::{AsEthApiError, FromEthApiError, FromEvmError, IntoEthApiError};
 use core::time::Duration;
-use reth_errors::{BlockExecutionError, BlockValidationError, RethError};
-use reth_primitives_traits::transaction::{error::InvalidTransactionError, signed::RecoveryError};
-use reth_revm::db::bal::EvmDatabaseError;
-use reth_rpc_convert::{CallFeesError, EthTxEnvError, TransactionConversionError};
-use reth_rpc_server_types::result::{
+use hanzo_evm_errors::{BlockExecutionError, BlockValidationError, EvmError};
+use hanzo_evm_primitives_traits::transaction::{error::InvalidTransactionError, signed::RecoveryError};
+use hanzo_evm_revm::db::bal::EvmDatabaseError;
+use hanzo_evm_rpc_convert::{CallFeesError, EthTxEnvError, TransactionConversionError};
+use hanzo_evm_rpc_server_types::result::{
     block_id_to_str, internal_rpc_err, invalid_params_rpc_err, rpc_err, rpc_error_with_code,
 };
-use reth_transaction_pool::error::{
+use hanzo_evm_transaction_pool::error::{
     Eip4844PoolTransactionError, Eip7702PoolTransactionError, InvalidPoolTransactionError,
     PoolError, PoolErrorKind, PoolTransactionError,
 };
@@ -128,7 +128,7 @@ pub enum EthApiError {
     BothStateAndStateDiffInOverride(Address),
     /// Other internal error
     #[error(transparent)]
-    Internal(RethError),
+    Internal(EvmError),
     /// Error related to signing
     #[error(transparent)]
     Signing(#[from] SignError),
@@ -450,7 +450,7 @@ where
                 Self::Unsupported("JS Tracer is not enabled")
             }
             DebugInspectorError::MuxInspector(err) => err.into(),
-            DebugInspectorError::Database(err) => Self::Internal(RethError::other(err)),
+            DebugInspectorError::Database(err) => Self::Internal(EvmError::other(err)),
             #[cfg(feature = "js-tracer")]
             DebugInspectorError::JsInspector(err) => err.into(),
             #[allow(unreachable_patterns)]
@@ -459,10 +459,10 @@ where
     }
 }
 
-impl From<RethError> for EthApiError {
-    fn from(error: RethError) -> Self {
+impl From<EvmError> for EthApiError {
+    fn from(error: EvmError) -> Self {
         match error {
-            RethError::Provider(err) => err.into(),
+            EvmError::Provider(err) => err.into(),
             err => Self::Internal(err),
         }
     }
@@ -486,20 +486,20 @@ impl From<BlockExecutionError> for EthApiError {
                         ))
                     }
                 }
-                _ => Self::Internal(RethError::Execution(BlockExecutionError::Validation(
+                _ => Self::Internal(EvmError::Execution(BlockExecutionError::Validation(
                     validation_error,
                 ))),
             },
             BlockExecutionError::Internal(internal_error) => {
-                Self::Internal(RethError::Execution(BlockExecutionError::Internal(internal_error)))
+                Self::Internal(EvmError::Execution(BlockExecutionError::Internal(internal_error)))
             }
         }
     }
 }
 
-impl From<reth_errors::ProviderError> for EthApiError {
-    fn from(error: reth_errors::ProviderError) -> Self {
-        use reth_errors::ProviderError;
+impl From<hanzo_evm_errors::ProviderError> for EthApiError {
+    fn from(error: hanzo_evm_errors::ProviderError) -> Self {
+        use hanzo_evm_errors::ProviderError;
         match error {
             ProviderError::HeaderNotFound(hash) => Self::HeaderNotFound(hash.into()),
             ProviderError::BlockHashNotFound(hash) | ProviderError::UnknownBlockHash(hash) => {
@@ -527,7 +527,7 @@ impl From<InvalidHeader> for EthApiError {
 impl<T, TxError> From<EVMError<T, TxError>> for EthApiError
 where
     T: Into<Self>,
-    TxError: reth_evm::InvalidTxError,
+    TxError: hanzo_evm_execution::InvalidTxError,
 {
     fn from(err: EVMError<T, TxError>) -> Self {
         match err {

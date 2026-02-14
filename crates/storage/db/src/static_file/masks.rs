@@ -4,7 +4,7 @@ use crate::{
     HeaderTerminalDifficulties,
 };
 use alloy_primitives::{Address, BlockHash};
-use reth_db_api::{models::StorageBeforeTx, table::Table, AccountChangeSets};
+use hanzo_evm_db_api::{models::StorageBeforeTx, table::Table, AccountChangeSets};
 
 // HEADER MASKS
 add_static_file_mask! {

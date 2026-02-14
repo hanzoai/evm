@@ -9,7 +9,7 @@ use crate::{
 use alloy_eips::{eip7594::BlobTransactionSidecarVariant, eip7702::SignedAuthorization};
 use alloy_primitives::{Address, TxHash, B256, U256};
 use futures_util::future::Either;
-use reth_primitives_traits::{Block, Recovered, SealedBlock};
+use hanzo_evm_primitives_traits::{Block, Recovered, SealedBlock};
 use std::{fmt, fmt::Debug, future::Future, time::Instant};
 
 mod constants;
@@ -189,7 +189,7 @@ pub trait TransactionValidator: Debug + Send + Sync {
     ///    * nonce >= next nonce of the sender
     ///    * ...
     ///
-    /// See [`InvalidTransactionError`](reth_primitives_traits::transaction::error::InvalidTransactionError) for common
+    /// See [`InvalidTransactionError`](hanzo_evm_primitives_traits::transaction::error::InvalidTransactionError) for common
     /// errors variants.
     ///
     /// The transaction pool makes no additional assumptions about the validity of the transaction

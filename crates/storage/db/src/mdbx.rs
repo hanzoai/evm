@@ -2,11 +2,11 @@
 
 use crate::{is_database_empty, TableSet, Tables};
 use eyre::Context;
-use reth_tracing::tracing::info;
+use hanzo_evm_tracing::tracing::info;
 use std::path::Path;
 
 pub use crate::implementation::mdbx::*;
-pub use reth_libmdbx::*;
+pub use hanzo_evm_libmdbx::*;
 
 /// Tables that have been removed from the schema but may still exist on disk from previous
 /// versions. These will be dropped during database initialization.
@@ -19,7 +19,7 @@ pub fn create_db<P: AsRef<Path>>(path: P, args: DatabaseArguments) -> eyre::Resu
 
     let rpath = path.as_ref();
     if is_database_empty(rpath) {
-        reth_fs_util::create_dir_all(rpath)
+        hanzo_evm_fs_util::create_dir_all(rpath)
             .wrap_err_with(|| format!("Could not create database directory {}", rpath.display()))?;
         create_db_version_file(rpath)?;
     } else {
@@ -58,12 +58,12 @@ fn drop_orphan_tables(db: &DatabaseEnv) {
     for table_name in ORPHAN_TABLES {
         match db.drop_orphan_table(table_name) {
             Ok(true) => {
-                info!(target: "reth::db", table = %table_name, "Dropped orphaned database table");
+                info!(target: "evm::db", table = %table_name, "Dropped orphaned database table");
             }
             Ok(false) => {}
             Err(e) => {
-                reth_tracing::tracing::warn!(
-                    target: "reth::db",
+                hanzo_evm_tracing::tracing::warn!(
+                    target: "evm::db",
                     table = %table_name,
                     %e,
                     "Failed to drop orphaned database table"

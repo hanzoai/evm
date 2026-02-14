@@ -1,13 +1,13 @@
 use super::{HashedCursor, HashedStorageCursor};
 use alloy_primitives::B256;
-use reth_storage_errors::db::DatabaseError;
+use hanzo_evm_storage_errors::db::DatabaseError;
 use std::time::{Duration, Instant};
 use tracing::debug_span;
 
 #[cfg(feature = "metrics")]
 use crate::TrieType;
 #[cfg(feature = "metrics")]
-use reth_metrics::metrics::{self, Histogram};
+use hanzo_evm_metrics::metrics::{self, Histogram};
 
 /// Prometheus metrics for hashed cursor operations.
 ///

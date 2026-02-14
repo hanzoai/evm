@@ -1,6 +1,6 @@
 #![allow(missing_docs)]
 use byteorder::{ByteOrder, LittleEndian};
-use reth_libmdbx::*;
+use hanzo_evm_libmdbx::*;
 use tempfile::tempdir;
 
 #[test]

@@ -1,7 +1,7 @@
 #![warn(unused_crate_dependencies)]
 
 use alloy_primitives::{keccak256, Address, B256};
-use reth_ethereum::{
+use hanzo_evm_ethereum::{
     chainspec::ChainSpecBuilder,
     node::EthereumNode,
     primitives::{AlloyBlockHeader, SealedBlock, SealedHeader},
@@ -21,7 +21,7 @@ use reth_ethereum::{
 // Other parts of the code which include caching are parts of the `EthApi` abstraction.
 fn main() -> eyre::Result<()> {
     // The path to data directory, e.g. "~/.local/reth/share/mainnet"
-    let datadir = std::env::var("RETH_DATADIR")?;
+    let datadir = std::env::var("EVM_DATADIR")?;
 
     // Instantiate a provider factory for Ethereum mainnet using the provided datadir path.
     let spec = ChainSpecBuilder::mainnet().build();
@@ -104,7 +104,7 @@ fn txs_provider_example<T: TransactionsProvider<Transaction = TransactionSigned>
 }
 
 /// The `BlockReader` allows querying the headers-related tables.
-fn block_provider_example<T: BlockReader<Block = reth_ethereum::Block>>(
+fn block_provider_example<T: BlockReader<Block = hanzo_evm_ethereum::Block>>(
     provider: T,
     number: u64,
 ) -> eyre::Result<()> {
@@ -145,7 +145,7 @@ fn block_provider_example<T: BlockReader<Block = reth_ethereum::Block>>(
 
 /// The `ReceiptProvider` allows querying the receipts tables.
 fn receipts_provider_example<
-    T: ReceiptProvider<Receipt = reth_ethereum::Receipt>
+    T: ReceiptProvider<Receipt = hanzo_evm_ethereum::Receipt>
         + TransactionsProvider<Transaction = TransactionSigned>
         + HeaderProvider,
 >(

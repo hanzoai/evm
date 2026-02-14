@@ -2,26 +2,26 @@ use crate::stages::MERKLE_STAGE_DEFAULT_INCREMENTAL_THRESHOLD;
 use alloy_consensus::BlockHeader;
 use alloy_primitives::BlockNumber;
 use num_traits::Zero;
-use reth_config::config::ExecutionConfig;
-use reth_consensus::FullConsensus;
-use reth_db::{static_file::HeaderMask, tables};
-use reth_evm::{execute::Executor, metrics::ExecutorMetrics, ConfigureEvm};
-use reth_execution_types::Chain;
-use reth_exex::{ExExManagerHandle, ExExNotification, ExExNotificationSource};
-use reth_primitives_traits::{format_gas_throughput, BlockBody, NodePrimitives};
-use reth_provider::{
+use hanzo_evm_config::config::ExecutionConfig;
+use hanzo_evm_consensus::FullConsensus;
+use hanzo_evm_db::{static_file::HeaderMask, tables};
+use hanzo_evm_execution::{execute::Executor, metrics::ExecutorMetrics, ConfigureEvm};
+use hanzo_evm_execution_types::Chain;
+use hanzo_evm_exex::{ExExManagerHandle, ExExNotification, ExExNotificationSource};
+use hanzo_evm_primitives_traits::{format_gas_throughput, BlockBody, NodePrimitives};
+use hanzo_evm_provider::{
     providers::{StaticFileProvider, StaticFileWriter},
     BlockHashReader, BlockReader, DBProvider, EitherWriter, ExecutionOutcome, HeaderProvider,
     LatestStateProviderRef, OriginalValuesKnown, ProviderError, StateWriteConfig, StateWriter,
     StaticFileProviderFactory, StatsReader, StorageSettingsCache, TransactionVariant,
 };
-use reth_revm::database::StateProviderDatabase;
-use reth_stages_api::{
+use hanzo_evm_revm::database::StateProviderDatabase;
+use hanzo_evm_stages_api::{
     BlockErrorKind, CheckpointBlockRange, EntitiesCheckpoint, ExecInput, ExecOutput,
     ExecutionCheckpoint, ExecutionStageThresholds, Stage, StageCheckpoint, StageError, StageId,
     UnwindInput, UnwindOutput,
 };
-use reth_static_file_types::StaticFileSegment;
+use hanzo_evm_static_file_types::StaticFileSegment;
 use std::{
     cmp::{max, Ordering},
     collections::BTreeMap,
@@ -68,7 +68,7 @@ where
     E: ConfigureEvm,
 {
     /// The stage's internal block executor
-    evm_config: E,
+    hanzo_evm_config: E,
     /// The consensus instance for validating blocks.
     consensus: Arc<dyn FullConsensus<E::Primitives>>,
     /// The commit thresholds of the execution stage.
@@ -98,7 +98,7 @@ where
 {
     /// Create new execution stage with specified config.
     pub fn new(
-        evm_config: E,
+        hanzo_evm_config: E,
         consensus: Arc<dyn FullConsensus<E::Primitives>>,
         thresholds: ExecutionStageThresholds,
         external_clean_threshold: u64,
@@ -106,7 +106,7 @@ where
     ) -> Self {
         Self {
             external_clean_threshold,
-            evm_config,
+            hanzo_evm_config,
             consensus,
             thresholds,
             post_execute_commit_input: None,
@@ -120,11 +120,11 @@ where
     ///
     /// The commit threshold will be set to [`MERKLE_STAGE_DEFAULT_INCREMENTAL_THRESHOLD`].
     pub fn new_with_executor(
-        evm_config: E,
+        hanzo_evm_config: E,
         consensus: Arc<dyn FullConsensus<E::Primitives>>,
     ) -> Self {
         Self::new(
-            evm_config,
+            hanzo_evm_config,
             consensus,
             ExecutionStageThresholds::default(),
             MERKLE_STAGE_DEFAULT_INCREMENTAL_THRESHOLD,
@@ -134,13 +134,13 @@ where
 
     /// Create new instance of [`ExecutionStage`] from configuration.
     pub fn from_config(
-        evm_config: E,
+        hanzo_evm_config: E,
         consensus: Arc<dyn FullConsensus<E::Primitives>>,
         config: ExecutionConfig,
         external_clean_threshold: u64,
     ) -> Self {
         Self::new(
-            evm_config,
+            hanzo_evm_config,
             consensus,
             config.into(),
             external_clean_threshold,
@@ -263,7 +263,7 @@ where
             Block = <E::Primitives as NodePrimitives>::Block,
             Header = <E::Primitives as NodePrimitives>::BlockHeader,
         > + StaticFileProviderFactory<
-            Primitives: NodePrimitives<BlockHeader: reth_db_api::table::Value>,
+            Primitives: NodePrimitives<BlockHeader: hanzo_evm_db_api::table::Value>,
         > + StatsReader
         + BlockHashReader
         + StateWriter<Receipt = <E::Primitives as NodePrimitives>::Receipt>
@@ -297,7 +297,7 @@ where
         self.ensure_consistency(provider, input.checkpoint().block_number, None)?;
 
         let db = StateProviderDatabase(LatestStateProviderRef::new(provider));
-        let mut executor = self.evm_config.batch_executor(db);
+        let mut executor = self.hanzo_evm_config.batch_executor(db);
 
         // Progress tracking
         let mut stage_progress = start_block;
@@ -575,7 +575,7 @@ fn execution_checkpoint<N>(
     checkpoint: StageCheckpoint,
 ) -> Result<ExecutionCheckpoint, ProviderError>
 where
-    N: NodePrimitives<BlockHeader: reth_db_api::table::Value>,
+    N: NodePrimitives<BlockHeader: hanzo_evm_db_api::table::Value>,
 {
     Ok(match checkpoint.execution_stage_checkpoint() {
         // If checkpoint block range fully matches our range,
@@ -648,7 +648,7 @@ pub fn calculate_gas_used_from_headers<N>(
     range: RangeInclusive<BlockNumber>,
 ) -> Result<u64, ProviderError>
 where
-    N: NodePrimitives<BlockHeader: reth_db_api::table::Value>,
+    N: NodePrimitives<BlockHeader: hanzo_evm_db_api::table::Value>,
 {
     debug!(target: "sync::stages::execution", ?range, "Calculating gas used from headers");
 
@@ -679,33 +679,33 @@ mod tests {
     use alloy_primitives::{address, hex_literal::hex, keccak256, Address, B256, U256};
     use alloy_rlp::Decodable;
     use assert_matches::assert_matches;
-    use reth_chainspec::ChainSpecBuilder;
-    use reth_db_api::{
+    use hanzo_evm_chainspec::ChainSpecBuilder;
+    use hanzo_evm_db_api::{
         models::{metadata::StorageSettings, AccountBeforeTx},
         transaction::{DbTx, DbTxMut},
     };
-    use reth_ethereum_consensus::EthBeaconConsensus;
-    use reth_ethereum_primitives::Block;
-    use reth_evm_ethereum::EthEvmConfig;
-    use reth_primitives_traits::{Account, Bytecode, SealedBlock, StorageEntry};
-    use reth_provider::{
+    use hanzo_evm_ethereum_consensus::EthBeaconConsensus;
+    use hanzo_evm_ethereum_primitives::Block;
+    use hanzo_evm_eth_execution::EthEvmConfig;
+    use hanzo_evm_primitives_traits::{Account, Bytecode, SealedBlock, StorageEntry};
+    use hanzo_evm_provider::{
         test_utils::create_test_provider_factory, AccountReader, BlockWriter,
         DatabaseProviderFactory, ReceiptProvider, StaticFileProviderFactory,
     };
-    use reth_prune::PruneModes;
-    use reth_prune_types::{PruneMode, ReceiptsLogPruneConfig};
-    use reth_stages_api::StageUnitCheckpoint;
-    use reth_testing_utils::generators;
+    use hanzo_evm_prune::PruneModes;
+    use hanzo_evm_prune_types::{PruneMode, ReceiptsLogPruneConfig};
+    use hanzo_evm_stages_api::StageUnitCheckpoint;
+    use hanzo_evm_testing_utils::generators;
     use std::collections::BTreeMap;
 
     fn stage() -> ExecutionStage<EthEvmConfig> {
-        let evm_config =
+        let hanzo_evm_config =
             EthEvmConfig::new(Arc::new(ChainSpecBuilder::mainnet().berlin_activated().build()));
         let consensus = Arc::new(EthBeaconConsensus::new(Arc::new(
             ChainSpecBuilder::mainnet().berlin_activated().build(),
         )));
         ExecutionStage::new(
-            evm_config,
+            hanzo_evm_config,
             consensus,
             ExecutionStageThresholds {
                 max_blocks: Some(100),

@@ -1,11 +1,11 @@
-//! Interaction with `reth_network::PeersManager`, for integration testing. Otherwise
-//! `reth_network::NetworkManager` manages `reth_network::PeersManager`.
+//! Interaction with `hanzo_evm_network::PeersManager`, for integration testing. Otherwise
+//! `hanzo_evm_network::NetworkManager` manages `hanzo_evm_network::PeersManager`.
 
 use std::net::SocketAddr;
 
 use derive_more::Constructor;
-use reth_network_peers::{NodeRecord, PeerId};
-use reth_network_types::{Peer, ReputationChangeKind};
+use hanzo_evm_network_peers::{NodeRecord, PeerId};
+use hanzo_evm_network_types::{Peer, ReputationChangeKind};
 use tokio::sync::{mpsc, oneshot};
 
 /// Provides an API for managing the peers of the network.

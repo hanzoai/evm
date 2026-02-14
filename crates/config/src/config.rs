@@ -1,8 +1,8 @@
 //! Configuration files.
-use reth_network_types::{PeersConfig, SessionsConfig};
-use reth_prune_types::PruneModes;
-use reth_stages_types::ExecutionStageThresholds;
-use reth_static_file_types::{StaticFileMap, StaticFileSegment};
+use hanzo_evm_network_types::{PeersConfig, SessionsConfig};
+use hanzo_evm_prune_types::PruneModes;
+use hanzo_evm_stages_types::ExecutionStageThresholds;
+use hanzo_evm_static_file_types::{StaticFileMap, StaticFileSegment};
 use std::{
     path::{Path, PathBuf},
     time::Duration,
@@ -15,7 +15,7 @@ const EXTENSION: &str = "toml";
 /// The default prune block interval
 pub const DEFAULT_BLOCK_INTERVAL: usize = 5;
 
-/// Configuration for the reth node.
+/// Configuration for the evm node.
 #[derive(Debug, Clone, Default, PartialEq, Eq)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 #[cfg_attr(feature = "serde", serde(default))]
@@ -87,7 +87,7 @@ impl Config {
         if path.extension() != Some(std::ffi::OsStr::new(EXTENSION)) {
             return Err(std::io::Error::new(
                 std::io::ErrorKind::InvalidInput,
-                format!("reth config file extension must be '{EXTENSION}'"),
+                format!("evm config file extension must be '{EXTENSION}'"),
             ));
         }
 
@@ -618,8 +618,8 @@ mod tests {
     use super::{Config, EXTENSION};
     use crate::PruneConfig;
     use alloy_primitives::Address;
-    use reth_network_peers::TrustedPeer;
-    use reth_prune_types::{PruneMode, PruneModes, ReceiptsLogPruneConfig};
+    use hanzo_evm_network_peers::TrustedPeer;
+    use hanzo_evm_prune_types::{PruneMode, PruneModes, ReceiptsLogPruneConfig};
     use std::{collections::BTreeMap, path::Path, str::FromStr, time::Duration};
 
     fn with_tempdir(filename: &str, proc: fn(&std::path::Path)) {
@@ -1152,7 +1152,7 @@ connect_trusted_nodes_only = true
 
     #[test]
     fn test_can_support_dns_in_trusted_nodes() {
-        let reth_toml = r#"
+        let evm_toml = r#"
     [peers]
     trusted_nodes = [
         "enode://0401e494dbd0c84c5c0f72adac5985d2f2525e08b68d448958aae218f5ac8198a80d1498e0ebec2ce38b1b18d6750f6e61a56b4614c5a6c6cf0981c39aed47dc@34.159.32.127:30303",
@@ -1160,7 +1160,7 @@ connect_trusted_nodes_only = true
     ]
     "#;
 
-        let conf: Config = toml::from_str(reth_toml).unwrap();
+        let conf: Config = toml::from_str(evm_toml).unwrap();
         assert_eq!(conf.peers.trusted_nodes.len(), 2);
 
         let expected_enodes = vec![

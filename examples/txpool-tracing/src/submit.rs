@@ -5,7 +5,7 @@
 use alloy_network::{Ethereum, EthereumWallet, NetworkWallet, TransactionBuilder};
 use alloy_primitives::{Address, TxHash, U256};
 use futures_util::StreamExt;
-use reth_ethereum::{
+use hanzo_evm_ethereum::{
     node::api::{FullNodeComponents, NodeTypes},
     pool::{
         AddedTransactionOutcome, PoolTransaction, TransactionEvent, TransactionOrigin,
@@ -19,7 +19,7 @@ use reth_ethereum::{
 /// Submit a transaction to the transaction pool
 ///
 /// This function demonstrates how to create, sign, and submit a transaction
-/// to the reth transaction pool.
+/// to the evm transaction pool.
 pub async fn submit_transaction<FC>(
     node: &FC,
     wallet: &EthereumWallet,

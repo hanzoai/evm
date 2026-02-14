@@ -5,11 +5,11 @@ use alloy_consensus::BlockHeader;
 use alloy_eips::BlockHashOrNumber;
 use alloy_rpc_types_engine::{JwtError, JwtSecret};
 use eyre::Result;
-use reth_consensus::Consensus;
-use reth_network_p2p::{
+use hanzo_evm_consensus::Consensus;
+use hanzo_evm_network_p2p::{
     bodies::client::BodiesClient, headers::client::HeadersClient, priority::Priority,
 };
-use reth_primitives_traits::{Block, SealedBlock, SealedHeader};
+use hanzo_evm_primitives_traits::{Block, SealedBlock, SealedHeader};
 use std::{
     env::VarError,
     path::{Path, PathBuf},
@@ -25,10 +25,10 @@ pub fn parse_path(value: &str) -> Result<PathBuf, shellexpand::LookupError<VarEr
 /// Attempts to retrieve or create a JWT secret from the specified path.
 pub fn get_or_create_jwt_secret_from_path(path: &Path) -> Result<JwtSecret, JwtError> {
     if path.exists() {
-        debug!(target: "reth::cli", ?path, "Reading JWT auth secret file");
+        debug!(target: "evm::cli", ?path, "Reading JWT auth secret file");
         JwtSecret::from_file(path)
     } else {
-        info!(target: "reth::cli", ?path, "Creating JWT auth secret file");
+        info!(target: "evm::cli", ?path, "Creating JWT auth secret file");
         JwtSecret::try_create_random(path)
     }
 }
@@ -39,7 +39,7 @@ pub async fn get_single_header<Client>(
     id: BlockHashOrNumber,
 ) -> Result<SealedHeader<Client::Header>>
 where
-    Client: HeadersClient<Header: reth_primitives_traits::BlockHeader>,
+    Client: HeadersClient<Header: hanzo_evm_primitives_traits::BlockHeader>,
 {
     let (peer_id, response) = client.get_header_with_priority(id, Priority::High).await?.split();
 

@@ -10,10 +10,10 @@ use alloy_consensus::Header;
 use alloy_eips::{BlockHashOrNumber, BlockNumHash};
 use alloy_primitives::{map::B256Map, B256};
 use parking_lot::Mutex;
-use reth_eth_wire_types::HeadersDirection;
-use reth_ethereum_primitives::{Block, BlockBody};
-use reth_network_peers::{PeerId, WithPeerId};
-use reth_primitives_traits::{SealedBlock, SealedHeader};
+use hanzo_evm_eth_wire_types::HeadersDirection;
+use hanzo_evm_ethereum_primitives::{Block, BlockBody};
+use hanzo_evm_network_peers::{PeerId, WithPeerId};
+use hanzo_evm_primitives_traits::{SealedBlock, SealedHeader};
 use std::{ops::RangeInclusive, sync::Arc};
 
 /// A headers+bodies client that stores the headers and bodies in memory, with an artificial soft
@@ -168,5 +168,5 @@ impl BodiesClient for TestFullBlockClient {
 }
 
 impl BlockClient for TestFullBlockClient {
-    type Block = reth_ethereum_primitives::Block;
+    type Block = hanzo_evm_ethereum_primitives::Block;
 }

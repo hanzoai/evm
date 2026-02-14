@@ -1,5 +1,5 @@
 use crate::transactions::config::{AnnouncementFilteringPolicy, TransactionPropagationPolicy};
-use reth_eth_wire::NetworkPrimitives;
+use hanzo_evm_eth_wire::NetworkPrimitives;
 use std::fmt::Debug;
 
 /// A container that bundles specific implementations of transaction-related policies,

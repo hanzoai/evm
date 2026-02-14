@@ -1,5 +1,5 @@
 [package]
-name = "reth-db-common"
+name = "hanzo-evm-db-common"
 version.workspace = true
 edition.workspace = true
 rust-version.workspace = true
@@ -8,21 +8,21 @@ homepage.workspace = true
 repository.workspace = true
 
 [dependencies]
-# reth
-reth-chainspec.workspace = true
-reth-db-api.workspace = true
-reth-provider.workspace = true
-reth-primitives-traits.workspace = true
-reth-config.workspace = true
-reth-trie.workspace = true
-reth-trie-db.workspace = true
-reth-etl.workspace = true
-reth-codecs.workspace = true
-reth-stages-types.workspace = true
-reth-fs-util.workspace = true
-reth-node-types.workspace = true
-reth-static-file-types.workspace = true
-reth-execution-errors.workspace = true
+# evm
+hanzo-evm-chainspec.workspace = true
+hanzo-evm-db-api.workspace = true
+hanzo-evm-provider.workspace = true
+hanzo-evm-primitives-traits.workspace = true
+hanzo-evm-config.workspace = true
+hanzo-evm-trie.workspace = true
+hanzo-evm-trie-db.workspace = true
+hanzo-evm-etl.workspace = true
+hanzo-evm-codecs.workspace = true
+hanzo-evm-stages-types.workspace = true
+hanzo-evm-fs-util.workspace = true
+hanzo-evm-node-types.workspace = true
+hanzo-evm-static-file-types.workspace = true
+hanzo-evm-execution-errors.workspace = true
 
 # eth
 alloy-consensus.workspace = true
@@ -42,11 +42,11 @@ serde_json.workspace = true
 tracing.workspace = true
 
 [dev-dependencies]
-reth-db = { workspace = true, features = ["mdbx"] }
-reth-provider = { workspace = true, features = ["test-utils"] }
+hanzo-evm-db = { workspace = true, features = ["mdbx"] }
+hanzo-evm-provider = { workspace = true, features = ["test-utils"] }
 
 [features]
-rocksdb = ["reth-db-api/rocksdb", "reth-provider/rocksdb"]
+rocksdb = ["hanzo-evm-db-api/rocksdb", "hanzo-evm-provider/rocksdb"]
 edge = ["rocksdb"]
 
 [lints]

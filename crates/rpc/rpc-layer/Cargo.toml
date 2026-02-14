@@ -1,5 +1,5 @@
 [package]
-name = "reth-rpc-layer"
+name = "hanzo-evm-rpc-layer"
 version.workspace = true
 edition.workspace = true
 rust-version.workspace = true

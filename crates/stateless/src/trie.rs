@@ -5,10 +5,10 @@ use alloy_rlp::{Decodable, Encodable};
 use alloy_rpc_types_debug::ExecutionWitness;
 use alloy_trie::{TrieAccount, EMPTY_ROOT_HASH};
 use itertools::Itertools;
-use reth_errors::ProviderError;
-use reth_revm::state::Bytecode;
-use reth_trie_common::{HashedPostState, Nibbles, TRIE_ACCOUNT_RLP_MAX_SIZE};
-use reth_trie_sparse::{
+use hanzo_evm_errors::ProviderError;
+use hanzo_evm_revm::state::Bytecode;
+use hanzo_evm_trie_common::{HashedPostState, Nibbles, TRIE_ACCOUNT_RLP_MAX_SIZE};
+use hanzo_evm_trie_sparse::{
     errors::SparseStateTrieResult,
     provider::{DefaultTrieNodeProvider, DefaultTrieNodeProviderFactory},
     RevealableSparseTrie, SparseStateTrie, SparseTrie,
@@ -215,7 +215,7 @@ fn verify_execution_witness(
     }
 }
 
-// Copied and modified from ress: https://github.com/paradigmxyz/ress/blob/06bf2c4788e45b8fcbd640e38b6243e6f87c4d0e/crates/engine/src/tree/root.rs
+// Copied and modified from ress: https://github.com/hanzoai/ress/blob/06bf2c4788e45b8fcbd640e38b6243e6f87c4d0e/crates/engine/src/tree/root.rs
 /// Calculates the post-execution state root by applying state changes to a sparse trie.
 ///
 /// This function takes a [`SparseStateTrie`] with the pre-state and a [`HashedPostState`]
@@ -279,7 +279,7 @@ fn calculate_state_root(
 
     // 2. Apply account‑level updates and (re)encode the account nodes
     // Update accounts with new values
-    // TODO: upstream changes into reth so that `SparseStateTrie::update_account` handles this
+    // TODO: upstream changes into evm so that `SparseStateTrie::update_account` handles this
     let mut account_rlp_buf = Vec::with_capacity(TRIE_ACCOUNT_RLP_MAX_SIZE);
 
     for (hashed_address, account) in

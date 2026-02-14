@@ -1,7 +1,7 @@
 //! Utilities to store history from downloaded ERA files with storage-api
 //!  and export it to recreate era1 files.
 //!
-//! The import is downloaded using [`reth_era_downloader`] and parsed using [`reth_era`].
+//! The import is downloaded using [`hanzo_evm_era_downloader`] and parsed using [`hanzo_evm_era`].
 
 mod history;
 

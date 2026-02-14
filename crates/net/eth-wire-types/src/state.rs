@@ -3,7 +3,7 @@
 use alloc::vec::Vec;
 use alloy_primitives::{Bytes, B256};
 use alloy_rlp::{RlpDecodableWrapper, RlpEncodableWrapper};
-use reth_codecs_derive::add_arbitrary_tests;
+use hanzo_evm_codecs_derive::add_arbitrary_tests;
 
 /// A request for state tree nodes corresponding to the given hashes.
 /// This message was removed in `eth/67`, only clients running `eth/66` or earlier will respond to

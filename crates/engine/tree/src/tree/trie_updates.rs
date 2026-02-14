@@ -2,8 +2,8 @@ use alloy_primitives::{
     map::{B256Map, HashMap},
     B256,
 };
-use reth_db::DatabaseError;
-use reth_trie::{
+use hanzo_evm_db::DatabaseError;
+use hanzo_evm_trie::{
     trie_cursor::{TrieCursor, TrieCursorFactory},
     updates::{StorageTrieUpdates, TrieUpdates},
     BranchNodeCompact, Nibbles,

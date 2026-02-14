@@ -2,9 +2,9 @@
 
 use clap::Parser;
 use eyre::{bail, WrapErr};
-use reth_config::Config;
+use hanzo_evm_config::Config;
 use std::path::PathBuf;
-/// `reth config` command
+/// `evm config` command
 #[derive(Debug, Parser)]
 pub struct Command {
     /// The path to the configuration file to use.

@@ -8,7 +8,7 @@ use crate::{
 };
 use alloy_consensus::{Header, ReceiptWithBloom};
 use alloy_primitives::{Address, BlockNumber, Bytes, Log, LogData, B256, B64, U256};
-use reth_ethereum_primitives::{Receipt, TxType};
+use hanzo_evm_ethereum_primitives::{Receipt, TxType};
 
 // Helper function to create a test header
 pub(crate) fn create_header() -> Header {
@@ -149,7 +149,7 @@ pub(crate) fn create_test_block_with_compressed_data(number: BlockNumber) -> Blo
 
     // Create test receipt list with bloom
     let receipts_list: Vec<ReceiptWithBloom> = vec![create_test_receipt_with_bloom(
-        reth_ethereum_primitives::TxType::Legacy,
+        hanzo_evm_ethereum_primitives::TxType::Legacy,
         true,
         21000,
         0,

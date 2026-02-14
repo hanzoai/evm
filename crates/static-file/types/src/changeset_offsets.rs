@@ -46,7 +46,7 @@ impl ChangesetOffsetWriter {
         let aligned_len = if remainder != 0 {
             let truncated_len = file_len - remainder;
             tracing::warn!(
-                target: "reth::static_file",
+                target: "evm::static_file",
                 path = %path.as_ref().display(),
                 original_len = file_len,
                 truncated_len,
@@ -67,7 +67,7 @@ impl ChangesetOffsetWriter {
                 // Sidecar has uncommitted records from a crash - truncate them
                 let target_len = committed_len * Self::RECORD_SIZE as u64;
                 tracing::warn!(
-                    target: "reth::static_file",
+                    target: "evm::static_file",
                     path = %path.as_ref().display(),
                     sidecar_records = records_in_file,
                     committed_len,

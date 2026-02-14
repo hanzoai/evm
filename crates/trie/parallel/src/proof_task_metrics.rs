@@ -1,6 +1,6 @@
 use crate::value_encoder::ValueEncoderStats;
-use reth_metrics::{metrics::Histogram, Metrics};
-use reth_trie::{
+use hanzo_evm_metrics::{metrics::Histogram, Metrics};
+use hanzo_evm_trie::{
     hashed_cursor::{HashedCursorMetrics, HashedCursorMetricsCache},
     trie_cursor::{TrieCursorMetrics, TrieCursorMetricsCache},
     TrieType,

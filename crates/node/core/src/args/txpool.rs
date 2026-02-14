@@ -1,11 +1,11 @@
 //! Transaction pool arguments
 
-use crate::cli::config::RethTransactionPoolConfig;
+use crate::cli::config::EvmTransactionPoolConfig;
 use alloy_eips::eip1559::{ETHEREUM_BLOCK_GAS_LIMIT_30M, MIN_PROTOCOL_BASE_FEE};
 use alloy_primitives::Address;
 use clap::{builder::Resettable, Args};
-use reth_cli_util::{parse_duration_from_secs_or_ms, parsers::format_duration_as_secs_or_ms};
-use reth_transaction_pool::{
+use hanzo_evm_cli_util::{parse_duration_from_secs_or_ms, parsers::format_duration_as_secs_or_ms};
+use hanzo_evm_transaction_pool::{
     blobstore::disk::DEFAULT_MAX_CACHED_BLOBS,
     maintain::MAX_QUEUED_TRANSACTION_LIFETIME,
     pool::{NEW_TX_LISTENER_BUFFER_SIZE, PENDING_TX_LISTENER_BUFFER_SIZE},
@@ -500,7 +500,7 @@ impl Default for TxPoolArgs {
     }
 }
 
-impl RethTransactionPoolConfig for TxPoolArgs {
+impl EvmTransactionPoolConfig for TxPoolArgs {
     /// Returns transaction pool configuration.
     fn pool_config(&self) -> PoolConfig {
         let default_config = PoolConfig::default();
@@ -565,7 +565,7 @@ mod tests {
     #[test]
     fn txpool_args_default_sanity_test() {
         let default_args = TxPoolArgs::default();
-        let args = CommandParser::<TxPoolArgs>::parse_from(["reth"]).args;
+        let args = CommandParser::<TxPoolArgs>::parse_from(["evm"]).args;
         assert_eq!(args, default_args);
     }
 
@@ -573,18 +573,18 @@ mod tests {
     fn txpool_parse_max_tx_lifetime() {
         // Test with a custom duration
         let args =
-            CommandParser::<TxPoolArgs>::parse_from(["reth", "--txpool.lifetime", "300"]).args;
+            CommandParser::<TxPoolArgs>::parse_from(["evm", "--txpool.lifetime", "300"]).args;
         assert_eq!(args.max_queued_lifetime, Duration::from_secs(300));
 
         // Test with the default value
-        let args = CommandParser::<TxPoolArgs>::parse_from(["reth"]).args;
+        let args = CommandParser::<TxPoolArgs>::parse_from(["evm"]).args;
         assert_eq!(args.max_queued_lifetime, Duration::from_secs(3 * 60 * 60)); // Default is 3h
     }
 
     #[test]
     fn txpool_parse_max_tx_lifetime_invalid() {
         let result =
-            CommandParser::<TxPoolArgs>::try_parse_from(["reth", "--txpool.lifetime", "invalid"]);
+            CommandParser::<TxPoolArgs>::try_parse_from(["evm", "--txpool.lifetime", "invalid"]);
 
         assert!(result.is_err(), "Expected an error for invalid duration");
     }
@@ -628,7 +628,7 @@ mod tests {
         };
 
         let parsed_args = CommandParser::<TxPoolArgs>::parse_from([
-            "reth",
+            "evm",
             "--txpool.pending-max-count",
             "1000",
             "--txpool.pending-max-size",

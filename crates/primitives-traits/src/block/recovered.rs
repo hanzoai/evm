@@ -878,7 +878,7 @@ pub(super) mod serde_bincode_compat {
     ///
     /// Intended to use with the [`serde_with::serde_as`] macro in the following way:
     /// ```rust
-    /// use reth_primitives_traits::{
+    /// use hanzo_evm_primitives_traits::{
     ///     block::RecoveredBlock,
     ///     serde_bincode_compat::{self, SerdeBincodeCompat},
     ///     Block,

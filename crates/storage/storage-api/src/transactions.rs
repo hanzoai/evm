@@ -4,8 +4,8 @@ use alloy_consensus::transaction::TransactionMeta;
 use alloy_eips::BlockHashOrNumber;
 use alloy_primitives::{Address, BlockNumber, TxHash, TxNumber};
 use core::ops::{Range, RangeBounds, RangeInclusive};
-use reth_primitives_traits::SignedTransaction;
-use reth_storage_errors::provider::{ProviderError, ProviderResult};
+use hanzo_evm_primitives_traits::SignedTransaction;
+use hanzo_evm_storage_errors::provider::{ProviderError, ProviderResult};
 
 /// Enum to control transaction hash inclusion.
 ///

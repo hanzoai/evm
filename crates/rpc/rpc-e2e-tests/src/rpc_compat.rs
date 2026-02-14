@@ -3,8 +3,8 @@
 use eyre::{eyre, Result};
 use futures_util::future::BoxFuture;
 use jsonrpsee::core::client::ClientT;
-use reth_e2e_test_utils::testsuite::{actions::Action, BlockInfo, Environment};
-use reth_node_api::EngineTypes;
+use hanzo_evm_e2e_test_utils::testsuite::{actions::Action, BlockInfo, Environment};
+use hanzo_evm_node_api::EngineTypes;
 use serde_json::Value;
 use std::path::Path;
 use tracing::{debug, info};
@@ -368,7 +368,7 @@ where
                 .map(Path::new)
                 .ok_or_else(|| eyre!("FCU JSON path is required"))?;
 
-            let fcu_state = reth_e2e_test_utils::setup_import::load_forkchoice_state(fcu_path)?;
+            let fcu_state = hanzo_evm_e2e_test_utils::setup_import::load_forkchoice_state(fcu_path)?;
 
             info!(
                 "Applying forkchoice state - head: {}, safe: {}, finalized: {}",
@@ -388,7 +388,7 @@ where
 
                 loop {
                     let response =
-                        reth_rpc_api::clients::EngineApiClient::<Engine>::fork_choice_updated_v3(
+                        hanzo_evm_rpc_api::clients::EngineApiClient::<Engine>::fork_choice_updated_v3(
                             &client.engine.http_client(),
                             fcu_state,
                             None,

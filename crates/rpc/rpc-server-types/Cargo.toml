@@ -1,5 +1,5 @@
 [package]
-name = "reth-rpc-server-types"
+name = "hanzo-evm-rpc-server-types"
 version.workspace = true
 edition.workspace = true
 rust-version.workspace = true
@@ -12,8 +12,8 @@ description = "RPC server types and constants"
 workspace = true
 
 [dependencies]
-reth-errors.workspace = true
-reth-network-api.workspace = true
+hanzo-evm-errors.workspace = true
+hanzo-evm-network-api.workspace = true
 
 # ethereum
 alloy-primitives.workspace = true

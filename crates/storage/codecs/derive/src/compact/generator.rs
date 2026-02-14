@@ -14,9 +14,9 @@ pub fn generate_from_to(
 ) -> TokenStream2 {
     let flags = format_ident!("{ident}Flags");
 
-    let reth_codecs = parse_reth_codecs_path(attrs).unwrap();
+    let hanzo_evm_codecs = parse_hanzo_evm_codecs_path(attrs).unwrap();
 
-    let to_compact = generate_to_compact(fields, ident, zstd.clone(), &reth_codecs);
+    let to_compact = generate_to_compact(fields, ident, zstd.clone(), &hanzo_evm_codecs);
     let from_compact = generate_from_compact(fields, ident, zstd);
 
     let lifetime = if has_lifetime {
@@ -27,11 +27,11 @@ pub fn generate_from_to(
 
     let impl_compact = if has_lifetime {
         quote! {
-           impl<#lifetime> #reth_codecs::Compact for #ident<#lifetime>
+           impl<#lifetime> #hanzo_evm_codecs::Compact for #ident<#lifetime>
         }
     } else {
         quote! {
-           impl #reth_codecs::Compact for #ident
+           impl #hanzo_evm_codecs::Compact for #ident
         }
     };
 
@@ -55,7 +55,7 @@ pub fn generate_from_to(
     // Build function
     quote! {
         #impl_compact {
-            fn to_compact<B>(&self, buf: &mut B) -> usize where B: #reth_codecs::__private::bytes::BufMut + AsMut<[u8]> {
+            fn to_compact<B>(&self, buf: &mut B) -> usize where B: #hanzo_evm_codecs::__private::bytes::BufMut + AsMut<[u8]> {
                 let mut flags = #flags::default();
                 let mut total_length = 0;
                 #(#to_compact)*
@@ -159,10 +159,10 @@ fn generate_to_compact(
     fields: &FieldList,
     ident: &Ident,
     zstd: Option<ZstdConfig>,
-    reth_codecs: &syn::Path,
+    hanzo_evm_codecs: &syn::Path,
 ) -> Vec<TokenStream2> {
     let mut lines = vec![quote! {
-        let mut buffer = #reth_codecs::__private::bytes::BytesMut::new();
+        let mut buffer = #hanzo_evm_codecs::__private::bytes::BytesMut::new();
     }];
 
     let is_enum = fields.iter().any(|field| matches!(field, FieldTypes::EnumVariant(_)));
@@ -219,17 +219,17 @@ fn generate_to_compact(
     lines
 }
 
-/// Function to extract the crate path from `reth_codecs(crate = "...")` attribute.
-pub(crate) fn parse_reth_codecs_path(attrs: &[Attribute]) -> syn::Result<syn::Path> {
-    // let default_crate_path: syn::Path = syn::parse_str("reth-codecs").unwrap();
-    let mut reth_codecs_path: syn::Path = syn::parse_quote!(reth_codecs);
+/// Function to extract the crate path from `hanzo_evm_codecs(crate = "...")` attribute.
+pub(crate) fn parse_hanzo_evm_codecs_path(attrs: &[Attribute]) -> syn::Result<syn::Path> {
+    // let default_crate_path: syn::Path = syn::parse_str("evm-codecs").unwrap();
+    let mut hanzo_evm_codecs_path: syn::Path = syn::parse_quote!(hanzo_evm_codecs);
     for attr in attrs {
-        if attr.path().is_ident("reth_codecs") {
+        if attr.path().is_ident("hanzo_evm_codecs") {
             attr.parse_nested_meta(|meta| {
                 if meta.path.is_ident("crate") {
                     let value = meta.value()?;
                     let lit: LitStr = value.parse()?;
-                    reth_codecs_path = syn::parse_str(&lit.value())?;
+                    hanzo_evm_codecs_path = syn::parse_str(&lit.value())?;
                     Ok(())
                 } else {
                     Err(meta.error("unsupported attribute"))
@@ -238,5 +238,5 @@ pub(crate) fn parse_reth_codecs_path(attrs: &[Attribute]) -> syn::Result<syn::Pa
         }
     }
 
-    Ok(reth_codecs_path)
+    Ok(hanzo_evm_codecs_path)
 }

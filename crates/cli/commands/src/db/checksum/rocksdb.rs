@@ -3,12 +3,12 @@
 use super::{checksum_hasher, PROGRESS_LOG_INTERVAL};
 use crate::common::CliNodeTypes;
 use clap::ValueEnum;
-use reth_chainspec::EthereumHardforks;
-use reth_db::{tables, DatabaseEnv};
-use reth_db_api::table::Table;
-use reth_db_common::DbTool;
-use reth_node_builder::NodeTypesWithDBAdapter;
-use reth_provider::RocksDBProviderFactory;
+use hanzo_evm_chainspec::EthereumHardforks;
+use hanzo_evm_db::{tables, DatabaseEnv};
+use hanzo_evm_db_api::table::Table;
+use hanzo_evm_db_common::DbTool;
+use hanzo_evm_node_builder::NodeTypesWithDBAdapter;
+use hanzo_evm_provider::RocksDBProviderFactory;
 use std::{hash::Hasher, time::Instant};
 use tracing::info;
 
@@ -78,7 +78,7 @@ pub fn checksum_rocksdb<N: CliNodeTypes<ChainSpec: EthereumHardforks>>(
 
 /// Computes checksum for a specific RocksDB table by iterating over rows.
 fn checksum_rocksdb_table<T: Table>(
-    rocksdb: &reth_provider::providers::RocksDBProvider,
+    rocksdb: &hanzo_evm_provider::providers::RocksDBProvider,
     limit: usize,
 ) -> eyre::Result<(u64, usize)> {
     let iter = rocksdb.raw_iter::<T>()?;

@@ -13,7 +13,7 @@ use alloy_evm::{
 };
 use alloy_genesis::Genesis;
 use alloy_primitives::{address, Bytes};
-use reth_ethereum::{
+use hanzo_evm_ethereum::{
     chainspec::{Chain, ChainSpec},
     evm::{
         primitives::{Database, EvmEnv},
@@ -38,7 +38,7 @@ use reth_ethereum::{
     tasks::TaskManager,
     EthPrimitives,
 };
-use reth_tracing::{RethTracer, Tracer};
+use hanzo_evm_tracing::{EvmTracer, Tracer};
 use std::sync::OnceLock;
 
 /// Custom EVM configuration.
@@ -95,9 +95,9 @@ where
     type EVM = EthEvmConfig<ChainSpec, MyEvmFactory>;
 
     async fn build_evm(self, ctx: &BuilderContext<Node>) -> eyre::Result<Self::EVM> {
-        let evm_config =
+        let hanzo_evm_config =
             EthEvmConfig::new_with_evm_factory(ctx.chain_spec(), MyEvmFactory::default());
-        Ok(evm_config)
+        Ok(hanzo_evm_config)
     }
 }
 
@@ -119,7 +119,7 @@ pub fn prague_custom() -> &'static Precompiles {
 
 #[tokio::main]
 async fn main() -> eyre::Result<()> {
-    let _guard = RethTracer::new().init()?;
+    let _guard = EvmTracer::new().init()?;
 
     let tasks = TaskManager::current();
 

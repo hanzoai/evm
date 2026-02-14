@@ -1,5 +1,5 @@
 [package]
-name = "reth-node-builder"
+name = "hanzo-evm-node-builder"
 version.workspace = true
 edition.workspace = true
 rust-version.workspace = true
@@ -12,51 +12,51 @@ readme = "README.md"
 workspace = true
 
 [dependencies]
-## reth
-reth-chain-state.workspace = true
-reth-chainspec.workspace = true
-reth-config.workspace = true
-reth-consensus-debug-client.workspace = true
-reth-consensus.workspace = true
-reth-db = { workspace = true, features = ["mdbx"] }
-reth-db-api.workspace = true
-reth-db-common.workspace = true
-reth-downloaders.workspace = true
-reth-engine-local.workspace = true
-reth-engine-primitives.workspace = true
-reth-engine-service.workspace = true
-reth-engine-tree.workspace = true
-reth-engine-util.workspace = true
-reth-evm.workspace = true
-reth-exex.workspace = true
-reth-fs-util.workspace = true
-reth-invalid-block-hooks.workspace = true
-reth-network-api.workspace = true
-reth-network-p2p.workspace = true
-reth-network.workspace = true
-reth-node-api.workspace = true
-reth-node-core.workspace = true
-reth-node-events.workspace = true
-reth-node-metrics.workspace = true
-reth-payload-builder.workspace = true
-reth-primitives-traits.workspace = true
-reth-provider.workspace = true
-reth-prune.workspace = true
-reth-rpc.workspace = true
-reth-rpc-api.workspace = true
-reth-rpc-builder.workspace = true
-reth-rpc-engine-api.workspace = true
-reth-rpc-eth-types.workspace = true
-reth-rpc-layer.workspace = true
-reth-stages.workspace = true
-reth-static-file.workspace = true
-reth-tasks.workspace = true
-reth-tokio-util.workspace = true
-reth-tracing.workspace = true
-reth-transaction-pool.workspace = true
-reth-trie-db = { workspace = true, features = ["metrics"] }
-reth-basic-payload-builder.workspace = true
-reth-node-ethstats.workspace = true
+## evm
+hanzo-evm-chain-state.workspace = true
+hanzo-evm-chainspec.workspace = true
+hanzo-evm-config.workspace = true
+hanzo-evm-consensus-debug-client.workspace = true
+hanzo-evm-consensus.workspace = true
+hanzo-evm-db = { workspace = true, features = ["mdbx"] }
+hanzo-evm-db-api.workspace = true
+hanzo-evm-db-common.workspace = true
+hanzo-evm-downloaders.workspace = true
+hanzo-evm-engine-local.workspace = true
+hanzo-evm-engine-primitives.workspace = true
+hanzo-evm-engine-service.workspace = true
+hanzo-evm-engine-tree.workspace = true
+hanzo-evm-engine-util.workspace = true
+hanzo-evm-execution.workspace = true
+hanzo-evm-exex.workspace = true
+hanzo-evm-fs-util.workspace = true
+hanzo-evm-invalid-block-hooks.workspace = true
+hanzo-evm-network-api.workspace = true
+hanzo-evm-network-p2p.workspace = true
+hanzo-evm-network.workspace = true
+hanzo-evm-node-api.workspace = true
+hanzo-evm-node-core.workspace = true
+hanzo-evm-node-events.workspace = true
+hanzo-evm-node-metrics.workspace = true
+hanzo-evm-payload-builder.workspace = true
+hanzo-evm-primitives-traits.workspace = true
+hanzo-evm-provider.workspace = true
+hanzo-evm-prune.workspace = true
+hanzo-evm-rpc.workspace = true
+hanzo-evm-rpc-api.workspace = true
+hanzo-evm-rpc-builder.workspace = true
+hanzo-evm-rpc-engine-api.workspace = true
+hanzo-evm-rpc-eth-types.workspace = true
+hanzo-evm-rpc-layer.workspace = true
+hanzo-evm-stages.workspace = true
+hanzo-evm-static-file.workspace = true
+hanzo-evm-tasks.workspace = true
+hanzo-evm-tokio-util.workspace = true
+hanzo-evm-tracing.workspace = true
+hanzo-evm-transaction-pool.workspace = true
+hanzo-evm-trie-db = { workspace = true, features = ["metrics"] }
+hanzo-evm-basic-payload-builder.workspace = true
+hanzo-evm-node-ethstats.workspace = true
 
 ## ethereum
 alloy-consensus.workspace = true
@@ -88,43 +88,43 @@ tracing.workspace = true
 
 [dev-dependencies]
 tempfile.workspace = true
-reth-ethereum-engine-primitives.workspace = true
-reth-payload-builder = { workspace = true, features = ["test-utils"] }
-reth-node-ethereum.workspace = true
-reth-provider = { workspace = true, features = ["test-utils"] }
-reth-evm-ethereum = { workspace = true, features = ["test-utils"] }
+hanzo-evm-ethereum-engine-primitives.workspace = true
+hanzo-evm-payload-builder = { workspace = true, features = ["test-utils"] }
+hanzo-evm-node-ethereum.workspace = true
+hanzo-evm-provider = { workspace = true, features = ["test-utils"] }
+hanzo-evm-eth-execution = { workspace = true, features = ["test-utils"] }
 
 [features]
 default = []
 js-tracer = [
-    "reth-rpc/js-tracer",
-    "reth-node-ethereum/js-tracer",
-    "reth-rpc-eth-types/js-tracer",
+    "hanzo-evm-rpc/js-tracer",
+    "hanzo-evm-node-ethereum/js-tracer",
+    "hanzo-evm-rpc-eth-types/js-tracer",
 ]
 test-utils = [
-    "reth-db/test-utils",
-    "reth-chain-state/test-utils",
-    "reth-chainspec/test-utils",
-    "reth-consensus/test-utils",
-    "reth-engine-tree/test-utils",
-    "reth-evm/test-utils",
-    "reth-downloaders/test-utils",
-    "reth-network/test-utils",
-    "reth-network-p2p/test-utils",
-    "reth-payload-builder/test-utils",
-    "reth-stages/test-utils",
-    "reth-db-api/test-utils",
-    "reth-provider/test-utils",
-    "reth-transaction-pool/test-utils",
-    "reth-trie-db/test-utils",
-    "reth-evm-ethereum/test-utils",
-    "reth-node-ethereum/test-utils",
-    "reth-primitives-traits/test-utils",
+    "hanzo-evm-db/test-utils",
+    "hanzo-evm-chain-state/test-utils",
+    "hanzo-evm-chainspec/test-utils",
+    "hanzo-evm-consensus/test-utils",
+    "hanzo-evm-engine-tree/test-utils",
+    "hanzo-evm-execution/test-utils",
+    "hanzo-evm-downloaders/test-utils",
+    "hanzo-evm-network/test-utils",
+    "hanzo-evm-network-p2p/test-utils",
+    "hanzo-evm-payload-builder/test-utils",
+    "hanzo-evm-stages/test-utils",
+    "hanzo-evm-db-api/test-utils",
+    "hanzo-evm-provider/test-utils",
+    "hanzo-evm-transaction-pool/test-utils",
+    "hanzo-evm-trie-db/test-utils",
+    "hanzo-evm-eth-execution/test-utils",
+    "hanzo-evm-node-ethereum/test-utils",
+    "hanzo-evm-primitives-traits/test-utils",
 ]
 op = [
-    "reth-db/op",
-    "reth-db-api/op",
-    "reth-engine-local/op",
-    "reth-evm/op",
-    "reth-primitives-traits/op",
+    "hanzo-evm-db/op",
+    "hanzo-evm-db-api/op",
+    "hanzo-evm-engine-local/op",
+    "hanzo-evm-execution/op",
+    "hanzo-evm-primitives-traits/op",
 ]

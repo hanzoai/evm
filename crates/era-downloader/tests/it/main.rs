@@ -11,7 +11,7 @@ const fn main() {}
 use bytes::Bytes;
 use futures::Stream;
 use reqwest::IntoUrl;
-use reth_era_downloader::HttpClient;
+use hanzo_evm_era_downloader::HttpClient;
 
 pub(crate) const ERA1_NIMBUS: &[u8] = include_bytes!("../res/era1-nimbus.html");
 pub(crate) const ERA1_ETH_PORTAL: &[u8] = include_bytes!("../res/ethportal.html");

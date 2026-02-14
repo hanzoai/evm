@@ -1,5 +1,5 @@
 [package]
-name = "reth-network-types"
+name = "hanzo-evm-network-types"
 version.workspace = true
 edition.workspace = true
 rust-version.workspace = true
@@ -12,9 +12,9 @@ description = "Commonly used network types"
 workspace = true
 
 [dependencies]
-# reth
-reth-network-peers.workspace = true
-reth-net-banlist.workspace = true
+# evm
+hanzo-evm-network-peers.workspace = true
+hanzo-evm-net-banlist.workspace = true
 
 alloy-eip2124.workspace = true
 

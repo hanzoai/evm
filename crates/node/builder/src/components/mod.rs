@@ -22,12 +22,12 @@ pub use payload::*;
 pub use pool::*;
 
 use crate::{ConfigureEvm, FullNodeTypes};
-use reth_consensus::FullConsensus;
-use reth_network::types::NetPrimitivesFor;
-use reth_network_api::FullNetwork;
-use reth_node_api::{NodeTypes, PrimitivesTy, TxTy};
-use reth_payload_builder::PayloadBuilderHandle;
-use reth_transaction_pool::{PoolPooledTx, PoolTransaction, TransactionPool};
+use hanzo_evm_consensus::FullConsensus;
+use hanzo_evm_network::types::NetPrimitivesFor;
+use hanzo_evm_network_api::FullNetwork;
+use hanzo_evm_node_api::{NodeTypes, PrimitivesTy, TxTy};
+use hanzo_evm_payload_builder::PayloadBuilderHandle;
+use hanzo_evm_transaction_pool::{PoolPooledTx, PoolTransaction, TransactionPool};
 use std::fmt::Debug;
 
 /// An abstraction over the components of a node, consisting of:
@@ -52,7 +52,7 @@ pub trait NodeComponents<T: FullNodeTypes>: Clone + Debug + Unpin + Send + Sync 
     fn pool(&self) -> &Self::Pool;
 
     /// Returns the node's evm config.
-    fn evm_config(&self) -> &Self::Evm;
+    fn hanzo_evm_config(&self) -> &Self::Evm;
 
     /// Returns the node's consensus type.
     fn consensus(&self) -> &Self::Consensus;
@@ -73,7 +73,7 @@ pub struct Components<Node: FullNodeTypes, Network, Pool, EVM, Consensus> {
     /// The transaction pool of the node.
     pub transaction_pool: Pool,
     /// The node's EVM configuration, defining settings for the Ethereum Virtual Machine.
-    pub evm_config: EVM,
+    pub hanzo_evm_config: EVM,
     /// The consensus implementation of the node.
     pub consensus: Consensus,
     /// The network implementation of the node.
@@ -107,8 +107,8 @@ where
         &self.transaction_pool
     }
 
-    fn evm_config(&self) -> &Self::Evm {
-        &self.evm_config
+    fn hanzo_evm_config(&self) -> &Self::Evm {
+        &self.hanzo_evm_config
     }
 
     fn consensus(&self) -> &Self::Consensus {
@@ -135,7 +135,7 @@ where
     fn clone(&self) -> Self {
         Self {
             transaction_pool: self.transaction_pool.clone(),
-            evm_config: self.evm_config.clone(),
+            hanzo_evm_config: self.hanzo_evm_config.clone(),
             consensus: self.consensus.clone(),
             network: self.network.clone(),
             payload_builder_handle: self.payload_builder_handle.clone(),

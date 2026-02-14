@@ -3,17 +3,17 @@
 
 use alloy_primitives::BlockNumber;
 use criterion::{criterion_main, measurement::WallTime, BenchmarkGroup, Criterion};
-use reth_config::config::{EtlConfig, TransactionLookupConfig};
-use reth_db::{test_utils::TempDatabase, Database, DatabaseEnv};
-use reth_provider::{
+use hanzo_evm_config::config::{EtlConfig, TransactionLookupConfig};
+use hanzo_evm_db::{test_utils::TempDatabase, Database, DatabaseEnv};
+use hanzo_evm_provider::{
     test_utils::MockNodeTypesWithDB, DBProvider, DatabaseProvider, DatabaseProviderFactory,
 };
-use reth_stages::{
+use hanzo_evm_stages::{
     stages::{MerkleStage, SenderRecoveryStage, TransactionLookupStage},
     test_utils::TestStageDB,
     StageCheckpoint,
 };
-use reth_stages_api::{ExecInput, Stage, StageExt, UnwindInput};
+use hanzo_evm_stages_api::{ExecInput, Stage, StageExt, UnwindInput};
 use std::ops::RangeInclusive;
 use tokio::runtime::Runtime;
 

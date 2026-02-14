@@ -7,26 +7,26 @@ use crate::{
 use alloy_eips::BlockHashOrNumber;
 use alloy_primitives::B256;
 use clap::{Parser, Subcommand};
-use reth_chainspec::{ChainSpecProvider, EthChainSpec, EthereumHardforks};
-use reth_cli::chainspec::ChainSpecParser;
-use reth_config::Config;
-use reth_consensus::noop::NoopConsensus;
-use reth_db::DatabaseEnv;
-use reth_downloaders::{bodies::noop::NoopBodiesDownloader, headers::noop::NoopHeaderDownloader};
-use reth_evm::ConfigureEvm;
-use reth_exex::ExExManagerHandle;
-use reth_provider::{providers::ProviderNodeTypes, BlockNumReader, ProviderFactory};
-use reth_stages::{
+use hanzo_evm_chainspec::{ChainSpecProvider, EthChainSpec, EthereumHardforks};
+use hanzo_evm_cli::chainspec::ChainSpecParser;
+use hanzo_evm_config::Config;
+use hanzo_evm_consensus::noop::NoopConsensus;
+use hanzo_evm_db::DatabaseEnv;
+use hanzo_evm_downloaders::{bodies::noop::NoopBodiesDownloader, headers::noop::NoopHeaderDownloader};
+use hanzo_evm_execution::ConfigureEvm;
+use hanzo_evm_exex::ExExManagerHandle;
+use hanzo_evm_provider::{providers::ProviderNodeTypes, BlockNumReader, ProviderFactory};
+use hanzo_evm_stages::{
     sets::{DefaultStages, OfflineStages},
     stages::ExecutionStage,
     ExecutionStageThresholds, Pipeline, StageSet,
 };
-use reth_static_file::StaticFileProducer;
+use hanzo_evm_static_file::StaticFileProducer;
 use std::sync::Arc;
 use tokio::sync::watch;
 use tracing::info;
 
-/// `reth stage unwind` command
+/// `evm stage unwind` command
 #[derive(Debug, Parser)]
 pub struct Command<C: ChainSpecParser> {
     #[command(flatten)]
@@ -58,22 +58,22 @@ impl<C: ChainSpecParser<ChainSpec: EthChainSpec + EthereumHardforks>> Command<C>
         let components = components(provider_factory.chain_spec());
 
         if self.offline {
-            info!(target: "reth::cli", "Performing an unwind for offline-only data!");
+            info!(target: "evm::cli", "Performing an unwind for offline-only data!");
         }
 
         let highest_static_file_block = provider_factory.provider()?.last_block_number()?;
-        info!(target: "reth::cli", ?target, ?highest_static_file_block, prune_config=?config.prune,  "Executing a pipeline unwind.");
+        info!(target: "evm::cli", ?target, ?highest_static_file_block, prune_config=?config.prune,  "Executing a pipeline unwind.");
 
         // This will build an offline-only pipeline if the `offline` flag is enabled
         let mut pipeline =
-            self.build_pipeline(config, provider_factory, components.evm_config().clone())?;
+            self.build_pipeline(config, provider_factory, components.hanzo_evm_config().clone())?;
 
         // Move all applicable data from database to static files.
         pipeline.move_to_static_files()?;
 
         pipeline.unwind(target, None)?;
 
-        info!(target: "reth::cli", ?target, "Unwound blocks");
+        info!(target: "evm::cli", ?target, "Unwound blocks");
 
         Ok(())
     }
@@ -82,7 +82,7 @@ impl<C: ChainSpecParser<ChainSpec: EthChainSpec + EthereumHardforks>> Command<C>
         self,
         config: Config,
         provider_factory: ProviderFactory<N>,
-        evm_config: impl ConfigureEvm<Primitives = N::Primitives> + 'static,
+        hanzo_evm_config: impl ConfigureEvm<Primitives = N::Primitives> + 'static,
     ) -> Result<Pipeline<N>, eyre::Error> {
         let stage_conf = &config.stages;
         let prune_modes = config.prune.segments.clone();
@@ -92,13 +92,13 @@ impl<C: ChainSpecParser<ChainSpec: EthChainSpec + EthereumHardforks>> Command<C>
         let builder = if self.offline {
             Pipeline::<N>::builder().add_stages(
                 OfflineStages::new(
-                    evm_config,
+                    hanzo_evm_config,
                     NoopConsensus::arc(),
                     config.stages,
                     prune_modes.clone(),
                 )
                 .builder()
-                .disable(reth_stages::StageId::SenderRecovery),
+                .disable(hanzo_evm_stages::StageId::SenderRecovery),
             )
         } else {
             Pipeline::<N>::builder().with_tip_sender(tip_tx).add_stages(
@@ -108,13 +108,13 @@ impl<C: ChainSpecParser<ChainSpec: EthChainSpec + EthereumHardforks>> Command<C>
                     Arc::new(NoopConsensus::default()),
                     NoopHeaderDownloader::default(),
                     NoopBodiesDownloader::default(),
-                    evm_config.clone(),
+                    hanzo_evm_config.clone(),
                     stage_conf.clone(),
                     prune_modes.clone(),
                     None,
                 )
                 .set(ExecutionStage::new(
-                    evm_config,
+                    hanzo_evm_config,
                     Arc::new(NoopConsensus::default()),
                     ExecutionStageThresholds {
                         max_blocks: None,
@@ -143,7 +143,7 @@ impl<C: ChainSpecParser> Command<C> {
     }
 }
 
-/// `reth stage unwind` subcommand
+/// `evm stage unwind` subcommand
 #[derive(Subcommand, Debug, Eq, PartialEq)]
 enum Subcommands {
     /// Unwinds the database from the latest block, until the given block number or hash has been
@@ -185,13 +185,13 @@ impl Subcommands {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use reth_chainspec::SEPOLIA;
-    use reth_ethereum_cli::chainspec::EthereumChainSpecParser;
+    use hanzo_evm_chainspec::SEPOLIA;
+    use hanzo_evm_ethereum_cli::chainspec::EthereumChainSpecParser;
 
     #[test]
     fn parse_unwind() {
         let cmd = Command::<EthereumChainSpecParser>::parse_from([
-            "reth",
+            "evm",
             "--datadir",
             "dir",
             "to-block",
@@ -200,7 +200,7 @@ mod tests {
         assert_eq!(cmd.command, Subcommands::ToBlock { target: BlockHashOrNumber::Number(100) });
 
         let cmd = Command::<EthereumChainSpecParser>::parse_from([
-            "reth",
+            "evm",
             "--datadir",
             "dir",
             "num-blocks",
@@ -212,7 +212,7 @@ mod tests {
     #[test]
     fn parse_unwind_chain() {
         let cmd = Command::<EthereumChainSpecParser>::parse_from([
-            "reth", "--chain", "sepolia", "to-block", "100",
+            "evm", "--chain", "sepolia", "to-block", "100",
         ]);
         assert_eq!(cmd.command, Subcommands::ToBlock { target: BlockHashOrNumber::Number(100) });
         assert_eq!(cmd.env.chain.chain_id(), SEPOLIA.chain_id());

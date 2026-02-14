@@ -1,8 +1,8 @@
 //! Executor metrics.
 use alloy_consensus::BlockHeader;
 use metrics::{Counter, Gauge, Histogram};
-use reth_metrics::Metrics;
-use reth_primitives_traits::{Block, RecoveredBlock};
+use hanzo_evm_metrics::Metrics;
+use hanzo_evm_primitives_traits::{Block, RecoveredBlock};
 use std::time::Instant;
 
 /// Executor metrics.
@@ -78,8 +78,8 @@ mod tests {
     use super::*;
     use alloy_consensus::Header;
     use alloy_primitives::B256;
-    use reth_ethereum_primitives::Block;
-    use reth_primitives_traits::Block as BlockTrait;
+    use hanzo_evm_ethereum_primitives::Block;
+    use hanzo_evm_primitives_traits::Block as BlockTrait;
 
     fn create_test_block_with_gas(gas_used: u64) -> RecoveredBlock<Block> {
         let header = Header { gas_used, ..Default::default() };

@@ -2,12 +2,12 @@ use alloy_primitives::Sealable;
 use futures::{FutureExt, Stream};
 use futures_util::StreamExt;
 use pin_project::pin_project;
-use reth_network_p2p::headers::{
+use hanzo_evm_network_p2p::headers::{
     downloader::{HeaderDownloader, SyncTarget},
     error::HeadersDownloaderResult,
 };
-use reth_primitives_traits::SealedHeader;
-use reth_tasks::{TaskSpawner, TokioTaskExecutor};
+use hanzo_evm_primitives_traits::SealedHeader;
+use hanzo_evm_tasks::{TaskSpawner, TokioTaskExecutor};
 use std::{
     fmt::Debug,
     future::Future,
@@ -44,11 +44,11 @@ impl<H: Sealable + Send + Sync + Unpin + 'static> TaskDownloader<H> {
     ///
     /// ```
     /// # use std::sync::Arc;
-    /// # use reth_downloaders::headers::reverse_headers::ReverseHeadersDownloader;
-    /// # use reth_downloaders::headers::task::TaskDownloader;
-    /// # use reth_consensus::HeaderValidator;
-    /// # use reth_network_p2p::headers::client::HeadersClient;
-    /// # use reth_primitives_traits::BlockHeader;
+    /// # use hanzo_evm_downloaders::headers::reverse_headers::ReverseHeadersDownloader;
+    /// # use hanzo_evm_downloaders::headers::task::TaskDownloader;
+    /// # use hanzo_evm_consensus::HeaderValidator;
+    /// # use hanzo_evm_network_p2p::headers::client::HeadersClient;
+    /// # use hanzo_evm_primitives_traits::BlockHeader;
     /// # fn t<H: HeadersClient<Header: BlockHeader> + 'static>(consensus:Arc<dyn HeaderValidator<H::Header>>, client: Arc<H>) {
     ///    let downloader = ReverseHeadersDownloader::<H>::builder().build(
     ///        client,
@@ -190,13 +190,13 @@ mod tests {
     use crate::headers::{
         reverse_headers::ReverseHeadersDownloaderBuilder, test_utils::child_header,
     };
-    use reth_consensus::test_utils::TestConsensus;
-    use reth_network_p2p::test_utils::TestHeadersClient;
+    use hanzo_evm_consensus::test_utils::TestConsensus;
+    use hanzo_evm_network_p2p::test_utils::TestHeadersClient;
     use std::sync::Arc;
 
     #[tokio::test(flavor = "multi_thread")]
     async fn download_one_by_one_on_task() {
-        reth_tracing::init_test_tracing();
+        hanzo_evm_tracing::init_test_tracing();
 
         let p3 = SealedHeader::default();
         let p2 = child_header(&p3);

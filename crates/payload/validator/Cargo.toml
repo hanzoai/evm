@@ -1,5 +1,5 @@
 [package]
-name = "reth-payload-validator"
+name = "hanzo-evm-payload-validator"
 version.workspace = true
 edition.workspace = true
 rust-version.workspace = true
@@ -12,8 +12,8 @@ description = "Payload validation support"
 workspace = true
 
 [dependencies]
-# reth
-reth-primitives-traits.workspace = true
+# evm
+hanzo-evm-primitives-traits.workspace = true
 
 # alloy
 alloy-rpc-types-engine.workspace = true
@@ -24,5 +24,5 @@ default = ["std"]
 std = [
     "alloy-consensus/std",
     "alloy-rpc-types-engine/std",
-    "reth-primitives-traits/std",
+    "hanzo-evm-primitives-traits/std",
 ]

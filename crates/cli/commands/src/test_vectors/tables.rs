@@ -8,12 +8,12 @@ use proptest::{
     test_runner::{TestRng, TestRunner},
 };
 use proptest_arbitrary_interop::arb;
-use reth_db_api::{
+use hanzo_evm_db_api::{
     table::{DupSort, Table, TableRow},
     tables,
 };
-use reth_ethereum_primitives::TransactionSigned;
-use reth_fs_util as fs;
+use hanzo_evm_ethereum_primitives::TransactionSigned;
+use hanzo_evm_fs_util as fs;
 use std::collections::HashSet;
 use tracing::error;
 
@@ -54,13 +54,13 @@ pub fn generate_vectors(mut tables: Vec<String>) -> Result<()> {
                 match table.as_str() {
                     $(
                         stringify!($table_type) => {
-                            tracing::info!(target: "reth::cli", "Generating test vectors for {} <{}>.", stringify!($table_or_dup), tables::$table_type$(::<$($generic),+>)?::NAME);
+                            tracing::info!(target: "evm::cli", "Generating test vectors for {} <{}>.", stringify!($table_or_dup), tables::$table_type$(::<$($generic),+>)?::NAME);
 
                             generate_vector!($table_type$(<$($generic),+>)?, $per_table, $table_or_dup);
                         },
                     )*
                     _ => {
-                        error!(target: "reth::cli", "Unknown table: {}", table);
+                        error!(target: "evm::cli", "Unknown table: {}", table);
                     }
                 }
             }

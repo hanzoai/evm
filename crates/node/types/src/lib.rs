@@ -1,23 +1,23 @@
-//! Standalone crate for Reth configuration traits and builder types.
+//! Standalone crate for Hanzo EVM configuration traits and builder types.
 
 #![doc(
-    html_logo_url = "https://raw.githubusercontent.com/paradigmxyz/reth/main/assets/reth-docs.png",
+    html_logo_url = "https://raw.githubusercontent.com/hanzoai/evm/main/assets/evm-docs.png",
     html_favicon_url = "https://avatars0.githubusercontent.com/u/97369466?s=256",
-    issue_tracker_base_url = "https://github.com/paradigmxyz/reth/issues/"
+    issue_tracker_base_url = "https://github.com/hanzoai/evm/issues/"
 )]
 #![cfg_attr(not(test), warn(unused_crate_dependencies))]
 #![cfg_attr(docsrs, feature(doc_cfg))]
 #![cfg_attr(not(feature = "std"), no_std)]
 
 use core::{fmt::Debug, marker::PhantomData};
-pub use reth_primitives_traits::{
+pub use hanzo_evm_primitives_traits::{
     Block, BlockBody, FullBlock, FullReceipt, FullSignedTx, NodePrimitives,
 };
 
-use reth_chainspec::EthChainSpec;
-use reth_db_api::{database_metrics::DatabaseMetrics, Database};
-use reth_engine_primitives::EngineTypes;
-use reth_payload_primitives::{BuiltPayload, PayloadTypes};
+use hanzo_evm_chainspec::EthChainSpec;
+use hanzo_evm_db_api::{database_metrics::DatabaseMetrics, Database};
+use hanzo_evm_engine_primitives::EngineTypes;
+use hanzo_evm_payload_primitives::{BuiltPayload, PayloadTypes};
 
 /// The type that configures the essential types of an Ethereum-like node.
 ///

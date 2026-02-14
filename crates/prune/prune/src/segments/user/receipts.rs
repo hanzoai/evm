@@ -2,13 +2,13 @@ use crate::{
     segments::{PruneInput, Segment},
     PrunerError,
 };
-use reth_db_api::{table::Value, transaction::DbTxMut};
-use reth_primitives_traits::NodePrimitives;
-use reth_provider::{
+use hanzo_evm_db_api::{table::Value, transaction::DbTxMut};
+use hanzo_evm_primitives_traits::NodePrimitives;
+use hanzo_evm_provider::{
     errors::provider::ProviderResult, BlockReader, DBProvider, NodePrimitivesProvider,
     PruneCheckpointWriter, StaticFileProviderFactory, StorageSettingsCache, TransactionsProvider,
 };
-use reth_prune_types::{PruneCheckpoint, PruneMode, PrunePurpose, PruneSegment, SegmentOutput};
+use hanzo_evm_prune_types::{PruneCheckpoint, PruneMode, PrunePurpose, PruneSegment, SegmentOutput};
 use tracing::instrument;
 
 #[derive(Debug)]

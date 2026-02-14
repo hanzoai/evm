@@ -1,7 +1,7 @@
 use crate::{BlockNumReader, DatabaseProviderFactory, HeaderProvider};
 use alloy_primitives::B256;
-pub use reth_storage_errors::provider::ConsistentViewError;
-use reth_storage_errors::provider::ProviderResult;
+pub use hanzo_evm_storage_errors::provider::ConsistentViewError;
+use hanzo_evm_storage_errors::provider::ProviderResult;
 
 /// A consistent view over state in the database.
 ///
@@ -79,16 +79,16 @@ where
 
 #[cfg(test)]
 mod tests {
-    use reth_errors::ProviderError;
+    use hanzo_evm_errors::ProviderError;
     use std::str::FromStr;
 
     use super::*;
     use crate::{test_utils::create_test_provider_factory, BlockWriter};
     use alloy_primitives::Bytes;
     use assert_matches::assert_matches;
-    use reth_chainspec::{ChainSpecProvider, EthChainSpec};
-    use reth_ethereum_primitives::{Block, BlockBody};
-    use reth_primitives_traits::{block::TestBlock, RecoveredBlock, SealedBlock};
+    use hanzo_evm_chainspec::{ChainSpecProvider, EthChainSpec};
+    use hanzo_evm_ethereum_primitives::{Block, BlockBody};
+    use hanzo_evm_primitives_traits::{block::TestBlock, RecoveredBlock, SealedBlock};
 
     #[test]
     fn test_consistent_view_extend() {

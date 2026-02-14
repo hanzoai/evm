@@ -1,4 +1,4 @@
-use reth_stages_api::StageId;
+use hanzo_evm_stages_api::StageId;
 
 #[cfg(test)]
 mod macros;

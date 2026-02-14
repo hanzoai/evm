@@ -1,31 +1,31 @@
 use alloy_consensus::BlockHeader;
 use alloy_primitives::{BlockHash, BlockNumber, Bytes, B256};
 use futures_util::StreamExt;
-use reth_config::config::EtlConfig;
-use reth_db_api::{
+use hanzo_evm_config::config::EtlConfig;
+use hanzo_evm_db_api::{
     cursor::{DbCursorRO, DbCursorRW},
     table::Value,
     tables,
     transaction::{DbTx, DbTxMut},
     DbTxUnwindExt, RawKey, RawTable, RawValue,
 };
-use reth_etl::Collector;
-use reth_network_p2p::headers::{
+use hanzo_evm_etl::Collector;
+use hanzo_evm_network_p2p::headers::{
     downloader::{HeaderDownloader, HeaderSyncGap, SyncTarget},
     error::HeadersDownloaderError,
 };
-use reth_primitives_traits::{
+use hanzo_evm_primitives_traits::{
     serde_bincode_compat, FullBlockHeader, HeaderTy, NodePrimitives, SealedHeader,
 };
-use reth_provider::{
+use hanzo_evm_provider::{
     providers::StaticFileWriter, BlockHashReader, DBProvider, HeaderSyncGapProvider,
     StaticFileProviderFactory,
 };
-use reth_stages_api::{
+use hanzo_evm_stages_api::{
     CheckpointBlockRange, EntitiesCheckpoint, ExecInput, ExecOutput, HeadersCheckpoint, Stage,
     StageCheckpoint, StageError, StageId, UnwindInput, UnwindOutput,
 };
-use reth_static_file_types::StaticFileSegment;
+use hanzo_evm_static_file_types::StaticFileSegment;
 use std::task::{ready, Context, Poll};
 
 use tokio::sync::watch;
@@ -37,7 +37,7 @@ use tracing::*;
 /// the perceived highest block on the network.
 ///
 /// The headers are processed and data is inserted into static files, as well as into the
-/// [`HeaderNumbers`][reth_db_api::tables::HeaderNumbers] table.
+/// [`HeaderNumbers`][hanzo_evm_db_api::tables::HeaderNumbers] table.
 ///
 /// NOTE: This stage downloads headers in reverse and pushes them to the ETL [`Collector`]. It then
 /// proceeds to push them sequentially to static files. The stage checkpoint is not updated until
@@ -400,21 +400,21 @@ mod tests {
     };
     use alloy_primitives::B256;
     use assert_matches::assert_matches;
-    use reth_provider::{DatabaseProviderFactory, ProviderFactory, StaticFileProviderFactory};
-    use reth_stages_api::StageUnitCheckpoint;
-    use reth_testing_utils::generators::{self, random_header, random_header_range};
+    use hanzo_evm_provider::{DatabaseProviderFactory, ProviderFactory, StaticFileProviderFactory};
+    use hanzo_evm_stages_api::StageUnitCheckpoint;
+    use hanzo_evm_testing_utils::generators::{self, random_header, random_header_range};
     use std::sync::Arc;
     use test_runner::HeadersTestRunner;
 
     mod test_runner {
         use super::*;
         use crate::test_utils::{TestRunnerError, TestStageDB};
-        use reth_consensus::test_utils::TestConsensus;
-        use reth_downloaders::headers::reverse_headers::{
+        use hanzo_evm_consensus::test_utils::TestConsensus;
+        use hanzo_evm_downloaders::headers::reverse_headers::{
             ReverseHeadersDownloader, ReverseHeadersDownloaderBuilder,
         };
-        use reth_network_p2p::test_utils::{TestHeaderDownloader, TestHeadersClient};
-        use reth_provider::{test_utils::MockNodeTypesWithDB, BlockNumReader, HeaderProvider};
+        use hanzo_evm_network_p2p::test_utils::{TestHeaderDownloader, TestHeadersClient};
+        use hanzo_evm_provider::{test_utils::MockNodeTypesWithDB, BlockNumReader, HeaderProvider};
         use tokio::sync::watch;
 
         pub(crate) struct HeadersTestRunner<D: HeaderDownloader> {

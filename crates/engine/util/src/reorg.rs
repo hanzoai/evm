@@ -4,22 +4,22 @@ use alloy_consensus::{BlockHeader, Transaction};
 use alloy_rpc_types_engine::{ForkchoiceState, PayloadStatus};
 use futures::{stream::FuturesUnordered, Stream, StreamExt, TryFutureExt};
 use itertools::Either;
-use reth_chainspec::{ChainSpecProvider, EthChainSpec};
-use reth_engine_primitives::{
+use hanzo_evm_chainspec::{ChainSpecProvider, EthChainSpec};
+use hanzo_evm_engine_primitives::{
     BeaconEngineMessage, BeaconOnNewPayloadError, ExecutionPayload as _, OnForkChoiceUpdated,
 };
-use reth_engine_tree::tree::EngineValidator;
-use reth_errors::{BlockExecutionError, BlockValidationError, RethError, RethResult};
-use reth_evm::{
+use hanzo_evm_engine_tree::tree::EngineValidator;
+use hanzo_evm_errors::{BlockExecutionError, BlockValidationError, EvmError, EvmResult};
+use hanzo_evm_execution::{
     execute::{BlockBuilder, BlockBuilderOutcome},
     ConfigureEvm,
 };
-use reth_payload_primitives::{BuiltPayload, EngineApiMessageVersion, PayloadTypes};
-use reth_primitives_traits::{
+use hanzo_evm_payload_primitives::{BuiltPayload, EngineApiMessageVersion, PayloadTypes};
+use hanzo_evm_primitives_traits::{
     block::Block as _, BlockBody as _, BlockTy, HeaderTy, SealedBlock, SignedTransaction,
 };
-use reth_revm::{database::StateProviderDatabase, db::State};
-use reth_storage_api::{errors::ProviderError, BlockReader, StateProviderFactory};
+use hanzo_evm_revm::{database::StateProviderDatabase, db::State};
+use hanzo_evm_storage_api::{errors::ProviderError, BlockReader, StateProviderFactory};
 use std::{
     collections::VecDeque,
     future::Future,
@@ -36,7 +36,7 @@ enum EngineReorgState<T: PayloadTypes> {
 }
 
 type EngineReorgResponse = Result<
-    Either<Result<PayloadStatus, BeaconOnNewPayloadError>, RethResult<OnForkChoiceUpdated>>,
+    Either<Result<PayloadStatus, BeaconOnNewPayloadError>, EvmResult<OnForkChoiceUpdated>>,
     oneshot::error::RecvError,
 >;
 
@@ -52,7 +52,7 @@ pub struct EngineReorg<S, T: PayloadTypes, Provider, Evm, Validator> {
     /// Database provider.
     provider: Provider,
     /// Evm configuration.
-    evm_config: Evm,
+    hanzo_evm_config: Evm,
     /// Payload validator.
     payload_validator: Validator,
     /// The frequency of reorgs.
@@ -75,7 +75,7 @@ impl<S, T: PayloadTypes, Provider, Evm, Validator> EngineReorg<S, T, Provider, E
     pub fn new(
         stream: S,
         provider: Provider,
-        evm_config: Evm,
+        hanzo_evm_config: Evm,
         payload_validator: Validator,
         frequency: usize,
         depth: usize,
@@ -83,7 +83,7 @@ impl<S, T: PayloadTypes, Provider, Evm, Validator> EngineReorg<S, T, Provider, E
         Self {
             stream,
             provider,
-            evm_config,
+            hanzo_evm_config,
             payload_validator,
             frequency,
             depth,
@@ -160,7 +160,7 @@ where
                     // so that the stream could yield the control back.
                     let reorg_block = match create_reorg_head(
                         this.provider,
-                        this.evm_config,
+                        this.hanzo_evm_config,
                         this.payload_validator,
                         *this.depth,
                         payload.clone(),
@@ -238,11 +238,11 @@ where
 
 fn create_reorg_head<Provider, Evm, T, Validator>(
     provider: &Provider,
-    evm_config: &Evm,
+    hanzo_evm_config: &Evm,
     payload_validator: &Validator,
     mut depth: usize,
     next_payload: T::ExecutionData,
-) -> RethResult<SealedBlock<BlockTy<Evm::Primitives>>>
+) -> EvmResult<SealedBlock<BlockTy<Evm::Primitives>>>
 where
     Provider: BlockReader<Header = HeaderTy<Evm::Primitives>, Block = BlockTy<Evm::Primitives>>
         + StateProviderFactory
@@ -253,7 +253,7 @@ where
 {
     // Ensure next payload is valid.
     let next_block =
-        payload_validator.convert_payload_to_block(next_payload).map_err(RethError::msg)?;
+        payload_validator.convert_payload_to_block(next_payload).map_err(EvmError::msg)?;
 
     // Fetch reorg target block depending on its depth and its parent.
     let mut previous_hash = next_block.parent_hash();
@@ -285,9 +285,9 @@ where
         .with_bundle_update()
         .build();
 
-    let ctx = evm_config.context_for_block(&reorg_target).map_err(RethError::other)?;
-    let evm = evm_config.evm_for_block(&mut state, &reorg_target).map_err(RethError::other)?;
-    let mut builder = evm_config.create_block_builder(evm, &reorg_target_parent, ctx);
+    let ctx = hanzo_evm_config.context_for_block(&reorg_target).map_err(EvmError::other)?;
+    let evm = hanzo_evm_config.evm_for_block(&mut state, &reorg_target).map_err(EvmError::other)?;
+    let mut builder = hanzo_evm_config.create_block_builder(evm, &reorg_target_parent, ctx);
 
     builder.apply_pre_execution_changes()?;
 
@@ -310,7 +310,7 @@ where
                 continue
             }
             // Treat error as fatal
-            Err(error) => return Err(RethError::Execution(error)),
+            Err(error) => return Err(EvmError::Execution(error)),
         };
 
         cumulative_gas_used += gas_used;

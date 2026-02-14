@@ -1,12 +1,12 @@
 use alloy_primitives::{Bytes, B256};
 use futures::StreamExt;
-use reth_network::{test_utils::Testnet, NetworkEventListenerProvider, Peers};
-use reth_network_api::{
+use hanzo_evm_network::{test_utils::Testnet, NetworkEventListenerProvider, Peers};
+use hanzo_evm_network_api::{
     events::{NetworkEvent, PeerEvent},
     test_utils::PeersHandleProvider,
 };
-use reth_provider::test_utils::MockEthProvider;
-use reth_ress_protocol::{
+use hanzo_evm_provider::test_utils::MockEthProvider;
+use hanzo_evm_ress_protocol::{
     test_utils::{MockRessProtocolProvider, NoopRessProtocolProvider},
     GetHeaders, NodeType, ProtocolEvent, ProtocolState, RessPeerRequest, RessProtocolHandler,
 };
@@ -15,7 +15,7 @@ use tokio::sync::{mpsc, oneshot};
 
 #[tokio::test(flavor = "multi_thread")]
 async fn disconnect_on_stateful_pair() {
-    reth_tracing::init_test_tracing();
+    hanzo_evm_tracing::init_test_tracing();
     let mut net = Testnet::create_with(2, MockEthProvider::default()).await;
     let protocol_provider = NoopRessProtocolProvider;
 
@@ -83,7 +83,7 @@ async fn disconnect_on_stateful_pair() {
 
 #[tokio::test(flavor = "multi_thread")]
 async fn message_exchange() {
-    reth_tracing::init_test_tracing();
+    hanzo_evm_tracing::init_test_tracing();
     let mut net = Testnet::create_with(2, MockEthProvider::default()).await;
     let protocol_provider = NoopRessProtocolProvider;
 
@@ -160,7 +160,7 @@ async fn message_exchange() {
 
 #[tokio::test(flavor = "multi_thread")]
 async fn witness_fetching_does_not_block() {
-    reth_tracing::init_test_tracing();
+    hanzo_evm_tracing::init_test_tracing();
     let mut net = Testnet::create_with(2, MockEthProvider::default()).await;
 
     let witness_delay = Duration::from_millis(100);
@@ -232,7 +232,7 @@ async fn witness_fetching_does_not_block() {
 
 #[tokio::test(flavor = "multi_thread")]
 async fn max_active_connections() {
-    reth_tracing::init_test_tracing();
+    hanzo_evm_tracing::init_test_tracing();
     let mut net = Testnet::create_with(3, MockEthProvider::default()).await;
     let protocol_provider = NoopRessProtocolProvider;
 

@@ -6,26 +6,26 @@ use alloy_consensus::{transaction::TxHashRef, BlockHeader};
 use alloy_primitives::B256;
 use alloy_rpc_types_eth::{BlockId, TransactionInfo};
 use futures::Future;
-use reth_chainspec::ChainSpecProvider;
-use reth_errors::ProviderError;
-use reth_evm::{
+use hanzo_evm_chainspec::ChainSpecProvider;
+use hanzo_evm_errors::ProviderError;
+use hanzo_evm_execution::{
     evm::EvmFactoryExt, system_calls::SystemCaller, tracing::TracingCtx, ConfigureEvm, Database,
     Evm, EvmEnvFor, EvmFor, HaltReasonFor, InspectorFor, TxEnvFor,
 };
-use reth_primitives_traits::{BlockBody, Recovered, RecoveredBlock};
-use reth_revm::{
+use hanzo_evm_primitives_traits::{BlockBody, Recovered, RecoveredBlock};
+use hanzo_evm_revm::{
     database::StateProviderDatabase,
     db::{bal::EvmDatabaseError, State},
 };
-use reth_rpc_eth_types::{cache::db::StateCacheDb, EthApiError};
-use reth_storage_api::{ProviderBlock, ProviderTx};
+use hanzo_evm_rpc_eth_types::{cache::db::StateCacheDb, EthApiError};
+use hanzo_evm_storage_api::{ProviderBlock, ProviderTx};
 use revm::{context::Block, context_interface::result::ResultAndState, DatabaseCommit};
 use revm_inspectors::tracing::{TracingInspector, TracingInspectorConfig};
 use std::sync::Arc;
 
 /// Executes CPU heavy tasks.
 pub trait Trace: LoadState<Error: FromEvmError<Self::Evm>> + Call {
-    /// Executes the [`TxEnvFor`] with [`reth_evm::EvmEnv`] against the given [Database] without
+    /// Executes the [`TxEnvFor`] with [`hanzo_evm_execution::EvmEnv`] against the given [Database] without
     /// committing state changes.
     fn inspect<DB, I>(
         &self,
@@ -38,7 +38,7 @@ pub trait Trace: LoadState<Error: FromEvmError<Self::Evm>> + Call {
         DB: Database<Error = EvmDatabaseError<ProviderError>>,
         I: InspectorFor<Self::Evm, DB>,
     {
-        let mut evm = self.evm_config().evm_with_env_and_inspector(db, evm_env, inspector);
+        let mut evm = self.hanzo_evm_config().evm_with_env_and_inspector(db, evm_env, inspector);
         evm.transact(tx_env).map_err(Self::Error::from_evm_err)
     }
 
@@ -46,7 +46,7 @@ pub trait Trace: LoadState<Error: FromEvmError<Self::Evm>> + Call {
     /// config.
     ///
     /// The callback is then called with the [`TracingInspector`] and the [`ResultAndState`] after
-    /// the configured [`reth_evm::EvmEnv`] was inspected.
+    /// the configured [`hanzo_evm_execution::EvmEnv`] was inspected.
     ///
     /// Caution: this is blocking
     fn trace_at<F, R>(
@@ -80,7 +80,7 @@ pub trait Trace: LoadState<Error: FromEvmError<Self::Evm>> + Call {
     /// config.
     ///
     /// The callback is then called with the [`TracingInspector`] and the [`ResultAndState`] after
-    /// the configured [`reth_evm::EvmEnv`] was inspected.
+    /// the configured [`hanzo_evm_execution::EvmEnv`] was inspected.
     fn spawn_trace_at_with_state<F, R>(
         &self,
         evm_env: EvmEnvFor<Self::Evm>,
@@ -114,7 +114,7 @@ pub trait Trace: LoadState<Error: FromEvmError<Self::Evm>> + Call {
     /// and the database that points to the beginning of the transaction.
     ///
     /// Note: Implementers should use a threadpool where blocking is allowed, such as
-    /// [`BlockingTaskPool`](reth_tasks::pool::BlockingTaskPool).
+    /// [`BlockingTaskPool`](hanzo_evm_tasks::pool::BlockingTaskPool).
     fn spawn_trace_transaction_in_block<F, R>(
         &self,
         hash: B256,
@@ -144,7 +144,7 @@ pub trait Trace: LoadState<Error: FromEvmError<Self::Evm>> + Call {
     /// and the database that points to the beginning of the transaction.
     ///
     /// Note: Implementers should use a threadpool where blocking is allowed, such as
-    /// [`BlockingTaskPool`](reth_tasks::pool::BlockingTaskPool).
+    /// [`BlockingTaskPool`](hanzo_evm_tasks::pool::BlockingTaskPool).
     fn spawn_trace_transaction_in_block_with_inspector<Insp, F, R>(
         &self,
         hash: B256,
@@ -185,7 +185,7 @@ pub trait Trace: LoadState<Error: FromEvmError<Self::Evm>> + Call {
                 // replay all transactions prior to the targeted transaction
                 this.replay_transactions_until(&mut db, evm_env.clone(), block_txs, *tx.tx_hash())?;
 
-                let tx_env = this.evm_config().tx_env(tx);
+                let tx_env = this.hanzo_evm_config().tx_env(tx);
                 let res = this.inspect(&mut db, evm_env, tx_env, &mut inspector)?;
                 f(tx_info, inspector, res, db)
             })
@@ -306,7 +306,7 @@ pub trait Trace: LoadState<Error: FromEvmError<Self::Evm>> + Call {
                 let mut idx = 0;
 
                 let results = this
-                    .evm_config()
+                    .hanzo_evm_config()
                     .evm_factory()
                     .create_tracer(&mut db, evm_env, inspector_setup())
                     .try_trace_many(block.transactions_recovered().take(max_transactions), |ctx| {
@@ -423,7 +423,7 @@ pub trait Trace: LoadState<Error: FromEvmError<Self::Evm>> + Call {
         let mut system_caller = SystemCaller::new(self.provider().chain_spec());
 
         // apply relevant system calls
-        let mut evm = self.evm_config().evm_with_env(db, evm_env.clone());
+        let mut evm = self.hanzo_evm_config().evm_with_env(db, evm_env.clone());
         system_caller.apply_pre_execution_changes(block.header(), &mut evm).map_err(|err| {
             EthApiError::EvmCustom(format!("failed to apply 4788 system call {err}"))
         })?;

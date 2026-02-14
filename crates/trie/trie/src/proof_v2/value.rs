@@ -5,8 +5,8 @@ use crate::{
 };
 use alloy_primitives::{B256, U256};
 use alloy_rlp::Encodable;
-use reth_execution_errors::trie::StateProofError;
-use reth_primitives_traits::Account;
+use hanzo_evm_execution_errors::trie::StateProofError;
+use hanzo_evm_primitives_traits::Account;
 use std::rc::Rc;
 
 /// A trait for deferred RLP-encoding of leaf values.

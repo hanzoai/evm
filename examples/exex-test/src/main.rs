@@ -1,10 +1,10 @@
 use futures_util::StreamExt;
-use reth_e2e_test_utils::testsuite::{
+use hanzo_evm_e2e_test_utils::testsuite::{
     actions::ProduceBlocks,
     setup::{NetworkSetup, Setup},
     TestBuilder,
 };
-use reth_ethereum::{
+use hanzo_evm_ethereum::{
     chainspec::{ChainSpecBuilder, MAINNET},
     exex::{ExExContext, ExExEvent},
     node::{

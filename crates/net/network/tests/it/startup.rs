@@ -3,14 +3,14 @@ use std::{
     net::{IpAddr, Ipv4Addr, SocketAddr, SocketAddrV4},
 };
 
-use reth_chainspec::MAINNET;
-use reth_discv4::{Discv4Config, NatResolver, DEFAULT_DISCOVERY_ADDR, DEFAULT_DISCOVERY_PORT};
-use reth_network::{
+use hanzo_evm_chainspec::MAINNET;
+use hanzo_evm_discv4::{Discv4Config, NatResolver, DEFAULT_DISCOVERY_ADDR, DEFAULT_DISCOVERY_PORT};
+use hanzo_evm_network::{
     error::{NetworkError, ServiceKind},
     Discovery, NetworkConfigBuilder, NetworkManager,
 };
-use reth_network_api::{NetworkInfo, PeersInfo};
-use reth_storage_api::noop::NoopProvider;
+use hanzo_evm_network_api::{NetworkInfo, PeersInfo};
+use hanzo_evm_storage_api::noop::NoopProvider;
 use secp256k1::SecretKey;
 use tokio::net::TcpListener;
 
@@ -19,7 +19,7 @@ fn is_addr_in_use_kind(err: &NetworkError, kind: ServiceKind) -> bool {
         NetworkError::AddressAlreadyInUse { kind: k, error } => {
             *k == kind && error.kind() == io::ErrorKind::AddrInUse
         }
-        NetworkError::Discv5Error(reth_discv5::Error::Discv5Error(discv5::Error::Io(err))) => {
+        NetworkError::Discv5Error(hanzo_evm_discv5::Error::Discv5Error(discv5::Error::Io(err))) => {
             err.kind() == io::ErrorKind::AddrInUse
         }
         _ => false,
@@ -77,7 +77,7 @@ async fn test_discv5_and_discv4_same_socket_fails() {
     let config = NetworkConfigBuilder::eth(secret_key)
         .listener_port(DEFAULT_DISCOVERY_PORT)
         .discovery_v5(
-            reth_discv5::Config::builder((DEFAULT_DISCOVERY_ADDR, DEFAULT_DISCOVERY_PORT).into())
+            hanzo_evm_discv5::Config::builder((DEFAULT_DISCOVERY_ADDR, DEFAULT_DISCOVERY_PORT).into())
                 .discv5_config(
                     discv5::ConfigBuilder::new(discv5::ListenConfig::from_ip(
                         DEFAULT_DISCOVERY_ADDR,
@@ -109,7 +109,7 @@ async fn test_discv5_and_rlpx_same_socket_ok_without_discv4() {
         .listener_port(test_port)
         .disable_discv4_discovery()
         .discovery_v5(
-            reth_discv5::Config::builder((DEFAULT_DISCOVERY_ADDR, test_port).into()).discv5_config(
+            hanzo_evm_discv5::Config::builder((DEFAULT_DISCOVERY_ADDR, test_port).into()).discv5_config(
                 discv5::ConfigBuilder::new(discv5::ListenConfig::from_ip(
                     DEFAULT_DISCOVERY_ADDR,
                     test_port,
@@ -122,7 +122,7 @@ async fn test_discv5_and_rlpx_same_socket_ok_without_discv4() {
     let _network = NetworkManager::new(config).await.expect("should build");
 }
 
-// <https://github.com/paradigmxyz/reth/issues/8851>
+// <https://github.com/hanzoai/evm/issues/8851>
 #[tokio::test(flavor = "multi_thread")]
 async fn test_tcp_port_node_record_no_discovery() {
     let secret_key = SecretKey::new(&mut rand_08::thread_rng());
@@ -140,7 +140,7 @@ async fn test_tcp_port_node_record_no_discovery() {
     assert_eq!(record.tcp_port, local_addr.port());
 }
 
-// <https://github.com/paradigmxyz/reth/issues/8851>
+// <https://github.com/hanzoai/evm/issues/8851>
 #[tokio::test(flavor = "multi_thread")]
 async fn test_tcp_port_node_record_discovery() {
     let secret_key = SecretKey::new(&mut rand_08::thread_rng());

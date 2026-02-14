@@ -1,4 +1,4 @@
-use reth_stages_api::{
+use hanzo_evm_stages_api::{
     ExecInput, ExecOutput, Stage, StageCheckpoint, StageError, StageId, UnwindInput, UnwindOutput,
 };
 
@@ -39,9 +39,9 @@ mod tests {
         stage_test_suite_ext, ExecuteStageTestRunner, StageTestRunner, TestRunnerError,
         TestStageDB, UnwindStageTestRunner,
     };
-    use reth_primitives_traits::SealedHeader;
-    use reth_provider::providers::StaticFileWriter;
-    use reth_testing_utils::{
+    use hanzo_evm_primitives_traits::SealedHeader;
+    use hanzo_evm_provider::providers::StaticFileWriter;
+    use hanzo_evm_testing_utils::{
         generators,
         generators::{random_header, random_header_range},
     };

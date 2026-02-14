@@ -1,12 +1,12 @@
 [package]
-name = "reth-ipc"
+name = "hanzo-evm-ipc"
 version.workspace = true
 edition.workspace = true
 rust-version.workspace = true
 license.workspace = true
 homepage.workspace = true
 repository.workspace = true
-description = "IPC support for reth"
+description = "IPC support for Hanzo EVM"
 
 [lints]
 workspace = true
@@ -32,5 +32,5 @@ interprocess = { workspace = true, features = ["tokio"] }
 [dev-dependencies]
 tokio-stream = { workspace = true, features = ["sync"] }
 serde.workspace = true
-reth-tracing.workspace = true
+hanzo-evm-tracing.workspace = true
 rand.workspace = true

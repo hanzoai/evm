@@ -1,10 +1,10 @@
 //! Test results and errors
 
-use reth_db::DatabaseError;
-use reth_ethereum_primitives::Block;
-use reth_primitives_traits::RecoveredBlock;
-use reth_provider::ProviderError;
-use reth_stateless::ExecutionWitness;
+use hanzo_evm_db::DatabaseError;
+use hanzo_evm_ethereum_primitives::Block;
+use hanzo_evm_primitives_traits::RecoveredBlock;
+use hanzo_evm_provider::ProviderError;
+use hanzo_evm_stateless::ExecutionWitness;
 use std::path::{Path, PathBuf};
 use thiserror::Error;
 
@@ -57,7 +57,7 @@ pub enum Error {
     /// A test assertion failed.
     #[error("test failed: {0}")]
     Assertion(String),
-    /// An error internally in reth occurred.
+    /// An error internally in evm occurred.
     #[error("test failed: {0}")]
     Provider(#[from] ProviderError),
     /// An error occurred while decoding RLP.
@@ -65,7 +65,7 @@ pub enum Error {
     RlpDecodeError(#[from] alloy_rlp::Error),
     /// A consensus error occurred.
     #[error("an error occurred during consensus checks: {0}")]
-    ConsensusError(#[from] reth_consensus::ConsensusError),
+    ConsensusError(#[from] hanzo_evm_consensus::ConsensusError),
 }
 
 impl Error {

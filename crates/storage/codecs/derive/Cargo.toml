@@ -1,5 +1,5 @@
 [package]
-name = "reth-codecs-derive"
+name = "hanzo-evm-codecs-derive"
 version.workspace = true
 edition.workspace = true
 rust-version.workspace = true

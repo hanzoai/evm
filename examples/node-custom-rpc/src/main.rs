@@ -1,4 +1,4 @@
-//! Example of how to use additional rpc namespaces in the reth CLI
+//! Example of how to use additional rpc namespaces in the evm CLI
 //!
 //! Run with
 //!
@@ -20,7 +20,7 @@ use jsonrpsee::{
     proc_macros::rpc,
     PendingSubscriptionSink, SubscriptionMessage,
 };
-use reth_ethereum::{
+use hanzo_evm_ethereum::{
     cli::{chainspec::EthereumChainSpecParser, interface::Cli},
     node::EthereumNode,
     pool::TransactionPool,
@@ -29,7 +29,7 @@ use std::time::Duration;
 use tokio::time::sleep;
 
 fn main() {
-    Cli::<EthereumChainSpecParser, RethCliTxpoolExt>::parse()
+    Cli::<EthereumChainSpecParser, EvmCliTxpoolExt>::parse()
         .run(|builder, args| async move {
             let handle = builder
                 // configure default ethereum node
@@ -61,9 +61,9 @@ fn main() {
         .unwrap();
 }
 
-/// Our custom cli args extension that adds one flag to reth default CLI.
+/// Our custom cli args extension that adds one flag to evm default CLI.
 #[derive(Debug, Clone, Copy, Default, clap::Args)]
-struct RethCliTxpoolExt {
+struct EvmCliTxpoolExt {
     /// CLI flag to enable the txpool extension namespace
     #[arg(long)]
     pub enable_ext: bool,
@@ -147,7 +147,7 @@ mod tests {
     use jsonrpsee::{
         http_client::HttpClientBuilder, server::ServerBuilder, ws_client::WsClientBuilder,
     };
-    use reth_ethereum::pool::noop::NoopTransactionPool;
+    use hanzo_evm_ethereum::pool::noop::NoopTransactionPool;
 
     #[cfg(test)]
     impl<Pool> TxpoolExtApiServer for TxpoolExt<Pool>

@@ -5,9 +5,9 @@ use crate::{
 };
 use alloy_chains::Chain;
 use alloy_primitives::B256;
-use reth_eth_wire_types::EthVersion;
-use reth_ethereum_forks::ValidationError;
-use reth_primitives_traits::{GotExpected, GotExpectedBoxed};
+use hanzo_evm_eth_wire_types::EthVersion;
+use hanzo_evm_ethereum_forks::ValidationError;
+use hanzo_evm_primitives_traits::{GotExpected, GotExpectedBoxed};
 use std::io;
 
 /// Errors when sending/receiving messages

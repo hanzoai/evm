@@ -15,25 +15,25 @@ use crate::{
 };
 use alloy_primitives::{map::HashMap, Address, BlockNumber, TxHash, TxNumber, B256};
 use rayon::slice::ParallelSliceMut;
-use reth_db::{
+use hanzo_evm_db::{
     cursor::{DbCursorRO, DbDupCursorRW},
     models::{AccountBeforeTx, StorageBeforeTx},
     static_file::TransactionSenderMask,
     table::Value,
     transaction::{CursorMutTy, CursorTy, DbTx, DbTxMut, DupCursorMutTy, DupCursorTy},
 };
-use reth_db_api::{
+use hanzo_evm_db_api::{
     cursor::DbCursorRW,
     models::{storage_sharded_key::StorageShardedKey, BlockNumberAddress, ShardedKey},
     tables,
     tables::BlockNumberList,
 };
-use reth_errors::ProviderError;
-use reth_node_types::NodePrimitives;
-use reth_primitives_traits::{ReceiptTy, StorageEntry};
-use reth_static_file_types::StaticFileSegment;
-use reth_storage_api::{ChangeSetReader, DBProvider, NodePrimitivesProvider, StorageSettingsCache};
-use reth_storage_errors::provider::ProviderResult;
+use hanzo_evm_errors::ProviderError;
+use hanzo_evm_node_types::NodePrimitives;
+use hanzo_evm_primitives_traits::{ReceiptTy, StorageEntry};
+use hanzo_evm_static_file_types::StaticFileSegment;
+use hanzo_evm_storage_api::{ChangeSetReader, DBProvider, NodePrimitivesProvider, StorageSettingsCache};
+use hanzo_evm_storage_errors::provider::ProviderResult;
 use strum::{Display, EnumIs};
 
 /// Type alias for [`EitherReader`] constructors.
@@ -1086,9 +1086,9 @@ mod tests {
 
     use super::*;
     use alloy_primitives::Address;
-    use reth_db::models::AccountBeforeTx;
-    use reth_static_file_types::StaticFileSegment;
-    use reth_storage_api::{DatabaseProviderFactory, StorageSettings};
+    use hanzo_evm_db::models::AccountBeforeTx;
+    use hanzo_evm_static_file_types::StaticFileSegment;
+    use hanzo_evm_storage_api::{DatabaseProviderFactory, StorageSettings};
 
     /// Verifies that `changed_accounts_with_range` correctly caps the query range to the
     /// static file tip when the requested range extends beyond it.
@@ -1205,13 +1205,13 @@ mod rocksdb_tests {
         RocksDBProviderFactory,
     };
     use alloy_primitives::{Address, B256};
-    use reth_db_api::{
+    use hanzo_evm_db_api::{
         models::{storage_sharded_key::StorageShardedKey, IntegerList, ShardedKey},
         tables,
         transaction::DbTxMut,
     };
-    use reth_ethereum_primitives::EthPrimitives;
-    use reth_storage_api::{DatabaseProviderFactory, StorageSettings};
+    use hanzo_evm_ethereum_primitives::EthPrimitives;
+    use hanzo_evm_storage_api::{DatabaseProviderFactory, StorageSettings};
     use std::marker::PhantomData;
     use tempfile::TempDir;
 
@@ -1456,13 +1456,13 @@ mod rocksdb_tests {
 
     // Type aliases for cursor types (needed for EitherWriter/EitherReader type inference)
     type AccountsHistoryWriteCursor =
-        reth_db::mdbx::cursor::Cursor<reth_db::mdbx::RW, tables::AccountsHistory>;
+        hanzo_evm_db::mdbx::cursor::Cursor<hanzo_evm_db::mdbx::RW, tables::AccountsHistory>;
     type StoragesHistoryWriteCursor =
-        reth_db::mdbx::cursor::Cursor<reth_db::mdbx::RW, tables::StoragesHistory>;
+        hanzo_evm_db::mdbx::cursor::Cursor<hanzo_evm_db::mdbx::RW, tables::StoragesHistory>;
     type AccountsHistoryReadCursor =
-        reth_db::mdbx::cursor::Cursor<reth_db::mdbx::RO, tables::AccountsHistory>;
+        hanzo_evm_db::mdbx::cursor::Cursor<hanzo_evm_db::mdbx::RO, tables::AccountsHistory>;
     type StoragesHistoryReadCursor =
-        reth_db::mdbx::cursor::Cursor<reth_db::mdbx::RO, tables::StoragesHistory>;
+        hanzo_evm_db::mdbx::cursor::Cursor<hanzo_evm_db::mdbx::RO, tables::StoragesHistory>;
 
     /// Runs the same account history queries against both MDBX and `RocksDB` backends,
     /// asserting they produce identical results.

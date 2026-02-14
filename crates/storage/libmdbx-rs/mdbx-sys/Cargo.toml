@@ -1,5 +1,5 @@
 [package]
-name = "reth-mdbx-sys"
+name = "hanzo-evm-mdbx-sys"
 description = "Raw bindings for libmdbx"
 version.workspace = true
 edition.workspace = true

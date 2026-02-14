@@ -8,7 +8,7 @@
 //! To enable it, add `testing` to the `--http.api` flag when starting the node:
 //!
 //! ```sh
-//! reth node --http --http.api eth,testing
+//! evm node --http --http.api eth,testing
 //! ```
 //!
 //! **Warning:** This namespace allows building arbitrary blocks. Never expose it
@@ -22,21 +22,21 @@ use alloy_rlp::Encodable;
 use alloy_rpc_types_engine::ExecutionPayloadEnvelopeV5;
 use async_trait::async_trait;
 use jsonrpsee::core::RpcResult;
-use reth_chainspec::{ChainSpecProvider, EthereumHardforks};
-use reth_consensus_common::validation::MAX_RLP_BLOCK_SIZE;
-use reth_errors::RethError;
-use reth_ethereum_engine_primitives::EthBuiltPayload;
-use reth_ethereum_primitives::EthPrimitives;
-use reth_evm::{execute::BlockBuilder, ConfigureEvm, NextBlockEnvAttributes};
-use reth_primitives_traits::{
+use hanzo_evm_chainspec::{ChainSpecProvider, EthereumHardforks};
+use hanzo_evm_consensus_common::validation::MAX_RLP_BLOCK_SIZE;
+use hanzo_evm_errors::EvmError;
+use hanzo_evm_ethereum_engine_primitives::EthBuiltPayload;
+use hanzo_evm_ethereum_primitives::EthPrimitives;
+use hanzo_evm_execution::{execute::BlockBuilder, ConfigureEvm, NextBlockEnvAttributes};
+use hanzo_evm_primitives_traits::{
     transaction::{recover::try_recover_signers, signed::RecoveryError},
     AlloyBlockHeader as BlockTrait, TxTy,
 };
-use reth_revm::{database::StateProviderDatabase, db::State};
-use reth_rpc_api::{TestingApiServer, TestingBuildBlockRequestV1};
-use reth_rpc_eth_api::{helpers::Call, FromEthApiError};
-use reth_rpc_eth_types::EthApiError;
-use reth_storage_api::{BlockReader, HeaderProvider};
+use hanzo_evm_revm::{database::StateProviderDatabase, db::State};
+use hanzo_evm_rpc_api::{TestingApiServer, TestingBuildBlockRequestV1};
+use hanzo_evm_rpc_eth_api::{helpers::Call, FromEthApiError};
+use hanzo_evm_rpc_eth_types::EthApiError;
+use hanzo_evm_storage_api::{BlockReader, HeaderProvider};
 use revm::context::Block;
 use revm_primitives::map::DefaultHashBuilder;
 use std::sync::Arc;
@@ -46,15 +46,15 @@ use tracing::debug;
 #[derive(Debug, Clone)]
 pub struct TestingApi<Eth, Evm> {
     eth_api: Eth,
-    evm_config: Evm,
+    hanzo_evm_config: Evm,
     /// If true, skip invalid transactions instead of failing.
     skip_invalid_transactions: bool,
 }
 
 impl<Eth, Evm> TestingApi<Eth, Evm> {
     /// Create a new testing API handler.
-    pub const fn new(eth_api: Eth, evm_config: Evm) -> Self {
-        Self { eth_api, evm_config, skip_invalid_transactions: false }
+    pub const fn new(eth_api: Eth, hanzo_evm_config: Evm) -> Self {
+        Self { eth_api, hanzo_evm_config, skip_invalid_transactions: false }
     }
 
     /// Enable skipping invalid transactions instead of failing.
@@ -78,7 +78,7 @@ where
         &self,
         request: TestingBuildBlockRequestV1,
     ) -> Result<ExecutionPayloadEnvelopeV5, Eth::Error> {
-        let evm_config = self.evm_config.clone();
+        let hanzo_evm_config = self.hanzo_evm_config.clone();
         let skip_invalid_transactions = self.skip_invalid_transactions;
         self.eth_api
             .spawn_with_state_at_block(request.parent_block_hash, move |eth_api, state| {
@@ -111,9 +111,9 @@ where
                     extra_data: request.extra_data.unwrap_or_default(),
                 };
 
-                let mut builder = evm_config
+                let mut builder = hanzo_evm_config
                     .builder_for_next_block(&mut db, &parent, env_attrs)
-                    .map_err(RethError::other)
+                    .map_err(EvmError::other)
                     .map_err(Eth::Error::from_eth_err)?;
                 builder.apply_pre_execution_changes().map_err(Eth::Error::from_eth_err)?;
 
@@ -209,7 +209,7 @@ where
                     requests,
                 )
                 .try_into_v5()
-                .map_err(RethError::other)
+                .map_err(EvmError::other)
                 .map_err(Eth::Error::from_eth_err)
             })
             .await

@@ -365,7 +365,7 @@ mod tests {
     use crate::{Capabilities, Capability};
     use alloy_primitives::bytes::Bytes;
     use alloy_rlp::{Decodable, Encodable};
-    use reth_eth_wire_types::RawCapabilityMessage;
+    use hanzo_evm_eth_wire_types::RawCapabilityMessage;
 
     #[test]
     fn from_eth_68() {

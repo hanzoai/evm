@@ -10,16 +10,16 @@
 #[cfg(test)]
 mod tests {
     use alloy_primitives::{Address, U256};
-    use reth_db::{models::AccountBeforeTx, test_utils::create_test_static_files_dir};
-    use reth_primitives_traits::Account;
-    use reth_static_file_types::{ChangesetOffset, ChangesetOffsetReader, StaticFileSegment};
+    use hanzo_evm_db::{models::AccountBeforeTx, test_utils::create_test_static_files_dir};
+    use hanzo_evm_primitives_traits::Account;
+    use hanzo_evm_static_file_types::{ChangesetOffset, ChangesetOffsetReader, StaticFileSegment};
     use std::{fs::OpenOptions, io::Write as _, path::PathBuf};
 
     use crate::providers::{
         static_file::manager::{StaticFileProviderBuilder, StaticFileWriter},
         StaticFileProvider,
     };
-    use reth_chain_state::EthPrimitives;
+    use hanzo_evm_chain_state::EthPrimitives;
 
     // ==================== HELPER FUNCTIONS ====================
 

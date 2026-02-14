@@ -2,19 +2,19 @@
 
 use crate::PayloadTypes;
 use alloy_rpc_types_engine::JwtSecret;
-use reth_basic_payload_builder::PayloadBuilder;
-use reth_consensus::FullConsensus;
-use reth_db_api::{database_metrics::DatabaseMetrics, Database};
-use reth_engine_primitives::{ConsensusEngineEvent, ConsensusEngineHandle};
-use reth_evm::ConfigureEvm;
-use reth_network_api::FullNetwork;
-use reth_node_core::node_config::NodeConfig;
-use reth_node_types::{NodeTypes, NodeTypesWithDBAdapter, TxTy};
-use reth_payload_builder::PayloadBuilderHandle;
-use reth_provider::FullProvider;
-use reth_tasks::TaskExecutor;
-use reth_tokio_util::EventSender;
-use reth_transaction_pool::{PoolTransaction, TransactionPool};
+use hanzo_evm_basic_payload_builder::PayloadBuilder;
+use hanzo_evm_consensus::FullConsensus;
+use hanzo_evm_db_api::{database_metrics::DatabaseMetrics, Database};
+use hanzo_evm_engine_primitives::{ConsensusEngineEvent, ConsensusEngineHandle};
+use hanzo_evm_execution::ConfigureEvm;
+use hanzo_evm_network_api::FullNetwork;
+use hanzo_evm_node_core::node_config::NodeConfig;
+use hanzo_evm_node_types::{NodeTypes, NodeTypesWithDBAdapter, TxTy};
+use hanzo_evm_payload_builder::PayloadBuilderHandle;
+use hanzo_evm_provider::FullProvider;
+use hanzo_evm_tasks::TaskExecutor;
+use hanzo_evm_tokio_util::EventSender;
+use hanzo_evm_transaction_pool::{PoolTransaction, TransactionPool};
 use std::{fmt::Debug, future::Future, marker::PhantomData};
 
 /// A helper trait that is downstream of the [`NodeTypes`] trait and adds stateful
@@ -80,7 +80,7 @@ pub trait FullNodeComponents: FullNodeTypes + Clone + 'static {
     fn pool(&self) -> &Self::Pool;
 
     /// Returns the node's evm config.
-    fn evm_config(&self) -> &Self::Evm;
+    fn hanzo_evm_config(&self) -> &Self::Evm;
 
     /// Returns the node's consensus type.
     fn consensus(&self) -> &Self::Consensus;
@@ -98,7 +98,7 @@ pub trait FullNodeComponents: FullNodeTypes + Clone + 'static {
     /// Returns an executor handle to spawn tasks.
     ///
     /// This can be used to spawn critical, blocking tasks or register tasks that should be
-    /// terminated gracefully. See also [`TaskSpawner`](reth_tasks::TaskSpawner).
+    /// terminated gracefully. See also [`TaskSpawner`](hanzo_evm_tasks::TaskSpawner).
     fn task_executor(&self) -> &TaskExecutor;
 }
 

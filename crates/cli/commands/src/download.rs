@@ -3,9 +3,9 @@ use clap::Parser;
 use eyre::Result;
 use lz4::Decoder;
 use reqwest::{blocking::Client as BlockingClient, header::RANGE, Client, StatusCode};
-use reth_chainspec::{EthChainSpec, EthereumHardforks};
-use reth_cli::chainspec::ChainSpecParser;
-use reth_fs_util as fs;
+use hanzo_evm_chainspec::{EthChainSpec, EthereumHardforks};
+use hanzo_evm_cli::chainspec::ChainSpecParser;
+use hanzo_evm_fs_util as fs;
 use std::{
     borrow::Cow,
     fs::OpenOptions,
@@ -143,12 +143,12 @@ impl<C: ChainSpecParser<ChainSpec: EthChainSpec + EthereumHardforks>> DownloadCo
             Some(url) => url,
             None => {
                 let url = get_latest_snapshot_url().await?;
-                info!(target: "reth::cli", "Using default snapshot URL: {}", url);
+                info!(target: "evm::cli", "Using default snapshot URL: {}", url);
                 url
             }
         };
 
-        info!(target: "reth::cli",
+        info!(target: "evm::cli",
             chain = %self.env.chain.chain(),
             dir = ?data_dir.data_dir(),
             url = %url,
@@ -156,7 +156,7 @@ impl<C: ChainSpecParser<ChainSpec: EthChainSpec + EthereumHardforks>> DownloadCo
         );
 
         stream_and_extract(&url, data_dir.data_dir()).await?;
-        info!(target: "reth::cli", "Snapshot downloaded and extracted successfully");
+        info!(target: "evm::cli", "Snapshot downloaded and extracted successfully");
 
         Ok(())
     }
@@ -317,7 +317,7 @@ fn extract_archive<R: Read>(
         }
     }
 
-    info!(target: "reth::cli", "Extraction complete.");
+    info!(target: "evm::cli", "Extraction complete.");
     Ok(())
 }
 
@@ -374,12 +374,12 @@ fn resumable_download(url: &str, target_dir: &Path) -> Result<(PathBuf, u64)> {
             existing_size >= total
         {
             fs::rename(&part_path, &final_path)?;
-            info!(target: "reth::cli", "Download complete: {}", final_path.display());
+            info!(target: "evm::cli", "Download complete: {}", final_path.display());
             return Ok((final_path, total));
         }
 
         if attempt > 1 {
-            info!(target: "reth::cli",
+            info!(target: "evm::cli",
                 "Retry attempt {}/{} - resuming from {} bytes",
                 attempt, MAX_DOWNLOAD_RETRIES, existing_size
             );
@@ -389,7 +389,7 @@ fn resumable_download(url: &str, target_dir: &Path) -> Result<(PathBuf, u64)> {
         if existing_size > 0 {
             request = request.header(RANGE, format!("bytes={existing_size}-"));
             if attempt == 1 {
-                info!(target: "reth::cli", "Resuming download from {} bytes", existing_size);
+                info!(target: "evm::cli", "Resuming download from {} bytes", existing_size);
             }
         }
 
@@ -398,7 +398,7 @@ fn resumable_download(url: &str, target_dir: &Path) -> Result<(PathBuf, u64)> {
             Err(e) => {
                 last_error = Some(e.into());
                 if attempt < MAX_DOWNLOAD_RETRIES {
-                    info!(target: "reth::cli",
+                    info!(target: "evm::cli",
                         "Download failed, retrying in {} seconds...", RETRY_BACKOFF_SECS
                     );
                     std::thread::sleep(Duration::from_secs(RETRY_BACKOFF_SECS));
@@ -451,7 +451,7 @@ fn resumable_download(url: &str, target_dir: &Path) -> Result<(PathBuf, u64)> {
         if let Err(e) = copy_result.and(flush_result) {
             last_error = Some(e.into());
             if attempt < MAX_DOWNLOAD_RETRIES {
-                info!(target: "reth::cli",
+                info!(target: "evm::cli",
                     "Download interrupted, retrying in {} seconds...", RETRY_BACKOFF_SECS
                 );
                 std::thread::sleep(Duration::from_secs(RETRY_BACKOFF_SECS));
@@ -460,7 +460,7 @@ fn resumable_download(url: &str, target_dir: &Path) -> Result<(PathBuf, u64)> {
         }
 
         fs::rename(&part_path, &final_path)?;
-        info!(target: "reth::cli", "Download complete: {}", final_path.display());
+        info!(target: "evm::cli", "Download complete: {}", final_path.display());
         return Ok((final_path, current_total));
     }
 
@@ -472,12 +472,12 @@ fn resumable_download(url: &str, target_dir: &Path) -> Result<(PathBuf, u64)> {
 fn download_and_extract(url: &str, format: CompressionFormat, target_dir: &Path) -> Result<()> {
     let (downloaded_path, total_size) = resumable_download(url, target_dir)?;
 
-    info!(target: "reth::cli", "Extracting snapshot...");
+    info!(target: "evm::cli", "Extracting snapshot...");
     let file = fs::open(&downloaded_path)?;
     extract_archive(file, total_size, format, target_dir)?;
 
     fs::remove_file(&downloaded_path)?;
-    info!(target: "reth::cli", "Removed downloaded archive");
+    info!(target: "evm::cli", "Removed downloaded archive");
 
     Ok(())
 }

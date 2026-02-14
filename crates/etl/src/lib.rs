@@ -7,9 +7,9 @@
 //! memory management (as it moves the buffer to disk instead of memory).
 
 #![doc(
-    html_logo_url = "https://raw.githubusercontent.com/paradigmxyz/reth/main/assets/reth-docs.png",
+    html_logo_url = "https://raw.githubusercontent.com/hanzoai/evm/main/assets/evm-docs.png",
     html_favicon_url = "https://avatars0.githubusercontent.com/u/97369466?s=256",
-    issue_tracker_base_url = "https://github.com/paradigmxyz/reth/issues/"
+    issue_tracker_base_url = "https://github.com/hanzoai/evm/issues/"
 )]
 #![cfg_attr(not(test), warn(unused_crate_dependencies))]
 #![cfg_attr(docsrs, feature(doc_cfg))]
@@ -25,7 +25,7 @@ use std::{
 const KV_LEN: usize = 8;
 
 use rayon::prelude::*;
-use reth_db_api::table::{Compress, Encode, Key, Value};
+use hanzo_evm_db_api::table::{Compress, Encode, Key, Value};
 use tempfile::{NamedTempFile, TempDir};
 
 /// An ETL (extract, transform, load) data collector.
@@ -36,7 +36,7 @@ use tempfile::{NamedTempFile, TempDir};
 ///
 /// Used mainly to insert data into `MDBX` in a sorted manner. This is important because performance
 /// and storage space degrades greatly if the data is inserted unsorted (eg. tables with hashes as
-/// keys.) as opposed to append & sorted insert. Some benchmarks can be found [here](https://github.com/paradigmxyz/reth/pull/1130#issuecomment-1418642755).
+/// keys.) as opposed to append & sorted insert. Some benchmarks can be found [here](https://github.com/hanzoai/evm/pull/1130#issuecomment-1418642755).
 #[derive(Debug)]
 pub struct Collector<K, V>
 where

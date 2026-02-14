@@ -13,7 +13,7 @@
 #![warn(unused_crate_dependencies)]
 
 use futures::StreamExt;
-use reth_ethereum::{
+use hanzo_evm_ethereum::{
     chainspec::DEV,
     network::{
         config::rng_secret_key,
@@ -28,7 +28,7 @@ use reth_ethereum::{
 
 #[tokio::main]
 async fn main() -> eyre::Result<()> {
-    reth_tracing::init_test_tracing();
+    hanzo_evm_tracing::init_test_tracing();
 
     // The key that's used for encrypting sessions and to identify our node.
     let local_key = rng_secret_key();

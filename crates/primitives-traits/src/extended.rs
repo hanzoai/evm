@@ -390,14 +390,14 @@ mod serde_bincode_compat {
     }
 }
 
-#[cfg(feature = "reth-codec")]
+#[cfg(feature = "hanzo-evm-codec")]
 use alloy_primitives::bytes::Buf;
 
-#[cfg(feature = "reth-codec")]
-impl<B, T> reth_codecs::Compact for Extended<B, T>
+#[cfg(feature = "hanzo-evm-codec")]
+impl<B, T> hanzo_evm_codecs::Compact for Extended<B, T>
 where
-    B: Transaction + IsTyped2718 + reth_codecs::Compact,
-    T: Transaction + reth_codecs::Compact,
+    B: Transaction + IsTyped2718 + hanzo_evm_codecs::Compact,
+    T: Transaction + hanzo_evm_codecs::Compact,
 {
     fn to_compact<Buf>(&self, buf: &mut Buf) -> usize
     where

@@ -2,14 +2,14 @@
 
 use alloy_genesis::Genesis;
 use eyre::Result;
-use reth_chainspec::ChainSpec;
-use reth_e2e_test_utils::testsuite::{
+use hanzo_evm_chainspec::ChainSpec;
+use hanzo_evm_e2e_test_utils::testsuite::{
     actions::{MakeCanonical, UpdateBlockInfo},
     setup::{NetworkSetup, Setup},
     TestBuilder,
 };
-use reth_node_ethereum::{EthEngineTypes, EthereumNode};
-use reth_rpc_e2e_tests::rpc_compat::{InitializeFromExecutionApis, RunRpcCompatTests};
+use hanzo_evm_node_ethereum::{EthEngineTypes, EthereumNode};
+use hanzo_evm_rpc_e2e_tests::rpc_compat::{InitializeFromExecutionApis, RunRpcCompatTests};
 use std::{env, path::PathBuf, sync::Arc};
 use tracing::{debug, info};
 
@@ -21,7 +21,7 @@ use tracing::{debug, info};
 /// 3. Runs tests cases in the local repository, some of which are execution-api tests
 #[tokio::test(flavor = "multi_thread")]
 async fn test_local_rpc_tests_compat() -> Result<()> {
-    reth_tracing::init_test_tracing();
+    hanzo_evm_tracing::init_test_tracing();
 
     // Use local test data
     let test_data_path = PathBuf::from(env!("CARGO_MANIFEST_DIR")).join("testdata/rpc-compat");
@@ -88,7 +88,7 @@ async fn test_local_rpc_tests_compat() -> Result<()> {
 /// 5. Runs all discovered RPC test cases individually (each test file reported separately)
 #[tokio::test(flavor = "multi_thread")]
 async fn test_execution_apis_compat() -> Result<()> {
-    reth_tracing::init_test_tracing();
+    hanzo_evm_tracing::init_test_tracing();
 
     // Get test data path from environment variable
     let test_data_path = match env::var("EXECUTION_APIS_TEST_PATH") {

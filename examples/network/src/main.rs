@@ -9,7 +9,7 @@
 #![warn(unused_crate_dependencies)]
 
 use futures::StreamExt;
-use reth_ethereum::{
+use hanzo_evm_ethereum::{
     network::{
         config::rng_secret_key, NetworkConfig, NetworkEventListenerProvider, NetworkManager,
     },

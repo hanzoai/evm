@@ -6,24 +6,24 @@ use alloy_primitives::B256;
 use enr::Enr;
 use futures::StreamExt;
 use parking_lot::Mutex;
-use reth_discv4::{Discv4, NatResolver};
-use reth_discv5::Discv5;
-use reth_eth_wire::{
+use hanzo_evm_discv4::{Discv4, NatResolver};
+use hanzo_evm_discv5::Discv5;
+use hanzo_evm_eth_wire::{
     BlockRangeUpdate, DisconnectReason, EthNetworkPrimitives, NetworkPrimitives,
     NewPooledTransactionHashes, SharedTransactions,
 };
-use reth_ethereum_forks::Head;
-use reth_network_api::{
+use hanzo_evm_ethereum_forks::Head;
+use hanzo_evm_network_api::{
     events::{NetworkPeersEvents, PeerEvent, PeerEventStream},
     test_utils::{PeersHandle, PeersHandleProvider},
     BlockDownloaderProvider, DiscoveryEvent, NetworkError, NetworkEvent,
     NetworkEventListenerProvider, NetworkInfo, NetworkStatus, PeerInfo, PeerRequest, Peers,
     PeersInfo,
 };
-use reth_network_p2p::sync::{NetworkSyncUpdater, SyncState, SyncStateProvider};
-use reth_network_peers::{NodeRecord, PeerId};
-use reth_network_types::{PeerAddr, PeerKind, Reputation, ReputationChangeKind};
-use reth_tokio_util::{EventSender, EventStream};
+use hanzo_evm_network_p2p::sync::{NetworkSyncUpdater, SyncState, SyncStateProvider};
+use hanzo_evm_network_peers::{NodeRecord, PeerId};
+use hanzo_evm_network_types::{PeerAddr, PeerKind, Reputation, ReputationChangeKind};
+use hanzo_evm_tokio_util::{EventSender, EventStream};
 use secp256k1::SecretKey;
 use std::{
     net::SocketAddr,
@@ -440,7 +440,7 @@ impl<N: NetworkPrimitives> NetworkSyncUpdater for NetworkHandle<N> {
     }
 
     /// Updates the advertised block range.
-    fn update_block_range(&self, update: reth_eth_wire::BlockRangeUpdate) {
+    fn update_block_range(&self, update: hanzo_evm_eth_wire::BlockRangeUpdate) {
         self.send_message(NetworkHandleMessage::InternalBlockRangeUpdate(update));
     }
 }

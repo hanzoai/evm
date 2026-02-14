@@ -1,21 +1,21 @@
-use reth_db::DatabaseEnv;
+use hanzo_evm_db::DatabaseEnv;
 // re-export the node api types
-pub use reth_node_api::{FullNodeTypes, NodeTypes};
+pub use hanzo_evm_node_api::{FullNodeTypes, NodeTypes};
 
 use crate::{
-    components::NodeComponentsBuilder, rpc::RethRpcAddOns, NodeAdapter, NodeAddOns, NodeHandle,
-    RethFullAdapter,
+    components::NodeComponentsBuilder, rpc::EvmRpcAddOns, NodeAdapter, NodeAddOns, NodeHandle,
+    EvmFullAdapter,
 };
-use reth_node_api::{EngineTypes, FullNodeComponents, PayloadTypes};
-use reth_node_core::{
+use hanzo_evm_node_api::{EngineTypes, FullNodeComponents, PayloadTypes};
+use hanzo_evm_node_core::{
     dirs::{ChainPath, DataDirPath},
     node_config::NodeConfig,
 };
-use reth_payload_builder::PayloadBuilderHandle;
-use reth_provider::ChainSpecProvider;
-use reth_rpc_api::EngineApiClient;
-use reth_rpc_builder::{auth::AuthServerHandle, RpcServerHandle};
-use reth_tasks::TaskExecutor;
+use hanzo_evm_payload_builder::PayloadBuilderHandle;
+use hanzo_evm_provider::ChainSpecProvider;
+use hanzo_evm_rpc_api::EngineApiClient;
+use hanzo_evm_rpc_builder::{auth::AuthServerHandle, RpcServerHandle};
+use hanzo_evm_tasks::TaskExecutor;
 use std::{
     fmt::Debug,
     marker::PhantomData,
@@ -106,7 +106,7 @@ where
 #[derive(Debug)]
 pub struct FullNode<Node: FullNodeComponents, AddOns: NodeAddOns<Node>> {
     /// The evm configuration.
-    pub evm_config: Node::Evm,
+    pub hanzo_evm_config: Node::Evm,
     /// The node's transaction pool.
     pub pool: Node::Pool,
     /// Handle to the node's network.
@@ -128,7 +128,7 @@ pub struct FullNode<Node: FullNodeComponents, AddOns: NodeAddOns<Node>> {
 impl<Node: FullNodeComponents, AddOns: NodeAddOns<Node>> Clone for FullNode<Node, AddOns> {
     fn clone(&self) -> Self {
         Self {
-            evm_config: self.evm_config.clone(),
+            hanzo_evm_config: self.hanzo_evm_config.clone(),
             pool: self.pool.clone(),
             network: self.network.clone(),
             provider: self.provider.clone(),
@@ -157,7 +157,7 @@ impl<Payload, Node, AddOns> FullNode<Node, AddOns>
 where
     Payload: PayloadTypes,
     Node: FullNodeComponents<Types: NodeTypes<Payload = Payload>>,
-    AddOns: RethRpcAddOns<Node>,
+    AddOns: EvmRpcAddOns<Node>,
 {
     /// Returns the [`RpcServerHandle`] to the started rpc server.
     pub const fn rpc_server_handle(&self) -> &RpcServerHandle {
@@ -174,7 +174,7 @@ impl<Engine, Node, AddOns> FullNode<Node, AddOns>
 where
     Engine: EngineTypes,
     Node: FullNodeComponents<Types: NodeTypes<Payload = Engine>>,
-    AddOns: RethRpcAddOns<Node>,
+    AddOns: EvmRpcAddOns<Node>,
 {
     /// Returns the [`EngineApiClient`] interface for the authenticated engine API.
     ///
@@ -219,8 +219,8 @@ impl<Node: FullNodeComponents, AddOns: NodeAddOns<Node>> DerefMut for FullNode<N
 
 /// Helper type alias to define [`FullNode`] for a given [`Node`].
 pub type FullNodeFor<N, DB = DatabaseEnv> =
-    FullNode<NodeAdapter<RethFullAdapter<DB, N>>, <N as Node<RethFullAdapter<DB, N>>>::AddOns>;
+    FullNode<NodeAdapter<EvmFullAdapter<DB, N>>, <N as Node<EvmFullAdapter<DB, N>>>::AddOns>;
 
 /// Helper type alias to define [`NodeHandle`] for a given [`Node`].
 pub type NodeHandleFor<N, DB = DatabaseEnv> =
-    NodeHandle<NodeAdapter<RethFullAdapter<DB, N>>, <N as Node<RethFullAdapter<DB, N>>>::AddOns>;
+    NodeHandle<NodeAdapter<EvmFullAdapter<DB, N>>, <N as Node<EvmFullAdapter<DB, N>>>::AddOns>;

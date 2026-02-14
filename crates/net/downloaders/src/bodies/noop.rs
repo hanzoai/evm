@@ -1,10 +1,10 @@
 use alloy_primitives::BlockNumber;
 use futures::Stream;
-use reth_network_p2p::{
+use hanzo_evm_network_p2p::{
     bodies::{downloader::BodyDownloader, response::BlockResponse},
     error::{DownloadError, DownloadResult},
 };
-use reth_primitives_traits::Block;
+use hanzo_evm_primitives_traits::Block;
 use std::{fmt::Debug, ops::RangeInclusive};
 
 /// A [`BodyDownloader`] implementation that does nothing.

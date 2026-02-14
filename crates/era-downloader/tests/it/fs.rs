@@ -1,6 +1,6 @@
 use alloy_primitives::hex::ToHexExt;
 use futures_util::StreamExt;
-use reth_era_downloader::read_dir;
+use hanzo_evm_era_downloader::read_dir;
 use sha2::Digest;
 use tokio::fs;
 

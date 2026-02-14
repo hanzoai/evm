@@ -1,6 +1,6 @@
 //! Node add-ons. Depend on core [`NodeComponents`](crate::NodeComponents).
 
-use reth_node_api::{FullNodeComponents, NodeAddOns};
+use hanzo_evm_node_api::{FullNodeComponents, NodeAddOns};
 
 use crate::{exex::BoxedLaunchExEx, hooks::NodeHooks};
 

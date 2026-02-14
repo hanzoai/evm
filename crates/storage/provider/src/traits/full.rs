@@ -6,11 +6,11 @@ use crate::{
     RocksDBProviderFactory, StageCheckpointReader, StateProviderFactory, StateReader,
     StaticFileProviderFactory,
 };
-use reth_chain_state::{
+use hanzo_evm_chain_state::{
     CanonStateSubscriptions, ForkChoiceSubscriptions, PersistedBlockSubscriptions,
 };
-use reth_node_types::{BlockTy, HeaderTy, NodeTypesWithDB, ReceiptTy, TxTy};
-use reth_storage_api::{NodePrimitivesProvider, StorageChangeSetReader};
+use hanzo_evm_node_types::{BlockTy, HeaderTy, NodeTypesWithDB, ReceiptTy, TxTy};
+use hanzo_evm_storage_api::{NodePrimitivesProvider, StorageChangeSetReader};
 use std::fmt::Debug;
 
 /// Helper trait to unify all provider traits for simplicity.

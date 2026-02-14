@@ -1,6 +1,6 @@
-use reth_errors::{DatabaseError, RethError};
-use reth_provider::ProviderError;
-use reth_prune_types::PruneSegmentError;
+use hanzo_evm_errors::{DatabaseError, EvmError};
+use hanzo_evm_provider::ProviderError;
+use hanzo_evm_prune_types::PruneSegmentError;
 use thiserror::Error;
 
 /// Errors that can occur during pruning.
@@ -19,7 +19,7 @@ pub enum PrunerError {
     Provider(#[from] ProviderError),
 }
 
-impl From<PrunerError> for RethError {
+impl From<PrunerError> for EvmError {
     fn from(err: PrunerError) -> Self {
         match err {
             PrunerError::PruneSegment(_) | PrunerError::InconsistentData(_) => Self::other(err),

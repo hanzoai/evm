@@ -4,8 +4,8 @@ use alloy_hardforks::{EthereumHardfork, ForkId, Head};
 use alloy_primitives::{hex, B256, U256};
 use alloy_rlp::{BufMut, Encodable, RlpDecodable, RlpEncodable};
 use core::fmt::{Debug, Display};
-use reth_chainspec::{EthChainSpec, Hardforks, MAINNET};
-use reth_codecs_derive::add_arbitrary_tests;
+use hanzo_evm_chainspec::{EthChainSpec, Hardforks, MAINNET};
+use hanzo_evm_codecs_derive::add_arbitrary_tests;
 
 /// `UnifiedStatus` is an internal superset of all ETH status fields for all `eth/` versions.
 ///
@@ -464,7 +464,7 @@ mod tests {
     use alloy_primitives::{b256, hex, B256, U256};
     use alloy_rlp::{Decodable, Encodable};
     use rand::Rng;
-    use reth_chainspec::{Chain, ChainSpec, ForkCondition, NamedChain};
+    use hanzo_evm_chainspec::{Chain, ChainSpec, ForkCondition, NamedChain};
     use std::str::FromStr;
 
     #[test]

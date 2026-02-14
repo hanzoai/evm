@@ -10,7 +10,7 @@ on:
 env:
   CARGO_TERM_COLOR: always
   BASELINE: base
-  SEED: reth
+  SEED: evm
   RUSTC_WRAPPER: "sccache"
 
 name: bench
@@ -23,9 +23,9 @@ jobs:
         total_partitions: [2]
         include:
           - partition: 1
-            crates: "-p reth-primitives -p reth-trie-common -p reth-trie-sparse"
+            crates: "-p evm-primitives -p evm-trie-common -p evm-trie-sparse"
           - partition: 2
-            crates: "-p reth-trie"
+            crates: "-p evm-trie"
     name: codspeed (${{ matrix.partition }}/${{ matrix.total_partitions }})
     steps:
       - uses: actions/checkout@v6

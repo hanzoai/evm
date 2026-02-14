@@ -2,16 +2,16 @@ use crate::BackfillJob;
 use std::{ops::RangeInclusive, time::Duration};
 
 use alloy_primitives::BlockNumber;
-use reth_node_api::FullNodeComponents;
-use reth_prune_types::PruneModes;
-use reth_stages_api::ExecutionStageThresholds;
+use hanzo_evm_node_api::FullNodeComponents;
+use hanzo_evm_prune_types::PruneModes;
+use hanzo_evm_stages_api::ExecutionStageThresholds;
 
 use super::stream::DEFAULT_PARALLELISM;
 
 /// Factory for creating new backfill jobs.
 #[derive(Debug, Clone)]
 pub struct BackfillJobFactory<E, P> {
-    evm_config: E,
+    hanzo_evm_config: E,
     provider: P,
     prune_modes: PruneModes,
     thresholds: ExecutionStageThresholds,
@@ -20,9 +20,9 @@ pub struct BackfillJobFactory<E, P> {
 
 impl<E, P> BackfillJobFactory<E, P> {
     /// Creates a new [`BackfillJobFactory`].
-    pub fn new(evm_config: E, provider: P) -> Self {
+    pub fn new(hanzo_evm_config: E, provider: P) -> Self {
         Self {
-            evm_config,
+            hanzo_evm_config,
             provider,
             prune_modes: PruneModes::default(),
             thresholds: ExecutionStageThresholds {
@@ -30,7 +30,7 @@ impl<E, P> BackfillJobFactory<E, P> {
                 // 60 seconds, so we limit the backfill job to the half of it to be sure we finish
                 // before the warning is logged.
                 //
-                // See `reth_db::implementation::mdbx::tx::LONG_TRANSACTION_DURATION`.
+                // See `hanzo_evm_db::implementation::mdbx::tx::LONG_TRANSACTION_DURATION`.
                 max_duration: Some(Duration::from_secs(30)),
                 ..Default::default()
             },
@@ -64,7 +64,7 @@ impl<E: Clone, P: Clone> BackfillJobFactory<E, P> {
     /// Creates a new backfill job for the given range.
     pub fn backfill(&self, range: RangeInclusive<BlockNumber>) -> BackfillJob<E, P> {
         BackfillJob {
-            evm_config: self.evm_config.clone(),
+            hanzo_evm_config: self.hanzo_evm_config.clone(),
             provider: self.provider.clone(),
             prune_modes: self.prune_modes.clone(),
             range,
@@ -80,7 +80,7 @@ impl BackfillJobFactory<(), ()> {
         components: Node,
     ) -> BackfillJobFactory<Node::Evm, Node::Provider> {
         BackfillJobFactory::<_, _>::new(
-            components.evm_config().clone(),
+            components.hanzo_evm_config().clone(),
             components.provider().clone(),
         )
     }

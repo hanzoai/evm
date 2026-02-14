@@ -5,17 +5,17 @@ use alloy_consensus::BlockHeader;
 use alloy_eips::BlockHashOrNumber;
 use alloy_primitives::{BlockNumber, B256};
 use derive_more::{Display, Error};
-use reth_consensus::ConsensusError;
-use reth_network_peers::WithPeerId;
-use reth_network_types::ReputationChangeKind;
-use reth_primitives_traits::{GotExpected, GotExpectedBoxed};
-use reth_storage_errors::{db::DatabaseError, provider::ProviderError};
+use hanzo_evm_consensus::ConsensusError;
+use hanzo_evm_network_peers::WithPeerId;
+use hanzo_evm_network_types::ReputationChangeKind;
+use hanzo_evm_primitives_traits::{GotExpected, GotExpectedBoxed};
+use hanzo_evm_storage_errors::{db::DatabaseError, provider::ProviderError};
 use tokio::sync::{mpsc, oneshot};
 
 /// Result alias for result of a request.
 pub type RequestResult<T> = Result<T, RequestError>;
 
-/// Result with [`PeerId`][reth_network_peers::PeerId]
+/// Result with [`PeerId`][hanzo_evm_network_peers::PeerId]
 pub type PeerRequestResult<T> = RequestResult<WithPeerId<T>>;
 
 /// Helper trait used to validate responses.

@@ -1,5 +1,5 @@
 use clap::Args;
-use reth_chainspec::{ChainKind, NamedChain};
+use hanzo_evm_chainspec::{ChainKind, NamedChain};
 use std::path::Path;
 use url::Url;
 

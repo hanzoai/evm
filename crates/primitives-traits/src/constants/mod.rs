@@ -4,8 +4,8 @@
 pub mod gas_units;
 pub use gas_units::{GIGAGAS, KILOGAS, MEGAGAS};
 
-/// The client version: `reth/v{major}.{minor}.{patch}`
-pub const RETH_CLIENT_VERSION: &str = concat!("reth/v", env!("CARGO_PKG_VERSION"));
+/// The client version: `evm/v{major}.{minor}.{patch}`
+pub const EVM_CLIENT_VERSION: &str = concat!("evm/v", env!("CARGO_PKG_VERSION"));
 
 /// Minimum gas limit allowed for transactions.
 pub const MINIMUM_GAS_LIMIT: u64 = 5000;

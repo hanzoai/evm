@@ -7,13 +7,13 @@
 //! cargo run -p custom-payload-builder -- node
 //! ```
 //!
-//! This launches a regular reth node overriding the engine api payload builder with our custom.
+//! This launches a regular evm node overriding the engine api payload builder with our custom.
 
 #![warn(unused_crate_dependencies)]
 
 use crate::generator::EmptyBlockPayloadJobGenerator;
-use reth_basic_payload_builder::BasicPayloadJobGeneratorConfig;
-use reth_ethereum::{
+use hanzo_evm_basic_payload_builder::BasicPayloadJobGeneratorConfig;
+use hanzo_evm_ethereum::{
     chainspec::ChainSpec,
     cli::interface::Cli,
     node::{
@@ -27,8 +27,8 @@ use reth_ethereum::{
     provider::CanonStateSubscriptions,
     EthPrimitives, TransactionSigned,
 };
-use reth_ethereum_payload_builder::EthereumBuilderConfig;
-use reth_payload_builder::{PayloadBuilderHandle, PayloadBuilderService};
+use hanzo_evm_ethereum_payload_builder::EthereumBuilderConfig;
+use hanzo_evm_payload_builder::{PayloadBuilderHandle, PayloadBuilderService};
 
 pub mod generator;
 pub mod job;
@@ -54,14 +54,14 @@ where
         self,
         ctx: &BuilderContext<Node>,
         pool: Pool,
-        evm_config: EthEvmConfig,
+        hanzo_evm_config: EthEvmConfig,
     ) -> eyre::Result<PayloadBuilderHandle<<Node::Types as NodeTypes>::Payload>> {
         tracing::info!("Spawning a custom payload builder");
 
-        let payload_builder = reth_ethereum_payload_builder::EthereumPayloadBuilder::new(
+        let payload_builder = hanzo_evm_ethereum_payload_builder::EthereumPayloadBuilder::new(
             ctx.provider().clone(),
             pool,
-            evm_config,
+            hanzo_evm_config,
             EthereumBuilderConfig::new()
                 .with_extra_data(ctx.payload_builder_config().extra_data_bytes()),
         );

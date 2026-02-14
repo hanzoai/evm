@@ -1,7 +1,7 @@
 use super::{TrieCursor, TrieCursorFactory, TrieStorageCursor};
 use crate::{BranchNodeCompact, Nibbles};
 use alloy_primitives::B256;
-use reth_storage_errors::db::DatabaseError;
+use hanzo_evm_storage_errors::db::DatabaseError;
 
 /// Noop trie cursor factory.
 #[derive(Clone, Default, Debug)]

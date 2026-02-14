@@ -10,8 +10,8 @@ use alloy_primitives::{Address, U256};
 use alloy_rpc_types_eth::{request::TransactionRequest, Transaction, TransactionInfo};
 use core::error;
 use dyn_clone::DynClone;
-use reth_evm::{BlockEnvFor, ConfigureEvm, EvmEnvFor, TxEnvFor};
-use reth_primitives_traits::{
+use hanzo_evm_execution::{BlockEnvFor, ConfigureEvm, EvmEnvFor, TxEnvFor};
+use hanzo_evm_primitives_traits::{
     BlockTy, HeaderTy, NodePrimitives, SealedBlock, SealedHeader, SealedHeaderFor, TransactionMeta,
     TxTy,
 };
@@ -922,7 +922,7 @@ pub trait TryFromTransactionResponse<N: Network> {
 }
 
 impl TryFromTransactionResponse<alloy_network::Ethereum>
-    for reth_ethereum_primitives::TransactionSigned
+    for hanzo_evm_ethereum_primitives::TransactionSigned
 {
     type Error = Infallible;
 
@@ -967,7 +967,7 @@ mod transaction_response_tests {
             effective_gas_price: None,
         };
 
-        let result = <reth_ethereum_primitives::TransactionSigned as TryFromTransactionResponse<
+        let result = <hanzo_evm_ethereum_primitives::TransactionSigned as TryFromTransactionResponse<
             Ethereum,
         >>::from_transaction_response(tx_response);
         assert!(result.is_ok());

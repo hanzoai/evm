@@ -28,7 +28,7 @@ use jsonrpsee::{
     },
     types::{ErrorObjectOwned, Id, Request},
 };
-use reth_ethereum::{
+use hanzo_evm_ethereum::{
     cli::{chainspec::EthereumChainSpecParser, interface::Cli},
     node::{EthereumAddOns, EthereumNode},
 };

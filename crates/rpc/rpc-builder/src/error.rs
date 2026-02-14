@@ -1,5 +1,5 @@
-use crate::{cors::CorsDomainError, RethRpcModule};
-use reth_ipc::server::IpcServerStartError;
+use crate::{cors::CorsDomainError, EvmRpcModule};
+use hanzo_evm_ipc::server::IpcServerStartError;
 use std::{
     collections::HashSet,
     io::{self, ErrorKind},
@@ -89,11 +89,11 @@ impl RpcError {
 #[derive(Debug)]
 pub struct ConflictingModules {
     /// Modules present in both http and ws.
-    pub overlap: HashSet<RethRpcModule>,
+    pub overlap: HashSet<EvmRpcModule>,
     /// Modules present in http but not in ws.
-    pub http_not_ws: HashSet<RethRpcModule>,
+    pub http_not_ws: HashSet<EvmRpcModule>,
     /// Modules present in ws but not in http.
-    pub ws_not_http: HashSet<RethRpcModule>,
+    pub ws_not_http: HashSet<EvmRpcModule>,
 }
 
 impl std::fmt::Display for ConflictingModules {

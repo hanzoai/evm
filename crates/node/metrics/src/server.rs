@@ -11,8 +11,8 @@ use http_body_util::Full;
 use metrics::describe_gauge;
 use metrics_process::Collector;
 use reqwest::Client;
-use reth_metrics::metrics::Unit;
-use reth_tasks::TaskExecutor;
+use hanzo_evm_metrics::metrics::Unit;
+use hanzo_evm_tasks::TaskExecutor;
 use std::{convert::Infallible, net::SocketAddr, path::PathBuf, sync::Arc, time::Duration};
 
 /// Configuration for the [`MetricServer`]
@@ -128,7 +128,7 @@ impl MetricServer {
             .await
             .wrap_err("Could not bind to address")?;
 
-        tracing::info!(target: "reth::cli", "Starting metrics endpoint at {}", listener.local_addr().unwrap());
+        tracing::info!(target: "evm::cli", "Starting metrics endpoint at {}", listener.local_addr().unwrap());
 
         task_executor.spawn_with_graceful_shutdown_signal(|mut signal| {
             Box::pin(async move {
@@ -390,7 +390,7 @@ fn jemalloc_pprof_dump(pprof_dump_dir: &PathBuf) -> eyre::Result<Vec<u8>> {
     use pprof_util::parse_jeheap;
     use tempfile::NamedTempFile;
 
-    reth_fs_util::create_dir_all(pprof_dump_dir)?;
+    hanzo_evm_fs_util::create_dir_all(pprof_dump_dir)?;
     let f = NamedTempFile::new_in(pprof_dump_dir)?;
     let path = CString::new(f.path().as_os_str().as_encoded_bytes()).unwrap();
 
@@ -419,7 +419,7 @@ fn handle_pprof_heap(_pprof_dump_dir: &PathBuf) -> Response<Full<Bytes>> {
 mod tests {
     use super::*;
     use reqwest::Client;
-    use reth_tasks::TaskManager;
+    use hanzo_evm_tasks::TaskManager;
     use socket2::{Domain, Socket, Type};
     use std::net::{SocketAddr, TcpListener};
 
@@ -469,7 +469,7 @@ mod tests {
 
         // Check the response body
         let body = response.text().await.unwrap();
-        assert!(body.contains("reth_process_cpu_seconds_total"));
-        assert!(body.contains("reth_process_start_time_seconds"));
+        assert!(body.contains("evm_process_cpu_seconds_total"));
+        assert!(body.contains("evm_process_start_time_seconds"));
     }
 }

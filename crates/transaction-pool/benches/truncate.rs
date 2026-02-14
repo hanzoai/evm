@@ -4,7 +4,7 @@ use criterion::{
     criterion_group, criterion_main, measurement::WallTime, BenchmarkGroup, Criterion,
 };
 use proptest::{prelude::*, strategy::ValueTree, test_runner::TestRunner};
-use reth_transaction_pool::{
+use hanzo_evm_transaction_pool::{
     pool::{BasefeeOrd, BlobTransactions, ParkedPool, PendingPool, QueuedOrd},
     test_utils::{MockOrdering, MockTransaction, MockTransactionFactory},
     SubPoolLimit,

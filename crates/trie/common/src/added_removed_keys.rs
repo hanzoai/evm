@@ -92,7 +92,7 @@ mod tests {
     use super::*;
     use crate::HashedStorage;
     use alloy_primitives::U256;
-    use reth_primitives_traits::Account;
+    use hanzo_evm_primitives_traits::Account;
 
     #[test]
     fn test_update_with_state_storage_keys_non_zero() {

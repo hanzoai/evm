@@ -3,25 +3,25 @@
 
 use alloy_consensus::Header;
 use rand::Rng;
-use reth_eth_wire::{EthVersion, HeadersDirection};
-use reth_ethereum_primitives::Block;
-use reth_network::{
+use hanzo_evm_eth_wire::{EthVersion, HeadersDirection};
+use hanzo_evm_ethereum_primitives::Block;
+use hanzo_evm_network::{
     test_utils::{NetworkEventStream, PeerConfig, Testnet},
     BlockDownloaderProvider, NetworkEventListenerProvider,
 };
-use reth_network_api::{NetworkInfo, Peers};
-use reth_network_p2p::{
+use hanzo_evm_network_api::{NetworkInfo, Peers};
+use hanzo_evm_network_p2p::{
     bodies::client::BodiesClient,
     headers::client::{HeadersClient, HeadersRequest},
 };
-use reth_provider::test_utils::MockEthProvider;
-use reth_transaction_pool::test_utils::{TestPool, TransactionGenerator};
+use hanzo_evm_provider::test_utils::MockEthProvider;
+use hanzo_evm_transaction_pool::test_utils::{TestPool, TransactionGenerator};
 use std::sync::Arc;
 use tokio::sync::oneshot;
 
 #[tokio::test(flavor = "multi_thread")]
 async fn test_get_body() {
-    reth_tracing::init_test_tracing();
+    hanzo_evm_tracing::init_test_tracing();
     let mut rng = rand::rng();
     let mock_provider = Arc::new(MockEthProvider::default());
     let mut tx_gen = TransactionGenerator::new(rand::rng());
@@ -64,7 +64,7 @@ async fn test_get_body() {
 
 #[tokio::test(flavor = "multi_thread")]
 async fn test_get_body_range() {
-    reth_tracing::init_test_tracing();
+    hanzo_evm_tracing::init_test_tracing();
     let mut rng = rand::rng();
     let mock_provider = Arc::new(MockEthProvider::default());
     let mut tx_gen = TransactionGenerator::new(rand::rng());
@@ -118,7 +118,7 @@ async fn test_get_body_range() {
 
 #[tokio::test(flavor = "multi_thread")]
 async fn test_get_header() {
-    reth_tracing::init_test_tracing();
+    hanzo_evm_tracing::init_test_tracing();
     let mut rng = rand::rng();
     let mock_provider = Arc::new(MockEthProvider::default());
 
@@ -164,7 +164,7 @@ async fn test_get_header() {
 
 #[tokio::test(flavor = "multi_thread")]
 async fn test_get_header_range() {
-    reth_tracing::init_test_tracing();
+    hanzo_evm_tracing::init_test_tracing();
     let mut rng = rand::rng();
     let mock_provider = Arc::new(MockEthProvider::default());
 
@@ -222,7 +222,7 @@ async fn test_get_header_range() {
 
 #[tokio::test(flavor = "multi_thread")]
 async fn test_get_header_range_falling() {
-    reth_tracing::init_test_tracing();
+    hanzo_evm_tracing::init_test_tracing();
     let mut rng = rand::rng();
     let mock_provider = Arc::new(MockEthProvider::default());
 
@@ -282,7 +282,7 @@ async fn test_get_header_range_falling() {
 
 #[tokio::test(flavor = "multi_thread")]
 async fn test_eth68_get_receipts() {
-    reth_tracing::init_test_tracing();
+    hanzo_evm_tracing::init_test_tracing();
     let mut rng = rand::rng();
     let mock_provider = Arc::new(MockEthProvider::default());
 
@@ -316,12 +316,12 @@ async fn test_eth68_get_receipts() {
 
         // Create some test receipts
         let receipts = vec![
-            reth_ethereum_primitives::Receipt {
+            hanzo_evm_ethereum_primitives::Receipt {
                 cumulative_gas_used: 21000,
                 success: true,
                 ..Default::default()
             },
-            reth_ethereum_primitives::Receipt {
+            hanzo_evm_ethereum_primitives::Receipt {
                 cumulative_gas_used: 42000,
                 success: false,
                 ..Default::default()
@@ -335,8 +335,8 @@ async fn test_eth68_get_receipts() {
         let (tx, rx) = oneshot::channel();
         handle0.send_request(
             *handle1.peer_id(),
-            reth_network::PeerRequest::GetReceipts {
-                request: reth_eth_wire::GetReceipts(vec![block_hash]),
+            hanzo_evm_network::PeerRequest::GetReceipts {
+                request: hanzo_evm_eth_wire::GetReceipts(vec![block_hash]),
                 response: tx,
             },
         );
@@ -353,7 +353,7 @@ async fn test_eth68_get_receipts() {
 
 #[tokio::test(flavor = "multi_thread")]
 async fn test_eth69_get_headers() {
-    reth_tracing::init_test_tracing();
+    hanzo_evm_tracing::init_test_tracing();
     let mut rng = rand::rng();
     let mock_provider = Arc::new(MockEthProvider::default());
 
@@ -405,7 +405,7 @@ async fn test_eth69_get_headers() {
 
 #[tokio::test(flavor = "multi_thread")]
 async fn test_eth69_get_bodies() {
-    reth_tracing::init_test_tracing();
+    hanzo_evm_tracing::init_test_tracing();
     let mut rng = rand::rng();
     let mock_provider = Arc::new(MockEthProvider::default());
     let mut tx_gen = TransactionGenerator::new(rand::rng());
@@ -454,7 +454,7 @@ async fn test_eth69_get_bodies() {
 
 #[tokio::test(flavor = "multi_thread")]
 async fn test_eth69_get_receipts() {
-    reth_tracing::init_test_tracing();
+    hanzo_evm_tracing::init_test_tracing();
     let mut rng = rand::rng();
     let mock_provider = Arc::new(MockEthProvider::default());
 
@@ -490,12 +490,12 @@ async fn test_eth69_get_receipts() {
 
         // Create some test receipts
         let receipts = vec![
-            reth_ethereum_primitives::Receipt {
+            hanzo_evm_ethereum_primitives::Receipt {
                 cumulative_gas_used: 21000,
                 success: true,
                 ..Default::default()
             },
-            reth_ethereum_primitives::Receipt {
+            hanzo_evm_ethereum_primitives::Receipt {
                 cumulative_gas_used: 42000,
                 success: false,
                 ..Default::default()
@@ -508,8 +508,8 @@ async fn test_eth69_get_receipts() {
         let (tx, rx) = oneshot::channel();
         handle0.send_request(
             *handle1.peer_id(),
-            reth_network::PeerRequest::GetReceipts69 {
-                request: reth_eth_wire::GetReceipts(vec![block_hash]),
+            hanzo_evm_network::PeerRequest::GetReceipts69 {
+                request: hanzo_evm_eth_wire::GetReceipts(vec![block_hash]),
                 response: tx,
             },
         );

@@ -1,6 +1,6 @@
 //! # RPC Blockchain Provider for Reth
 //!
-//! This crate provides an RPC-based implementation of reth's `StateProviderFactory` and related
+//! This crate provides an RPC-based implementation of evm's `StateProviderFactory` and related
 //! traits that fetches blockchain data via RPC instead of from a local database.
 //!
 //! Similar to the [`BlockchainProvider`](../../provider/src/providers/blockchain_provider.rs)
@@ -14,12 +14,12 @@
 //! - Implements `StateProviderFactory` for remote RPC state access
 //! - Supports Ethereum and Optimism network
 //! - Useful for testing without requiring a full database
-//! - Can be used with reth ExEx (Execution Extensions) for testing
+//! - Can be used with evm ExEx (Execution Extensions) for testing
 
 #![doc(
-    html_logo_url = "https://raw.githubusercontent.com/paradigmxyz/reth/main/assets/reth-docs.png",
+    html_logo_url = "https://raw.githubusercontent.com/hanzoai/evm/main/assets/evm-docs.png",
     html_favicon_url = "https://avatars0.githubusercontent.com/u/97369466?s=256",
-    issue_tracker_base_url = "https://github.com/paradigmxyz/reth/issues/"
+    issue_tracker_base_url = "https://github.com/hanzoai/evm/issues/"
 )]
 #![cfg_attr(not(test), warn(unused_crate_dependencies))]
 #![cfg_attr(docsrs, feature(doc_cfg))]
@@ -32,17 +32,17 @@ use alloy_provider::{ext::DebugApi, network::Network, Provider};
 use alloy_rpc_types::{AccountInfo, BlockId};
 use alloy_rpc_types_engine::ForkchoiceState;
 use dashmap::DashMap;
-use reth_chainspec::{ChainInfo, ChainSpecProvider};
-use reth_db_api::{
+use hanzo_evm_chainspec::{ChainInfo, ChainSpecProvider};
+use hanzo_evm_db_api::{
     mock::{DatabaseMock, TxMock},
     models::StoredBlockBodyIndices,
 };
-use reth_errors::{ProviderError, ProviderResult};
-use reth_node_types::{
+use hanzo_evm_errors::{ProviderError, ProviderResult};
+use hanzo_evm_node_types::{
     Block, BlockBody, BlockTy, HeaderTy, NodeTypes, PrimitivesTy, ReceiptTy, TxTy,
 };
-use reth_primitives::{Account, Bytecode, RecoveredBlock, SealedHeader, TransactionMeta};
-use reth_provider::{
+use hanzo_evm_primitives::{Account, Bytecode, RecoveredBlock, SealedHeader, TransactionMeta};
+use hanzo_evm_provider::{
     AccountReader, BlockHashReader, BlockIdReader, BlockNumReader, BlockReader, BytecodeReader,
     CanonChainTracker, CanonStateNotification, CanonStateNotifications, CanonStateSubscriptions,
     ChainStateBlockReader, ChainStateBlockWriter, ChangeSetReader, DatabaseProviderFactory,
@@ -50,14 +50,14 @@ use reth_provider::{
     StateProviderBox, StateProviderFactory, StateReader, StateRootProvider, StorageReader,
     TransactionVariant, TransactionsProvider,
 };
-use reth_prune_types::{PruneCheckpoint, PruneSegment};
-use reth_rpc_convert::{TryFromBlockResponse, TryFromReceiptResponse, TryFromTransactionResponse};
-use reth_stages_types::{StageCheckpoint, StageId};
-use reth_storage_api::{
+use hanzo_evm_prune_types::{PruneCheckpoint, PruneSegment};
+use hanzo_evm_rpc_convert::{TryFromBlockResponse, TryFromReceiptResponse, TryFromTransactionResponse};
+use hanzo_evm_stages_types::{StageCheckpoint, StageId};
+use hanzo_evm_storage_api::{
     BlockBodyIndicesProvider, BlockReaderIdExt, BlockSource, DBProvider, NodePrimitivesProvider,
     ReceiptProviderIdExt, StatsReader,
 };
-use reth_trie::{updates::TrieUpdates, AccountProof, HashedPostState, MultiProof, TrieInput};
+use hanzo_evm_trie::{updates::TrieUpdates, AccountProof, HashedPostState, MultiProof, TrieInput};
 use std::{
     collections::BTreeMap,
     future::{Future, IntoFuture},
@@ -77,12 +77,12 @@ pub struct RpcBlockchainProviderConfig {
     /// If enabled, the node will use Reth's RPC methods (`debug_codeByHash` and
     /// `eth_getAccountInfo`) to speed up account information retrieval. When disabled, it will
     /// use multiple standard RPC calls to get account information.
-    pub reth_rpc_support: bool,
+    pub hanzo_evm_rpc_support: bool,
 }
 
 impl Default for RpcBlockchainProviderConfig {
     fn default() -> Self {
-        Self { compute_state_root: false, reth_rpc_support: true }
+        Self { compute_state_root: false, hanzo_evm_rpc_support: true }
     }
 }
 
@@ -94,8 +94,8 @@ impl RpcBlockchainProviderConfig {
     }
 
     /// Sets whether to use Reth-specific RPC methods for better performance
-    pub const fn with_reth_rpc_support(mut self, support: bool) -> Self {
-        self.reth_rpc_support = support;
+    pub const fn with_hanzo_evm_rpc_support(mut self, support: bool) -> Self {
+        self.hanzo_evm_rpc_support = support;
         self
     }
 }
@@ -207,7 +207,7 @@ where
             self.chain_spec.clone(),
         )
         .with_compute_state_root(self.config.compute_state_root)
-        .with_reth_rpc_support(self.config.reth_rpc_support)
+        .with_hanzo_evm_rpc_support(self.config.hanzo_evm_rpc_support)
     }
 
     /// Helper function to get state provider by block number
@@ -253,7 +253,7 @@ where
     N: Network,
     Node: NodeTypes,
 {
-    fn chain_info(&self) -> Result<reth_chainspec::ChainInfo, ProviderError> {
+    fn chain_info(&self) -> Result<hanzo_evm_chainspec::ChainInfo, ProviderError> {
         self.block_on_async(async {
             let block = self
                 .provider
@@ -912,7 +912,7 @@ where
     /// Since the state provider is short-lived, we don't worry about memory leaks.
     code_store: DashMap<B256, Bytecode>,
     /// Whether to use Reth-specific RPC methods for better performance
-    reth_rpc_support: bool,
+    hanzo_evm_rpc_support: bool,
 }
 
 impl<P: std::fmt::Debug, Node: NodeTypes, N> std::fmt::Debug
@@ -941,7 +941,7 @@ impl<P: Clone, Node: NodeTypes, N> RpcBlockchainStateProvider<P, Node, N> {
             chain_spec: None,
             compute_state_root: false,
             code_store: Default::default(),
-            reth_rpc_support: true,
+            hanzo_evm_rpc_support: true,
         }
     }
 
@@ -959,7 +959,7 @@ impl<P: Clone, Node: NodeTypes, N> RpcBlockchainStateProvider<P, Node, N> {
             chain_spec: Some(chain_spec),
             compute_state_root: false,
             code_store: Default::default(),
-            reth_rpc_support: true,
+            hanzo_evm_rpc_support: true,
         }
     }
 
@@ -981,7 +981,7 @@ impl<P: Clone, Node: NodeTypes, N> RpcBlockchainStateProvider<P, Node, N> {
             chain_spec: self.chain_spec.clone(),
             compute_state_root: self.compute_state_root,
             code_store: Default::default(),
-            reth_rpc_support: self.reth_rpc_support,
+            hanzo_evm_rpc_support: self.hanzo_evm_rpc_support,
         }
     }
 
@@ -999,8 +999,8 @@ impl<P: Clone, Node: NodeTypes, N> RpcBlockchainStateProvider<P, Node, N> {
     /// If enabled, the node will use Reth's RPC methods (`debug_codeByHash` and
     /// `eth_getAccountInfo`) to speed up account information retrieval. When disabled, it will
     /// use multiple standard RPC calls to get account information.
-    pub const fn with_reth_rpc_support(mut self, is_enable: bool) -> Self {
-        self.reth_rpc_support = is_enable;
+    pub const fn with_hanzo_evm_rpc_support(mut self, is_enable: bool) -> Self {
+        self.hanzo_evm_rpc_support = is_enable;
         self
     }
 
@@ -1012,7 +1012,7 @@ impl<P: Clone, Node: NodeTypes, N> RpcBlockchainStateProvider<P, Node, N> {
     {
         let account_info = self.block_on_async(async {
             // Get account info in a single RPC call using `eth_getAccountInfo`
-            if self.reth_rpc_support {
+            if self.hanzo_evm_rpc_support {
                 return self
                     .provider
                     .get_account_info(address)
@@ -1114,12 +1114,12 @@ where
     Node: NodeTypes,
 {
     fn bytecode_by_hash(&self, code_hash: &B256) -> Result<Option<Bytecode>, ProviderError> {
-        if !self.reth_rpc_support {
+        if !self.hanzo_evm_rpc_support {
             return Ok(self.code_store.get(code_hash).map(|entry| entry.value().clone()));
         }
 
         self.block_on_async(async {
-            // The method `debug_codeByHash` is currently only available on a Reth node
+            // The method `debug_codeByHash` is currently only available on a Hanzo EVM node
             let code = self
                 .provider
                 .debug_code_by_hash(*code_hash, None)
@@ -1200,14 +1200,14 @@ where
     fn plain_state_storages(
         &self,
         addresses_with_keys: impl IntoIterator<Item = (Address, impl IntoIterator<Item = StorageKey>)>,
-    ) -> Result<Vec<(Address, Vec<reth_primitives::StorageEntry>)>, ProviderError> {
+    ) -> Result<Vec<(Address, Vec<hanzo_evm_primitives::StorageEntry>)>, ProviderError> {
         let mut results = Vec::new();
 
         for (address, keys) in addresses_with_keys {
             let mut values = Vec::new();
             for key in keys {
                 let value = self.storage(address, key)?.unwrap_or_default();
-                values.push(reth_primitives::StorageEntry::new(key, value));
+                values.push(hanzo_evm_primitives::StorageEntry::new(key, value));
             }
             results.push((address, values));
         }
@@ -1230,7 +1230,7 @@ where
     }
 }
 
-impl<P, Node, N> reth_storage_api::StorageRootProvider for RpcBlockchainStateProvider<P, Node, N>
+impl<P, Node, N> hanzo_evm_storage_api::StorageRootProvider for RpcBlockchainStateProvider<P, Node, N>
 where
     P: Provider<N> + Clone + 'static,
     N: Network,
@@ -1239,7 +1239,7 @@ where
     fn storage_root(
         &self,
         _address: Address,
-        _hashed_storage: reth_trie::HashedStorage,
+        _hashed_storage: hanzo_evm_trie::HashedStorage,
     ) -> Result<B256, ProviderError> {
         // RPC doesn't provide storage root computation
         Err(ProviderError::UnsupportedProvider)
@@ -1249,8 +1249,8 @@ where
         &self,
         _address: Address,
         _slot: B256,
-        _hashed_storage: reth_trie::HashedStorage,
-    ) -> Result<reth_trie::StorageProof, ProviderError> {
+        _hashed_storage: hanzo_evm_trie::HashedStorage,
+    ) -> Result<hanzo_evm_trie::StorageProof, ProviderError> {
         Err(ProviderError::UnsupportedProvider)
     }
 
@@ -1258,13 +1258,13 @@ where
         &self,
         _address: Address,
         _slots: &[B256],
-        _hashed_storage: reth_trie::HashedStorage,
-    ) -> Result<reth_trie::StorageMultiProof, ProviderError> {
+        _hashed_storage: hanzo_evm_trie::HashedStorage,
+    ) -> Result<hanzo_evm_trie::StorageMultiProof, ProviderError> {
         Err(ProviderError::UnsupportedProvider)
     }
 }
 
-impl<P, Node, N> reth_storage_api::StateProofProvider for RpcBlockchainStateProvider<P, Node, N>
+impl<P, Node, N> hanzo_evm_storage_api::StateProofProvider for RpcBlockchainStateProvider<P, Node, N>
 where
     P: Provider<N> + Clone + 'static,
     N: Network,
@@ -1282,7 +1282,7 @@ where
     fn multiproof(
         &self,
         _input: TrieInput,
-        _targets: reth_trie::MultiProofTargets,
+        _targets: hanzo_evm_trie::MultiProofTargets,
     ) -> Result<MultiProof, ProviderError> {
         Err(ProviderError::UnsupportedProvider)
     }
@@ -1296,7 +1296,7 @@ where
     }
 }
 
-impl<P, Node, N> reth_storage_api::HashedPostStateProvider
+impl<P, Node, N> hanzo_evm_storage_api::HashedPostStateProvider
     for RpcBlockchainStateProvider<P, Node, N>
 where
     P: Provider<N> + Clone + 'static,
@@ -1320,7 +1320,7 @@ where
     fn get_state(
         &self,
         _block: BlockNumber,
-    ) -> Result<Option<reth_execution_types::ExecutionOutcome<Self::Receipt>>, ProviderError> {
+    ) -> Result<Option<hanzo_evm_execution_types::ExecutionOutcome<Self::Receipt>>, ProviderError> {
         // RPC doesn't provide execution outcomes
         Err(ProviderError::UnsupportedProvider)
     }
@@ -1357,7 +1357,7 @@ where
         unimplemented!("commit not supported for RPC provider")
     }
 
-    fn prune_modes_ref(&self) -> &reth_prune_types::PruneModes {
+    fn prune_modes_ref(&self) -> &hanzo_evm_prune_types::PruneModes {
         unimplemented!("prune modes not supported for RPC provider")
     }
 }
@@ -1465,7 +1465,7 @@ where
     fn find_block_by_hash(
         &self,
         _hash: B256,
-        _source: reth_provider::BlockSource,
+        _source: hanzo_evm_provider::BlockSource,
     ) -> Result<Option<Self::Block>, ProviderError> {
         Err(ProviderError::UnsupportedProvider)
     }
@@ -1729,7 +1729,7 @@ where
     fn account_block_changeset(
         &self,
         _block_number: BlockNumber,
-    ) -> Result<Vec<reth_db_api::models::AccountBeforeTx>, ProviderError> {
+    ) -> Result<Vec<hanzo_evm_db_api::models::AccountBeforeTx>, ProviderError> {
         Err(ProviderError::UnsupportedProvider)
     }
 
@@ -1737,14 +1737,14 @@ where
         &self,
         _block_number: BlockNumber,
         _address: Address,
-    ) -> ProviderResult<Option<reth_db_api::models::AccountBeforeTx>> {
+    ) -> ProviderResult<Option<hanzo_evm_db_api::models::AccountBeforeTx>> {
         Err(ProviderError::UnsupportedProvider)
     }
 
     fn account_changesets_range(
         &self,
         _range: impl std::ops::RangeBounds<BlockNumber>,
-    ) -> ProviderResult<Vec<(BlockNumber, reth_db_api::models::AccountBeforeTx)>> {
+    ) -> ProviderResult<Vec<(BlockNumber, hanzo_evm_db_api::models::AccountBeforeTx)>> {
         Err(ProviderError::UnsupportedProvider)
     }
 
@@ -1851,7 +1851,7 @@ where
     N: Network,
     Node: NodeTypes,
 {
-    fn count_entries<T: reth_db_api::table::Table>(&self) -> Result<usize, ProviderError> {
+    fn count_entries<T: hanzo_evm_db_api::table::Table>(&self) -> Result<usize, ProviderError> {
         Ok(0)
     }
 }
@@ -1865,14 +1865,14 @@ where
     fn block_body_indices(
         &self,
         _num: u64,
-    ) -> Result<Option<reth_db_api::models::StoredBlockBodyIndices>, ProviderError> {
+    ) -> Result<Option<hanzo_evm_db_api::models::StoredBlockBodyIndices>, ProviderError> {
         Err(ProviderError::UnsupportedProvider)
     }
 
     fn block_body_indices_range(
         &self,
         _range: RangeInclusive<u64>,
-    ) -> Result<Vec<reth_db_api::models::StoredBlockBodyIndices>, ProviderError> {
+    ) -> Result<Vec<hanzo_evm_db_api::models::StoredBlockBodyIndices>, ProviderError> {
         Err(ProviderError::UnsupportedProvider)
     }
 }

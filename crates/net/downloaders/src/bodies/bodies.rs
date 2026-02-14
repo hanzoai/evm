@@ -4,9 +4,9 @@ use alloy_consensus::BlockHeader;
 use alloy_primitives::BlockNumber;
 use futures::Stream;
 use futures_util::StreamExt;
-use reth_config::BodiesConfig;
-use reth_consensus::Consensus;
-use reth_network_p2p::{
+use hanzo_evm_config::BodiesConfig;
+use hanzo_evm_consensus::Consensus;
+use hanzo_evm_network_p2p::{
     bodies::{
         client::BodiesClient,
         downloader::{BodyDownloader, BodyDownloaderResult},
@@ -14,9 +14,9 @@ use reth_network_p2p::{
     },
     error::{DownloadError, DownloadResult},
 };
-use reth_primitives_traits::{size::InMemorySize, Block, SealedHeader};
-use reth_storage_api::HeaderProvider;
-use reth_tasks::{TaskSpawner, TokioTaskExecutor};
+use hanzo_evm_primitives_traits::{size::InMemorySize, Block, SealedHeader};
+use hanzo_evm_storage_api::HeaderProvider;
+use hanzo_evm_tasks::{TaskSpawner, TokioTaskExecutor};
 use std::{
     cmp::Ordering,
     collections::BinaryHeap,
@@ -623,9 +623,9 @@ mod tests {
     };
     use alloy_primitives::{map::B256Map, B256};
     use assert_matches::assert_matches;
-    use reth_consensus::test_utils::TestConsensus;
-    use reth_provider::test_utils::create_test_provider_factory;
-    use reth_testing_utils::generators::{self, random_block_range, BlockRangeParams};
+    use hanzo_evm_consensus::test_utils::TestConsensus;
+    use hanzo_evm_provider::test_utils::create_test_provider_factory;
+    use hanzo_evm_testing_utils::generators::{self, random_block_range, BlockRangeParams};
 
     // Check that the blocks are emitted in order of block number, not in order of
     // first-downloaded
@@ -642,7 +642,7 @@ mod tests {
         );
 
         let mut downloader = BodiesDownloaderBuilder::default()
-            .build::<reth_ethereum_primitives::Block, _, _>(
+            .build::<hanzo_evm_ethereum_primitives::Block, _, _>(
                 client.clone(),
                 Arc::new(TestConsensus::default()),
                 factory,
@@ -682,7 +682,7 @@ mod tests {
 
         let mut downloader = BodiesDownloaderBuilder::default()
             .with_request_limit(request_limit)
-            .build::<reth_ethereum_primitives::Block, _, _>(
+            .build::<hanzo_evm_ethereum_primitives::Block, _, _>(
             client.clone(),
             Arc::new(TestConsensus::default()),
             factory,
@@ -711,7 +711,7 @@ mod tests {
         let mut downloader = BodiesDownloaderBuilder::default()
             .with_stream_batch_size(stream_batch_size)
             .with_request_limit(request_limit)
-            .build::<reth_ethereum_primitives::Block, _, _>(
+            .build::<hanzo_evm_ethereum_primitives::Block, _, _>(
                 client.clone(),
                 Arc::new(TestConsensus::default()),
                 factory,
@@ -744,7 +744,7 @@ mod tests {
 
         let mut downloader = BodiesDownloaderBuilder::default()
             .with_stream_batch_size(100)
-            .build::<reth_ethereum_primitives::Block, _, _>(
+            .build::<hanzo_evm_ethereum_primitives::Block, _, _>(
             client.clone(),
             Arc::new(TestConsensus::default()),
             factory,
@@ -785,7 +785,7 @@ mod tests {
             .with_stream_batch_size(10)
             .with_request_limit(1)
             .with_max_buffered_blocks_size_bytes(1)
-            .build::<reth_ethereum_primitives::Block, _, _>(
+            .build::<hanzo_evm_ethereum_primitives::Block, _, _>(
                 client.clone(),
                 Arc::new(TestConsensus::default()),
                 factory,
@@ -817,7 +817,7 @@ mod tests {
         let mut downloader = BodiesDownloaderBuilder::default()
             .with_request_limit(3)
             .with_stream_batch_size(100)
-            .build::<reth_ethereum_primitives::Block, _, _>(
+            .build::<hanzo_evm_ethereum_primitives::Block, _, _>(
                 client.clone(),
                 Arc::new(TestConsensus::default()),
                 factory,

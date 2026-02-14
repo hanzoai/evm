@@ -4,15 +4,15 @@ mod user;
 
 use crate::{PruneLimiter, PrunerError};
 use alloy_primitives::{BlockNumber, TxNumber};
-use reth_provider::{
+use hanzo_evm_provider::{
     errors::provider::ProviderResult, BlockReader, PruneCheckpointWriter, StaticFileProviderFactory,
 };
-use reth_prune_types::{
+use hanzo_evm_prune_types::{
     PruneCheckpoint, PruneMode, PruneProgress, PrunePurpose, PruneSegment, SegmentOutput,
     SegmentOutputCheckpoint,
 };
-use reth_stages_types::StageId;
-use reth_static_file_types::StaticFileSegment;
+use hanzo_evm_stages_types::StageId;
+use hanzo_evm_static_file_types::StaticFileSegment;
 pub use set::SegmentSet;
 use std::{fmt::Debug, ops::RangeInclusive};
 use tracing::error;
@@ -238,12 +238,12 @@ impl PruneInput {
 mod tests {
     use super::*;
     use alloy_primitives::B256;
-    use reth_provider::{
+    use hanzo_evm_provider::{
         providers::BlockchainProvider,
         test_utils::{create_test_provider_factory, MockEthProvider},
         BlockWriter,
     };
-    use reth_testing_utils::generators::{self, random_block_range, BlockRangeParams};
+    use hanzo_evm_testing_utils::generators::{self, random_block_range, BlockRangeParams};
 
     #[test]
     fn test_prune_input_get_next_tx_num_range_no_to_block() {

@@ -8,14 +8,14 @@ use alloy_primitives::{B256, U256};
 use alloy_rpc_types_eth::BlockId;
 use derive_more::{Deref, DerefMut, From, Into};
 use itertools::Itertools;
-use reth_rpc_server_types::{
+use hanzo_evm_rpc_server_types::{
     constants,
     constants::gas_oracle::{
         DEFAULT_GAS_PRICE_BLOCKS, DEFAULT_GAS_PRICE_PERCENTILE, DEFAULT_IGNORE_GAS_PRICE,
         DEFAULT_MAX_GAS_PRICE, MAX_HEADER_HISTORY, MAX_REWARD_PERCENTILE_COUNT, SAMPLE_NUMBER,
     },
 };
-use reth_storage_api::{BlockReaderIdExt, NodePrimitivesProvider};
+use hanzo_evm_storage_api::{BlockReaderIdExt, NodePrimitivesProvider};
 use schnellru::{ByLength, LruMap};
 use serde::{Deserialize, Serialize};
 use std::fmt::{self, Debug, Formatter};

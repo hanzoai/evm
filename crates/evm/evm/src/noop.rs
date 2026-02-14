@@ -1,7 +1,7 @@
 //! Helpers for testing.
 
 use crate::{ConfigureEvm, EvmEnvFor};
-use reth_primitives_traits::{BlockTy, HeaderTy, SealedBlock, SealedHeader};
+use hanzo_evm_primitives_traits::{BlockTy, HeaderTy, SealedBlock, SealedHeader};
 
 /// A no-op EVM config that panics on any call. Used as a typesystem hack to satisfy
 /// [`ConfigureEvm`] bounds.

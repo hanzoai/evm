@@ -5,18 +5,18 @@ use alloy_network::TxSignerSync;
 use alloy_provider::{Provider, ProviderBuilder};
 use futures::future::JoinAll;
 use rand::{rngs::StdRng, seq::IndexedRandom, Rng, SeedableRng};
-use reth_chainspec::{ChainSpecBuilder, MAINNET};
-use reth_e2e_test_utils::{
+use hanzo_evm_chainspec::{ChainSpecBuilder, MAINNET};
+use hanzo_evm_e2e_test_utils::{
     setup, setup_engine, setup_engine_with_connection, transaction::TransactionTestContext,
     wallet::Wallet,
 };
-use reth_node_ethereum::EthereumNode;
-use reth_rpc_api::EthApiServer;
+use hanzo_evm_node_ethereum::EthereumNode;
+use hanzo_evm_rpc_api::EthApiServer;
 use std::{sync::Arc, time::Duration};
 
 #[tokio::test]
 async fn can_sync() -> eyre::Result<()> {
-    reth_tracing::init_test_tracing();
+    hanzo_evm_tracing::init_test_tracing();
 
     let (mut nodes, _tasks, wallet) = setup::<EthereumNode>(
         2,
@@ -59,7 +59,7 @@ async fn can_sync() -> eyre::Result<()> {
 
 #[tokio::test]
 async fn e2e_test_send_transactions() -> eyre::Result<()> {
-    reth_tracing::init_test_tracing();
+    hanzo_evm_tracing::init_test_tracing();
 
     let seed: [u8; 32] = rand::rng().random();
     let mut rng = StdRng::from_seed(seed);
@@ -101,7 +101,7 @@ async fn e2e_test_send_transactions() -> eyre::Result<()> {
 
 #[tokio::test]
 async fn test_long_reorg() -> eyre::Result<()> {
-    reth_tracing::init_test_tracing();
+    hanzo_evm_tracing::init_test_tracing();
 
     let seed: [u8; 32] = rand::rng().random();
     let mut rng = StdRng::from_seed(seed);
@@ -157,7 +157,7 @@ async fn test_long_reorg() -> eyre::Result<()> {
 
 #[tokio::test]
 async fn test_reorg_through_backfill() -> eyre::Result<()> {
-    reth_tracing::init_test_tracing();
+    hanzo_evm_tracing::init_test_tracing();
 
     let seed: [u8; 32] = rand::rng().random();
     let mut rng = StdRng::from_seed(seed);
@@ -206,7 +206,7 @@ async fn test_reorg_through_backfill() -> eyre::Result<()> {
 
 #[tokio::test(flavor = "multi_thread")]
 async fn test_tx_propagation() -> eyre::Result<()> {
-    reth_tracing::init_test_tracing();
+    hanzo_evm_tracing::init_test_tracing();
 
     let chain_spec = Arc::new(
         ChainSpecBuilder::default()

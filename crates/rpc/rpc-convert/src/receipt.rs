@@ -18,7 +18,7 @@ pub trait TryFromReceiptResponse<N: Network> {
         Self: Sized;
 }
 
-impl TryFromReceiptResponse<alloy_network::Ethereum> for reth_ethereum_primitives::Receipt {
+impl TryFromReceiptResponse<alloy_network::Ethereum> for hanzo_evm_ethereum_primitives::Receipt {
     type Error = Infallible;
 
     fn from_receipt_response(
@@ -44,7 +44,7 @@ mod tests {
     use super::*;
     use alloy_consensus::ReceiptEnvelope;
     use alloy_network::Ethereum;
-    use reth_ethereum_primitives::Receipt;
+    use hanzo_evm_ethereum_primitives::Receipt;
 
     #[test]
     fn test_try_from_receipt_response() {

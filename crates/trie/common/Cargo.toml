@@ -1,12 +1,12 @@
 [package]
-name = "reth-trie-common"
+name = "hanzo-evm-trie-common"
 version.workspace = true
 edition.workspace = true
 homepage.workspace = true
 license.workspace = true
 repository.workspace = true
 rust-version.workspace = true
-description = "Commonly used types for trie usage in reth."
+description = "Commonly used types for trie usage in Hanzo EVM."
 
 [lints]
 workspace = true
@@ -17,8 +17,8 @@ alloy-primitives.workspace = true
 alloy-rlp = { workspace = true, features = ["arrayvec"] }
 alloy-trie = { workspace = true, features = ["ethereum"] }
 alloy-consensus.workspace = true
-reth-primitives-traits.workspace = true
-reth-codecs = { workspace = true, optional = true }
+hanzo-evm-primitives-traits.workspace = true
+hanzo-evm-codecs = { workspace = true, optional = true }
 
 alloy-rpc-types-eth = { workspace = true, optional = true }
 alloy-serde = { workspace = true, optional = true }
@@ -29,7 +29,7 @@ derive_more.workspace = true
 itertools = { workspace = true, features = ["use_alloc"] }
 nybbles = { workspace = true, features = ["rlp"] }
 
-# reth
+# evm
 revm-database.workspace = true
 
 # `serde` feature
@@ -46,8 +46,8 @@ arbitrary = { workspace = true, features = ["derive"], optional = true }
 rayon = { workspace = true, optional = true }
 
 [dev-dependencies]
-reth-primitives-traits = { workspace = true, features = ["serde"] }
-reth-codecs.workspace = true
+hanzo-evm-primitives-traits = { workspace = true, features = ["serde"] }
+hanzo-evm-codecs.workspace = true
 alloy-genesis.workspace = true
 
 alloy-primitives = { workspace = true, features = ["getrandom"] }
@@ -80,7 +80,7 @@ std = [
     "bytes?/std",
     "derive_more/std",
     "nybbles/std",
-    "reth-primitives-traits/std",
+    "hanzo-evm-primitives-traits/std",
     "serde?/std",
     "serde_with?/std",
     "serde_json/std",
@@ -97,15 +97,15 @@ serde = [
     "alloy-consensus/serde",
     "alloy-trie/serde",
     "alloy-rpc-types-eth?/serde",
-    "reth-primitives-traits/serde",
-    "reth-codecs?/serde",
+    "hanzo-evm-primitives-traits/serde",
+    "hanzo-evm-codecs?/serde",
     "revm-database/serde",
     "revm-state/serde",
 ]
-reth-codec = ["dep:reth-codecs", "dep:bytes", "dep:arrayvec"]
+hanzo-evm-codec = ["dep:hanzo-evm-codecs", "dep:bytes", "dep:arrayvec"]
 serde-bincode-compat = [
     "serde",
-    "reth-primitives-traits/serde-bincode-compat",
+    "hanzo-evm-primitives-traits/serde-bincode-compat",
     "alloy-consensus/serde-bincode-compat",
     "dep:serde_with",
     "alloy-genesis/serde-bincode-compat",
@@ -115,20 +115,20 @@ test-utils = [
     "dep:plain_hasher",
     "dep:hash-db",
     "arbitrary",
-    "reth-primitives-traits/test-utils",
-    "reth-codecs/test-utils",
+    "hanzo-evm-primitives-traits/test-utils",
+    "hanzo-evm-codecs/test-utils",
 ]
 arbitrary = [
     "std",
-    "dep:reth-codecs",
+    "dep:hanzo-evm-codecs",
     "alloy-trie/arbitrary",
     "dep:arbitrary",
     "alloy-serde?/arbitrary",
-    "reth-primitives-traits/arbitrary",
+    "hanzo-evm-primitives-traits/arbitrary",
     "alloy-consensus/arbitrary",
     "alloy-primitives/arbitrary",
     "nybbles/arbitrary",
-    "reth-codecs/arbitrary",
+    "hanzo-evm-codecs/arbitrary",
     "alloy-rpc-types-eth?/arbitrary",
 ]
 rayon = ["dep:rayon"]

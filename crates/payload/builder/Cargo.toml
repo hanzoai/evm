@@ -1,23 +1,23 @@
 [package]
-name = "reth-payload-builder"
+name = "hanzo-evm-payload-builder"
 version.workspace = true
 edition.workspace = true
 rust-version.workspace = true
 license.workspace = true
 homepage.workspace = true
 repository.workspace = true
-description = "reth payload builder"
+description = "Hanzo EVM payload builder"
 
 [lints]
 workspace = true
 
 [dependencies]
-# reth
-reth-primitives-traits.workspace = true
-reth-chain-state.workspace = true
-reth-payload-builder-primitives.workspace = true
-reth-payload-primitives.workspace = true
-reth-ethereum-engine-primitives.workspace = true
+# evm
+hanzo-evm-primitives-traits.workspace = true
+hanzo-evm-chain-state.workspace = true
+hanzo-evm-payload-builder-primitives.workspace = true
+hanzo-evm-payload-primitives.workspace = true
+hanzo-evm-ethereum-engine-primitives.workspace = true
 
 # alloy
 alloy-consensus.workspace = true
@@ -30,7 +30,7 @@ tokio-stream.workspace = true
 futures-util.workspace = true
 
 # metrics
-reth-metrics.workspace = true
+hanzo-evm-metrics.workspace = true
 metrics.workspace = true
 
 # misc
@@ -41,7 +41,7 @@ tokio = { workspace = true, features = ["sync", "rt"] }
 
 [features]
 test-utils = [
-    "reth-chain-state/test-utils",
-    "reth-primitives-traits/test-utils",
+    "hanzo-evm-chain-state/test-utils",
+    "hanzo-evm-primitives-traits/test-utils",
     "tokio/rt",
 ]

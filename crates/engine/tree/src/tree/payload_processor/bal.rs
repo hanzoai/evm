@@ -3,9 +3,9 @@
 use alloy_consensus::constants::KECCAK_EMPTY;
 use alloy_eip7928::BlockAccessList;
 use alloy_primitives::{keccak256, Address, StorageKey, U256};
-use reth_primitives_traits::Account;
-use reth_provider::{AccountReader, ProviderError};
-use reth_trie::{HashedPostState, HashedStorage};
+use hanzo_evm_primitives_traits::Account;
+use hanzo_evm_provider::{AccountReader, ProviderError};
+use hanzo_evm_trie::{HashedPostState, HashedStorage};
 use std::ops::Range;
 
 /// Returns the total number of storage slots (both changed and read-only) across all accounts in
@@ -199,7 +199,7 @@ mod tests {
         AccountChanges, BalanceChange, CodeChange, NonceChange, SlotChanges, StorageChange,
     };
     use alloy_primitives::{Address, Bytes, StorageKey, B256};
-    use reth_revm::test_utils::StateProviderTest;
+    use hanzo_evm_revm::test_utils::StateProviderTest;
 
     #[test]
     fn test_bal_to_hashed_post_state_basic() {

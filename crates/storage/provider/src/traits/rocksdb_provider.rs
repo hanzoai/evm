@@ -2,8 +2,8 @@ use crate::{
     either_writer::{RawRocksDBBatch, RocksBatchArg, RocksTxRefArg},
     providers::RocksDBProvider,
 };
-use reth_storage_api::StorageSettingsCache;
-use reth_storage_errors::provider::ProviderResult;
+use hanzo_evm_storage_api::StorageSettingsCache;
+use hanzo_evm_storage_errors::provider::ProviderResult;
 
 /// `RocksDB` provider factory.
 ///
@@ -104,7 +104,7 @@ pub trait RocksDBProviderFactory {
 #[cfg(all(test, unix, feature = "rocksdb"))]
 mod tests {
     use super::*;
-    use reth_db_api::models::StorageSettings;
+    use hanzo_evm_db_api::models::StorageSettings;
     use std::sync::atomic::{AtomicUsize, Ordering};
 
     /// Mock `RocksDB` provider that tracks `tx()` calls.

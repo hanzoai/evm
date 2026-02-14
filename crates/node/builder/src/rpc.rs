@@ -1,9 +1,9 @@
 //! Builder support for rpc components.
 
 pub use jsonrpsee::server::middleware::rpc::{RpcService, RpcServiceBuilder};
-pub use reth_engine_tree::tree::{BasicEngineValidator, EngineValidator};
-pub use reth_rpc_builder::{middleware::RethRpcMiddleware, Identity, Stack};
-pub use reth_trie_db::ChangesetCache;
+pub use hanzo_evm_engine_tree::tree::{BasicEngineValidator, EngineValidator};
+pub use hanzo_evm_rpc_builder::{middleware::EvmRpcMiddleware, Identity, Stack};
+pub use hanzo_evm_trie_db::ChangesetCache;
 
 use crate::{
     invalid_block_hook::InvalidBlockHookExt, ConfigureEngineEvm, ConsensusEngineEvent,
@@ -13,32 +13,32 @@ use alloy_rpc_types::engine::ClientVersionV1;
 use alloy_rpc_types_engine::ExecutionData;
 use jsonrpsee::{core::middleware::layer::Either, RpcModule};
 use parking_lot::Mutex;
-use reth_chain_state::CanonStateSubscriptions;
-use reth_chainspec::{ChainSpecProvider, EthChainSpec, EthereumHardforks, Hardforks};
-use reth_node_api::{
+use hanzo_evm_chain_state::CanonStateSubscriptions;
+use hanzo_evm_chainspec::{ChainSpecProvider, EthChainSpec, EthereumHardforks, Hardforks};
+use hanzo_evm_node_api::{
     AddOnsContext, BlockTy, EngineApiValidator, EngineTypes, FullNodeComponents, FullNodeTypes,
     NodeAddOns, NodeTypes, PayloadTypes, PayloadValidator, PrimitivesTy, TreeConfig,
 };
-use reth_node_core::{
-    cli::config::RethTransactionPoolConfig,
+use hanzo_evm_node_core::{
+    cli::config::EvmTransactionPoolConfig,
     node_config::NodeConfig,
     version::{version_metadata, CLIENT_CODE},
 };
-use reth_payload_builder::{PayloadBuilderHandle, PayloadStore};
-use reth_rpc::{
+use hanzo_evm_payload_builder::{PayloadBuilderHandle, PayloadStore};
+use hanzo_evm_rpc::{
     eth::{core::EthRpcConverterFor, DevSigner, EthApiTypes, FullEthApiServer},
     AdminApi,
 };
-use reth_rpc_api::{eth::helpers::EthTransactions, IntoEngineApiRpcModule};
-use reth_rpc_builder::{
+use hanzo_evm_rpc_api::{eth::helpers::EthTransactions, IntoEngineApiRpcModule};
+use hanzo_evm_rpc_builder::{
     auth::{AuthRpcModule, AuthServerHandle},
-    config::RethRpcServerConfig,
+    config::EvmRpcServerConfig,
     RpcModuleBuilder, RpcRegistryInner, RpcServerConfig, RpcServerHandle, TransportRpcModules,
 };
-use reth_rpc_engine_api::{capabilities::EngineCapabilities, EngineApi};
-use reth_rpc_eth_types::{cache::cache_new_blocks_task, EthConfig, EthStateCache};
-use reth_tokio_util::EventSender;
-use reth_tracing::tracing::{debug, info};
+use hanzo_evm_rpc_engine_api::{capabilities::EngineCapabilities, EngineApi};
+use hanzo_evm_rpc_eth_types::{cache::cache_new_blocks_task, EthConfig, EthStateCache};
+use hanzo_evm_tokio_util::EventSender;
+use hanzo_evm_tracing::tracing::{debug, info};
 use std::{
     fmt::{self, Debug},
     future::Future,
@@ -51,7 +51,7 @@ use tokio::sync::oneshot;
 ///
 /// This can be used to access the endpoints of the servers.
 #[derive(Debug, Clone)]
-pub struct RethRpcServerHandles {
+pub struct EvmRpcServerHandles {
     /// The regular RPC server handle to all configured transports.
     pub rpc: RpcServerHandle,
     /// The handle to the auth server (engine API)
@@ -139,20 +139,20 @@ pub trait OnRpcStarted<Node: FullNodeComponents, EthApi: EthApiTypes>: Send {
     fn on_rpc_started(
         self: Box<Self>,
         ctx: RpcContext<'_, Node, EthApi>,
-        handles: RethRpcServerHandles,
+        handles: EvmRpcServerHandles,
     ) -> eyre::Result<()>;
 }
 
 impl<Node, EthApi, F> OnRpcStarted<Node, EthApi> for F
 where
-    F: FnOnce(RpcContext<'_, Node, EthApi>, RethRpcServerHandles) -> eyre::Result<()> + Send,
+    F: FnOnce(RpcContext<'_, Node, EthApi>, EvmRpcServerHandles) -> eyre::Result<()> + Send,
     Node: FullNodeComponents,
     EthApi: EthApiTypes,
 {
     fn on_rpc_started(
         self: Box<Self>,
         ctx: RpcContext<'_, Node, EthApi>,
-        handles: RethRpcServerHandles,
+        handles: EvmRpcServerHandles,
     ) -> eyre::Result<()> {
         (*self)(ctx, handles)
     }
@@ -166,7 +166,7 @@ where
     fn on_rpc_started(
         self: Box<Self>,
         _: RpcContext<'_, Node, EthApi>,
-        _: RethRpcServerHandles,
+        _: EvmRpcServerHandles,
     ) -> eyre::Result<()> {
         Ok(())
     }
@@ -257,7 +257,7 @@ pub struct RpcModuleContainer<'a, Node: FullNodeComponents, EthApi: EthApiTypes>
 /// [`AuthRpcModule`].
 ///
 /// This can be used to access installed modules, or create commonly used handlers like
-/// [`reth_rpc::eth::EthApi`], and ultimately merge additional rpc handler into the configured
+/// [`hanzo_evm_rpc::eth::EthApi`], and ultimately merge additional rpc handler into the configured
 /// transport modules [`TransportRpcModules`] as well as configured authenticated methods
 /// [`AuthRpcModule`].
 #[expect(missing_debug_implementations)]
@@ -326,7 +326,7 @@ where
 /// Handle to the launched RPC servers.
 pub struct RpcHandle<Node: FullNodeComponents, EthApi: EthApiTypes> {
     /// Handles to launched servers.
-    pub rpc_server_handles: RethRpcServerHandles,
+    pub rpc_server_handles: EvmRpcServerHandles,
     /// Configured RPC modules.
     pub rpc_registry: RpcRegistry<Node, EthApi>,
     /// Notification channel for engine API events
@@ -375,7 +375,7 @@ where
 
 impl<Node: FullNodeComponents, EthApi: EthApiTypes> RpcHandle<Node, EthApi> {
     /// Returns the RPC server handles.
-    pub const fn rpc_server_handles(&self) -> &RethRpcServerHandles {
+    pub const fn rpc_server_handles(&self) -> &EvmRpcServerHandles {
         &self.rpc_server_handles
     }
 
@@ -492,7 +492,7 @@ struct RpcSetupContext<'a, Node: FullNodeComponents, EthApi: EthApiTypes> {
     config: &'a NodeConfig<<Node::Types as NodeTypes>::ChainSpec>,
     modules: TransportRpcModules,
     auth_module: AuthRpcModule,
-    auth_config: reth_rpc_builder::auth::AuthServerConfig,
+    auth_config: hanzo_evm_rpc_builder::auth::AuthServerConfig,
     registry: RpcRegistry<Node, EthApi>,
     on_rpc_started: Box<dyn OnRpcStarted<Node, EthApi>>,
     engine_events: EventSender<ConsensusEngineEvent<<Node::Types as NodeTypes>::Primitives>>,
@@ -672,7 +672,7 @@ where
     /// # Examples
     ///
     /// ```ignore
-    /// use reth_rpc_builder::{RpcServiceBuilder, RpcRequestMetrics};
+    /// use hanzo_evm_rpc_builder::{RpcServiceBuilder, RpcRequestMetrics};
     /// use tower::Layer;
     ///
     /// // Simple example with metrics
@@ -781,7 +781,7 @@ where
     /// Sets the hook that is run once the rpc server is started.
     pub fn on_rpc_started<F>(mut self, hook: F) -> Self
     where
-        F: FnOnce(RpcContext<'_, Node, EthB::EthApi>, RethRpcServerHandles) -> eyre::Result<()>
+        F: FnOnce(RpcContext<'_, Node, EthB::EthApi>, EvmRpcServerHandles) -> eyre::Result<()>
             + Send
             + 'static,
     {
@@ -825,7 +825,7 @@ where
     EthB: EthApiBuilder<N>,
     EB: EngineApiBuilder<N>,
     EVB: EngineValidatorBuilder<N>,
-    RpcMiddleware: RethRpcMiddleware,
+    RpcMiddleware: EvmRpcMiddleware,
 {
     /// Launches only the regular RPC server (HTTP/WS/IPC), without the authenticated Engine API
     /// server.
@@ -863,7 +863,7 @@ where
         let rpc_server_handle = Self::launch_rpc_server_internal(server_config, &modules).await?;
 
         let handles =
-            RethRpcServerHandles { rpc: rpc_server_handle.clone(), auth: AuthServerHandle::noop() };
+            EvmRpcServerHandles { rpc: rpc_server_handle.clone(), auth: AuthServerHandle::noop() };
         Self::finalize_rpc_setup(
             &mut registry,
             &mut modules,
@@ -947,7 +947,7 @@ where
             (rpc, auth)
         };
 
-        let handles = RethRpcServerHandles { rpc, auth };
+        let handles = EvmRpcServerHandles { rpc, auth };
 
         Self::finalize_rpc_setup(
             &mut registry,
@@ -982,7 +982,7 @@ where
         let engine_api = engine_api_builder.build_engine_api(&ctx).await?;
         let AddOnsContext { node, config, beacon_engine_handle, jwt_secret, engine_events } = ctx;
 
-        info!(target: "reth::cli", "Engine API handler initialized");
+        info!(target: "evm::cli", "Engine API handler initialized");
 
         let cache = EthStateCache::spawn_with(
             node.provider().clone(),
@@ -1010,14 +1010,14 @@ where
 
         let auth_config = config.rpc.auth_server_config(jwt_secret)?;
         let module_config = config.rpc.transport_rpc_module_config();
-        debug!(target: "reth::cli", http=?module_config.http(), ws=?module_config.ws(), "Using RPC module config");
+        debug!(target: "evm::cli", http=?module_config.http(), ws=?module_config.ws(), "Using RPC module config");
 
         let (mut modules, mut auth_module, registry) = RpcModuleBuilder::default()
             .with_provider(node.provider().clone())
             .with_pool(node.pool().clone())
             .with_network(node.network().clone())
             .with_executor(Box::new(node.task_executor().clone()))
-            .with_evm_config(node.evm_config().clone())
+            .with_hanzo_evm_config(node.hanzo_evm_config().clone())
             .with_consensus(node.consensus().clone())
             .build_with_auth_server(module_config, engine_api, eth_api, engine_events.clone());
 
@@ -1064,18 +1064,18 @@ where
         modules: &TransportRpcModules,
     ) -> eyre::Result<RpcServerHandle>
     where
-        M: RethRpcMiddleware,
+        M: EvmRpcMiddleware,
     {
         let handle = server_config.start(modules).await?;
 
         if let Some(path) = handle.ipc_endpoint() {
-            info!(target: "reth::cli", %path, "RPC IPC server started");
+            info!(target: "evm::cli", %path, "RPC IPC server started");
         }
         if let Some(addr) = handle.http_local_addr() {
-            info!(target: "reth::cli", url=%addr, "RPC HTTP server started");
+            info!(target: "evm::cli", url=%addr, "RPC HTTP server started");
         }
         if let Some(addr) = handle.ws_local_addr() {
-            info!(target: "reth::cli", url=%addr, "RPC WS server started");
+            info!(target: "evm::cli", url=%addr, "RPC WS server started");
         }
 
         Ok(handle)
@@ -1084,7 +1084,7 @@ where
     /// Helper to launch the auth server
     async fn launch_auth_server_internal(
         auth_module: AuthRpcModule,
-        auth_config: reth_rpc_builder::auth::AuthServerConfig,
+        auth_config: hanzo_evm_rpc_builder::auth::AuthServerConfig,
     ) -> eyre::Result<AuthServerHandle> {
         auth_module.start_server(auth_config)
             .await
@@ -1092,9 +1092,9 @@ where
             .inspect(|handle| {
                 let addr = handle.local_addr();
                 if let Some(ipc_endpoint) = handle.ipc_endpoint() {
-                    info!(target: "reth::cli", url=%addr, ipc_endpoint=%ipc_endpoint, "RPC auth server started");
+                    info!(target: "evm::cli", url=%addr, ipc_endpoint=%ipc_endpoint, "RPC auth server started");
                 } else {
-                    info!(target: "reth::cli", url=%addr, "RPC auth server started");
+                    info!(target: "evm::cli", url=%addr, "RPC auth server started");
                 }
             })
     }
@@ -1107,7 +1107,7 @@ where
         node: &N,
         config: &NodeConfig<<N::Types as NodeTypes>::ChainSpec>,
         on_rpc_started: Box<dyn OnRpcStarted<N, EthB::EthApi>>,
-        handles: RethRpcServerHandles,
+        handles: EvmRpcServerHandles,
     ) -> eyre::Result<()> {
         let ctx = RpcContext { node: node.clone(), config, registry, modules, auth_module };
 
@@ -1125,7 +1125,7 @@ where
     PVB: PayloadValidatorBuilder<N>,
     EB: EngineApiBuilder<N>,
     EVB: EngineValidatorBuilder<N>,
-    RpcMiddleware: RethRpcMiddleware,
+    RpcMiddleware: EvmRpcMiddleware,
 {
     type Handle = RpcHandle<N, EthB::EthApi>;
 
@@ -1136,7 +1136,7 @@ where
 
 /// Helper trait implemented for add-ons producing [`RpcHandle`]. Used by common node launcher
 /// implementations.
-pub trait RethRpcAddOns<N: FullNodeComponents>:
+pub trait EvmRpcAddOns<N: FullNodeComponents>:
     NodeAddOns<N, Handle = RpcHandle<N, Self::EthApi>>
 {
     /// eth API implementation.
@@ -1146,7 +1146,7 @@ pub trait RethRpcAddOns<N: FullNodeComponents>:
     fn hooks_mut(&mut self) -> &mut RpcHooks<N, Self::EthApi>;
 }
 
-impl<N: FullNodeComponents, EthB, EV, EB, Engine, RpcMiddleware> RethRpcAddOns<N>
+impl<N: FullNodeComponents, EthB, EV, EB, Engine, RpcMiddleware> EvmRpcAddOns<N>
     for RpcAddOns<N, EthB, EV, EB, Engine, RpcMiddleware>
 where
     Self: NodeAddOns<N, Handle = RpcHandle<N, EthB::EthApi>>,
@@ -1177,8 +1177,8 @@ impl<'a, N: FullNodeComponents<Types: NodeTypes<ChainSpec: Hardforks + EthereumH
     EthApiCtx<'a, N>
 {
     /// Provides a [`EthApiBuilder`] with preconfigured config and components.
-    pub fn eth_api_builder(self) -> reth_rpc::EthApiBuilder<N, EthRpcConverterFor<N>> {
-        reth_rpc::EthApiBuilder::new_with_components(self.components.clone())
+    pub fn eth_api_builder(self) -> hanzo_evm_rpc::EthApiBuilder<N, EthRpcConverterFor<N>> {
+        hanzo_evm_rpc::EthApiBuilder::new_with_components(self.components.clone())
             .eth_cache(self.cache)
             .task_spawner(self.components.task_executor().clone())
             .gas_cap(self.config.rpc_gas_cap.into())
@@ -1201,7 +1201,7 @@ pub trait EthApiBuilder<N: FullNodeComponents>: Default + Send + 'static {
     /// The Ethapi implementation this builder will build.
     type EthApi: FullEthApiServer<Provider = N::Provider, Pool = N::Pool>;
 
-    /// Builds the [`EthApiServer`](reth_rpc_api::eth::EthApiServer) from the given context.
+    /// Builds the [`EthApiServer`](hanzo_evm_rpc_api::eth::EthApiServer) from the given context.
     fn build_eth_api(
         self,
         ctx: EthApiCtx<'_, N>,
@@ -1327,7 +1327,7 @@ where
         >,
     >,
     EV: PayloadValidatorBuilder<Node>,
-    EV::Validator: reth_engine_primitives::PayloadValidator<
+    EV::Validator: hanzo_evm_engine_primitives::PayloadValidator<
         <Node::Types as NodeTypes>::Payload,
         Block = BlockTy<Node::Types>,
     >,
@@ -1347,7 +1347,7 @@ where
         Ok(BasicEngineValidator::new(
             ctx.node.provider().clone(),
             std::sync::Arc::new(ctx.node.consensus().clone()),
-            ctx.node.evm_config().clone(),
+            ctx.node.hanzo_evm_config().clone(),
             validator,
             tree_config,
             invalid_block_hook,

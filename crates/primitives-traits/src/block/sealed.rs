@@ -308,7 +308,7 @@ impl<B: Block> Deref for SealedBlock<B> {
 
 impl<B: Block> Encodable for SealedBlock<B> {
     fn encode(&self, out: &mut dyn BufMut) {
-        // TODO: https://github.com/paradigmxyz/reth/issues/18002
+        // TODO: https://github.com/hanzoai/evm/issues/18002
         self.clone().into_block().encode(out);
     }
 }
@@ -420,7 +420,7 @@ pub(super) mod serde_bincode_compat {
     ///
     /// Intended to use with the [`serde_with::serde_as`] macro in the following way:
     /// ```rust
-    /// use reth_primitives_traits::{
+    /// use hanzo_evm_primitives_traits::{
     ///     block::SealedBlock,
     ///     serde_bincode_compat::{self, SerdeBincodeCompat},
     ///     Block,

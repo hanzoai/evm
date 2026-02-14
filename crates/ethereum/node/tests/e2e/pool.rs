@@ -3,17 +3,17 @@ use alloy_consensus::{EthereumTxEnvelope, TxEip4844};
 use alloy_eips::{eip1559::ETHEREUM_BLOCK_GAS_LIMIT_30M, Encodable2718};
 use alloy_genesis::Genesis;
 use alloy_primitives::B256;
-use reth_chainspec::{ChainSpecBuilder, MAINNET};
-use reth_e2e_test_utils::{
+use hanzo_evm_chainspec::{ChainSpecBuilder, MAINNET};
+use hanzo_evm_e2e_test_utils::{
     node::NodeTestContext, transaction::TransactionTestContext, wallet::Wallet,
 };
-use reth_node_builder::{NodeBuilder, NodeHandle};
-use reth_node_core::{args::RpcServerArgs, node_config::NodeConfig};
-use reth_node_ethereum::EthereumNode;
-use reth_primitives_traits::Recovered;
-use reth_provider::CanonStateSubscriptions;
-use reth_tasks::TaskManager;
-use reth_transaction_pool::{
+use hanzo_evm_node_builder::{NodeBuilder, NodeHandle};
+use hanzo_evm_node_core::{args::RpcServerArgs, node_config::NodeConfig};
+use hanzo_evm_node_ethereum::EthereumNode;
+use hanzo_evm_primitives_traits::Recovered;
+use hanzo_evm_provider::CanonStateSubscriptions;
+use hanzo_evm_tasks::TaskManager;
+use hanzo_evm_transaction_pool::{
     blobstore::InMemoryBlobStore, test_utils::OkValidator, BlockInfo, CoinbaseTipOrdering,
     EthPooledTransaction, Pool, PoolTransaction, TransactionOrigin, TransactionPool,
     TransactionPoolExt,
@@ -23,7 +23,7 @@ use std::{sync::Arc, time::Duration};
 // Test that stale transactions could be correctly evicted.
 #[tokio::test]
 async fn maintain_txpool_stale_eviction() -> eyre::Result<()> {
-    reth_tracing::init_test_tracing();
+    hanzo_evm_tracing::init_test_tracing();
     let tasks = TaskManager::current();
     let executor = tasks.executor();
 
@@ -58,14 +58,14 @@ async fn maintain_txpool_stale_eviction() -> eyre::Result<()> {
 
     let wallet = Wallet::default();
 
-    let config = reth_transaction_pool::maintain::MaintainPoolConfig {
+    let config = hanzo_evm_transaction_pool::maintain::MaintainPoolConfig {
         max_tx_lifetime: Duration::from_secs(1),
         ..Default::default()
     };
 
     executor.spawn_critical(
         "txpool maintenance task",
-        reth_transaction_pool::maintain::maintain_transaction_pool_future(
+        hanzo_evm_transaction_pool::maintain::maintain_transaction_pool_future(
             node.inner.provider.clone(),
             txpool.clone(),
             node.inner.provider.clone().canonical_state_stream(),
@@ -97,7 +97,7 @@ async fn maintain_txpool_stale_eviction() -> eyre::Result<()> {
 // Test that the pool's maintenance task can correctly handle `CanonStateNotification::Reorg` events
 #[tokio::test]
 async fn maintain_txpool_reorg() -> eyre::Result<()> {
-    reth_tracing::init_test_tracing();
+    hanzo_evm_tracing::init_test_tracing();
     let tasks = TaskManager::current();
     let executor = tasks.executor();
 
@@ -137,12 +137,12 @@ async fn maintain_txpool_reorg() -> eyre::Result<()> {
 
     executor.spawn_critical(
         "txpool maintenance task",
-        reth_transaction_pool::maintain::maintain_transaction_pool_future(
+        hanzo_evm_transaction_pool::maintain::maintain_transaction_pool_future(
             node.inner.provider.clone(),
             txpool.clone(),
             node.inner.provider.clone().canonical_state_stream(),
             executor.clone(),
-            reth_transaction_pool::maintain::MaintainPoolConfig::default(),
+            hanzo_evm_transaction_pool::maintain::MaintainPoolConfig::default(),
         ),
     );
 
@@ -230,7 +230,7 @@ async fn maintain_txpool_reorg() -> eyre::Result<()> {
 // events
 #[tokio::test]
 async fn maintain_txpool_commit() -> eyre::Result<()> {
-    reth_tracing::init_test_tracing();
+    hanzo_evm_tracing::init_test_tracing();
     let tasks = TaskManager::current();
     let executor = tasks.executor();
 
@@ -267,12 +267,12 @@ async fn maintain_txpool_commit() -> eyre::Result<()> {
 
     executor.spawn_critical(
         "txpool maintenance task",
-        reth_transaction_pool::maintain::maintain_transaction_pool_future(
+        hanzo_evm_transaction_pool::maintain::maintain_transaction_pool_future(
             node.inner.provider.clone(),
             txpool.clone(),
             node.inner.provider.clone().canonical_state_stream(),
             executor.clone(),
-            reth_transaction_pool::maintain::MaintainPoolConfig::default(),
+            hanzo_evm_transaction_pool::maintain::MaintainPoolConfig::default(),
         ),
     );
 

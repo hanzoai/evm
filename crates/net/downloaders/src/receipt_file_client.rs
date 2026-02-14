@@ -219,8 +219,8 @@ mod test {
         hex, Bytes, Log, LogData,
     };
     use alloy_rlp::{Decodable, RlpDecodable};
-    use reth_ethereum_primitives::{Receipt, TxType};
-    use reth_tracing::init_test_tracing;
+    use hanzo_evm_ethereum_primitives::{Receipt, TxType};
+    use hanzo_evm_tracing::init_test_tracing;
     use tokio_util::codec::Decoder;
 
     use super::{FromReceiptReader, ReceiptFileClient, ReceiptWithBlockNumber};

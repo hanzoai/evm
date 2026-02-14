@@ -1,4 +1,4 @@
-use reth_node_ethereum::EthereumNode;
+use hanzo_evm_node_ethereum::EthereumNode;
 
 fn main() -> eyre::Result<()> {
     reth::cli::Cli::parse_args().run(async move |builder, _| {

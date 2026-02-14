@@ -1,9 +1,9 @@
-//! A basic payload generator for reth.
+//! A basic payload generator for evm.
 
 #![doc(
-    html_logo_url = "https://raw.githubusercontent.com/paradigmxyz/reth/main/assets/reth-docs.png",
+    html_logo_url = "https://raw.githubusercontent.com/hanzoai/evm/main/assets/evm-docs.png",
     html_favicon_url = "https://avatars0.githubusercontent.com/u/97369466?s=256",
-    issue_tracker_base_url = "https://github.com/paradigmxyz/reth/issues/"
+    issue_tracker_base_url = "https://github.com/hanzoai/evm/issues/"
 )]
 #![cfg_attr(not(test), warn(unused_crate_dependencies))]
 #![cfg_attr(docsrs, feature(doc_cfg))]
@@ -13,14 +13,14 @@ use alloy_eips::merge::SLOT_DURATION;
 use alloy_primitives::{B256, U256};
 use futures_core::ready;
 use futures_util::FutureExt;
-use reth_chain_state::CanonStateNotification;
-use reth_payload_builder::{KeepPayloadJobAlive, PayloadId, PayloadJob, PayloadJobGenerator};
-use reth_payload_builder_primitives::PayloadBuilderError;
-use reth_payload_primitives::{BuiltPayload, PayloadBuilderAttributes, PayloadKind};
-use reth_primitives_traits::{HeaderTy, NodePrimitives, SealedHeader};
-use reth_revm::{cached::CachedReads, cancelled::CancelOnDrop};
-use reth_storage_api::{BlockReaderIdExt, StateProviderFactory};
-use reth_tasks::TaskSpawner;
+use hanzo_evm_chain_state::CanonStateNotification;
+use hanzo_evm_payload_builder::{KeepPayloadJobAlive, PayloadId, PayloadJob, PayloadJobGenerator};
+use hanzo_evm_payload_builder_primitives::PayloadBuilderError;
+use hanzo_evm_payload_primitives::{BuiltPayload, PayloadBuilderAttributes, PayloadKind};
+use hanzo_evm_primitives_traits::{HeaderTy, NodePrimitives, SealedHeader};
+use hanzo_evm_revm::{cached::CachedReads, cancelled::CancelOnDrop};
+use hanzo_evm_storage_api::{BlockReaderIdExt, StateProviderFactory};
+use hanzo_evm_tasks::TaskSpawner;
 use std::{
     fmt,
     future::Future,

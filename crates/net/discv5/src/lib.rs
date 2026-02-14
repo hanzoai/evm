@@ -1,9 +1,9 @@
 //! Wrapper around [`discv5::Discv5`].
 
 #![doc(
-    html_logo_url = "https://raw.githubusercontent.com/paradigmxyz/reth/main/assets/reth-docs.png",
+    html_logo_url = "https://raw.githubusercontent.com/hanzoai/evm/main/assets/evm-docs.png",
     html_favicon_url = "https://avatars0.githubusercontent.com/u/97369466?s=256",
-    issue_tracker_base_url = "https://github.com/paradigmxyz/reth/issues/"
+    issue_tracker_base_url = "https://github.com/hanzoai/evm/issues/"
 )]
 #![cfg_attr(not(test), warn(unused_crate_dependencies))]
 #![cfg_attr(docsrs, feature(doc_cfg))]
@@ -23,8 +23,8 @@ use enr::{discv4_id_to_discv5_id, EnrCombinedKeyWrapper};
 use futures::future::join_all;
 use itertools::Itertools;
 use rand::{Rng, RngCore};
-use reth_ethereum_forks::{EnrForkIdEntry, ForkId};
-use reth_network_peers::{NodeRecord, PeerId};
+use hanzo_evm_ethereum_forks::{EnrForkIdEntry, ForkId};
+use hanzo_evm_network_peers::{NodeRecord, PeerId};
 use secp256k1::SecretKey;
 use tokio::{sync::mpsc, task};
 use tracing::{debug, error, trace};
@@ -84,7 +84,7 @@ pub struct Discv5 {
 
 impl Discv5 {
     ////////////////////////////////////////////////////////////////////////////////////////////////
-    // Minimal interface with `reth_network::discovery`
+    // Minimal interface with `hanzo_evm_network::discovery`
     ////////////////////////////////////////////////////////////////////////////////////////////////
 
     /// Adds the node to the table, if it is not already present.
@@ -170,9 +170,9 @@ impl Discv5 {
         self.local_node_record.udp_port
     }
 
-    /// Spawns [`discv5::Discv5`]. Returns [`discv5::Discv5`] handle in reth compatible wrapper type
+    /// Spawns [`discv5::Discv5`]. Returns [`discv5::Discv5`] handle in evm compatible wrapper type
     /// [`Discv5`], a receiver of [`discv5::Event`]s from the underlying node, and the local
-    /// [`Enr`](discv5::Enr) converted into the reth compatible [`NodeRecord`] type.
+    /// [`Enr`](discv5::Enr) converted into the evm compatible [`NodeRecord`] type.
     pub async fn start(
         sk: &SecretKey,
         discv5_config: Config,
@@ -252,7 +252,7 @@ impl Discv5 {
 
                 // node has been inserted into kbuckets
 
-                // `replaced` partly covers `reth_discv4::DiscoveryUpdate::Removed(_)`
+                // `replaced` partly covers `hanzo_evm_discv4::DiscoveryUpdate::Removed(_)`
 
                 self.metrics.discovered_peers.increment_kbucket_insertions(1);
 
@@ -260,7 +260,7 @@ impl Discv5 {
             }
             discv5::Event::SessionEstablished(enr, remote_socket) => {
                 // this branch is semantically similar to branches of
-                // `reth_discv4::DiscoveryUpdate`: `DiscoveryUpdate::Added(_)` and
+                // `hanzo_evm_discv4::DiscoveryUpdate`: `DiscoveryUpdate::Added(_)` and
                 // `DiscoveryUpdate::DiscoveredAtCapacity(_)
 
                 // peer has been discovered as part of query, or, by incoming session (peer has
@@ -276,7 +276,7 @@ impl Discv5 {
                 node_id: _,
             } => {
                 // this branch is semantically similar to branches of
-                // `reth_discv4::DiscoveryUpdate`: `DiscoveryUpdate::Added(_)` and
+                // `hanzo_evm_discv4::DiscoveryUpdate`: `DiscoveryUpdate::Added(_)` and
                 // `DiscoveryUpdate::DiscoveredAtCapacity(_)
 
                 // peer has been discovered as part of query, or, by an outgoing session (but peer
@@ -697,8 +697,8 @@ mod test {
     use super::*;
     use ::enr::{CombinedKey, EnrKey};
     use rand_08::thread_rng;
-    use reth_chainspec::MAINNET;
-    use reth_tracing::init_test_tracing;
+    use hanzo_evm_chainspec::MAINNET;
+    use hanzo_evm_tracing::init_test_tracing;
     use std::env;
     use tracing::trace;
 
@@ -740,7 +740,7 @@ mod test {
 
     #[tokio::test(flavor = "multi_thread")]
     async fn discv5() {
-        reth_tracing::init_test_tracing();
+        hanzo_evm_tracing::init_test_tracing();
 
         // rig test
 
@@ -761,9 +761,9 @@ mod test {
         // test
 
         // add node_2 to discovery handle of node_1 (should add node to discv5 kbuckets)
-        let node_2_enr_reth_compatible_ty: Enr<SecretKey> =
+        let node_2_enr_evm_compatible_ty: Enr<SecretKey> =
             EnrCombinedKeyWrapper(node_2_enr.clone()).into();
-        node_1.add_node(node_2_enr_reth_compatible_ty).unwrap();
+        node_1.add_node(node_2_enr_evm_compatible_ty).unwrap();
 
         // verify node_2 is in KBuckets of node_1:discv5
         assert!(
@@ -791,7 +791,7 @@ mod test {
 
     #[test]
     fn discovered_enr_disc_socket_missing() {
-        reth_tracing::init_test_tracing();
+        hanzo_evm_tracing::init_test_tracing();
 
         // rig test
         const REMOTE_RLPX_PORT: u16 = 30303;

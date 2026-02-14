@@ -1,7 +1,7 @@
 //! Tests fetching a list of files
 use crate::StubClient;
 use reqwest::Url;
-use reth_era_downloader::EraClient;
+use hanzo_evm_era_downloader::EraClient;
 use std::str::FromStr;
 use tempfile::tempdir;
 use test_case::test_case;

@@ -3,8 +3,8 @@
 use alloy_consensus::Typed2718;
 use alloy_eips::eip2718::Encodable2718;
 use alloy_primitives::{BlockNumber, B256};
-use reth_execution_types::ChainBlocks;
-use reth_primitives_traits::{Block, BlockBody, SignedTransaction};
+use hanzo_evm_execution_types::ChainBlocks;
+use hanzo_evm_primitives_traits::{Block, BlockBody, SignedTransaction};
 use std::collections::BTreeMap;
 
 /// The type that is used to track canonical blob transactions.
@@ -91,9 +91,9 @@ mod tests {
     use super::*;
     use alloy_consensus::{Header, Signed};
     use alloy_primitives::Signature;
-    use reth_ethereum_primitives::Transaction;
-    use reth_execution_types::Chain;
-    use reth_primitives_traits::{RecoveredBlock, SealedBlock, SealedHeader};
+    use hanzo_evm_ethereum_primitives::Transaction;
+    use hanzo_evm_execution_types::Chain;
+    use hanzo_evm_primitives_traits::{RecoveredBlock, SealedBlock, SealedHeader};
 
     #[test]
     fn test_finalized_tracker() {

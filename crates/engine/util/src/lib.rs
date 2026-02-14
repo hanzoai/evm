@@ -1,16 +1,16 @@
 //! Collection of various stream utilities for consensus engine.
 
 #![doc(
-    html_logo_url = "https://raw.githubusercontent.com/paradigmxyz/reth/main/assets/reth-docs.png",
+    html_logo_url = "https://raw.githubusercontent.com/hanzoai/evm/main/assets/evm-docs.png",
     html_favicon_url = "https://avatars0.githubusercontent.com/u/97369466?s=256",
-    issue_tracker_base_url = "https://github.com/paradigmxyz/reth/issues/"
+    issue_tracker_base_url = "https://github.com/hanzoai/evm/issues/"
 )]
 #![cfg_attr(docsrs, feature(doc_cfg))]
 #![cfg_attr(not(test), warn(unused_crate_dependencies))]
 
 use futures::{Future, Stream};
-use reth_engine_primitives::BeaconEngineMessage;
-use reth_payload_primitives::PayloadTypes;
+use hanzo_evm_engine_primitives::BeaconEngineMessage;
+use hanzo_evm_payload_primitives::PayloadTypes;
 use std::path::PathBuf;
 use tokio_util::either::Either;
 
@@ -107,7 +107,7 @@ pub trait EngineMessageStreamExt<T: PayloadTypes>: Stream<Item = BeaconEngineMes
     fn reorg<Provider, Evm, Validator>(
         self,
         provider: Provider,
-        evm_config: Evm,
+        hanzo_evm_config: Evm,
         payload_validator: Validator,
         frequency: usize,
         depth: Option<usize>,
@@ -118,7 +118,7 @@ pub trait EngineMessageStreamExt<T: PayloadTypes>: Stream<Item = BeaconEngineMes
         EngineReorg::new(
             self,
             provider,
-            evm_config,
+            hanzo_evm_config,
             payload_validator,
             frequency,
             depth.unwrap_or_default(),
@@ -133,7 +133,7 @@ pub trait EngineMessageStreamExt<T: PayloadTypes>: Stream<Item = BeaconEngineMes
     fn maybe_reorg<Provider, Evm, Validator, E, F, Fut>(
         self,
         provider: Provider,
-        evm_config: Evm,
+        hanzo_evm_config: Evm,
         payload_validator_fn: F,
         frequency: Option<usize>,
         depth: Option<usize>,
@@ -151,7 +151,7 @@ pub trait EngineMessageStreamExt<T: PayloadTypes>: Stream<Item = BeaconEngineMes
                 Ok(Either::Left(reorg::EngineReorg::new(
                     self,
                     provider,
-                    evm_config,
+                    hanzo_evm_config,
                     validator,
                     frequency,
                     depth.unwrap_or_default(),

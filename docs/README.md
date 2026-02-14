@@ -1,4 +1,4 @@
-## reth Contributor Documentation
+## evm Contributor Documentation
 
 This directory contains documentation for contributors.
 

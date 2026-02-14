@@ -1,17 +1,17 @@
 use crate::utils::eth_payload_attributes;
 use alloy_genesis::Genesis;
 use alloy_primitives::B256;
-use reth_chainspec::{ChainSpecBuilder, MAINNET};
-use reth_e2e_test_utils::{setup, transaction::TransactionTestContext};
-use reth_node_ethereum::EthereumNode;
-use reth_provider::{HeaderProvider, StageCheckpointReader};
-use reth_stages_types::StageId;
+use hanzo_evm_chainspec::{ChainSpecBuilder, MAINNET};
+use hanzo_evm_e2e_test_utils::{setup, transaction::TransactionTestContext};
+use hanzo_evm_node_ethereum::EthereumNode;
+use hanzo_evm_provider::{HeaderProvider, StageCheckpointReader};
+use hanzo_evm_stages_types::StageId;
 use std::sync::Arc;
 
 /// Tests that a node can initialize and advance with a custom genesis block number.
 #[tokio::test]
 async fn can_run_eth_node_with_custom_genesis_number() -> eyre::Result<()> {
-    reth_tracing::init_test_tracing();
+    hanzo_evm_tracing::init_test_tracing();
 
     // Create genesis with custom block number (e.g., 1000)
     let mut genesis: Genesis =
@@ -64,7 +64,7 @@ async fn can_run_eth_node_with_custom_genesis_number() -> eyre::Result<()> {
 /// Tests that block queries respect custom genesis boundaries.
 #[tokio::test]
 async fn custom_genesis_block_query_boundaries() -> eyre::Result<()> {
-    reth_tracing::init_test_tracing();
+    hanzo_evm_tracing::init_test_tracing();
 
     let genesis_number = 5000u64;
 

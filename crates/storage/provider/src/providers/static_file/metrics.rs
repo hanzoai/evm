@@ -2,8 +2,8 @@ use std::{collections::HashMap, time::Duration};
 
 use itertools::Itertools;
 use metrics::{Counter, Gauge, Histogram};
-use reth_metrics::Metrics;
-use reth_static_file_types::{StaticFileMap, StaticFileSegment};
+use hanzo_evm_metrics::Metrics;
+use hanzo_evm_static_file_types::{StaticFileMap, StaticFileSegment};
 use strum::{EnumIter, IntoEnumIterator};
 
 /// Metrics for the static file provider.

@@ -2,7 +2,7 @@
 
 #![cfg_attr(feature = "disable-lock", allow(dead_code))]
 
-use reth_storage_errors::lockfile::StorageLockError;
+use hanzo_evm_storage_errors::lockfile::StorageLockError;
 use std::{
     path::{Path, PathBuf},
     process,
@@ -48,8 +48,8 @@ impl StorageLock {
             process_lock.pid != (process::id() as usize) &&
             process_lock.is_active()
         {
-            reth_tracing::tracing::error!(
-                target: "reth::db::lockfile",
+            hanzo_evm_tracing::tracing::error!(
+                target: "evm::db::lockfile",
                 path = ?file_path,
                 pid = process_lock.pid,
                 start_time = process_lock.start_time,
@@ -72,11 +72,11 @@ impl Drop for StorageLockInner {
                 if let Ok(Some(process_uid)) = ProcessUID::parse(file_path) {
                     // Only remove if the lock file belongs to our process
                     if process_uid.pid == process::id() as usize {
-                        if let Err(err) = reth_fs_util::remove_file(file_path) {
-                            reth_tracing::tracing::error!(%err, "Failed to delete lock file");
+                        if let Err(err) = hanzo_evm_fs_util::remove_file(file_path) {
+                            hanzo_evm_tracing::tracing::error!(%err, "Failed to delete lock file");
                         }
                     } else {
-                        reth_tracing::tracing::warn!(
+                        hanzo_evm_tracing::tracing::warn!(
                             "Lock file belongs to different process (PID: {}), not removing",
                             process_uid.pid
                         );
@@ -84,8 +84,8 @@ impl Drop for StorageLockInner {
                 } else {
                     // If we can't parse the lock file, still try to remove it
                     // as it might be corrupted or from a previous run
-                    if let Err(err) = reth_fs_util::remove_file(file_path) {
-                        reth_tracing::tracing::error!(%err, "Failed to delete lock file");
+                    if let Err(err) = hanzo_evm_fs_util::remove_file(file_path) {
+                        hanzo_evm_tracing::tracing::error!(%err, "Failed to delete lock file");
                     }
                 }
             }
@@ -103,7 +103,7 @@ impl StorageLockInner {
     fn new(file_path: PathBuf) -> Result<Self, StorageLockError> {
         // Create the directory if it doesn't exist
         if let Some(parent) = file_path.parent() {
-            reth_fs_util::create_dir_all(parent).map_err(StorageLockError::other)?;
+            hanzo_evm_fs_util::create_dir_all(parent).map_err(StorageLockError::other)?;
         }
 
         // Write this process unique identifier (pid & start_time) to file
@@ -143,7 +143,7 @@ impl ProcessUID {
     /// Parses [`Self`] from a file.
     fn parse(path: &Path) -> Result<Option<Self>, StorageLockError> {
         if path.exists() &&
-            let Ok(contents) = reth_fs_util::read_to_string(path)
+            let Ok(contents) = hanzo_evm_fs_util::read_to_string(path)
         {
             let mut lines = contents.lines();
             if let (Some(Ok(pid)), Some(Ok(start_time))) = (
@@ -167,7 +167,7 @@ impl ProcessUID {
 
     /// Writes `pid` and `start_time` to a file.
     fn write(&self, path: &Path) -> Result<(), StorageLockError> {
-        reth_fs_util::write(path, format!("{}\n{}", self.pid, self.start_time))
+        hanzo_evm_fs_util::write(path, format!("{}\n{}", self.pid, self.start_time))
             .map_err(StorageLockError::other)
     }
 }

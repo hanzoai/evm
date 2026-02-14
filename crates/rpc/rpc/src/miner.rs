@@ -1,7 +1,7 @@
 use alloy_primitives::{Bytes, U128};
 use async_trait::async_trait;
 use jsonrpsee::core::RpcResult;
-use reth_rpc_api::MinerApiServer;
+use hanzo_evm_rpc_api::MinerApiServer;
 
 /// `miner` API implementation.
 ///

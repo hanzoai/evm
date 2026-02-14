@@ -1,5 +1,5 @@
 use crate::{cursor::DbCursorRO, table::Table, transaction::DbTxMut};
-use reth_storage_errors::db::DatabaseError;
+use hanzo_evm_storage_errors::db::DatabaseError;
 use std::ops::RangeBounds;
 
 /// Extension trait for [`DbTxMut`] that provides unwind functionality.

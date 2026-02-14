@@ -4,8 +4,8 @@ use alloy_primitives::{BlockHash, BlockNumber, Sealable, B256};
 use async_compression::tokio::bufread::GzipDecoder;
 use futures::Future;
 use itertools::Either;
-use reth_consensus::{Consensus, ConsensusError};
-use reth_network_p2p::{
+use hanzo_evm_consensus::{Consensus, ConsensusError};
+use hanzo_evm_network_p2p::{
     bodies::client::{BodiesClient, BodiesFut},
     download::DownloadClient,
     error::RequestError,
@@ -13,8 +13,8 @@ use reth_network_p2p::{
     priority::Priority,
     BlockClient,
 };
-use reth_network_peers::PeerId;
-use reth_primitives_traits::{Block, BlockBody, FullBlock, SealedBlock, SealedHeader};
+use hanzo_evm_network_peers::PeerId;
+use hanzo_evm_primitives_traits::{Block, BlockBody, FullBlock, SealedBlock, SealedHeader};
 use std::{collections::HashMap, io, ops::RangeInclusive, path::Path, sync::Arc};
 use thiserror::Error;
 use tokio::{
@@ -226,7 +226,7 @@ struct FileClientBuilder<B: Block> {
     pub parent_header: Option<SealedHeader<B::Header>>,
 }
 
-impl<B: FullBlock<Header: reth_primitives_traits::BlockHeader>> FromReader
+impl<B: FullBlock<Header: hanzo_evm_primitives_traits::BlockHeader>> FromReader
     for FileClientBuilder<B>
 {
     type Error = FileClientError;
@@ -676,13 +676,13 @@ mod tests {
     use async_compression::tokio::write::GzipEncoder;
     use futures_util::stream::StreamExt;
     use rand::Rng;
-    use reth_consensus::{noop::NoopConsensus, test_utils::TestConsensus};
-    use reth_ethereum_primitives::Block;
-    use reth_network_p2p::{
+    use hanzo_evm_consensus::{noop::NoopConsensus, test_utils::TestConsensus};
+    use hanzo_evm_ethereum_primitives::Block;
+    use hanzo_evm_network_p2p::{
         bodies::downloader::BodyDownloader,
         headers::downloader::{HeaderDownloader, SyncTarget},
     };
-    use reth_provider::test_utils::create_test_provider_factory;
+    use hanzo_evm_provider::test_utils::create_test_provider_factory;
     use std::sync::Arc;
     use tokio::{
         fs::File,
@@ -721,7 +721,7 @@ mod tests {
 
     #[tokio::test]
     async fn download_headers_at_fork_head() {
-        reth_tracing::init_test_tracing();
+        hanzo_evm_tracing::init_test_tracing();
 
         let p3 = SealedHeader::default();
         let p2 = child_header(&p3);
@@ -755,7 +755,7 @@ mod tests {
 
     #[tokio::test]
     async fn test_download_headers_from_file() {
-        reth_tracing::init_test_tracing();
+        hanzo_evm_tracing::init_test_tracing();
 
         // Generate some random blocks
         let (file, headers, _) = generate_bodies_file(0..=19).await;
@@ -807,7 +807,7 @@ mod tests {
 
     #[tokio::test]
     async fn test_chunk_download_headers_from_file() {
-        reth_tracing::init_test_tracing();
+        hanzo_evm_tracing::init_test_tracing();
 
         // Generate some random blocks
         let (file, headers, _) = generate_bodies_file(0..=14).await;
@@ -856,7 +856,7 @@ mod tests {
 
     #[tokio::test]
     async fn test_chunk_download_headers_from_gzip_file() {
-        reth_tracing::init_test_tracing();
+        hanzo_evm_tracing::init_test_tracing();
 
         // Generate some random blocks
         let (file, headers, _) = generate_bodies_file(0..=14).await;

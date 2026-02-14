@@ -1,19 +1,19 @@
 [package]
-name = "reth-payload-util"
+name = "hanzo-evm-payload-util"
 version.workspace = true
 edition.workspace = true
 rust-version.workspace = true
 license.workspace = true
 homepage.workspace = true
 repository.workspace = true
-description = "reth payload utilities"
+description = "Hanzo EVM payload utilities"
 
 [lints]
 workspace = true
 
 [dependencies]
-# reth
-reth-transaction-pool.workspace = true
+# evm
+hanzo-evm-transaction-pool.workspace = true
 
 # alloy
 alloy-primitives.workspace = true

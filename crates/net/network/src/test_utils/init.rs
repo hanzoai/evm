@@ -1,5 +1,5 @@
 use enr::{k256::ecdsa::SigningKey, Enr, EnrPublicKey};
-use reth_network_peers::PeerId;
+use hanzo_evm_network_peers::PeerId;
 use std::net::SocketAddr;
 
 /// Obtains a `PeerId` from an ENR. In this case, the `PeerId` represents the public key contained
@@ -48,7 +48,7 @@ pub fn unused_tcp_and_udp_port() -> u16 {
 }
 
 /// Creates two unused `SocketAddrs`, intended for use as the p2p (TCP) and discovery ports (UDP)
-/// for new reth instances.
+/// for new evm instances.
 pub fn unused_tcp_udp() -> (SocketAddr, SocketAddr) {
     (unused_tcp_addr(), unused_udp_addr())
 }

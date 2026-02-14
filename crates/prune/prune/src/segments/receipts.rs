@@ -8,15 +8,15 @@ use crate::{
     segments::{self, PruneInput},
     PrunerError,
 };
-use reth_db_api::{table::Value, tables, transaction::DbTxMut};
-use reth_primitives_traits::NodePrimitives;
-use reth_provider::{
+use hanzo_evm_db_api::{table::Value, tables, transaction::DbTxMut};
+use hanzo_evm_primitives_traits::NodePrimitives;
+use hanzo_evm_provider::{
     errors::provider::ProviderResult, BlockReader, DBProvider, EitherWriter,
     NodePrimitivesProvider, PruneCheckpointWriter, StaticFileProviderFactory, StorageSettingsCache,
     TransactionsProvider,
 };
-use reth_prune_types::{PruneCheckpoint, PruneSegment, SegmentOutput, SegmentOutputCheckpoint};
-use reth_static_file_types::StaticFileSegment;
+use hanzo_evm_prune_types::{PruneCheckpoint, PruneSegment, SegmentOutput, SegmentOutputCheckpoint};
+use hanzo_evm_static_file_types::StaticFileSegment;
 use tracing::{debug, trace};
 
 pub(crate) fn prune<Provider>(
@@ -101,13 +101,13 @@ mod tests {
         FoldWhile::{Continue, Done},
         Itertools,
     };
-    use reth_db_api::tables;
-    use reth_provider::{DBProvider, DatabaseProviderFactory, PruneCheckpointReader};
-    use reth_prune_types::{
+    use hanzo_evm_db_api::tables;
+    use hanzo_evm_provider::{DBProvider, DatabaseProviderFactory, PruneCheckpointReader};
+    use hanzo_evm_prune_types::{
         PruneCheckpoint, PruneInterruptReason, PruneMode, PruneProgress, PruneSegment,
     };
-    use reth_stages::test_utils::{StorageKind, TestStageDB};
-    use reth_testing_utils::generators::{
+    use hanzo_evm_stages::test_utils::{StorageKind, TestStageDB};
+    use hanzo_evm_testing_utils::generators::{
         self, random_block_range, random_receipt, BlockRangeParams,
     };
     use std::ops::Sub;
@@ -117,7 +117,7 @@ mod tests {
         let mut db = TestStageDB::default();
         // Configure the factory to use database for receipts by enabling receipt pruning.
         // This ensures EitherWriter::receipts_destination returns Database instead of StaticFile.
-        db.factory = db.factory.with_prune_modes(reth_prune_types::PruneModes {
+        db.factory = db.factory.with_prune_modes(hanzo_evm_prune_types::PruneModes {
             receipts: Some(PruneMode::Full),
             ..Default::default()
         });

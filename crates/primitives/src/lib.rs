@@ -6,13 +6,13 @@
 //!
 //! - `arbitrary`: Adds `proptest` and `arbitrary` support for primitive types.
 //! - `test-utils`: Export utilities for testing
-//! - `reth-codec`: Enables db codec support for reth types including zstd compression for certain
+//! - `reth-codec`: Enables db codec support for evm types including zstd compression for certain
 //!   types.
 
 #![doc(
-    html_logo_url = "https://raw.githubusercontent.com/paradigmxyz/reth/main/assets/reth-docs.png",
+    html_logo_url = "https://raw.githubusercontent.com/hanzoai/evm/main/assets/evm-docs.png",
     html_favicon_url = "https://avatars0.githubusercontent.com/u/97369466?s=256",
-    issue_tracker_base_url = "https://github.com/paradigmxyz/reth/issues/"
+    issue_tracker_base_url = "https://github.com/hanzoai/evm/issues/"
 )]
 #![cfg_attr(not(test), warn(unused_crate_dependencies))]
 #![cfg_attr(docsrs, feature(doc_cfg))]
@@ -20,7 +20,7 @@
 
 mod block;
 mod receipt;
-pub use reth_static_file_types as static_file;
+pub use hanzo_evm_static_file_types as static_file;
 pub mod transaction;
 #[cfg(any(test, feature = "arbitrary"))]
 pub use block::{generate_valid_header, valid_header_strategy};
@@ -29,7 +29,7 @@ pub use block::{Block, BlockBody, SealedBlock};
 pub use block::{BlockWithSenders, SealedBlockFor, SealedBlockWithSenders};
 
 pub use receipt::{gas_spent_by_transactions, Receipt};
-pub use reth_primitives_traits::{
+pub use hanzo_evm_primitives_traits::{
     logs_bloom, Account, BlockTy, BodyTy, Bytecode, GotExpected, GotExpectedBoxed, Header,
     HeaderTy, Log, LogData, NodePrimitives, ReceiptTy, RecoveredBlock, SealedHeader, StorageEntry,
     TxTy,
@@ -53,7 +53,7 @@ pub use transaction::{
 pub use transaction::{PooledTransactionsElementEcRecovered, TransactionSignedEcRecovered};
 
 // Re-exports
-pub use reth_ethereum_forks::*;
+pub use hanzo_evm_ethereum_forks::*;
 
 #[cfg(feature = "c-kzg")]
 pub use c_kzg as kzg;
@@ -61,14 +61,14 @@ pub use c_kzg as kzg;
 /// Bincode-compatible serde implementations for commonly used types in Reth.
 ///
 /// `bincode` crate doesn't work with optionally serializable serde fields, but some of the
-/// Reth types require optional serialization for RPC compatibility. This module makes so that
+/// Hanzo EVM types require optional serialization for RPC compatibility. This module makes so that
 /// all fields are serialized.
 ///
 /// Read more: <https://github.com/bincode-org/bincode/issues/326>
 #[cfg(feature = "serde-bincode-compat")]
 pub mod serde_bincode_compat {
-    pub use reth_primitives_traits::serde_bincode_compat::*;
+    pub use hanzo_evm_primitives_traits::serde_bincode_compat::*;
 }
 
 // Re-export of `EthPrimitives`
-pub use reth_ethereum_primitives::EthPrimitives;
+pub use hanzo_evm_ethereum_primitives::EthPrimitives;

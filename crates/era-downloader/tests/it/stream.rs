@@ -2,7 +2,7 @@
 use crate::StubClient;
 use futures_util::StreamExt;
 use reqwest::Url;
-use reth_era_downloader::{EraClient, EraStream, EraStreamConfig};
+use hanzo_evm_era_downloader::{EraClient, EraStream, EraStreamConfig};
 use std::str::FromStr;
 use tempfile::tempdir;
 use test_case::test_case;

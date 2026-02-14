@@ -1,16 +1,16 @@
 //! Database debugging tool
 use crate::common::{AccessRights, CliNodeComponents, CliNodeTypes, Environment, EnvironmentArgs};
 use clap::Parser;
-use reth_chainspec::{EthChainSpec, EthereumHardforks};
-use reth_cli::chainspec::ChainSpecParser;
-use reth_db::{init_db, mdbx::DatabaseArguments, DatabaseEnv};
-use reth_db_api::{
+use hanzo_evm_chainspec::{EthChainSpec, EthereumHardforks};
+use hanzo_evm_cli::chainspec::ChainSpecParser;
+use hanzo_evm_db::{init_db, mdbx::DatabaseArguments, DatabaseEnv};
+use hanzo_evm_db_api::{
     cursor::DbCursorRO, database::Database, models::ClientVersion, table::TableImporter, tables,
     transaction::DbTx,
 };
-use reth_db_common::DbTool;
-use reth_node_builder::NodeTypesWithDB;
-use reth_node_core::{
+use hanzo_evm_db_common::DbTool;
+use hanzo_evm_node_builder::NodeTypesWithDB;
+use hanzo_evm_node_core::{
     args::DatadirArgs,
     dirs::{DataDirPath, PlatformPath},
 };
@@ -29,7 +29,7 @@ use execution::dump_execution_stage;
 mod merkle;
 use merkle::dump_merkle_stage;
 
-/// `reth dump-stage` command
+/// `evm dump-stage` command
 #[derive(Debug, Parser)]
 pub struct Command<C: ChainSpecParser> {
     #[command(flatten)]
@@ -98,17 +98,17 @@ impl<C: ChainSpecParser<ChainSpec: EthChainSpec + EthereumHardforks>> Command<C>
         let Environment { provider_factory, .. } = self.env.init::<N>(AccessRights::RO)?;
         let tool = DbTool::new(provider_factory)?;
         let components = components(tool.chain());
-        let evm_config = components.evm_config().clone();
+        let hanzo_evm_config = components.hanzo_evm_config().clone();
         let consensus = components.consensus().clone();
 
         match &self.command {
             Stages::Execution(cmd) => {
-                handle_stage!(dump_execution_stage, &tool, cmd, evm_config, consensus)
+                handle_stage!(dump_execution_stage, &tool, cmd, hanzo_evm_config, consensus)
             }
             Stages::StorageHashing(cmd) => handle_stage!(dump_hashing_storage_stage, &tool, cmd),
             Stages::AccountHashing(cmd) => handle_stage!(dump_hashing_account_stage, &tool, cmd),
             Stages::Merkle(cmd) => {
-                handle_stage!(dump_merkle_stage, &tool, cmd, evm_config, consensus)
+                handle_stage!(dump_merkle_stage, &tool, cmd, hanzo_evm_config, consensus)
             }
         }
 
@@ -133,7 +133,7 @@ pub(crate) fn setup<N: NodeTypesWithDB>(
 ) -> eyre::Result<(DatabaseEnv, u64)> {
     assert!(from < to, "FROM block should be lower than TO block.");
 
-    info!(target: "reth::cli", ?output_db, "Creating separate db");
+    info!(target: "evm::cli", ?output_db, "Creating separate db");
 
     let output_datadir = init_db(output_db, DatabaseArguments::new(ClientVersion::default()))?;
 

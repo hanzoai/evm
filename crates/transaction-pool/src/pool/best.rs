@@ -8,7 +8,7 @@ use alloy_consensus::Transaction;
 use alloy_eips::Typed2718;
 use alloy_primitives::map::AddressSet;
 use core::fmt;
-use reth_primitives_traits::transaction::error::InvalidTransactionError;
+use hanzo_evm_primitives_traits::transaction::error::InvalidTransactionError;
 use std::{
     collections::{BTreeMap, BTreeSet, HashSet, VecDeque},
     sync::Arc,

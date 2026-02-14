@@ -1,6 +1,6 @@
 //! This example showcases various Nodebuilder use cases
 
-use reth_ethereum::{
+use hanzo_evm_ethereum::{
     cli::interface::Cli,
     node::{builder::components::NoopNetworkBuilder, node::EthereumAddOns, EthereumNode},
 };

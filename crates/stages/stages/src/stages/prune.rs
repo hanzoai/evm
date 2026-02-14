@@ -1,16 +1,16 @@
-use reth_db_api::{table::Value, transaction::DbTxMut};
-use reth_primitives_traits::NodePrimitives;
-use reth_provider::{
+use hanzo_evm_db_api::{table::Value, transaction::DbTxMut};
+use hanzo_evm_primitives_traits::NodePrimitives;
+use hanzo_evm_provider::{
     BlockReader, ChainStateBlockReader, DBProvider, PruneCheckpointReader, PruneCheckpointWriter,
     RocksDBProviderFactory, StageCheckpointReader, StaticFileProviderFactory,
 };
-use reth_prune::{
+use hanzo_evm_prune::{
     PruneMode, PruneModes, PruneSegment, PrunerBuilder, SegmentOutput, SegmentOutputCheckpoint,
 };
-use reth_stages_api::{
+use hanzo_evm_stages_api::{
     ExecInput, ExecOutput, Stage, StageCheckpoint, StageError, StageId, UnwindInput, UnwindOutput,
 };
-use reth_storage_api::{ChangeSetReader, StorageChangeSetReader, StorageSettingsCache};
+use hanzo_evm_storage_api::{ChangeSetReader, StorageChangeSetReader, StorageSettingsCache};
 use tracing::info;
 
 /// The prune stage that runs the pruner with the provided prune modes.
@@ -198,13 +198,13 @@ mod tests {
         TestRunnerError, TestStageDB, UnwindStageTestRunner,
     };
     use alloy_primitives::B256;
-    use reth_ethereum_primitives::Block;
-    use reth_primitives_traits::{SealedBlock, SignerRecoverable};
-    use reth_provider::{
+    use hanzo_evm_ethereum_primitives::Block;
+    use hanzo_evm_primitives_traits::{SealedBlock, SignerRecoverable};
+    use hanzo_evm_provider::{
         providers::StaticFileWriter, TransactionsProvider, TransactionsProviderExt,
     };
-    use reth_prune::PruneMode;
-    use reth_testing_utils::generators::{self, random_block_range, BlockRangeParams};
+    use hanzo_evm_prune::PruneMode;
+    use hanzo_evm_testing_utils::generators::{self, random_block_range, BlockRangeParams};
 
     stage_test_suite_ext!(PruneTestRunner, prune);
 

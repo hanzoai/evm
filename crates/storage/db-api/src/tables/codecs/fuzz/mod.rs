@@ -17,7 +17,7 @@ macro_rules! impl_fuzzer_with_input {
                 use crate::table;
 
                 #[expect(unused_imports)]
-                use reth_primitives_traits::*;
+                use hanzo_evm_primitives_traits::*;
 
                 #[allow(unused_imports)]
                 use super::inputs::*;

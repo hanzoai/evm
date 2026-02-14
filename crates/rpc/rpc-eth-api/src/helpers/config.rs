@@ -8,14 +8,14 @@ use alloy_eips::{
 use alloy_evm::precompiles::Precompile;
 use alloy_primitives::Address;
 use jsonrpsee::{core::RpcResult, proc_macros::rpc};
-use reth_chainspec::{ChainSpecProvider, EthChainSpec, EthereumHardforks, Hardforks, Head};
-use reth_errors::{ProviderError, RethError};
-use reth_evm::{precompiles::PrecompilesMap, ConfigureEvm, Evm};
-use reth_node_api::NodePrimitives;
-use reth_primitives_traits::header::HeaderMut;
-use reth_revm::db::EmptyDB;
-use reth_rpc_eth_types::EthApiError;
-use reth_storage_api::BlockReaderIdExt;
+use hanzo_evm_chainspec::{ChainSpecProvider, EthChainSpec, EthereumHardforks, Hardforks, Head};
+use hanzo_evm_errors::{ProviderError, EvmError};
+use hanzo_evm_execution::{precompiles::PrecompilesMap, ConfigureEvm, Evm};
+use hanzo_evm_node_api::NodePrimitives;
+use hanzo_evm_primitives_traits::header::HeaderMut;
+use hanzo_evm_revm::db::EmptyDB;
+use hanzo_evm_rpc_eth_types::EthApiError;
+use hanzo_evm_storage_api::BlockReaderIdExt;
 use std::collections::BTreeMap;
 
 /// RPC endpoint support for [EIP-7910](https://eips.ethereum.org/EIPS/eip-7910)
@@ -33,7 +33,7 @@ pub trait EthConfigApi {
 #[derive(Debug, Clone)]
 pub struct EthConfigHandler<Provider, Evm> {
     provider: Provider,
-    evm_config: Evm,
+    hanzo_evm_config: Evm,
 }
 
 impl<Provider, Evm> EthConfigHandler<Provider, Evm>
@@ -44,8 +44,8 @@ where
     Evm: ConfigureEvm<Primitives: NodePrimitives<BlockHeader = Provider::Header>> + 'static,
 {
     /// Creates a new [`EthConfigHandler`].
-    pub const fn new(provider: Provider, evm_config: Evm) -> Self {
-        Self { provider, evm_config }
+    pub const fn new(provider: Provider, hanzo_evm_config: Evm) -> Self {
+        Self { provider, hanzo_evm_config }
     }
 
     /// Returns fork config for specific timestamp.
@@ -87,7 +87,7 @@ where
         }
     }
 
-    fn config(&self) -> Result<EthConfig, RethError> {
+    fn config(&self) -> Result<EthConfig, EvmError> {
         let chain_spec = self.provider.chain_spec();
         let latest = self
             .provider
@@ -96,7 +96,7 @@ where
             .into_header();
 
         let current_precompiles = evm_to_precompiles_map(
-            self.evm_config.evm_for_block(EmptyDB::default(), &latest).map_err(RethError::other)?,
+            self.hanzo_evm_config.evm_for_block(EmptyDB::default(), &latest).map_err(EvmError::other)?,
         );
 
         let mut fork_timestamps =
@@ -110,7 +110,7 @@ where
             .and_then(|idx| idx.checked_sub(1))
             .or_else(|| fork_timestamps.len().checked_sub(1))
             .and_then(|idx| fork_timestamps.get(idx).map(|ts| (idx, *ts)))
-            .ok_or_else(|| RethError::msg("no active timestamp fork found"))?;
+            .ok_or_else(|| EvmError::msg("no active timestamp fork found"))?;
 
         let current = self.build_fork_config_at(current_fork_timestamp, current_precompiles);
 
@@ -123,9 +123,9 @@ where
                 header
             };
             let next_precompiles = evm_to_precompiles_map(
-                self.evm_config
+                self.hanzo_evm_config
                     .evm_for_block(EmptyDB::default(), &fake_header)
-                    .map_err(RethError::other)?,
+                    .map_err(EvmError::other)?,
             );
 
             config.next = Some(self.build_fork_config_at(next_fork_timestamp, next_precompiles));
@@ -141,9 +141,9 @@ where
             header
         };
         let last_precompiles = evm_to_precompiles_map(
-            self.evm_config
+            self.hanzo_evm_config
                 .evm_for_block(EmptyDB::default(), &fake_header)
-                .map_err(RethError::other)?,
+                .map_err(EvmError::other)?,
         );
 
         config.last = Some(self.build_fork_config_at(last_fork_timestamp, last_precompiles));

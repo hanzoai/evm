@@ -1,3 +1,3 @@
 //! Utility functions for signature.
 
-pub use reth_primitives_traits::crypto::*;
+pub use hanzo_evm_primitives_traits::crypto::*;

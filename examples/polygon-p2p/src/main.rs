@@ -6,20 +6,20 @@
 //! cargo run -p polygon-p2p
 //! ```
 //!
-//! This launches a regular reth node overriding the engine api payload builder with our custom.
+//! This launches a regular evm node overriding the engine api payload builder with our custom.
 //!
 //! Credits to: <https://merkle.io/blog/modifying-reth-to-build-the-fastest-transaction-network-on-bsc-and-polygon>
 
 #![warn(unused_crate_dependencies)]
 
 use chain_cfg::{boot_nodes, head, polygon_chain_spec};
-use reth_discv4::Discv4ConfigBuilder;
-use reth_ethereum::network::{
+use hanzo_evm_discv4::Discv4ConfigBuilder;
+use hanzo_evm_ethereum::network::{
     api::events::SessionInfo, config::NetworkMode, NetworkConfig, NetworkEvent,
     NetworkEventListenerProvider, NetworkManager,
 };
-use reth_tracing::{
-    tracing::info, tracing_subscriber::filter::LevelFilter, LayerInfo, LogFormat, RethTracer,
+use hanzo_evm_tracing::{
+    tracing::info, tracing_subscriber::filter::LevelFilter, LayerInfo, LogFormat, EvmTracer,
     Tracer,
 };
 use secp256k1::{rand, SecretKey};
@@ -36,7 +36,7 @@ async fn main() {
     // The ECDSA private key used to create our enode identifier.
     let secret_key = SecretKey::new(&mut rand::thread_rng());
 
-    let _ = RethTracer::new()
+    let _ = EvmTracer::new()
         .with_stdout(LayerInfo::new(
             LogFormat::Terminal,
             LevelFilter::INFO.to_string(),

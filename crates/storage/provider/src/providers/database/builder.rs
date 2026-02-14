@@ -7,13 +7,13 @@ use crate::{
     providers::{NodeTypesForProvider, RocksDBProvider, StaticFileProvider},
     ProviderFactory,
 };
-use reth_db::{
+use hanzo_evm_db::{
     mdbx::{DatabaseArguments, MaxReadTransactionDuration},
     open_db_read_only, DatabaseEnv,
 };
-use reth_db_api::{database_metrics::DatabaseMetrics, Database};
-use reth_node_types::{NodeTypes, NodeTypesWithDBAdapter};
-use reth_storage_errors::provider::ProviderResult;
+use hanzo_evm_db_api::{database_metrics::DatabaseMetrics, Database};
+use hanzo_evm_node_types::{NodeTypes, NodeTypesWithDBAdapter};
+use hanzo_evm_storage_errors::provider::ProviderResult;
 use std::{
     marker::PhantomData,
     path::{Path, PathBuf},
@@ -51,10 +51,10 @@ impl<N> ProviderFactoryBuilder<N> {
     /// This is recommended when the new read-only instance is used with an active node.
     ///
     /// ```no_run
-    /// use reth_chainspec::MAINNET;
-    /// use reth_provider::providers::{NodeTypesForProvider, ProviderFactoryBuilder};
+    /// use hanzo_evm_chainspec::MAINNET;
+    /// use hanzo_evm_provider::providers::{NodeTypesForProvider, ProviderFactoryBuilder};
     ///
-    /// fn demo<N: NodeTypesForProvider<ChainSpec = reth_chainspec::ChainSpec>>() {
+    /// fn demo<N: NodeTypesForProvider<ChainSpec = hanzo_evm_chainspec::ChainSpec>>() {
     ///     let provider_factory = ProviderFactoryBuilder::<N>::default()
     ///         .open_read_only(MAINNET.clone(), "datadir")
     ///         .unwrap();
@@ -66,10 +66,10 @@ impl<N> ProviderFactoryBuilder<N> {
     /// This is recommended when no changes to the static files are expected (e.g. no active node)
     ///
     /// ```no_run
-    /// use reth_chainspec::MAINNET;
-    /// use reth_provider::providers::{NodeTypesForProvider, ProviderFactoryBuilder, ReadOnlyConfig};
+    /// use hanzo_evm_chainspec::MAINNET;
+    /// use hanzo_evm_provider::providers::{NodeTypesForProvider, ProviderFactoryBuilder, ReadOnlyConfig};
     ///
-    /// fn demo<N: NodeTypesForProvider<ChainSpec = reth_chainspec::ChainSpec>>() {
+    /// fn demo<N: NodeTypesForProvider<ChainSpec = hanzo_evm_chainspec::ChainSpec>>() {
     ///     let provider_factory = ProviderFactoryBuilder::<N>::default()
     ///         .open_read_only(MAINNET.clone(), ReadOnlyConfig::from_datadir("datadir").no_watch())
     ///         .unwrap();
@@ -84,10 +84,10 @@ impl<N> ProviderFactoryBuilder<N> {
     /// [`ReadOnlyConfig::disable_long_read_transaction_safety`].
     ///
     /// ```no_run
-    /// use reth_chainspec::MAINNET;
-    /// use reth_provider::providers::{NodeTypesForProvider, ProviderFactoryBuilder, ReadOnlyConfig};
+    /// use hanzo_evm_chainspec::MAINNET;
+    /// use hanzo_evm_provider::providers::{NodeTypesForProvider, ProviderFactoryBuilder, ReadOnlyConfig};
     ///
-    /// fn demo<N: NodeTypesForProvider<ChainSpec = reth_chainspec::ChainSpec>>() {
+    /// fn demo<N: NodeTypesForProvider<ChainSpec = hanzo_evm_chainspec::ChainSpec>>() {
     ///     let provider_factory = ProviderFactoryBuilder::<N>::default()
     ///         .open_read_only(
     ///             MAINNET.clone(),

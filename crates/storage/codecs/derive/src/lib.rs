@@ -1,9 +1,9 @@
 //! Derive macros for the Compact codec traits.
 
 #![doc(
-    html_logo_url = "https://raw.githubusercontent.com/paradigmxyz/reth/main/assets/reth-docs.png",
+    html_logo_url = "https://raw.githubusercontent.com/hanzoai/evm/main/assets/evm-docs.png",
     html_favicon_url = "https://avatars0.githubusercontent.com/u/97369466?s=256",
-    issue_tracker_base_url = "https://github.com/paradigmxyz/reth/issues/"
+    issue_tracker_base_url = "https://github.com/hanzoai/evm/issues/"
 )]
 #![cfg_attr(not(test), warn(unused_crate_dependencies))]
 #![allow(unreachable_pub, missing_docs)]
@@ -55,13 +55,13 @@ pub(crate) struct ZstdConfig {
 ///   own encoding and do not rely on the bitflag struct.
 /// - `Bytes` fields and any types containing a `Bytes` field should be placed last to ensure
 ///   efficient decoding.
-#[proc_macro_derive(Compact, attributes(maybe_zero, reth_codecs))]
+#[proc_macro_derive(Compact, attributes(maybe_zero, hanzo_evm_codecs))]
 pub fn derive(input: TokenStream) -> TokenStream {
     compact::derive(parse_macro_input!(input as DeriveInput), None)
 }
 
 /// Adds `zstd` compression to derived [`Compact`].
-#[proc_macro_derive(CompactZstd, attributes(maybe_zero, reth_codecs, reth_zstd))]
+#[proc_macro_derive(CompactZstd, attributes(maybe_zero, hanzo_evm_codecs, hanzo_evm_zstd))]
 pub fn derive_zstd(input: TokenStream) -> TokenStream {
     let input = parse_macro_input!(input as DeriveInput);
 
@@ -69,7 +69,7 @@ pub fn derive_zstd(input: TokenStream) -> TokenStream {
     let mut decompressor = None;
 
     for attr in &input.attrs {
-        if attr.path().is_ident("reth_zstd") &&
+        if attr.path().is_ident("hanzo_evm_zstd") &&
             let Err(err) = attr.parse_nested_meta(|meta| {
                 if meta.path.is_ident("compressor") {
                     let value = meta.value()?;

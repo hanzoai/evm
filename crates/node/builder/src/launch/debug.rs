@@ -1,14 +1,14 @@
 use super::LaunchNode;
-use crate::{rpc::RethRpcAddOns, EngineNodeLauncher, Node, NodeHandle};
+use crate::{rpc::EvmRpcAddOns, EngineNodeLauncher, Node, NodeHandle};
 use alloy_consensus::transaction::Either;
 use alloy_provider::network::AnyNetwork;
 use jsonrpsee::core::{DeserializeOwned, Serialize};
-use reth_chainspec::EthChainSpec;
-use reth_consensus_debug_client::{
+use hanzo_evm_chainspec::EthChainSpec;
+use hanzo_evm_consensus_debug_client::{
     BlockProvider, DebugConsensusClient, EtherscanBlockProvider, RpcBlockProvider,
 };
-use reth_engine_local::LocalMiner;
-use reth_node_api::{
+use hanzo_evm_engine_local::LocalMiner;
+use hanzo_evm_node_api::{
     BlockTy, FullNodeComponents, FullNodeTypes, HeaderTy, PayloadAttrTy, PayloadAttributesBuilder,
     PayloadTypes,
 };
@@ -137,7 +137,7 @@ where
 impl<L, Target, N, AddOns, B> DebugNodeLauncherFuture<L, Target, N, B>
 where
     N: FullNodeComponents<Types: DebugNode<N>>,
-    AddOns: RethRpcAddOns<N>,
+    AddOns: EvmRpcAddOns<N>,
     L: LaunchNode<Target, Node = NodeHandle<N, AddOns>>,
     B: BlockProvider<Block = BlockTy<N::Types>> + Clone,
 {
@@ -203,7 +203,7 @@ where
         let config = &handle.node.config;
 
         if let Some(provider) = debug_block_provider {
-            info!(target: "reth::cli", "Using custom debug block provider");
+            info!(target: "evm::cli", "Using custom debug block provider");
 
             let rpc_consensus_client = DebugConsensusClient::new(
                 handle.node.add_ons_handle.beacon_engine_handle.clone(),
@@ -217,7 +217,7 @@ where
                     rpc_consensus_client.run().await
                 });
         } else if let Some(url) = config.debug.rpc_consensus_url.clone() {
-            info!(target: "reth::cli", "Using RPC consensus client: {}", url);
+            info!(target: "evm::cli", "Using RPC consensus client: {}", url);
 
             let block_provider =
                 RpcBlockProvider::<AnyNetwork, _>::new(url.as_str(), |block_response| {
@@ -238,7 +238,7 @@ where
                 rpc_consensus_client.run().await
             });
         } else if let Some(maybe_custom_etherscan_url) = config.debug.etherscan.clone() {
-            info!(target: "reth::cli", "Using etherscan as consensus client");
+            info!(target: "evm::cli", "Using etherscan as consensus client");
 
             let chain = config.chain.chain();
             let etherscan_url = maybe_custom_etherscan_url.map(Ok).unwrap_or_else(|| {
@@ -268,7 +268,7 @@ where
         }
 
         if config.dev.dev {
-            info!(target: "reth::cli", "Using local payload attributes builder for dev mode");
+            info!(target: "evm::cli", "Using local payload attributes builder for dev mode");
 
             let blockchain_db = handle.node.provider.clone();
             let chain_spec = config.chain.clone();
@@ -310,7 +310,7 @@ impl<L, Target, N, AddOns, B> IntoFuture for DebugNodeLauncherFuture<L, Target, 
 where
     Target: Send + 'static,
     N: FullNodeComponents<Types: DebugNode<N>>,
-    AddOns: RethRpcAddOns<N> + 'static,
+    AddOns: EvmRpcAddOns<N> + 'static,
     L: LaunchNode<Target, Node = NodeHandle<N, AddOns>> + 'static,
     B: BlockProvider<Block = BlockTy<N::Types>> + Clone + 'static,
 {
@@ -326,7 +326,7 @@ impl<L, Target, N, AddOns> LaunchNode<Target> for DebugNodeLauncher<L>
 where
     Target: Send + 'static,
     N: FullNodeComponents<Types: DebugNode<N>>,
-    AddOns: RethRpcAddOns<N> + 'static,
+    AddOns: EvmRpcAddOns<N> + 'static,
     L: LaunchNode<Target, Node = NodeHandle<N, AddOns>> + 'static,
     DefaultDebugBlockProvider<N>: BlockProvider<Block = BlockTy<N::Types>> + Clone,
 {

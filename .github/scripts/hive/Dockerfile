@@ -54,7 +54,7 @@ FROM ubuntu AS runtime
 
 ARG CARGO_BIN
 
-COPY --from=builder /app/target/hivetests/$CARGO_BIN /usr/local/bin/reth
+COPY --from=builder /app/target/hivetests/$CARGO_BIN /usr/local/bin/evm
 COPY LICENSE-* ./
 
 EXPOSE 30303 30303/udp 9001 8545 8546

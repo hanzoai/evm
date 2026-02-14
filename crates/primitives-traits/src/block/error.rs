@@ -14,7 +14,7 @@ use crate::transaction::signed::RecoveryError;
 /// ```rust
 /// use alloy_consensus::{Block, BlockBody, Header, Signed, TxEnvelope, TxLegacy};
 /// use alloy_primitives::{Signature, B256};
-/// use reth_primitives_traits::{block::error::SealedBlockRecoveryError, SealedBlock};
+/// use hanzo_evm_primitives_traits::{block::error::SealedBlockRecoveryError, SealedBlock};
 ///
 /// // Create a simple block for demonstration
 /// let header = Header::default();

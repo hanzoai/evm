@@ -1,0 +1,69 @@
+[package]
+name = "hanzo-evm-eth-execution"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+homepage.workspace = true
+repository.workspace = true
+
+[lints]
+workspace = true
+
+[dependencies]
+# Reth
+hanzo-evm-execution-types.workspace = true
+hanzo-evm-chainspec.workspace = true
+hanzo-evm-ethereum-forks.workspace = true
+hanzo-evm-primitives-traits.workspace = true
+hanzo-evm-ethereum-primitives.workspace = true
+revm.workspace = true
+hanzo-evm-execution.workspace = true
+hanzo-evm-storage-errors.workspace = true
+
+# Alloy
+alloy-primitives.workspace = true
+alloy-eips.workspace = true
+alloy-evm.workspace = true
+alloy-consensus.workspace = true
+alloy-rpc-types-engine.workspace = true
+
+# Misc
+parking_lot = { workspace = true, optional = true }
+derive_more = { workspace = true, optional = true }
+
+[dev-dependencies]
+hanzo-evm-testing-utils.workspace = true
+hanzo-evm-execution = { workspace = true, features = ["test-utils"] }
+secp256k1.workspace = true
+alloy-genesis.workspace = true
+
+[features]
+default = ["std"]
+std = [
+    "alloy-consensus/std",
+    "alloy-eips/std",
+    "alloy-genesis/std",
+    "alloy-primitives/std",
+    "secp256k1/std",
+    "hanzo-evm-ethereum-forks/std",
+    "hanzo-evm-chainspec/std",
+    "alloy-evm/std",
+    "hanzo-evm-execution-types/std",
+    "hanzo-evm-execution/std",
+    "hanzo-evm-primitives-traits/std",
+    "revm/std",
+    "hanzo-evm-ethereum-primitives/std",
+    "derive_more?/std",
+    "alloy-rpc-types-engine/std",
+    "hanzo-evm-storage-errors/std",
+]
+test-utils = [
+    "std",
+    "dep:parking_lot",
+    "dep:derive_more",
+    "hanzo-evm-chainspec/test-utils",
+    "hanzo-evm-ethereum-primitives/test-utils",
+    "hanzo-evm-execution/test-utils",
+    "hanzo-evm-primitives-traits/test-utils",
+]

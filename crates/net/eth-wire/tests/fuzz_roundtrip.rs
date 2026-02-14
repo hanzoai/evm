@@ -50,8 +50,8 @@ macro_rules! fuzz_type_and_name {
 pub mod fuzz_rlp {
     use crate::roundtrip_encoding;
     use alloy_rlp::{RlpDecodableWrapper, RlpEncodableWrapper};
-    use reth_codecs::add_arbitrary_tests;
-    use reth_eth_wire::{
+    use hanzo_evm_codecs::add_arbitrary_tests;
+    use hanzo_evm_eth_wire::{
         BlockBodies, BlockHeaders, DisconnectReason, GetBlockBodies, GetBlockHeaders, GetNodeData,
         GetPooledTransactions, GetReceipts, HelloMessage, NewBlock, NewBlockHashes,
         NewPooledTransactionHashes66, NewPooledTransactionHashes68, NodeData, P2PMessage,

@@ -38,7 +38,7 @@ pub const DEFAULT_MULTIPROOF_TASK_CHUNK_SIZE_V2: usize = DEFAULT_MULTIPROOF_TASK
 
 /// Default number of reserved CPU cores for non-reth processes.
 ///
-/// This will be deducted from the thread count of main reth global threadpool.
+/// This will be deducted from the thread count of main evm global threadpool.
 pub const DEFAULT_RESERVED_CPU_CORES: usize = 1;
 
 /// Returns the default maximum concurrency for prewarm task based on available parallelism.

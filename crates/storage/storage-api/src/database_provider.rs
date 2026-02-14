@@ -1,6 +1,6 @@
 use alloc::vec::Vec;
 use core::ops::{Bound, RangeBounds};
-use reth_db_api::{
+use hanzo_evm_db_api::{
     common::KeyValue,
     cursor::DbCursorRO,
     database::Database,
@@ -8,8 +8,8 @@ use reth_db_api::{
     transaction::{DbTx, DbTxMut},
     DatabaseError,
 };
-use reth_prune_types::PruneModes;
-use reth_storage_errors::provider::ProviderResult;
+use hanzo_evm_prune_types::PruneModes;
+use hanzo_evm_storage_errors::provider::ProviderResult;
 
 /// Database provider.
 pub trait DBProvider: Sized {
@@ -30,7 +30,7 @@ pub trait DBProvider: Sized {
     ///
     /// CAUTION: In most of the cases, you want the safety guarantees for long read transactions
     /// enabled. Use this only if you're sure that no write transaction is open in parallel, meaning
-    /// that Reth as a node is offline and not progressing.
+    /// that Hanzo EVM as a node is offline and not progressing.
     fn disable_long_read_transaction_safety(mut self) -> Self {
         self.tx_mut().disable_long_read_transaction_safety();
         self

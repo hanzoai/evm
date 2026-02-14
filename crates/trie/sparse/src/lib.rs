@@ -21,7 +21,7 @@ mod metrics;
 
 /// Re-export sparse trie error types.
 pub mod errors {
-    pub use reth_execution_errors::{
+    pub use hanzo_evm_execution_errors::{
         SparseStateTrieError, SparseStateTrieErrorKind, SparseStateTrieResult, SparseTrieError,
         SparseTrieErrorKind, SparseTrieResult,
     };

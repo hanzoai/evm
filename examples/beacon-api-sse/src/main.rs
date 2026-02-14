@@ -8,7 +8,7 @@
 //! cargo run -p example-beacon-api-sse -- node
 //! ```
 //!
-//! This launches a regular reth instance and subscribes to payload attributes event stream.
+//! This launches a regular evm instance and subscribes to payload attributes event stream.
 //!
 //! **NOTE**: This expects that the CL client is running an http server on `localhost:5052` and is
 //! configured to emit payload attributes events.
@@ -21,7 +21,7 @@ use alloy_rpc_types_beacon::events::PayloadAttributesEvent;
 use clap::Parser;
 use futures_util::stream::StreamExt;
 use mev_share_sse::{client::EventStream, EventClient};
-use reth_ethereum::{
+use hanzo_evm_ethereum::{
     cli::{chainspec::EthereumChainSpecParser, interface::Cli},
     node::EthereumNode,
 };
@@ -40,7 +40,7 @@ fn main() {
         .unwrap();
 }
 
-/// Our custom cli args extension that adds one flag to reth default CLI.
+/// Our custom cli args extension that adds one flag to evm default CLI.
 #[derive(Debug, Clone, clap::Parser)]
 struct BeaconEventsConfig {
     /// Beacon Node http server address
@@ -100,7 +100,7 @@ mod tests {
 
     #[test]
     fn parse_config() {
-        let args = BeaconEventsConfig::try_parse_from(["reth"]);
+        let args = BeaconEventsConfig::try_parse_from(["evm"]);
         assert!(args.is_ok());
     }
 }

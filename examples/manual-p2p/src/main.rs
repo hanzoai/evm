@@ -12,9 +12,9 @@ use std::time::Duration;
 
 use alloy_consensus::constants::MAINNET_GENESIS_HASH;
 use futures::StreamExt;
-use reth_discv4::{DiscoveryUpdate, Discv4, Discv4ConfigBuilder, DEFAULT_DISCOVERY_ADDRESS};
-use reth_ecies::stream::ECIESStream;
-use reth_ethereum::{
+use hanzo_evm_discv4::{DiscoveryUpdate, Discv4, Discv4ConfigBuilder, DEFAULT_DISCOVERY_ADDRESS};
+use hanzo_evm_ecies::stream::ECIESStream;
+use hanzo_evm_ethereum::{
     chainspec::{Chain, EthereumHardfork, Head, MAINNET},
     network::{
         config::rng_secret_key,
@@ -25,7 +25,7 @@ use reth_ethereum::{
         EthNetworkPrimitives,
     },
 };
-use reth_network_peers::{mainnet_nodes, pk2id, NodeRecord};
+use hanzo_evm_network_peers::{mainnet_nodes, pk2id, NodeRecord};
 use secp256k1::{SecretKey, SECP256K1};
 use std::sync::LazyLock;
 use tokio::net::TcpStream;

@@ -1,5 +1,5 @@
 [package]
-name = "reth-eth-wire-types"
+name = "hanzo-evm-eth-wire-types"
 description = "types for eth-wire"
 version.workspace = true
 edition.workspace = true
@@ -12,11 +12,11 @@ repository.workspace = true
 workspace = true
 
 [dependencies]
-# reth
-reth-chainspec.workspace = true
-reth-codecs-derive.workspace = true
-reth-ethereum-primitives.workspace = true
-reth-primitives-traits.workspace = true
+# evm
+hanzo-evm-chainspec.workspace = true
+hanzo-evm-codecs-derive.workspace = true
+hanzo-evm-ethereum-primitives.workspace = true
+hanzo-evm-primitives-traits.workspace = true
 
 # ethereum
 alloy-chains = { workspace = true, features = ["rlp"] }
@@ -37,7 +37,7 @@ proptest-arbitrary-interop = { workspace = true, optional = true }
 alloy-hardforks.workspace = true
 
 [dev-dependencies]
-reth-ethereum-primitives = { workspace = true, features = ["arbitrary"] }
+hanzo-evm-ethereum-primitives = { workspace = true, features = ["arbitrary"] }
 alloy-primitives = { workspace = true, features = ["arbitrary", "rand"] }
 alloy-consensus = { workspace = true, features = ["arbitrary"] }
 alloy-eips = { workspace = true, features = ["arbitrary"] }
@@ -59,23 +59,23 @@ std = [
     "alloy-rlp/std",
     "bytes/std",
     "derive_more/std",
-    "reth-ethereum-primitives/std",
-    "reth-primitives-traits/std",
+    "hanzo-evm-ethereum-primitives/std",
+    "hanzo-evm-primitives-traits/std",
     "serde?/std",
     "thiserror/std",
-    "reth-chainspec/std",
+    "hanzo-evm-chainspec/std",
 ]
 arbitrary = [
-    "reth-ethereum-primitives/arbitrary",
+    "hanzo-evm-ethereum-primitives/arbitrary",
     "alloy-chains/arbitrary",
     "dep:arbitrary",
     "dep:proptest",
     "dep:proptest-arbitrary-interop",
-    "reth-chainspec/arbitrary",
+    "hanzo-evm-chainspec/arbitrary",
     "alloy-consensus/arbitrary",
     "alloy-eips/arbitrary",
     "alloy-primitives/arbitrary",
-    "reth-primitives-traits/arbitrary",
+    "hanzo-evm-primitives-traits/arbitrary",
 ]
 serde = [
     "dep:serde",
@@ -85,7 +85,7 @@ serde = [
     "alloy-primitives/serde",
     "bytes/serde",
     "rand/serde",
-    "reth-primitives-traits/serde",
-    "reth-ethereum-primitives/serde",
+    "hanzo-evm-primitives-traits/serde",
+    "hanzo-evm-ethereum-primitives/serde",
     "alloy-hardforks/serde",
 ]

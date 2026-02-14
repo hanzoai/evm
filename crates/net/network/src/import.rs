@@ -1,9 +1,9 @@
 //! This module provides an abstraction over block import in the form of the `BlockImport` trait.
 
 use crate::message::NewBlockMessage;
-use reth_eth_wire::NewBlock;
-use reth_eth_wire_types::broadcast::NewBlockHashes;
-use reth_network_peers::PeerId;
+use hanzo_evm_eth_wire::NewBlock;
+use hanzo_evm_eth_wire_types::broadcast::NewBlockHashes;
+use hanzo_evm_network_peers::PeerId;
 use std::{
     error::Error,
     task::{Context, Poll},
@@ -37,7 +37,7 @@ pub enum NewBlockEvent<B = NewBlock> {
 
 /// Represents different types of block import events
 #[derive(Debug)]
-pub enum BlockImportEvent<B = reth_ethereum_primitives::Block> {
+pub enum BlockImportEvent<B = hanzo_evm_ethereum_primitives::Block> {
     /// General block announcement and validation status
     Announcement(BlockValidation<B>),
     /// Result of a peer-specific block import
@@ -46,7 +46,7 @@ pub enum BlockImportEvent<B = reth_ethereum_primitives::Block> {
 
 /// Outcome of the [`BlockImport`]'s block handling.
 #[derive(Debug)]
-pub struct BlockImportOutcome<B = reth_ethereum_primitives::Block> {
+pub struct BlockImportOutcome<B = hanzo_evm_ethereum_primitives::Block> {
     /// Sender of the block announcement message.
     pub peer: PeerId,
     /// The result after validating the block
@@ -75,7 +75,7 @@ pub enum BlockValidation<B> {
 pub enum BlockImportError {
     /// Consensus error
     #[error(transparent)]
-    Consensus(#[from] reth_consensus::ConsensusError),
+    Consensus(#[from] hanzo_evm_consensus::ConsensusError),
     /// Other error
     #[error(transparent)]
     Other(#[from] Box<dyn Error + Send + Sync>),

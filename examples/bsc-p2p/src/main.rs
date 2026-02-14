@@ -6,21 +6,21 @@
 //! cargo run -p bsc-p2p
 //! ```
 //!
-//! This launches a regular reth node overriding the engine api payload builder with our custom.
+//! This launches a regular evm node overriding the engine api payload builder with our custom.
 //!
 //! Credits to: <https://merkle.io/blog/modifying-reth-to-build-the-fastest-transaction-network-on-bsc-and-polygon>
 
 use chainspec::{boot_nodes, bsc_chain_spec, head};
 use handshake::BscHandshake;
-use reth_discv4::Discv4ConfigBuilder;
-use reth_network::{
+use hanzo_evm_discv4::Discv4ConfigBuilder;
+use hanzo_evm_network::{
     EthNetworkPrimitives, NetworkConfig, NetworkEvent, NetworkEventListenerProvider,
     NetworkManager, PeersInfo,
 };
-use reth_network_api::events::{PeerEvent, SessionInfo};
-use reth_provider::noop::NoopProvider;
-use reth_tracing::{
-    tracing_subscriber::filter::LevelFilter, LayerInfo, LogFormat, RethTracer, Tracer,
+use hanzo_evm_network_api::events::{PeerEvent, SessionInfo};
+use hanzo_evm_provider::noop::NoopProvider;
+use hanzo_evm_tracing::{
+    tracing_subscriber::filter::LevelFilter, LayerInfo, LogFormat, EvmTracer, Tracer,
 };
 use secp256k1::{rand, SecretKey};
 use std::{
@@ -38,7 +38,7 @@ mod upgrade_status;
 
 #[tokio::main]
 async fn main() {
-    let _ = RethTracer::new()
+    let _ = EvmTracer::new()
         .with_stdout(LayerInfo::new(
             LogFormat::Terminal,
             LevelFilter::INFO.to_string(),

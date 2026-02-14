@@ -11,9 +11,9 @@ use clap::{
     Arg, Args, Command,
 };
 use rand::Rng;
-use reth_cli_util::{parse_duration_from_secs_or_ms, parse_ether_value};
-use reth_rpc_eth_types::builder::config::PendingBlockKind;
-use reth_rpc_server_types::{constants, RethRpcModule, RpcModuleSelection};
+use hanzo_evm_cli_util::{parse_duration_from_secs_or_ms, parse_ether_value};
+use hanzo_evm_rpc_eth_types::builder::config::PendingBlockKind;
+use hanzo_evm_rpc_server_types::{constants, EvmRpcModule, RpcModuleSelection};
 use std::{
     ffi::OsStr,
     net::{IpAddr, Ipv4Addr},
@@ -620,7 +620,7 @@ pub struct RpcServerArgs {
 
     /// Path to file containing disallowed addresses, json-encoded list of strings. Block
     /// validation API will reject blocks containing transactions from these addresses.
-    #[arg(long = "builder.disallow", value_name = "PATH", value_parser = reth_cli_util::parsers::read_json_from_file::<AddressSet>, default_value = Resettable::from(DefaultRpcServerArgs::get_global().builder_disallow.as_ref().map(|v| format!("{:?}", v).into())))]
+    #[arg(long = "builder.disallow", value_name = "PATH", value_parser = hanzo_evm_cli_util::parsers::read_json_from_file::<AddressSet>, default_value = Resettable::from(DefaultRpcServerArgs::get_global().builder_disallow.as_ref().map(|v| format!("{:?}", v).into())))]
     pub builder_disallow: Option<AddressSet>,
 
     /// State cache configuration.
@@ -698,7 +698,7 @@ impl RpcServerArgs {
     /// * The `auth_port` is scaled by a factor of `instance * 100`
     /// * The `http_port` is scaled by a factor of `-instance`
     /// * The `ws_port` is scaled by a factor of `instance * 2`
-    /// * The `ipcpath` is appended with the instance number: `/tmp/reth.ipc-<instance>`
+    /// * The `ipcpath` is appended with the instance number: `/tmp/evm.ipc-<instance>`
     ///
     /// # Panics
     /// Warning: if `instance` is zero in debug mode, this will panic.
@@ -902,7 +902,7 @@ impl TypedValueParser for RpcModuleSelectionValueParser {
 
     fn possible_values(&self) -> Option<Box<dyn Iterator<Item = PossibleValue> + '_>> {
         // Only show standard modules in help text (excludes "other")
-        let values = RethRpcModule::standard_variant_names().map(PossibleValue::new);
+        let values = EvmRpcModule::standard_variant_names().map(PossibleValue::new);
         Some(Box::new(values))
     }
 }
@@ -922,7 +922,7 @@ mod tests {
     #[test]
     fn test_rpc_server_args_parser() {
         let args =
-            CommandParser::<RpcServerArgs>::parse_from(["reth", "--http.api", "eth,admin,debug"])
+            CommandParser::<RpcServerArgs>::parse_from(["evm", "--http.api", "eth,admin,debug"])
                 .args;
 
         let apis = args.http_api.unwrap();
@@ -934,7 +934,7 @@ mod tests {
     #[test]
     fn test_rpc_server_eth_call_bundle_args() {
         let args =
-            CommandParser::<RpcServerArgs>::parse_from(["reth", "--http.api", "eth,admin,debug"])
+            CommandParser::<RpcServerArgs>::parse_from(["evm", "--http.api", "eth,admin,debug"])
                 .args;
 
         let apis = args.http_api.unwrap();
@@ -945,7 +945,7 @@ mod tests {
 
     #[test]
     fn test_rpc_server_args_parser_none() {
-        let args = CommandParser::<RpcServerArgs>::parse_from(["reth", "--http.api", "none"]).args;
+        let args = CommandParser::<RpcServerArgs>::parse_from(["evm", "--http.api", "none"]).args;
         let apis = args.http_api.unwrap();
         let expected = RpcModuleSelection::Selection(Default::default());
         assert_eq!(apis, expected);
@@ -954,14 +954,14 @@ mod tests {
     #[test]
     fn rpc_server_args_default_sanity_test() {
         let default_args = RpcServerArgs::default();
-        let args = CommandParser::<RpcServerArgs>::parse_from(["reth"]).args;
+        let args = CommandParser::<RpcServerArgs>::parse_from(["evm"]).args;
 
         assert_eq!(args, default_args);
     }
 
     #[test]
     fn test_rpc_tx_fee_cap_parse_integer() {
-        let args = CommandParser::<RpcServerArgs>::parse_from(["reth", "--rpc.txfeecap", "2"]).args;
+        let args = CommandParser::<RpcServerArgs>::parse_from(["evm", "--rpc.txfeecap", "2"]).args;
         let expected = 2_000_000_000_000_000_000u128; // 2 ETH in wei
         assert_eq!(args.rpc_tx_fee_cap, expected);
     }
@@ -969,20 +969,20 @@ mod tests {
     #[test]
     fn test_rpc_tx_fee_cap_parse_decimal() {
         let args =
-            CommandParser::<RpcServerArgs>::parse_from(["reth", "--rpc.txfeecap", "1.5"]).args;
+            CommandParser::<RpcServerArgs>::parse_from(["evm", "--rpc.txfeecap", "1.5"]).args;
         let expected = 1_500_000_000_000_000_000u128; // 1.5 ETH in wei
         assert_eq!(args.rpc_tx_fee_cap, expected);
     }
 
     #[test]
     fn test_rpc_tx_fee_cap_parse_zero() {
-        let args = CommandParser::<RpcServerArgs>::parse_from(["reth", "--rpc.txfeecap", "0"]).args;
+        let args = CommandParser::<RpcServerArgs>::parse_from(["evm", "--rpc.txfeecap", "0"]).args;
         assert_eq!(args.rpc_tx_fee_cap, 0); // 0 = no cap
     }
 
     #[test]
     fn test_rpc_tx_fee_cap_parse_none() {
-        let args = CommandParser::<RpcServerArgs>::parse_from(["reth"]).args;
+        let args = CommandParser::<RpcServerArgs>::parse_from(["evm"]).args;
         let expected = 1_000_000_000_000_000_000u128;
         assert_eq!(args.rpc_tx_fee_cap, expected); // 1 ETH default cap
     }
@@ -1002,7 +1002,7 @@ mod tests {
             ws_allowed_origins: Some("*".to_string()),
             ws_api: Some(RpcModuleSelection::try_from_selection(["eth", "admin"]).unwrap()),
             ipcdisable: false,
-            ipcpath: "reth.ipc".to_string(),
+            ipcpath: "evm.ipc".to_string(),
             ipc_socket_permissions: Some("0o666".to_string()),
             auth_addr: "127.0.0.1".parse().unwrap(),
             auth_port: 8551,
@@ -1054,7 +1054,7 @@ mod tests {
         };
 
         let parsed_args = CommandParser::<RpcServerArgs>::parse_from([
-            "reth",
+            "evm",
             "--http",
             "--http.addr",
             "127.0.0.1",
@@ -1074,7 +1074,7 @@ mod tests {
             "--ws.api",
             "eth,admin",
             "--ipcpath",
-            "reth.ipc",
+            "evm.ipc",
             "--ipc.permissions",
             "0o666",
             "--authrpc.addr",

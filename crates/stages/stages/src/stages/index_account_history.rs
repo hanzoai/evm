@@ -1,15 +1,15 @@
 use super::collect_account_history_indices;
 use crate::stages::utils::{collect_history_indices, load_account_history};
-use reth_config::config::{EtlConfig, IndexHistoryConfig};
+use hanzo_evm_config::config::{EtlConfig, IndexHistoryConfig};
 #[cfg(all(unix, feature = "rocksdb"))]
-use reth_db_api::Tables;
-use reth_db_api::{models::ShardedKey, tables, transaction::DbTxMut};
-use reth_provider::{
+use hanzo_evm_db_api::Tables;
+use hanzo_evm_db_api::{models::ShardedKey, tables, transaction::DbTxMut};
+use hanzo_evm_provider::{
     DBProvider, EitherWriter, HistoryWriter, PruneCheckpointReader, PruneCheckpointWriter,
     RocksDBProviderFactory, StorageSettingsCache,
 };
-use reth_prune_types::{PruneCheckpoint, PruneMode, PrunePurpose, PruneSegment};
-use reth_stages_api::{
+use hanzo_evm_prune_types::{PruneCheckpoint, PruneMode, PrunePurpose, PruneSegment};
+use hanzo_evm_stages_api::{
     ExecInput, ExecOutput, Stage, StageCheckpoint, StageError, StageId, UnwindInput, UnwindOutput,
 };
 use std::fmt::Debug;
@@ -52,8 +52,8 @@ where
         + HistoryWriter
         + PruneCheckpointReader
         + PruneCheckpointWriter
-        + reth_storage_api::ChangeSetReader
-        + reth_provider::StaticFileProviderFactory
+        + hanzo_evm_storage_api::ChangeSetReader
+        + hanzo_evm_provider::StaticFileProviderFactory
         + StorageSettingsCache
         + RocksDBProviderFactory,
 {
@@ -140,7 +140,7 @@ where
         provider.with_rocksdb_batch_auto_commit(|rocksdb_batch| {
             let mut writer = EitherWriter::new_accounts_history(provider, rocksdb_batch)?;
             load_account_history(collector, first_sync, &mut writer)
-                .map_err(|e| reth_provider::ProviderError::other(Box::new(e)))?;
+                .map_err(|e| hanzo_evm_provider::ProviderError::other(Box::new(e)))?;
             Ok(((), writer.into_raw_rocksdb_batch()))
         })?;
 
@@ -178,7 +178,7 @@ mod tests {
     };
     use alloy_primitives::{address, Address, BlockNumber, B256};
     use itertools::Itertools;
-    use reth_db_api::{
+    use hanzo_evm_db_api::{
         cursor::DbCursorRO,
         models::{
             sharded_key, sharded_key::NUM_OF_INDICES_IN_SHARD, AccountBeforeTx,
@@ -187,8 +187,8 @@ mod tests {
         transaction::DbTx,
         BlockNumberList,
     };
-    use reth_provider::{providers::StaticFileWriter, DatabaseProviderFactory};
-    use reth_testing_utils::generators::{
+    use hanzo_evm_provider::{providers::StaticFileWriter, DatabaseProviderFactory};
+    use hanzo_evm_testing_utils::generators::{
         self, random_block_range, random_changeset_range, random_contract_account_range,
         BlockRangeParams,
     };
@@ -666,8 +666,8 @@ mod tests {
     #[cfg(all(unix, feature = "rocksdb"))]
     mod rocksdb_tests {
         use super::*;
-        use reth_provider::RocksDBProviderFactory;
-        use reth_storage_api::StorageSettings;
+        use hanzo_evm_provider::RocksDBProviderFactory;
+        use hanzo_evm_storage_api::StorageSettings;
 
         /// Test that when `account_history_in_rocksdb` is enabled, the stage
         /// writes account history indices to `RocksDB` instead of MDBX.

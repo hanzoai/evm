@@ -1,6 +1,6 @@
 //! Transaction pool metrics.
 
-use reth_metrics::{
+use hanzo_evm_metrics::{
     metrics::{Counter, Gauge, Histogram},
     Metrics,
 };

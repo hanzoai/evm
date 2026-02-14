@@ -12,9 +12,9 @@ use core::{
     task::{ready, Context, Poll},
 };
 use futures::{future::Either, FutureExt, TryFutureExt};
-use reth_errors::RethResult;
-use reth_payload_builder_primitives::PayloadBuilderError;
-use reth_payload_primitives::{EngineApiMessageVersion, PayloadTypes};
+use hanzo_evm_errors::EvmResult;
+use hanzo_evm_payload_builder_primitives::PayloadBuilderError;
+use hanzo_evm_payload_primitives::{EngineApiMessageVersion, PayloadTypes};
 use tokio::sync::{mpsc::UnboundedSender, oneshot};
 
 /// Type alias for backwards compat
@@ -162,7 +162,7 @@ pub enum BeaconEngineMessage<Payload: PayloadTypes> {
         /// The Engine API Version.
         version: EngineApiMessageVersion,
         /// The sender for returning forkchoice updated result.
-        tx: oneshot::Sender<RethResult<OnForkChoiceUpdated>>,
+        tx: oneshot::Sender<EvmResult<OnForkChoiceUpdated>>,
     },
 }
 
@@ -247,7 +247,7 @@ where
         state: ForkchoiceState,
         payload_attrs: Option<Payload::PayloadAttributes>,
         version: EngineApiMessageVersion,
-    ) -> oneshot::Receiver<RethResult<OnForkChoiceUpdated>> {
+    ) -> oneshot::Receiver<EvmResult<OnForkChoiceUpdated>> {
         let (tx, rx) = oneshot::channel();
         let _ = self.to_engine.send(BeaconEngineMessage::ForkchoiceUpdated {
             state,

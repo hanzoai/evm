@@ -1,5 +1,5 @@
 [package]
-name = "reth-engine-primitives"
+name = "hanzo-evm-engine-primitives"
 version.workspace = true
 edition.workspace = true
 rust-version.workspace = true
@@ -11,16 +11,16 @@ repository.workspace = true
 workspace = true
 
 [dependencies]
-# reth
-reth-evm.workspace = true
-reth-execution-types.workspace = true
-reth-payload-primitives.workspace = true
-reth-payload-builder-primitives.workspace = true
-reth-primitives-traits.workspace = true
-reth-ethereum-primitives.workspace = true
-reth-chain-state.workspace = true
-reth-errors.workspace = true
-reth-trie-common.workspace = true
+# evm
+hanzo-evm-execution.workspace = true
+hanzo-evm-execution-types.workspace = true
+hanzo-evm-payload-primitives.workspace = true
+hanzo-evm-payload-builder-primitives.workspace = true
+hanzo-evm-primitives-traits.workspace = true
+hanzo-evm-ethereum-primitives.workspace = true
+hanzo-evm-chain-state.workspace = true
+hanzo-evm-errors.workspace = true
+hanzo-evm-trie-common.workspace = true
 
 # alloy
 alloy-primitives.workspace = true
@@ -40,10 +40,10 @@ thiserror.workspace = true
 [features]
 default = ["std"]
 std = [
-    "reth-execution-types/std",
-    "reth-ethereum-primitives/std",
-    "reth-primitives-traits/std",
-    "reth-trie-common/std",
+    "hanzo-evm-execution-types/std",
+    "hanzo-evm-ethereum-primitives/std",
+    "hanzo-evm-primitives-traits/std",
+    "hanzo-evm-trie-common/std",
     "alloy-primitives/std",
     "alloy-consensus/std",
     "alloy-rpc-types-engine/std",
@@ -52,5 +52,5 @@ std = [
     "tokio",
     "serde/std",
     "thiserror/std",
-    "reth-evm/std",
+    "hanzo-evm-execution/std",
 ]

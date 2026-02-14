@@ -15,8 +15,8 @@ use alloy_rpc_types_trace::{
 };
 use futures::{Stream, StreamExt};
 use jsonrpsee::core::client::Error as RpcError;
-use reth_ethereum_primitives::{Receipt, TransactionSigned};
-use reth_rpc_api::{clients::DebugApiClient, EthApiClient};
+use hanzo_evm_ethereum_primitives::{Receipt, TransactionSigned};
+use hanzo_evm_rpc_api::{clients::DebugApiClient, EthApiClient};
 
 const NOOP_TRACER: &str = include_str!("../assets/noop-tracer.js");
 const JS_TRACER_TEMPLATE: &str = include_str!("../assets/tracer-template.js");
@@ -221,7 +221,7 @@ impl JsTracerBuilder {
     /// The body code has access to the `ctx` and `db` variables.
     ///
     /// ```
-    /// use reth_rpc_api_testing_util::debug::JsTracerBuilder;
+    /// use hanzo_evm_rpc_api_testing_util::debug::JsTracerBuilder;
     /// let code = JsTracerBuilder::default().result_body("return {};").code();
     /// ```
     pub fn result_body(mut self, body: impl Into<String>) -> Self {
@@ -389,7 +389,7 @@ mod tests {
     #[ignore]
     async fn can_trace_noop_sepolia() {
         let tx = TX_1.parse().unwrap();
-        let url = parse_env_url("RETH_RPC_TEST_NODE_URL").unwrap();
+        let url = parse_env_url("EVM_RPC_TEST_NODE_URL").unwrap();
         let client = HttpClientBuilder::default().build(url).unwrap();
         let res =
             client.debug_trace_transaction_json(tx, NoopJsTracer::default().into()).await.unwrap();
@@ -400,7 +400,7 @@ mod tests {
     #[ignore]
     async fn can_trace_default_template() {
         let tx = TX_1.parse().unwrap();
-        let url = parse_env_url("RETH_RPC_TEST_NODE_URL").unwrap();
+        let url = parse_env_url("EVM_RPC_TEST_NODE_URL").unwrap();
         let client = HttpClientBuilder::default().build(url).unwrap();
         let res = client
             .debug_trace_transaction_json(tx, JsTracerBuilder::default().into())
@@ -413,7 +413,7 @@ mod tests {
     #[ignore]
     async fn can_debug_trace_block_transactions() {
         let block = 11_117_104u64;
-        let url = parse_env_url("RETH_RPC_TEST_NODE_URL").unwrap();
+        let url = parse_env_url("EVM_RPC_TEST_NODE_URL").unwrap();
         let client = HttpClientBuilder::default().build(url).unwrap();
 
         let opts = GethDebugTracingOptions::default()

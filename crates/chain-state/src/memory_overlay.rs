@@ -1,13 +1,13 @@
 use super::ExecutedBlock;
 use alloy_consensus::BlockHeader;
 use alloy_primitives::{keccak256, Address, BlockNumber, Bytes, StorageKey, StorageValue, B256};
-use reth_errors::ProviderResult;
-use reth_primitives_traits::{Account, Bytecode, NodePrimitives};
-use reth_storage_api::{
+use hanzo_evm_errors::ProviderResult;
+use hanzo_evm_primitives_traits::{Account, Bytecode, NodePrimitives};
+use hanzo_evm_storage_api::{
     AccountReader, BlockHashReader, BytecodeReader, HashedPostStateProvider, StateProofProvider,
     StateProvider, StateProviderBox, StateRootProvider, StorageRootProvider,
 };
-use reth_trie::{
+use hanzo_evm_trie::{
     updates::TrieUpdates, AccountProof, HashedPostState, HashedStorage, MultiProof,
     MultiProofTargets, StorageMultiProof, TrieInput,
 };
@@ -19,7 +19,7 @@ use std::{borrow::Cow, sync::OnceLock};
 #[expect(missing_debug_implementations)]
 pub struct MemoryOverlayStateProviderRef<
     'a,
-    N: NodePrimitives = reth_ethereum_primitives::EthPrimitives,
+    N: NodePrimitives = hanzo_evm_ethereum_primitives::EthPrimitives,
 > {
     /// Historical state provider for state lookups that are not found in memory blocks.
     pub(crate) historical: Box<dyn StateProvider + 'a>,
@@ -160,7 +160,7 @@ impl<N: NodePrimitives> StorageRootProvider for MemoryOverlayStateProviderRef<'_
         address: Address,
         slot: B256,
         storage: HashedStorage,
-    ) -> ProviderResult<reth_trie::StorageProof> {
+    ) -> ProviderResult<hanzo_evm_trie::StorageProof> {
         let merged = self.merged_hashed_storage(address, storage);
         self.historical.storage_proof(address, slot, merged)
     }
@@ -240,7 +240,7 @@ impl<N: NodePrimitives> BytecodeReader for MemoryOverlayStateProviderRef<'_, N> 
 /// An owned state provider that stores references to in-memory blocks along with their state as
 /// well as a reference of the historical state provider for fallback lookups.
 #[expect(missing_debug_implementations)]
-pub struct MemoryOverlayStateProvider<N: NodePrimitives = reth_ethereum_primitives::EthPrimitives> {
+pub struct MemoryOverlayStateProvider<N: NodePrimitives = hanzo_evm_ethereum_primitives::EthPrimitives> {
     /// Historical state provider for state lookups that are not found in memory blocks.
     pub(crate) historical: StateProviderBox,
     /// The collection of executed parent blocks. Expected order is newest to oldest.
@@ -278,4 +278,4 @@ impl<N: NodePrimitives> MemoryOverlayStateProvider<N> {
 }
 
 // Delegates all provider impls to [`MemoryOverlayStateProviderRef`]
-reth_storage_api::macros::delegate_provider_impls!(MemoryOverlayStateProvider<N> where [N: NodePrimitives]);
+hanzo_evm_storage_api::macros::delegate_provider_impls!(MemoryOverlayStateProvider<N> where [N: NodePrimitives]);

@@ -1,8 +1,8 @@
 use alloy_primitives::U64;
 use jsonrpsee::core::RpcResult as Result;
-use reth_network_api::PeersInfo;
-use reth_rpc_api::NetApiServer;
-use reth_rpc_eth_api::helpers::EthApiSpec;
+use hanzo_evm_network_api::PeersInfo;
+use hanzo_evm_rpc_api::NetApiServer;
+use hanzo_evm_rpc_eth_api::helpers::EthApiSpec;
 
 /// `Net` API implementation.
 ///
@@ -31,7 +31,7 @@ where
 {
     /// Handler for `net_version`
     fn version(&self) -> Result<String> {
-        // Note: net_version is numeric: <https://github.com/paradigmxyz/reth/issues/5569>
+        // Note: net_version is numeric: <https://github.com/hanzoai/evm/issues/5569>
         Ok(self.eth.chain_id().to::<u64>().to_string())
     }
 

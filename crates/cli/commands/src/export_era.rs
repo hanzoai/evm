@@ -2,11 +2,11 @@
 
 use crate::common::{AccessRights, CliNodeTypes, Environment, EnvironmentArgs};
 use clap::{Args, Parser};
-use reth_chainspec::{EthChainSpec, EthereumHardforks};
-use reth_cli::chainspec::ChainSpecParser;
-use reth_era::era1::types::execution::MAX_BLOCKS_PER_ERA1;
-use reth_era_utils as era1;
-use reth_provider::DatabaseProviderFactory;
+use hanzo_evm_chainspec::{EthChainSpec, EthereumHardforks};
+use hanzo_evm_cli::chainspec::ChainSpecParser;
+use hanzo_evm_era::era1::types::execution::MAX_BLOCKS_PER_ERA1;
+use hanzo_evm_era_utils as era1;
+use hanzo_evm_provider::DatabaseProviderFactory;
 use std::{path::PathBuf, sync::Arc};
 use tracing::info;
 
@@ -78,7 +78,7 @@ impl<C: ChainSpecParser<ChainSpec: EthChainSpec + EthereumHardforks>> ExportEraC
         export_config.validate()?;
 
         info!(
-            target: "reth::cli",
+            target: "evm::cli",
             "Starting ERA1 block export: blocks {}-{} to {}",
             export_config.first_block_number,
             export_config.last_block_number,
@@ -91,7 +91,7 @@ impl<C: ChainSpecParser<ChainSpec: EthChainSpec + EthereumHardforks>> ExportEraC
         let exported_files = era1::export(&provider, &export_config)?;
 
         info!(
-            target: "reth::cli",
+            target: "evm::cli",
             "Successfully exported {} ERA1 files to {}",
             exported_files.len(),
             export_config.dir.display()
