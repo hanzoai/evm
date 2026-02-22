@@ -9,11 +9,11 @@ use alloy_primitives::{Address, B256};
 use criterion::{criterion_group, criterion_main, BenchmarkId, Criterion};
 use proptest::test_runner::TestRunner;
 use rand::Rng;
-use hanzo_evm_chainspec::ChainSpec;
-use hanzo_evm_db_common::init::init_genesis;
-use hanzo_evm_engine_tree::tree::{
-    executor::WorkloadExecutor, precompile_cache::PrecompileCacheMap, PayloadProcessor,
-    StateProviderBuilder, TreeConfig,
+use reth_chainspec::ChainSpec;
+use reth_db_common::init::init_genesis;
+use reth_engine_tree::tree::{
+    precompile_cache::PrecompileCacheMap, ExecutionEnv, PayloadProcessor, StateProviderBuilder,
+    TreeConfig,
 };
 use hanzo_evm_ethereum_primitives::TransactionSigned;
 use hanzo_evm_execution::OnStateHook;
@@ -219,7 +219,7 @@ fn bench_state_root(c: &mut Criterion) {
                         setup_provider(&factory, &state_updates).expect("failed to setup provider");
 
                         let payload_processor = PayloadProcessor::new(
-                            WorkloadExecutor::default(),
+                            reth_tasks::Runtime::test(),
                             EthEvmConfig::new(factory.chain_spec()),
                             &TreeConfig::default(),
                             PrecompileCacheMap::default(),
@@ -231,7 +231,7 @@ fn bench_state_root(c: &mut Criterion) {
                     |(genesis_hash, mut payload_processor, provider, state_updates)| {
                         black_box({
                             let mut handle = payload_processor.spawn(
-                                Default::default(),
+                                ExecutionEnv::test_default(),
                                 (
                                     Vec::<
                                         Result<

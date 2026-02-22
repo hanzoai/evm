@@ -2,27 +2,26 @@ use alloy_eips::eip2718::Encodable2718;
 use alloy_genesis::Genesis;
 use alloy_primitives::{b256, hex, Address};
 use futures::StreamExt;
-use hanzo_evm_chainspec::ChainSpec;
-use hanzo_evm_node_api::{BlockBody, FullNodeComponents};
-use hanzo_evm_node_builder::{rpc::EvmRpcAddOns, FullNode, NodeBuilder, NodeConfig, NodeHandle};
-use hanzo_evm_node_core::args::DevArgs;
-use hanzo_evm_node_ethereum::{node::EthereumAddOns, EthereumNode};
-use hanzo_evm_provider::{providers::BlockchainProvider, CanonStateSubscriptions};
-use hanzo_evm_rpc_eth_api::{helpers::EthTransactions, EthApiServer};
-use hanzo_evm_tasks::TaskManager;
+use reth_chainspec::ChainSpec;
+use reth_node_api::{BlockBody, FullNodeComponents};
+use reth_node_builder::{rpc::RethRpcAddOns, FullNode, NodeBuilder, NodeConfig, NodeHandle};
+use reth_node_core::args::DevArgs;
+use reth_node_ethereum::{node::EthereumAddOns, EthereumNode};
+use reth_provider::{providers::BlockchainProvider, CanonStateSubscriptions};
+use reth_rpc_eth_api::{helpers::EthTransactions, EthApiServer};
+use reth_tasks::Runtime;
 use std::sync::Arc;
 
 #[tokio::test]
 async fn can_run_dev_node() -> eyre::Result<()> {
-    hanzo_evm_tracing::init_test_tracing();
-    let tasks = TaskManager::current();
-    let exec = tasks.executor();
+    reth_tracing::init_test_tracing();
+    let runtime = Runtime::test();
 
     let node_config = NodeConfig::test()
         .with_chain(custom_chain())
         .with_dev(DevArgs { dev: true, ..Default::default() });
     let NodeHandle { node, .. } = NodeBuilder::new(node_config.clone())
-        .testing_node(exec.clone())
+        .testing_node(runtime.clone())
         .with_types_and_provider::<EthereumNode, BlockchainProvider<_>>()
         .with_components(EthereumNode::components())
         .with_add_ons(EthereumAddOns::default())
@@ -36,16 +35,15 @@ async fn can_run_dev_node() -> eyre::Result<()> {
 
 #[tokio::test]
 async fn can_run_dev_node_custom_attributes() -> eyre::Result<()> {
-    hanzo_evm_tracing::init_test_tracing();
-    let tasks = TaskManager::current();
-    let exec = tasks.executor();
+    reth_tracing::init_test_tracing();
+    let runtime = Runtime::test();
 
     let node_config = NodeConfig::test()
         .with_chain(custom_chain())
         .with_dev(DevArgs { dev: true, ..Default::default() });
     let fee_recipient = Address::random();
     let NodeHandle { node, .. } = NodeBuilder::new(node_config.clone())
-        .testing_node(exec.clone())
+        .testing_node(runtime.clone())
         .with_types_and_provider::<EthereumNode, BlockchainProvider<_>>()
         .with_components(EthereumNode::components())
         .with_add_ons(EthereumAddOns::default())

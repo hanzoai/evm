@@ -13,9 +13,8 @@ use hanzo_evm_provider::{
     providers::BlockchainProvider, DatabaseProviderFactory, ProviderFactory, StageCheckpointReader,
     StaticFileProviderFactory,
 };
-use hanzo_evm_rpc_server_types::RpcModuleSelection;
-use hanzo_evm_stages_types::StageId;
-use hanzo_evm_tasks::TaskManager;
+use reth_rpc_server_types::RpcModuleSelection;
+use reth_stages_types::StageId;
 use std::{path::Path, sync::Arc};
 use tempfile::TempDir;
 use tracing::{debug, info, span, Level};
@@ -24,8 +23,6 @@ use tracing::{debug, info, span, Level};
 pub struct ChainImportResult {
     /// The nodes that were created
     pub nodes: Vec<NodeHelperType<EthereumNode>>,
-    /// The task manager
-    pub task_manager: TaskManager,
     /// The wallet for testing
     pub wallet: Wallet,
     /// Temporary directories that must be kept alive for the duration of the test
@@ -68,8 +65,7 @@ pub async fn setup_engine_with_chain_import(
         + Copy
         + 'static,
 ) -> eyre::Result<ChainImportResult> {
-    let tasks = TaskManager::current();
-    let exec = tasks.executor();
+    let runtime = reth_tasks::Runtime::test();
 
     let network_config = NetworkArgs {
         discovery: DiscoveryArgs { disable_discovery: true, ..DiscoveryArgs::default() },
@@ -129,6 +125,7 @@ pub async fn setup_engine_with_chain_import(
                     .with_default_tables()
                     .build()
                     .unwrap(),
+                reth_tasks::Runtime::test(),
             )?;
 
         // Initialize genesis if needed
@@ -151,6 +148,7 @@ pub async fn setup_engine_with_chain_import(
             &config,
             hanzo_evm_config,
             consensus,
+            runtime.clone(),
         )
         .await?;
 
@@ -221,7 +219,7 @@ pub async fn setup_engine_with_chain_import(
         let node = EthereumNode::default();
 
         let NodeHandle { node, node_exit_future: _ } = NodeBuilder::new(node_config.clone())
-            .testing_node_with_datadir(exec.clone(), datadir.clone())
+            .testing_node_with_datadir(runtime.clone(), datadir.clone())
             .with_types_and_provider::<EthereumNode, BlockchainProvider<_>>()
             .with_components(node.components_builder())
             .with_add_ons(node.add_ons())
@@ -243,7 +241,6 @@ pub async fn setup_engine_with_chain_import(
 
     Ok(ChainImportResult {
         nodes,
-        task_manager: tasks,
         wallet: crate::Wallet::default().with_chain_id(chain_spec.chain.id()),
         _temp_dirs: temp_dirs,
     })
@@ -276,11 +273,12 @@ pub fn load_forkchoice_state(path: &Path) -> eyre::Result<alloy_rpc_types_engine
 mod tests {
     use super::*;
     use crate::test_rlp_utils::{create_fcu_json, generate_test_blocks, write_blocks_to_rlp};
-    use hanzo_evm_chainspec::{ChainSpecBuilder, MAINNET};
-    use hanzo_evm_db::mdbx::DatabaseArguments;
-    use hanzo_evm_payload_builder::EthPayloadBuilderAttributes;
-    use hanzo_evm_primitives::SealedBlock;
-    use hanzo_evm_provider::{
+    use reth_chainspec::{ChainSpecBuilder, MAINNET};
+    use reth_db::mdbx::DatabaseArguments;
+    use reth_ethereum_primitives::Block;
+    use reth_payload_builder::EthPayloadBuilderAttributes;
+    use reth_primitives_traits::SealedBlock;
+    use reth_provider::{
         test_utils::MockNodeTypesWithDB, BlockHashReader, BlockNumReader, BlockReaderIdExt,
     };
     use std::path::PathBuf;
@@ -333,6 +331,7 @@ mod tests {
                     .with_default_tables()
                     .build()
                     .unwrap(),
+                reth_tasks::Runtime::test(),
             )
             .expect("failed to create provider factory");
 
@@ -344,7 +343,8 @@ mod tests {
             let config = Config::default();
             let hanzo_evm_config = hanzo_evm_node_ethereum::EthEvmConfig::new(chain_spec.clone());
             // Use NoopConsensus to skip gas limit validation for test imports
-            let consensus = hanzo_evm_consensus::noop::NoopConsensus::arc();
+            let consensus = reth_consensus::noop::NoopConsensus::arc();
+            let runtime = reth_tasks::Runtime::test();
 
             let result = import_blocks_from_file(
                 &rlp_path,
@@ -353,6 +353,7 @@ mod tests {
                 &config,
                 hanzo_evm_config,
                 consensus,
+                runtime,
             )
             .await
             .unwrap();
@@ -397,6 +398,7 @@ mod tests {
                     .with_default_tables()
                     .build()
                     .unwrap(),
+                reth_tasks::Runtime::test(),
             )
             .expect("failed to create provider factory");
 
@@ -447,7 +449,7 @@ mod tests {
         chain_spec: &ChainSpec,
         block_count: u64,
         temp_dir: &Path,
-    ) -> (Vec<SealedBlock>, PathBuf) {
+    ) -> (Vec<SealedBlock<Block>>, PathBuf) {
         let test_blocks = generate_test_blocks(chain_spec, block_count);
         assert_eq!(
             test_blocks.len(),
@@ -497,6 +499,7 @@ mod tests {
                 .with_default_tables()
                 .build()
                 .unwrap(),
+            reth_tasks::Runtime::test(),
         )
         .expect("failed to create provider factory");
 
@@ -508,7 +511,8 @@ mod tests {
         let config = Config::default();
         let hanzo_evm_config = hanzo_evm_node_ethereum::EthEvmConfig::new(chain_spec.clone());
         // Use NoopConsensus to skip gas limit validation for test imports
-        let consensus = hanzo_evm_consensus::noop::NoopConsensus::arc();
+        let consensus = reth_consensus::noop::NoopConsensus::arc();
+        let runtime = reth_tasks::Runtime::test();
 
         let result = import_blocks_from_file(
             &rlp_path,
@@ -517,6 +521,7 @@ mod tests {
             &config,
             hanzo_evm_config,
             consensus,
+            runtime,
         )
         .await
         .unwrap();

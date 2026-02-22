@@ -42,8 +42,9 @@ serde_json.workspace = true
 tracing.workspace = true
 
 [dev-dependencies]
-hanzo-evm-db = { workspace = true, features = ["mdbx"] }
-hanzo-evm-provider = { workspace = true, features = ["test-utils"] }
+reth-db = { workspace = true, features = ["mdbx"] }
+reth-provider = { workspace = true, features = ["test-utils"] }
+reth-tasks.workspace = true
 
 [features]
 rocksdb = ["hanzo-evm-db-api/rocksdb", "hanzo-evm-provider/rocksdb"]

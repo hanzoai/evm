@@ -14,9 +14,9 @@ use hanzo_evm_network_p2p::{
     },
     error::{DownloadError, DownloadResult},
 };
-use hanzo_evm_primitives_traits::{size::InMemorySize, Block, SealedHeader};
-use hanzo_evm_storage_api::HeaderProvider;
-use hanzo_evm_tasks::{TaskSpawner, TokioTaskExecutor};
+use reth_primitives_traits::{size::InMemorySize, Block, SealedHeader};
+use reth_storage_api::HeaderProvider;
+use reth_tasks::Runtime;
 use std::{
     cmp::Ordering,
     collections::BinaryHeap,
@@ -285,17 +285,9 @@ where
     C: BodiesClient<Body = B::Body> + 'static,
     Provider: HeaderProvider<Header = B::Header> + Unpin + 'static,
 {
-    /// Spawns the downloader task via [`tokio::task::spawn`]
-    pub fn into_task(self) -> TaskDownloader<B> {
-        self.into_task_with(&TokioTaskExecutor::default())
-    }
-
-    /// Convert the downloader into a [`TaskDownloader`] by spawning it via the given spawner.
-    pub fn into_task_with<S>(self, spawner: &S) -> TaskDownloader<B>
-    where
-        S: TaskSpawner,
-    {
-        TaskDownloader::spawn_with(self, spawner)
+    /// Convert the downloader into a [`TaskDownloader`] by spawning it via the given [`Runtime`].
+    pub fn into_task_with(self, runtime: &Runtime) -> TaskDownloader<B> {
+        TaskDownloader::spawn_with(self, runtime)
     }
 }
 

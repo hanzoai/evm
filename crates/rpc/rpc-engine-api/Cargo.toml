@@ -52,6 +52,7 @@ hanzo-evm-ethereum-primitives.workspace = true
 hanzo-evm-payload-builder = { workspace = true, features = ["test-utils"] }
 hanzo-evm-testing-utils.workspace = true
 alloy-rlp.workspace = true
-hanzo-evm-node-ethereum.workspace = true
+reth-node-ethereum.workspace = true
+reth-tasks = { workspace = true, features = ["test-utils"] }
 
 assert_matches.workspace = true

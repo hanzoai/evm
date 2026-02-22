@@ -12,10 +12,9 @@ description = "Compatibility layer for hanzo-evm-primitives and ethereum RPC typ
 workspace = true
 
 [dependencies]
-# evm
-hanzo-evm-primitives-traits.workspace = true
-hanzo-evm-execution.workspace = true
-hanzo-evm-ethereum-primitives.workspace = true
+# reth
+reth-primitives-traits.workspace = true
+reth-evm.workspace = true
 
 # ethereum
 alloy-primitives.workspace = true
@@ -29,7 +28,6 @@ alloy-evm = { workspace = true, features = ["rpc"] }
 # optimism
 op-alloy-consensus = { workspace = true, optional = true }
 op-alloy-rpc-types = { workspace = true, optional = true }
-op-alloy-network = { workspace = true, optional = true }
 
 # io
 jsonrpsee-types.workspace = true
@@ -48,8 +46,7 @@ default = []
 op = [
     "dep:op-alloy-consensus",
     "dep:op-alloy-rpc-types",
-    "dep:op-alloy-network",
-    "hanzo-evm-execution/op",
-    "hanzo-evm-primitives-traits/op",
+    "reth-evm/op",
+    "reth-primitives-traits/op",
     "alloy-evm/op",
 ]

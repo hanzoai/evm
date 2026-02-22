@@ -23,11 +23,10 @@ crates_to_check=(
     evm-storage-api
 
     ## ethereum
-    evm-evm-ethereum
-    evm-ethereum-forks
-    evm-ethereum-primitives
-    evm-ethereum-consensus
-    evm-stateless
+    reth-evm-ethereum
+    reth-ethereum-forks
+    reth-ethereum-primitives
+    reth-ethereum-consensus
 )
 
 any_failed=0

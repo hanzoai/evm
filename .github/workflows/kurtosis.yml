@@ -5,7 +5,7 @@ name: kurtosis
 on:
   workflow_dispatch:
   schedule:
-    - cron: "0 */6 * * *"
+    - cron: "0 0 * * *"
 
   push:
     tags:
@@ -19,20 +19,21 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  prepare-evm:
-    uses: ./.github/workflows/prepare-evm.yml
+  build-reth:
+    if: github.repository == 'paradigmxyz/reth'
+    uses: ./.github/workflows/docker-test.yml
     with:
-      image_tag: ghcr.io/hanzoai/evm:kurtosis-ci
-      binary_name: evm
+      hive_target: kurtosis
+    secrets: inherit
 
   test:
     timeout-minutes: 60
     strategy:
       fail-fast: false
     name: run kurtosis
-    runs-on: depot-ubuntu-latest
+    runs-on: ${{ github.repository == 'paradigmxyz/reth' && 'depot-ubuntu-latest' || 'ubuntu-latest' }}
     needs:
-      - prepare-evm
+      - build-reth
     steps:
       - uses: actions/checkout@v6
         with:
@@ -64,5 +65,5 @@ jobs:
         uses: rtCamp/action-slack-notify@v2
         env:
           SLACK_COLOR: ${{ job.status }}
-          SLACK_MESSAGE: "Failed run: https://github.com/hanzoai/evm/actions/runs/${{ github.run_id }}"
-          SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK_URL }}
+          SLACK_MESSAGE: "Failed run: https://github.com/paradigmxyz/reth/actions/runs/${{ github.run_id }}"
+          SLACK_WEBHOOK: ${{ secrets.SLACK_HIVE_WEBHOOK_URL }}

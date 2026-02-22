@@ -55,17 +55,18 @@ alloy-provider = { workspace = true, features = ["ws", "ipc"] }
 alloy-network.workspace = true
 
 [dev-dependencies]
-hanzo-evm-ethereum-primitives.workspace = true
-hanzo-evm-network-peers.workspace = true
-hanzo-evm-eth-execution.workspace = true
-hanzo-evm-ethereum-engine-primitives.workspace = true
-hanzo-evm-payload-builder = { workspace = true, features = ["test-utils"] }
-hanzo-evm-provider = { workspace = true, features = ["test-utils"] }
-hanzo-evm-rpc-api = { workspace = true, features = ["client"] }
-hanzo-evm-rpc-engine-api.workspace = true
-hanzo-evm-tracing.workspace = true
-hanzo-evm-transaction-pool = { workspace = true, features = ["test-utils"] }
-hanzo-evm-node-ethereum.workspace = true
+reth-ethereum-primitives.workspace = true
+reth-network-peers.workspace = true
+reth-evm-ethereum.workspace = true
+reth-ethereum-engine-primitives.workspace = true
+reth-payload-builder = { workspace = true, features = ["test-utils"] }
+reth-provider = { workspace = true, features = ["test-utils"] }
+reth-rpc-api = { workspace = true, features = ["client"] }
+reth-rpc-engine-api.workspace = true
+reth-tracing.workspace = true
+reth-transaction-pool = { workspace = true, features = ["test-utils"] }
+reth-node-ethereum.workspace = true
+reth-tasks = { workspace = true, features = ["test-utils"] }
 
 alloy-primitives.workspace = true
 alloy-rpc-types-eth.workspace = true

@@ -8,20 +8,20 @@ use hanzo_evm_chainspec::{ChainSpecBuilder, EthChainSpec, MAINNET};
 use hanzo_evm_e2e_test_utils::{
     node::NodeTestContext, setup, setup_engine, transaction::TransactionTestContext, wallet::Wallet,
 };
-use hanzo_evm_node_api::TreeConfig;
-use hanzo_evm_node_builder::{NodeBuilder, NodeHandle};
-use hanzo_evm_node_core::{args::RpcServerArgs, node_config::NodeConfig};
-use hanzo_evm_node_ethereum::EthereumNode;
-use hanzo_evm_provider::BlockNumReader;
-use hanzo_evm_rpc_api::TestingBuildBlockRequestV1;
-use hanzo_evm_tasks::TaskManager;
+use reth_node_api::TreeConfig;
+use reth_node_builder::{NodeBuilder, NodeHandle};
+use reth_node_core::{args::RpcServerArgs, node_config::NodeConfig};
+use reth_node_ethereum::EthereumNode;
+use reth_provider::BlockNumReader;
+use reth_rpc_api::TestingBuildBlockRequestV1;
+use reth_tasks::Runtime;
 use std::sync::Arc;
 
 #[tokio::test]
 async fn can_run_eth_node() -> eyre::Result<()> {
     hanzo_evm_tracing::init_test_tracing();
 
-    let (mut nodes, _tasks, wallet) = setup::<EthereumNode>(
+    let (mut nodes, wallet) = setup::<EthereumNode>(
         1,
         Arc::new(
             ChainSpecBuilder::default()
@@ -56,9 +56,8 @@ async fn can_run_eth_node() -> eyre::Result<()> {
 #[tokio::test]
 #[cfg(unix)]
 async fn can_run_eth_node_with_auth_engine_api_over_ipc() -> eyre::Result<()> {
-    hanzo_evm_tracing::init_test_tracing();
-    let exec = TaskManager::current();
-    let exec = exec.executor();
+    reth_tracing::init_test_tracing();
+    let runtime = Runtime::test();
 
     // Chain spec with test allocs
     let genesis: Genesis = serde_json::from_str(include_str!("../assets/genesis.json")).unwrap();
@@ -76,7 +75,7 @@ async fn can_run_eth_node_with_auth_engine_api_over_ipc() -> eyre::Result<()> {
         .with_rpc(RpcServerArgs::default().with_unused_ports().with_http().with_auth_ipc());
 
     let NodeHandle { node, node_exit_future: _ } = NodeBuilder::new(node_config)
-        .testing_node(exec)
+        .testing_node(runtime)
         .node(EthereumNode::default())
         .launch()
         .await?;
@@ -104,9 +103,8 @@ async fn can_run_eth_node_with_auth_engine_api_over_ipc() -> eyre::Result<()> {
 #[tokio::test]
 #[cfg(unix)]
 async fn test_failed_run_eth_node_with_no_auth_engine_api_over_ipc_opts() -> eyre::Result<()> {
-    hanzo_evm_tracing::init_test_tracing();
-    let exec = TaskManager::current();
-    let exec = exec.executor();
+    reth_tracing::init_test_tracing();
+    let runtime = Runtime::test();
 
     // Chain spec with test allocs
     let genesis: Genesis = serde_json::from_str(include_str!("../assets/genesis.json")).unwrap();
@@ -121,7 +119,7 @@ async fn test_failed_run_eth_node_with_no_auth_engine_api_over_ipc_opts() -> eyr
     // Node setup
     let node_config = NodeConfig::test().with_chain(chain_spec);
     let NodeHandle { node, node_exit_future: _ } = NodeBuilder::new(node_config)
-        .testing_node(exec)
+        .testing_node(runtime)
         .node(EthereumNode::default())
         .launch()
         .await?;
@@ -139,7 +137,7 @@ async fn test_failed_run_eth_node_with_no_auth_engine_api_over_ipc_opts() -> eyr
 async fn test_engine_graceful_shutdown() -> eyre::Result<()> {
     hanzo_evm_tracing::init_test_tracing();
 
-    let (mut nodes, _tasks, wallet) = setup::<EthereumNode>(
+    let (mut nodes, wallet) = setup::<EthereumNode>(
         1,
         Arc::new(
             ChainSpecBuilder::default()
@@ -189,9 +187,8 @@ async fn test_engine_graceful_shutdown() -> eyre::Result<()> {
 
 #[tokio::test]
 async fn test_testing_build_block_v1_osaka() -> eyre::Result<()> {
-    hanzo_evm_tracing::init_test_tracing();
-    let tasks = TaskManager::current();
-    let exec = tasks.executor();
+    reth_tracing::init_test_tracing();
+    let runtime = Runtime::test();
 
     let genesis: Genesis = serde_json::from_str(include_str!("../assets/genesis.json")).unwrap();
     let chain_spec = Arc::new(
@@ -208,7 +205,7 @@ async fn test_testing_build_block_v1_osaka() -> eyre::Result<()> {
         );
 
     let NodeHandle { node, node_exit_future: _ } = NodeBuilder::new(node_config)
-        .testing_node(exec)
+        .testing_node(runtime)
         .node(EthereumNode::default())
         .launch()
         .await?;
@@ -278,13 +275,14 @@ async fn test_sparse_trie_reuse_across_blocks() -> eyre::Result<()> {
         .with_sparse_trie_prune_depth(2)
         .with_sparse_trie_max_storage_tries(100);
 
-    let (mut nodes, _tasks, _wallet) = setup_engine::<EthereumNode>(
+    let (mut nodes, _wallet) = setup_engine::<EthereumNode>(
         1,
         Arc::new(
             ChainSpecBuilder::default()
                 .chain(MAINNET.chain)
                 .genesis(serde_json::from_str(include_str!("../assets/genesis.json")).unwrap())
                 .cancun_activated()
+                .prague_activated()
                 .build(),
         ),
         false,

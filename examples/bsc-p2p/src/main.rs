@@ -17,10 +17,11 @@ use hanzo_evm_network::{
     EthNetworkPrimitives, NetworkConfig, NetworkEvent, NetworkEventListenerProvider,
     NetworkManager, PeersInfo,
 };
-use hanzo_evm_network_api::events::{PeerEvent, SessionInfo};
-use hanzo_evm_provider::noop::NoopProvider;
-use hanzo_evm_tracing::{
-    tracing_subscriber::filter::LevelFilter, LayerInfo, LogFormat, EvmTracer, Tracer,
+use reth_network_api::events::{PeerEvent, SessionInfo};
+use reth_provider::noop::NoopProvider;
+use reth_tasks::Runtime;
+use reth_tracing::{
+    tracing_subscriber::filter::LevelFilter, LayerInfo, LogFormat, RethTracer, Tracer,
 };
 use secp256k1::{rand, SecretKey};
 use std::{
@@ -53,7 +54,7 @@ async fn main() {
 
     let bsc_boot_nodes = boot_nodes();
 
-    let net_cfg = NetworkConfig::builder(secret_key)
+    let net_cfg = NetworkConfig::builder(secret_key, Runtime::test())
         .boot_nodes(bsc_boot_nodes.clone())
         .set_head(head())
         .with_pow()

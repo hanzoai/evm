@@ -10,7 +10,7 @@ use crate::{
         policy::NetworkPolicies,
         TransactionsHandle, TransactionsManager, TransactionsManagerConfig,
     },
-    NetworkConfig, NetworkConfigBuilder, NetworkHandle, NetworkManager,
+    NetworkConfig, NetworkConfigBuilder, NetworkHandle, NetworkManager, PeersConfig,
 };
 use futures::{FutureExt, StreamExt};
 use pin_project::pin_project;
@@ -29,9 +29,9 @@ use hanzo_evm_network_peers::PeerId;
 use hanzo_evm_storage_api::{
     noop::NoopProvider, BlockReader, BlockReaderIdExt, HeaderProvider, StateProviderFactory,
 };
-use hanzo_evm_tasks::TokioTaskExecutor;
-use hanzo_evm_tokio_util::EventStream;
-use hanzo_evm_transaction_pool::{
+use reth_tasks::Runtime;
+use reth_tokio_util::EventStream;
+use reth_transaction_pool::{
     blobstore::InMemoryBlobStore,
     test_utils::{TestPool, TestPoolBuilder},
     EthTransactionPool, PoolTransaction, TransactionPool, TransactionValidationTaskExecutor,
@@ -198,7 +198,7 @@ where
                 peer.client.clone(),
                 EthEvmConfig::mainnet(),
                 blob_store.clone(),
-                TokioTaskExecutor::default(),
+                Runtime::test(),
             );
             peer.map_transactions_manager(EthTransactionPool::eth_pool(
                 pool,
@@ -228,7 +228,7 @@ where
                 peer.client.clone(),
                 EthEvmConfig::mainnet(),
                 blob_store.clone(),
-                TokioTaskExecutor::default(),
+                Runtime::test(),
             );
 
             peer.map_transactions_manager_with(
@@ -713,11 +713,12 @@ where
     }
 
     fn network_config_builder(secret_key: SecretKey) -> NetworkConfigBuilder {
-        NetworkConfigBuilder::new(secret_key)
+        NetworkConfigBuilder::new(secret_key, Runtime::test())
             .listener_addr(SocketAddr::V4(SocketAddrV4::new(Ipv4Addr::UNSPECIFIED, 0)))
             .discovery_addr(SocketAddr::V4(SocketAddrV4::new(Ipv4Addr::UNSPECIFIED, 0)))
             .disable_dns_discovery()
             .disable_discv4_discovery()
+            .peer_config(PeersConfig::test())
     }
 }
 

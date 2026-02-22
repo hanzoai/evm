@@ -55,25 +55,26 @@ exclude_crates=(
   evm-ress-provider
   # The following are not supposed to be working
   reth # all of the crates below
-  evm-storage-rpc-provider
-  evm-invalid-block-hooks # evm-provider
-  evm-libmdbx # mdbx
-  evm-mdbx-sys # mdbx
-  evm-payload-builder # evm-metrics
-  evm-provider # tokio
-  evm-prune # tokio
-  evm-prune-static-files # evm-provider
-  evm-stages-api # evm-provider, evm-prune
-  evm-static-file # tokio
-  evm-transaction-pool # c-kzg
-  evm-payload-util # evm-transaction-pool
-  evm-trie-parallel # tokio
-  evm-trie-sparse-parallel # rayon
-  evm-testing-utils
-  evm-era-downloader # tokio
-  evm-era-utils # tokio
-  evm-tracing-otlp
-  evm-node-ethstats
+  reth-storage-rpc-provider
+  reth-invalid-block-hooks # reth-provider
+  reth-libmdbx # mdbx
+  reth-mdbx-sys # mdbx
+  reth-payload-builder # reth-metrics
+  reth-provider # tokio
+  reth-prune # tokio
+  reth-prune-static-files # reth-provider
+  reth-tasks # tokio rt-multi-thread
+  reth-stages-api # reth-provider, reth-prune
+  reth-static-file # tokio
+  reth-transaction-pool # c-kzg
+  reth-payload-util # reth-transaction-pool
+  reth-trie-parallel # tokio
+  reth-trie-sparse-parallel # rayon
+  reth-testing-utils
+  reth-era-downloader # tokio
+  reth-era-utils # tokio
+  reth-tracing-otlp
+  reth-node-ethstats
 )
 
 any_failed=0

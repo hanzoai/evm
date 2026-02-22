@@ -9,7 +9,7 @@ use hanzo_evm_db_api::{
 use hanzo_evm_primitives_traits::{GotExpected, SealedHeader};
 use hanzo_evm_provider::{
     ChangeSetReader, DBProvider, HeaderProvider, ProviderError, StageCheckpointReader,
-    StageCheckpointWriter, StatsReader, StorageChangeSetReader, TrieWriter,
+    StageCheckpointWriter, StatsReader, StorageChangeSetReader, StorageSettingsCache, TrieWriter,
 };
 use hanzo_evm_stages_api::{
     BlockErrorKind, EntitiesCheckpoint, ExecInput, ExecOutput, MerkleCheckpoint, Stage,
@@ -160,6 +160,7 @@ where
         + HeaderProvider
         + ChangeSetReader
         + StorageChangeSetReader
+        + StorageSettingsCache
         + StageCheckpointReader
         + StageCheckpointWriter,
 {

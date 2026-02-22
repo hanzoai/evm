@@ -4,10 +4,10 @@ use crate::{segments, segments::Segment, StaticFileProducerEvent};
 use alloy_primitives::BlockNumber;
 use parking_lot::Mutex;
 use rayon::prelude::*;
-use hanzo_evm_codecs::Compact;
-use hanzo_evm_db_api::table::Value;
-use hanzo_evm_primitives_traits::NodePrimitives;
-use hanzo_evm_provider::{
+use reth_codecs::Compact;
+use reth_db_api::table::Value;
+use reth_primitives_traits::{FastInstant as Instant, NodePrimitives};
+use reth_provider::{
     providers::StaticFileWriter, BlockReader, ChainStateBlockReader, DBProvider,
     DatabaseProviderFactory, StageCheckpointReader, StaticFileProviderFactory,
 };
@@ -19,7 +19,6 @@ use hanzo_evm_tokio_util::{EventSender, EventStream};
 use std::{
     ops::{Deref, RangeInclusive},
     sync::Arc,
-    time::Instant,
 };
 use tracing::{debug, trace};
 

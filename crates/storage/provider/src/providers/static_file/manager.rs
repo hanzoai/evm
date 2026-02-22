@@ -6,7 +6,7 @@ use crate::{
     changeset_walker::{StaticFileAccountChangesetWalker, StaticFileStorageChangesetWalker},
     to_range, BlockHashReader, BlockNumReader, BlockReader, BlockSource, EitherWriter,
     EitherWriterDestination, HeaderProvider, ReceiptProvider, StageCheckpointReader, StatsReader,
-    TransactionVariant, TransactionsProvider, TransactionsProviderExt, STORAGE_POOL,
+    TransactionVariant, TransactionsProvider, TransactionsProviderExt,
 };
 use alloy_consensus::{transaction::TransactionMeta, Header};
 use alloy_eips::{eip2718::Encodable2718, BlockHashOrNumber};
@@ -34,7 +34,7 @@ use hanzo_evm_nippy_jar::{NippyJar, NippyJarChecker, CONFIG_FILE_EXTENSION};
 use hanzo_evm_node_types::NodePrimitives;
 use hanzo_evm_primitives_traits::{
     dashmap::DashMap, AlloyBlockHeader as _, BlockBody as _, RecoveredBlock, SealedHeader,
-    SignedTransaction, StorageEntry,
+    SignedTransaction, StorageSlotKey,
 };
 use hanzo_evm_prune_types::PruneSegment;
 use hanzo_evm_stages_types::PipelineTarget;
@@ -42,8 +42,8 @@ use hanzo_evm_static_file_types::{
     find_fixed_range, ChangesetOffsetReader, HighestStaticFiles, SegmentHeader,
     SegmentRangeInclusive, StaticFileMap, StaticFileSegment, DEFAULT_BLOCKS_PER_STATIC_FILE,
 };
-use hanzo_evm_storage_api::{
-    BlockBodyIndicesProvider, ChangeSetReader, DBProvider, PruneCheckpointReader,
+use reth_storage_api::{
+    BlockBodyIndicesProvider, ChangeSetReader, ChangesetEntry, DBProvider, PruneCheckpointReader,
     StorageChangeSetReader, StorageSettingsCache,
 };
 use hanzo_evm_storage_errors::provider::{ProviderError, ProviderResult, StaticFileWriterError};
@@ -643,7 +643,7 @@ impl<N: NodePrimitives> StaticFileProvider<N> {
                     revert.storage_revert.into_iter().map(move |(key, revert_to_slot)| {
                         StorageBeforeTx {
                             address: revert.address,
-                            key: B256::new(key.to_be_bytes()),
+                            key: StorageSlotKey::from_u256(key).to_hashed(),
                             value: revert_to_slot.to_previous_value(),
                         }
                     })
@@ -682,6 +682,7 @@ impl<N: NodePrimitives> StaticFileProvider<N> {
         blocks: &[ExecutedBlock<N>],
         tx_nums: &[TxNumber],
         ctx: StaticFileWriteCtx,
+        runtime: &reth_tasks::Runtime,
     ) -> ProviderResult<()> {
         if blocks.is_empty() {
             return Ok(());
@@ -696,7 +697,7 @@ impl<N: NodePrimitives> StaticFileProvider<N> {
         let mut r_account_changesets = None;
         let mut r_storage_changesets = None;
 
-        STORAGE_POOL.in_place_scope(|s| {
+        runtime.storage_pool().in_place_scope(|s| {
             s.spawn(|_| {
                 r_headers =
                     Some(self.write_segment(StaticFileSegment::Headers, first_block_number, |w| {
@@ -1485,7 +1486,7 @@ impl<N: NodePrimitives> StaticFileProvider<N> {
         info!(target: "evm::cli", "Healing static file inconsistencies.");
 
         for segment in self.segments_to_check(provider) {
-            let _guard = info_span!("Healing static file segment", ?segment).entered();
+            let _guard = info_span!("healing_static_file_segment", ?segment).entered();
             let _ = self.maybe_heal_segment(segment)?;
         }
 
@@ -2519,7 +2520,7 @@ impl<N: NodePrimitives> StorageChangeSetReader for StaticFileProvider<N> {
     fn storage_changeset(
         &self,
         block_number: BlockNumber,
-    ) -> ProviderResult<Vec<(BlockNumberAddress, StorageEntry)>> {
+    ) -> ProviderResult<Vec<(BlockNumberAddress, ChangesetEntry)>> {
         let provider = match self.get_segment_provider_for_block(
             StaticFileSegment::StorageChangeSets,
             block_number,
@@ -2537,7 +2538,10 @@ impl<N: NodePrimitives> StorageChangeSetReader for StaticFileProvider<N> {
             for i in offset.changeset_range() {
                 if let Some(change) = cursor.get_one::<StorageChangesetMask>(i.into())? {
                     let block_address = BlockNumberAddress((block_number, change.address));
-                    let entry = StorageEntry { key: change.key, value: change.value };
+                    let entry = ChangesetEntry {
+                        key: StorageSlotKey::hashed(change.key),
+                        value: change.value,
+                    };
                     changeset.push((block_address, entry));
                 }
             }
@@ -2552,7 +2556,7 @@ impl<N: NodePrimitives> StorageChangeSetReader for StaticFileProvider<N> {
         block_number: BlockNumber,
         address: Address,
         storage_key: B256,
-    ) -> ProviderResult<Option<StorageEntry>> {
+    ) -> ProviderResult<Option<ChangesetEntry>> {
         let provider = match self.get_segment_provider_for_block(
             StaticFileSegment::StorageChangeSets,
             block_number,
@@ -2601,7 +2605,10 @@ impl<N: NodePrimitives> StorageChangeSetReader for StaticFileProvider<N> {
                 .get_one::<StorageChangesetMask>(low.into())?
                 .filter(|change| change.address == address && change.key == storage_key)
         {
-            return Ok(Some(StorageEntry { key: change.key, value: change.value }));
+            return Ok(Some(ChangesetEntry {
+                key: StorageSlotKey::hashed(change.key),
+                value: change.value,
+            }));
         }
 
         Ok(None)
@@ -2610,7 +2617,7 @@ impl<N: NodePrimitives> StorageChangeSetReader for StaticFileProvider<N> {
     fn storage_changesets_range(
         &self,
         range: impl RangeBounds<BlockNumber>,
-    ) -> ProviderResult<Vec<(BlockNumberAddress, StorageEntry)>> {
+    ) -> ProviderResult<Vec<(BlockNumberAddress, ChangesetEntry)>> {
         let range = self.bound_range(range, StaticFileSegment::StorageChangeSets);
         self.walk_storage_changeset_range(range).collect()
     }

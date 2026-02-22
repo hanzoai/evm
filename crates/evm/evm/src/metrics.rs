@@ -1,9 +1,8 @@
 //! Executor metrics.
 use alloy_consensus::BlockHeader;
 use metrics::{Counter, Gauge, Histogram};
-use hanzo_evm_metrics::Metrics;
-use hanzo_evm_primitives_traits::{Block, RecoveredBlock};
-use std::time::Instant;
+use reth_metrics::Metrics;
+use reth_primitives_traits::{Block, FastInstant as Instant, RecoveredBlock};
 
 /// Executor metrics.
 #[derive(Metrics, Clone)]

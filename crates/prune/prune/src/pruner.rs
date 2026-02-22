@@ -5,15 +5,16 @@ use crate::{
     Metrics, PruneLimiter, PrunerError, PrunerEvent,
 };
 use alloy_primitives::BlockNumber;
-use hanzo_evm_exex_types::FinishedExExHeight;
-use hanzo_evm_provider::{
+use reth_exex_types::FinishedExExHeight;
+use reth_primitives_traits::FastInstant as Instant;
+use reth_provider::{
     DBProvider, DatabaseProviderFactory, PruneCheckpointReader, PruneCheckpointWriter,
     StageCheckpointReader,
 };
-use hanzo_evm_prune_types::{PruneProgress, PrunedSegmentInfo, PrunerOutput};
-use hanzo_evm_stages_types::StageId;
-use hanzo_evm_tokio_util::{EventSender, EventStream};
-use std::time::{Duration, Instant};
+use reth_prune_types::{PruneProgress, PrunedSegmentInfo, PrunerOutput};
+use reth_stages_types::StageId;
+use reth_tokio_util::{EventSender, EventStream};
+use std::time::Duration;
 use tokio::sync::watch;
 use tracing::{debug, instrument};
 

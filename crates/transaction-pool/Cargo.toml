@@ -107,8 +107,9 @@ test-utils = [
     "hanzo-evm-primitives-traits/test-utils",
     "hanzo-evm-ethereum-primitives/test-utils",
     "alloy-primitives/rand",
-    "hanzo-evm-execution/test-utils",
-    "hanzo-evm-eth-execution/test-utils",
+    "reth-evm/test-utils",
+    "reth-evm-ethereum/test-utils",
+    "reth-tasks/test-utils",
 ]
 arbitrary = [
     "proptest",

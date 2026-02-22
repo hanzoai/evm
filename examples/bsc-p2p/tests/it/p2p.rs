@@ -7,7 +7,8 @@ use hanzo_evm_discv4::Discv4ConfigBuilder;
 use hanzo_evm_network::{
     EthNetworkPrimitives, NetworkConfig, NetworkEvent, NetworkEventListenerProvider, NetworkManager,
 };
-use hanzo_evm_provider::noop::NoopProvider;
+use reth_provider::noop::NoopProvider;
+use reth_tasks::Runtime;
 use secp256k1::{rand, SecretKey};
 use std::{
     net::{Ipv4Addr, SocketAddr},
@@ -25,7 +26,7 @@ async fn can_connect() {
 
     let secret_key = SecretKey::new(&mut rand::thread_rng());
 
-    let net_cfg = NetworkConfig::<_, EthNetworkPrimitives>::builder(secret_key)
+    let net_cfg = NetworkConfig::<_, EthNetworkPrimitives>::builder(secret_key, Runtime::test())
         .boot_nodes(boot_nodes())
         .set_head(head())
         .with_pow()

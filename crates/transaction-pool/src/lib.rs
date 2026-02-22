@@ -196,14 +196,14 @@
 //! Listen for new transactions and print them:
 //!
 //! ```
-//! use hanzo_evm_chainspec::MAINNET;
-//! use hanzo_evm_storage_api::{BlockReaderIdExt, StateProviderFactory};
-//! use hanzo_evm_tasks::TokioTaskExecutor;
-//! use hanzo_evm_chainspec::ChainSpecProvider;
-//! use hanzo_evm_transaction_pool::{TransactionValidationTaskExecutor, Pool, TransactionPool};
-//! use hanzo_evm_transaction_pool::blobstore::InMemoryBlobStore;
-//! use hanzo_evm_chainspec::EthereumHardforks;
-//! use hanzo_evm_execution::ConfigureEvm;
+//! use reth_chainspec::MAINNET;
+//! use reth_storage_api::{BlockReaderIdExt, StateProviderFactory};
+//! use reth_tasks::Runtime;
+//! use reth_chainspec::ChainSpecProvider;
+//! use reth_transaction_pool::{TransactionValidationTaskExecutor, Pool, TransactionPool};
+//! use reth_transaction_pool::blobstore::InMemoryBlobStore;
+//! use reth_chainspec::EthereumHardforks;
+//! use reth_evm::ConfigureEvm;
 //! use alloy_consensus::Header;
 //! async fn t<C, Evm>(client: C, hanzo_evm_config: Evm)
 //! where
@@ -211,8 +211,9 @@
 //!     Evm: ConfigureEvm<Primitives: hanzo_evm_primitives_traits::NodePrimitives<BlockHeader = Header>> + 'static,
 //! {
 //!     let blob_store = InMemoryBlobStore::default();
+//!     let runtime = Runtime::test();
 //!     let pool = Pool::eth_pool(
-//!         TransactionValidationTaskExecutor::eth(client, hanzo_evm_config, blob_store.clone(), TokioTaskExecutor::default()),
+//!         TransactionValidationTaskExecutor::eth(client, evm_config, blob_store.clone(), runtime),
 //!         blob_store,
 //!         Default::default(),
 //!     );
@@ -232,17 +233,15 @@
 //!
 //! ```
 //! use futures_util::Stream;
-//! use hanzo_evm_chain_state::CanonStateNotification;
-//! use hanzo_evm_chainspec::{MAINNET, ChainSpecProvider, ChainSpec};
-//! use hanzo_evm_storage_api::{BlockReaderIdExt, StateProviderFactory};
-//! use hanzo_evm_tasks::TokioTaskExecutor;
-//! use hanzo_evm_tasks::TaskSpawner;
-//! use hanzo_evm_tasks::TaskManager;
-//! use hanzo_evm_transaction_pool::{TransactionValidationTaskExecutor, Pool};
-//! use hanzo_evm_transaction_pool::blobstore::InMemoryBlobStore;
-//! use hanzo_evm_transaction_pool::maintain::{maintain_transaction_pool_future};
-//! use hanzo_evm_execution::ConfigureEvm;
-//! use hanzo_evm_ethereum_primitives::EthPrimitives;
+//! use reth_chain_state::CanonStateNotification;
+//! use reth_chainspec::{MAINNET, ChainSpecProvider, ChainSpec};
+//! use reth_storage_api::{BlockReaderIdExt, StateProviderFactory};
+//! use reth_tasks::Runtime;
+//! use reth_transaction_pool::{TransactionValidationTaskExecutor, Pool};
+//! use reth_transaction_pool::blobstore::InMemoryBlobStore;
+//! use reth_transaction_pool::maintain::{maintain_transaction_pool_future};
+//! use reth_evm::ConfigureEvm;
+//! use reth_ethereum_primitives::EthPrimitives;
 //! use alloy_consensus::Header;
 //!
 //!  async fn t<C, St, Evm>(client: C, stream: St, hanzo_evm_config: Evm)
@@ -251,17 +250,15 @@
 //!     Evm: ConfigureEvm<Primitives = EthPrimitives> + 'static,
 //!     {
 //!     let blob_store = InMemoryBlobStore::default();
-//!     let rt = tokio::runtime::Runtime::new().unwrap();
-//!     let manager = TaskManager::new(rt.handle().clone());
-//!     let executor = manager.executor();
+//!     let runtime = Runtime::test();
 //!     let pool = Pool::eth_pool(
-//!         TransactionValidationTaskExecutor::eth(client.clone(), hanzo_evm_config, blob_store.clone(), executor.clone()),
+//!         TransactionValidationTaskExecutor::eth(client.clone(), evm_config, blob_store.clone(), runtime.clone()),
 //!         blob_store,
 //!         Default::default(),
 //!     );
 //!
 //!   // spawn a task that listens for new blocks and updates the pool's transactions, mined transactions etc..
-//!   tokio::task::spawn(maintain_transaction_pool_future(client, pool, stream, executor.clone(), Default::default()));
+//!   tokio::task::spawn(maintain_transaction_pool_future(client, pool, stream, runtime.clone(), Default::default()));
 //!
 //! # }
 //! ```
@@ -389,17 +386,6 @@ where
         self.pool.validator().validate_transaction(origin, transaction).await
     }
 
-    /// Returns future that validates all transactions in the given iterator.
-    ///
-    /// This returns the validated transactions in the iterator's order.
-    async fn validate_all(
-        &self,
-        origin: TransactionOrigin,
-        transactions: impl IntoIterator<Item = V::Transaction> + Send,
-    ) -> Vec<TransactionValidationOutcome<V::Transaction>> {
-        self.pool.validator().validate_transactions_with_origin(origin, transactions).await
-    }
-
     /// Number of transactions in the entire pool
     pub fn len(&self) -> usize {
         self.pool.len()
@@ -437,17 +423,17 @@ where
     /// # Example
     ///
     /// ```
-    /// use hanzo_evm_chainspec::MAINNET;
-    /// use hanzo_evm_storage_api::{BlockReaderIdExt, StateProviderFactory};
-    /// use hanzo_evm_tasks::TokioTaskExecutor;
-    /// use hanzo_evm_chainspec::ChainSpecProvider;
-    /// use hanzo_evm_transaction_pool::{
+    /// use reth_chainspec::MAINNET;
+    /// use reth_storage_api::{BlockReaderIdExt, StateProviderFactory};
+    /// use reth_tasks::Runtime;
+    /// use reth_chainspec::ChainSpecProvider;
+    /// use reth_transaction_pool::{
     ///     blobstore::InMemoryBlobStore, Pool, TransactionValidationTaskExecutor,
     /// };
     /// use hanzo_evm_chainspec::EthereumHardforks;
     /// use hanzo_evm_execution::ConfigureEvm;
     /// use alloy_consensus::Header;
-    /// # fn t<C, Evm>(client: C, hanzo_evm_config: Evm)
+    /// # fn t<C, Evm>(client: C, evm_config: Evm, runtime: Runtime)
     /// # where
     /// #     C: ChainSpecProvider<ChainSpec: EthereumHardforks> + StateProviderFactory + BlockReaderIdExt<Header = Header> + Clone + 'static,
     /// #     Evm: ConfigureEvm<Primitives: hanzo_evm_primitives_traits::NodePrimitives<BlockHeader = Header>> + 'static,
@@ -458,7 +444,7 @@ where
     ///         client,
     ///         hanzo_evm_config,
     ///         blob_store.clone(),
-    ///         TokioTaskExecutor::default(),
+    ///         runtime,
     ///     ),
     ///     blob_store,
     ///     Default::default(),
@@ -521,9 +507,24 @@ where
         if transactions.is_empty() {
             return Vec::new()
         }
-        let validated = self.validate_all(origin, transactions).await;
+        let validated = self
+            .pool
+            .validator()
+            .validate_transactions(transactions.into_iter().map(|tx| (origin, tx)))
+            .await;
+        self.pool.add_transactions(origin, validated)
+    }
 
-        self.pool.add_transactions(origin, validated.into_iter())
+    async fn add_transactions_with_origins(
+        &self,
+        transactions: Vec<(TransactionOrigin, Self::Transaction)>,
+    ) -> Vec<PoolResult<AddedTransactionOutcome>> {
+        if transactions.is_empty() {
+            return Vec::new()
+        }
+        let origins: Vec<_> = transactions.iter().map(|(origin, _)| *origin).collect();
+        let validated = self.pool.validator().validate_transactions(transactions).await;
+        self.pool.add_transactions_with_origins(origins.into_iter().zip(validated))
     }
 
     fn transaction_event_listener(&self, tx_hash: TxHash) -> Option<TransactionEvents> {

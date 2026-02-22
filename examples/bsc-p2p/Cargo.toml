@@ -6,21 +6,21 @@ edition.workspace = true
 license.workspace = true
 
 [dependencies]
-# evm
-hanzo-evm-chainspec.workspace = true
-hanzo-evm-discv4 = { workspace = true, features = ["test-utils"] }
-hanzo-evm-engine-primitives.workspace = true
-hanzo-evm-ethereum-forks = { workspace = true, features = ["serde"] }
-hanzo-evm-eth-wire.workspace = true
-hanzo-evm-eth-wire-types.workspace = true
-hanzo-evm-network = { workspace = true, features = ["test-utils"] }
-hanzo-evm-network-api.workspace = true
-hanzo-evm-network-peers.workspace = true
-hanzo-evm-payload-primitives.workspace = true
-hanzo-evm-primitives.workspace = true
-hanzo-evm-primitives-traits.workspace = true
-hanzo-evm-provider = { workspace = true, features = ["test-utils"] }
-hanzo-evm-tracing.workspace = true
+# reth
+reth-chainspec.workspace = true
+reth-discv4 = { workspace = true, features = ["test-utils"] }
+reth-engine-primitives.workspace = true
+reth-ethereum-forks = { workspace = true, features = ["serde"] }
+reth-eth-wire.workspace = true
+reth-eth-wire-types.workspace = true
+reth-network = { workspace = true, features = ["test-utils"] }
+reth-network-api.workspace = true
+reth-network-peers.workspace = true
+reth-payload-primitives.workspace = true
+reth-primitives-traits.workspace = true
+reth-provider = { workspace = true, features = ["test-utils"] }
+reth-tasks.workspace = true
+reth-tracing.workspace = true
 
 # alloy
 alloy-primitives.workspace = true
@@ -39,7 +39,8 @@ tokio-stream.workspace = true
 tracing.workspace = true
 
 [dev-dependencies]
-hanzo-evm-node-ethereum.workspace = true
+reth-ethereum-primitives.workspace = true
+reth-node-ethereum.workspace = true
 
 [features]
 serde = [
@@ -51,6 +52,7 @@ serde = [
     "hanzo-evm-primitives-traits/serde",
     "secp256k1/serde",
     "bytes/serde",
-    "hanzo-evm-network/serde",
-    "hanzo-evm-network-api/serde",
+    "reth-network/serde",
+    "reth-network-api/serde",
+    "reth-ethereum-primitives/serde",
 ]

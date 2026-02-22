@@ -313,19 +313,19 @@ where
 mod test {
     use super::*;
     use crate::components::Components;
-    use hanzo_evm_consensus::noop::NoopConsensus;
-    use hanzo_evm_db_api::mock::DatabaseMock;
-    use hanzo_evm_ethereum_engine_primitives::EthEngineTypes;
-    use hanzo_evm_execution::noop::NoopEvmConfig;
-    use hanzo_evm_eth_execution::MockEvmConfig;
-    use hanzo_evm_network::EthNetworkPrimitives;
-    use hanzo_evm_network_api::noop::NoopNetwork;
-    use hanzo_evm_node_api::FullNodeTypesAdapter;
-    use hanzo_evm_node_ethereum::EthereumNode;
-    use hanzo_evm_payload_builder::PayloadBuilderHandle;
-    use hanzo_evm_provider::noop::NoopProvider;
-    use hanzo_evm_tasks::TaskManager;
-    use hanzo_evm_transaction_pool::noop::NoopTransactionPool;
+    use reth_consensus::noop::NoopConsensus;
+    use reth_db_api::mock::DatabaseMock;
+    use reth_ethereum_engine_primitives::EthEngineTypes;
+    use reth_evm::noop::NoopEvmConfig;
+    use reth_evm_ethereum::MockEvmConfig;
+    use reth_network::EthNetworkPrimitives;
+    use reth_network_api::noop::NoopNetwork;
+    use reth_node_api::FullNodeTypesAdapter;
+    use reth_node_ethereum::EthereumNode;
+    use reth_payload_builder::PayloadBuilderHandle;
+    use reth_provider::noop::NoopProvider;
+    use reth_tasks::Runtime;
+    use reth_transaction_pool::noop::NoopTransactionPool;
 
     #[test]
     fn test_noop_components() {
@@ -343,12 +343,7 @@ mod test {
             payload_builder_handle: PayloadBuilderHandle::<EthEngineTypes>::noop(),
         };
 
-        let task_executor = {
-            let runtime = tokio::runtime::Runtime::new().unwrap();
-            let handle = runtime.handle().clone();
-            let manager = TaskManager::new(handle);
-            manager.executor()
-        };
+        let task_executor = Runtime::test();
 
         let node = NodeAdapter { components, task_executor, provider: NoopProvider::default() };
 

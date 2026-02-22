@@ -8,11 +8,10 @@ use hanzo_evm_network::{
     import::{BlockImportError, BlockImportEvent, BlockImportOutcome, BlockValidation},
     message::NewBlockMessage,
 };
-use hanzo_evm_network_api::PeerId;
-use hanzo_evm_payload_primitives::{BuiltPayload, EngineApiMessageVersion, PayloadTypes};
-use hanzo_evm_primitives::NodePrimitives;
-use hanzo_evm_primitives_traits::{AlloyBlockHeader, Block};
-use hanzo_evm_provider::{BlockHashReader, BlockNumReader};
+use reth_network_api::PeerId;
+use reth_payload_primitives::{BuiltPayload, EngineApiMessageVersion, PayloadTypes};
+use reth_primitives_traits::{AlloyBlockHeader, Block, NodePrimitives};
+use reth_provider::{BlockHashReader, BlockNumReader};
 use std::{
     future::Future,
     pin::Pin,
@@ -227,12 +226,12 @@ mod tests {
     use super::*;
     use alloy_primitives::{B256, U128};
     use alloy_rpc_types::engine::PayloadStatus;
-    use hanzo_evm_chainspec::ChainInfo;
-    use hanzo_evm_engine_primitives::{BeaconEngineMessage, OnForkChoiceUpdated};
-    use hanzo_evm_eth_wire::NewBlock;
-    use hanzo_evm_node_ethereum::EthEngineTypes;
-    use hanzo_evm_primitives::Block;
-    use hanzo_evm_provider::ProviderError;
+    use reth_chainspec::ChainInfo;
+    use reth_engine_primitives::{BeaconEngineMessage, OnForkChoiceUpdated};
+    use reth_eth_wire::NewBlock;
+    use reth_ethereum_primitives::Block;
+    use reth_node_ethereum::EthEngineTypes;
+    use reth_provider::ProviderError;
     use std::{
         sync::Arc,
         task::{Context, Poll},
@@ -402,7 +401,7 @@ mod tests {
 
     /// Creates a test block message
     fn create_test_block() -> NewBlockMessage<NewBlock<Block>> {
-        let block: hanzo_evm_primitives::Block = Block::default();
+        let block: reth_ethereum_primitives::Block = Block::default();
         let new_block = NewBlock { block: block.clone(), td: U128::ZERO };
         NewBlockMessage { hash: block.header.hash_slow(), block: Arc::new(new_block) }
     }

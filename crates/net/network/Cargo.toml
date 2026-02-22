@@ -127,18 +127,19 @@ serde = [
     "hanzo-evm-storage-api/serde",
 ]
 test-utils = [
-    "hanzo-evm-transaction-pool/test-utils",
-    "hanzo-evm-network-types/test-utils",
-    "hanzo-evm-chainspec/test-utils",
-    "hanzo-evm-consensus/test-utils",
-    "hanzo-evm-discv4/test-utils",
-    "hanzo-evm-network/test-utils",
-    "hanzo-evm-network-p2p/test-utils",
-    "hanzo-evm-primitives-traits/test-utils",
-    "hanzo-evm-provider/test-utils",
-    "hanzo-evm-ethereum-primitives/test-utils",
-    "dep:hanzo-evm-eth-execution",
-    "hanzo-evm-eth-execution?/test-utils",
+    "reth-transaction-pool/test-utils",
+    "reth-network-types/test-utils",
+    "reth-chainspec/test-utils",
+    "reth-consensus/test-utils",
+    "reth-discv4/test-utils",
+    "reth-network/test-utils",
+    "reth-network-p2p/test-utils",
+    "reth-primitives-traits/test-utils",
+    "reth-provider/test-utils",
+    "reth-ethereum-primitives/test-utils",
+    "dep:reth-evm-ethereum",
+    "reth-evm-ethereum?/test-utils",
+    "reth-tasks/test-utils",
 ]
 
 [[bench]]

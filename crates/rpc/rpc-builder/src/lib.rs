@@ -57,9 +57,9 @@ use hanzo_evm_storage_api::{
     AccountReader, BlockReader, ChangeSetReader, FullRpcProvider, NodePrimitivesProvider,
     StateProviderFactory,
 };
-use hanzo_evm_tasks::{pool::BlockingTaskGuard, TaskSpawner, TokioTaskExecutor};
-use hanzo_evm_tokio_util::EventSender;
-use hanzo_evm_transaction_pool::{noop::NoopTransactionPool, TransactionPool};
+use reth_tasks::{pool::BlockingTaskGuard, Runtime};
+use reth_tokio_util::EventSender;
+use reth_transaction_pool::{noop::NoopTransactionPool, TransactionPool};
 use serde::{Deserialize, Serialize};
 use std::{
     collections::HashMap,
@@ -103,8 +103,10 @@ pub use eth::EthHandlers;
 mod metrics;
 use crate::middleware::EvmRpcMiddleware;
 pub use metrics::{MeteredBatchRequestsFuture, MeteredRequestFuture, RpcRequestMetricsService};
-use hanzo_evm_chain_state::{CanonStateSubscriptions, PersistedBlockSubscriptions};
-use hanzo_evm_rpc::eth::sim_bundle::EthSimBundle;
+use reth_chain_state::{
+    CanonStateSubscriptions, ForkChoiceSubscriptions, PersistedBlockSubscriptions,
+};
+use reth_rpc::eth::sim_bundle::EthSimBundle;
 
 // Rpc rate limiter
 pub mod rate_limiter;
@@ -121,7 +123,7 @@ pub struct RpcModuleBuilder<N, Provider, Pool, Network, EvmConfig, Consensus> {
     /// The Network type to when creating all rpc handlers
     network: Network,
     /// How additional tasks are spawned, for example in the eth pubsub namespace
-    executor: Box<dyn TaskSpawner + 'static>,
+    executor: Option<Runtime>,
     /// Defines how the EVM should be configured before execution.
     hanzo_evm_config: EvmConfig,
     /// The consensus implementation.
@@ -140,11 +142,19 @@ impl<N, Provider, Pool, Network, EvmConfig, Consensus>
         provider: Provider,
         pool: Pool,
         network: Network,
-        executor: Box<dyn TaskSpawner + 'static>,
-        hanzo_evm_config: EvmConfig,
+        executor: Runtime,
+        evm_config: EvmConfig,
         consensus: Consensus,
     ) -> Self {
-        Self { provider, pool, network, executor, hanzo_evm_config, consensus, _primitives: PhantomData }
+        Self {
+            provider,
+            pool,
+            network,
+            executor: Some(executor),
+            evm_config,
+            consensus,
+            _primitives: PhantomData,
+        }
     }
 
     /// Configure the provider instance.
@@ -215,23 +225,14 @@ impl<N, Provider, Pool, Network, EvmConfig, Consensus>
     }
 
     /// Configure the task executor to use for additional tasks.
-    pub fn with_executor(self, executor: Box<dyn TaskSpawner + 'static>) -> Self {
-        let Self { pool, network, provider, hanzo_evm_config, consensus, _primitives, .. } = self;
-        Self { provider, network, pool, executor, hanzo_evm_config, consensus, _primitives }
-    }
-
-    /// Configure [`TokioTaskExecutor`] as the task executor to use for additional tasks.
-    ///
-    /// This will spawn additional tasks directly via `tokio::task::spawn`, See
-    /// [`TokioTaskExecutor`].
-    pub fn with_tokio_executor(self) -> Self {
-        let Self { pool, network, provider, hanzo_evm_config, consensus, _primitives, .. } = self;
+    pub fn with_executor(self, executor: Runtime) -> Self {
+        let Self { pool, network, provider, evm_config, consensus, _primitives, .. } = self;
         Self {
             provider,
             network,
             pool,
-            executor: Box::new(TokioTaskExecutor::default()),
-            hanzo_evm_config,
+            executor: Some(executor),
+            evm_config,
             consensus,
             _primitives,
         }
@@ -311,6 +312,7 @@ where
     N: NodePrimitives,
     Provider: FullRpcProvider<Block = N::Block, Receipt = N::Receipt, Header = N::BlockHeader>
         + CanonStateSubscriptions<Primitives = N>
+        + ForkChoiceSubscriptions<Header = N::BlockHeader>
         + PersistedBlockSubscriptions
         + AccountReader
         + ChangeSetReader,
@@ -361,7 +363,9 @@ where
     where
         EthApi: FullEthApiServer<Provider = Provider, Pool = Pool>,
     {
-        let Self { provider, pool, network, executor, consensus, hanzo_evm_config, .. } = self;
+        let Self { provider, pool, network, executor, consensus, evm_config, .. } = self;
+        let executor =
+            executor.expect("RpcModuleBuilder requires a Runtime to be set via `with_executor`");
         RpcRegistryInner::new(
             provider,
             pool,
@@ -405,7 +409,15 @@ where
 
 impl<N: NodePrimitives> Default for RpcModuleBuilder<N, (), (), (), (), ()> {
     fn default() -> Self {
-        Self::new((), (), (), Box::new(TokioTaskExecutor::default()), (), ())
+        Self {
+            provider: (),
+            pool: (),
+            network: (),
+            executor: None,
+            evm_config: (),
+            consensus: (),
+            _primitives: PhantomData,
+        }
     }
 }
 
@@ -483,8 +495,8 @@ pub struct RpcRegistryInner<Provider, Pool, Network, EthApi: EthApiTypes, EvmCon
     provider: Provider,
     pool: Pool,
     network: Network,
-    executor: Box<dyn TaskSpawner + 'static>,
-    hanzo_evm_config: EvmConfig,
+    executor: Runtime,
+    evm_config: EvmConfig,
     consensus: Consensus,
     /// Holds all `eth_` namespace handlers
     eth: EthHandlers<EthApi>,
@@ -522,7 +534,7 @@ where
         provider: Provider,
         pool: Pool,
         network: Network,
-        executor: Box<dyn TaskSpawner + 'static>,
+        executor: Runtime,
         consensus: Consensus,
         config: RpcModuleConfig,
         hanzo_evm_config: EvmConfig,
@@ -575,8 +587,8 @@ where
     }
 
     /// Returns a reference to the tasks type
-    pub const fn tasks(&self) -> &(dyn TaskSpawner + 'static) {
-        &*self.executor
+    pub const fn tasks(&self) -> &Runtime {
+        &self.executor
     }
 
     /// Returns a reference to the provider
@@ -656,7 +668,8 @@ where
             Transaction = N::SignedTx,
         > + AccountReader
         + ChangeSetReader
-        + CanonStateSubscriptions
+        + CanonStateSubscriptions<Primitives = N>
+        + ForkChoiceSubscriptions<Header = N::BlockHeader>
         + PersistedBlockSubscriptions,
     Network: NetworkInfo + Peers + Clone + 'static,
     EthApi: EthApiServer<
@@ -833,9 +846,14 @@ where
         NetApi::new(self.network.clone(), eth_api)
     }
 
-    /// Instantiates `EvmApi`
-    pub fn evm_api(&self) -> EvmApi<Provider> {
-        EvmApi::new(self.provider.clone(), self.executor.clone())
+    /// Instantiates `RethApi`
+    pub fn reth_api(&self) -> RethApi<Provider, EvmConfig> {
+        RethApi::new(
+            self.provider.clone(),
+            self.evm_config.clone(),
+            self.blocking_pool_guard.clone(),
+            self.executor.clone(),
+        )
     }
 }
 
@@ -845,6 +863,7 @@ where
     N: NodePrimitives,
     Provider: FullRpcProvider<Block = N::Block>
         + CanonStateSubscriptions<Primitives = N>
+        + ForkChoiceSubscriptions<Header = N::BlockHeader>
         + PersistedBlockSubscriptions
         + AccountReader
         + ChangeSetReader,
@@ -939,7 +958,7 @@ where
                         EvmRpcModule::Debug => DebugApi::new(
                             eth_api.clone(),
                             self.blocking_pool_guard.clone(),
-                            &*self.executor,
+                            &self.executor,
                             self.engine_events.new_listener(),
                         )
                         .into_rpc()
@@ -986,14 +1005,17 @@ where
                         )
                         .into_rpc()
                         .into(),
-                        EvmRpcModule::Ots => OtterscanApi::new(eth_api.clone()).into_rpc().into(),
-                        EvmRpcModule::Evm => {
-                            EvmApi::new(self.provider.clone(), self.executor.clone())
-                                .into_rpc()
-                                .into()
-                        }
-                        EvmRpcModule::Miner => MinerApi::default().into_rpc().into(),
-                        EvmRpcModule::Mev => {
+                        RethRpcModule::Ots => OtterscanApi::new(eth_api.clone()).into_rpc().into(),
+                        RethRpcModule::Reth => RethApi::new(
+                            self.provider.clone(),
+                            self.evm_config.clone(),
+                            self.blocking_pool_guard.clone(),
+                            self.executor.clone(),
+                        )
+                        .into_rpc()
+                        .into(),
+                        RethRpcModule::Miner => MinerApi::default().into_rpc().into(),
+                        RethRpcModule::Mev => {
                             EthSimBundle::new(eth_api.clone(), self.blocking_pool_guard.clone())
                                 .into_rpc()
                                 .into()

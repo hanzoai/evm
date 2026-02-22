@@ -21,7 +21,8 @@ use hanzo_evm_stages_api::{
     ExecutionCheckpoint, ExecutionStageThresholds, Stage, StageCheckpoint, StageError, StageId,
     UnwindInput, UnwindOutput,
 };
-use hanzo_evm_static_file_types::StaticFileSegment;
+use reth_static_file_types::StaticFileSegment;
+use reth_trie::KeccakKeyHasher;
 use std::{
     cmp::{max, Ordering},
     collections::BTreeMap,
@@ -461,8 +462,15 @@ where
             }
         }
 
-        // write output
+        // Write output. When `use_hashed_state` is enabled, `write_state` skips writing to
+        // plain account/storage tables and only writes bytecodes and changesets. The hashed
+        // state is then written separately below.
         provider.write_state(&state, OriginalValuesKnown::Yes, StateWriteConfig::default())?;
+
+        if provider.cached_storage_settings().use_hashed_state() {
+            let hashed_state = state.hash_state_slow::<KeccakKeyHasher>();
+            provider.write_hashed_state(&hashed_state.into_sorted())?;
+        }
 
         let db_write_duration = time.elapsed();
         debug!(
@@ -1261,8 +1269,7 @@ mod tests {
         // but no receipt data is written.
 
         let factory = create_test_provider_factory();
-        factory
-            .set_storage_settings_cache(StorageSettings::v1().with_receipts_in_static_files(true));
+        factory.set_storage_settings_cache(StorageSettings::v2());
 
         // Setup with block 1
         let provider_rw = factory.database_provider_rw().unwrap();

@@ -10,19 +10,19 @@ use hanzo_evm_node_core::{
     args::DatadirArgs,
     dirs::{DataDirPath, MaybePlatformPath},
 };
-use hanzo_evm_node_ethereum::{node::EthereumAddOns, EthereumNode};
-use hanzo_evm_rpc_api::TestingBuildBlockRequestV1;
-use hanzo_evm_rpc_server_types::{EvmRpcModule, RpcModuleSelection};
-use hanzo_evm_tasks::TaskManager;
+use reth_node_ethereum::{node::EthereumAddOns, EthereumNode};
+use reth_rpc_api::TestingBuildBlockRequestV1;
+use reth_rpc_server_types::{RethRpcModule, RpcModuleSelection};
+use reth_tasks::Runtime;
 use std::str::FromStr;
 use tempfile::tempdir;
 use tokio::sync::oneshot;
 
 #[tokio::test(flavor = "multi_thread")]
 async fn testing_rpc_build_block_works() -> eyre::Result<()> {
-    let tasks = TaskManager::current();
-    let mut rpc_args = hanzo_evm_node_core::args::RpcServerArgs::default().with_http();
-    rpc_args.http_api = Some(RpcModuleSelection::from_iter([EvmRpcModule::Testing]));
+    let runtime = Runtime::test();
+    let mut rpc_args = reth_node_core::args::RpcServerArgs::default().with_http();
+    rpc_args.http_api = Some(RpcModuleSelection::from_iter([RethRpcModule::Testing]));
     let tempdir = tempdir().expect("temp datadir");
     let datadir_args = DatadirArgs {
         datadir: MaybePlatformPath::<DataDirPath>::from_str(tempdir.path().to_str().unwrap())
@@ -41,7 +41,7 @@ async fn testing_rpc_build_block_works() -> eyre::Result<()> {
 
     let builder = NodeBuilder::new(config)
         .with_database(db)
-        .with_launch_context(tasks.executor())
+        .with_launch_context(runtime)
         .with_types::<EthereumNode>()
         .with_components(EthereumNode::components())
         .with_add_ons(EthereumAddOns::default())

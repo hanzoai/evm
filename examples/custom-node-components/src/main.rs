@@ -96,7 +96,7 @@ where
             );
 
             // spawn the maintenance task
-            ctx.task_executor().spawn_critical(
+            ctx.task_executor().spawn_critical_task(
                 "txpool maintenance task",
                 hanzo_evm_ethereum::pool::maintain::maintain_transaction_pool_future(
                     client,

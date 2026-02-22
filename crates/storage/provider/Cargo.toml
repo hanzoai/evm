@@ -12,27 +12,27 @@ description = "Hanzo EVM storage provider."
 workspace = true
 
 [dependencies]
-# evm
-hanzo-evm-chainspec.workspace = true
-hanzo-evm-execution-types.workspace = true
-hanzo-evm-ethereum-primitives = { workspace = true, features = ["hanzo-evm-codec"] }
-hanzo-evm-primitives-traits = { workspace = true, features = ["hanzo-evm-codec", "secp256k1", "dashmap"] }
-hanzo-evm-errors.workspace = true
-hanzo-evm-storage-errors.workspace = true
-hanzo-evm-storage-api = { workspace = true, features = ["std", "db-api"] }
-hanzo-evm-db = { workspace = true, features = ["mdbx"] }
-hanzo-evm-db-api.workspace = true
-hanzo-evm-prune-types.workspace = true
-hanzo-evm-stages-types.workspace = true
-hanzo-evm-tasks.workspace = true
-hanzo-evm-trie = { workspace = true, features = ["metrics"] }
-hanzo-evm-trie-db = { workspace = true, features = ["metrics"] }
-hanzo-evm-nippy-jar.workspace = true
-hanzo-evm-codecs.workspace = true
-hanzo-evm-chain-state.workspace = true
-hanzo-evm-node-types.workspace = true
-hanzo-evm-static-file-types = { workspace = true, features = ["std"] }
-hanzo-evm-fs-util.workspace = true
+# reth
+reth-chainspec.workspace = true
+reth-execution-types.workspace = true
+reth-ethereum-primitives = { workspace = true, features = ["reth-codec"] }
+reth-primitives-traits = { workspace = true, features = ["reth-codec", "secp256k1", "dashmap"] }
+reth-errors.workspace = true
+reth-storage-errors.workspace = true
+reth-storage-api = { workspace = true, features = ["std", "db-api"] }
+reth-db = { workspace = true, features = ["mdbx"] }
+reth-db-api.workspace = true
+reth-prune-types.workspace = true
+reth-stages-types.workspace = true
+reth-tasks = { workspace = true, features = ["rayon"] }
+reth-trie = { workspace = true, features = ["metrics"] }
+reth-trie-db = { workspace = true, features = ["metrics"] }
+reth-nippy-jar.workspace = true
+reth-codecs.workspace = true
+reth-chain-state.workspace = true
+reth-node-types.workspace = true
+reth-static-file-types = { workspace = true, features = ["std"] }
+reth-fs-util.workspace = true
 
 # ethereum
 alloy-eips.workspace = true
@@ -105,4 +105,5 @@ test-utils = [
     "hanzo-evm-stages-types/test-utils",
     "revm-state",
     "tokio",
+    "reth-tasks/test-utils",
 ]

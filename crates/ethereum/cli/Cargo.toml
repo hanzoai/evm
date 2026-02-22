@@ -11,19 +11,20 @@ repository.workspace = true
 workspace = true
 
 [dependencies]
-# evm
-hanzo-evm-cli.workspace = true
-hanzo-evm-cli-commands.workspace = true
-hanzo-evm-cli-runner.workspace = true
-hanzo-evm-chainspec.workspace = true
-hanzo-evm-db.workspace = true
-hanzo-evm-node-builder.workspace = true
-hanzo-evm-node-core.workspace = true
-hanzo-evm-node-ethereum.workspace = true
-hanzo-evm-node-metrics.workspace = true
-hanzo-evm-rpc-server-types.workspace = true
-hanzo-evm-tracing.workspace = true
-hanzo-evm-node-api.workspace = true
+# reth
+reth-cli.workspace = true
+reth-cli-commands.workspace = true
+reth-cli-runner.workspace = true
+reth-chainspec.workspace = true
+reth-db.workspace = true
+reth-node-builder.workspace = true
+reth-node-core.workspace = true
+reth-node-ethereum.workspace = true
+reth-node-metrics.workspace = true
+reth-rpc-server-types.workspace = true
+reth-tasks.workspace = true
+reth-tracing.workspace = true
+reth-node-api.workspace = true
 
 # misc
 clap.workspace = true

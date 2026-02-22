@@ -15,12 +15,13 @@ use crate::{
     NetworkConfigBuilder, NetworkManager,
 };
 use alloy_primitives::TxHash;
-use hanzo_evm_eth_wire::EthVersion;
-use hanzo_evm_eth_wire_types::EthNetworkPrimitives;
-use hanzo_evm_network_api::{PeerKind, PeerRequest, PeerRequestSender};
-use hanzo_evm_network_peers::PeerId;
-use hanzo_evm_storage_api::noop::NoopProvider;
-use hanzo_evm_transaction_pool::test_utils::{testing_pool, TestPool};
+use reth_eth_wire::EthVersion;
+use reth_eth_wire_types::EthNetworkPrimitives;
+use reth_network_api::{PeerKind, PeerRequest, PeerRequestSender};
+use reth_network_peers::PeerId;
+use reth_storage_api::noop::NoopProvider;
+use reth_tasks::Runtime;
+use reth_transaction_pool::test_utils::{testing_pool, TestPool};
 use secp256k1::SecretKey;
 use std::sync::Arc;
 use tokio::sync::mpsc;
@@ -32,7 +33,7 @@ pub async fn new_tx_manager(
     let secret_key = SecretKey::new(&mut rand_08::thread_rng());
     let client = NoopProvider::default();
 
-    let config = NetworkConfigBuilder::new(secret_key)
+    let config = NetworkConfigBuilder::new(secret_key, Runtime::test())
         // let OS choose port
         .listener_port(0)
         .disable_discovery()

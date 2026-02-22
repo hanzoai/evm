@@ -49,8 +49,9 @@
 //! use hanzo_evm_network::{
 //!     config::rng_secret_key, EthNetworkPrimitives, NetworkConfig, NetworkManager,
 //! };
-//! use hanzo_evm_network_peers::mainnet_nodes;
-//! use hanzo_evm_storage_api::noop::NoopProvider;
+//! use reth_network_peers::mainnet_nodes;
+//! use reth_storage_api::noop::NoopProvider;
+//! use reth_tasks::Runtime;
 //!
 //! // This block provider implementation is used for testing purposes.
 //! let client = NoopProvider::default();
@@ -58,7 +59,7 @@
 //! // The key that's used for encrypting sessions and to identify our node.
 //! let local_key = rng_secret_key();
 //!
-//! let config = NetworkConfig::<_, EthNetworkPrimitives>::builder(local_key)
+//! let config = NetworkConfig::<_, EthNetworkPrimitives>::builder(local_key, Runtime::test())
 //!     .boot_nodes(mainnet_nodes())
 //!     .build(client);
 //!
@@ -78,9 +79,10 @@
 //! use hanzo_evm_network::{
 //!     config::rng_secret_key, EthNetworkPrimitives, NetworkConfig, NetworkManager,
 //! };
-//! use hanzo_evm_network_peers::mainnet_nodes;
-//! use hanzo_evm_storage_api::noop::NoopProvider;
-//! use hanzo_evm_transaction_pool::TransactionPool;
+//! use reth_network_peers::mainnet_nodes;
+//! use reth_storage_api::noop::NoopProvider;
+//! use reth_tasks::Runtime;
+//! use reth_transaction_pool::TransactionPool;
 //! async fn launch<Pool: TransactionPool>(pool: Pool) {
 //!     // This block provider implementation is used for testing purposes.
 //!     let client = NoopProvider::default();
@@ -88,7 +90,7 @@
 //!     // The key that's used for encrypting sessions and to identify our node.
 //!     let local_key = rng_secret_key();
 //!
-//!     let config = NetworkConfig::<_, EthNetworkPrimitives>::builder(local_key)
+//!     let config = NetworkConfig::<_, EthNetworkPrimitives>::builder(local_key, Runtime::test())
 //!         .boot_nodes(mainnet_nodes())
 //!         .build(client.clone());
 //!     let transactions_manager_config = config.transactions_manager_config.clone();

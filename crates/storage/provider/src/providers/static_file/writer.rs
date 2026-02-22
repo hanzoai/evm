@@ -5,12 +5,13 @@ use crate::providers::static_file::metrics::StaticFileProviderOperation;
 use alloy_consensus::BlockHeader;
 use alloy_primitives::{BlockHash, BlockNumber, TxNumber, U256};
 use parking_lot::{lock_api::RwLockWriteGuard, RawRwLock, RwLock};
-use hanzo_evm_codecs::Compact;
-use hanzo_evm_db::models::{AccountBeforeTx, StorageBeforeTx};
-use hanzo_evm_db_api::models::CompactU256;
-use hanzo_evm_nippy_jar::{NippyJar, NippyJarError, NippyJarWriter};
-use hanzo_evm_node_types::NodePrimitives;
-use hanzo_evm_static_file_types::{
+use reth_codecs::Compact;
+use reth_db::models::{AccountBeforeTx, StorageBeforeTx};
+use reth_db_api::models::CompactU256;
+use reth_nippy_jar::{NippyJar, NippyJarError, NippyJarWriter};
+use reth_node_types::NodePrimitives;
+use reth_primitives_traits::FastInstant as Instant;
+use reth_static_file_types::{
     ChangesetOffset, ChangesetOffsetReader, ChangesetOffsetWriter, SegmentHeader,
     SegmentRangeInclusive, StaticFileSegment,
 };
@@ -21,7 +22,6 @@ use std::{
     fmt::Debug,
     path::{Path, PathBuf},
     sync::{Arc, Weak},
-    time::Instant,
 };
 use tracing::{debug, instrument};
 

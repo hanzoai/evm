@@ -31,6 +31,7 @@ eyre = { workspace = true, optional = true }
 # metrics
 hanzo-evm-metrics = { workspace = true, optional = true }
 metrics = { workspace = true, optional = true }
+quanta = { workspace = true, optional = true }
 
 # misc
 page_size = { workspace = true, optional = true }
@@ -70,7 +71,8 @@ mdbx = [
     "dep:hanzo-evm-libmdbx",
     "dep:eyre",
     "dep:page_size",
-    "hanzo-evm-metrics",
+    "dep:quanta",
+    "reth-metrics",
     "dep:metrics",
     "dep:strum",
     "dep:rustc-hash",

@@ -43,22 +43,24 @@ auto_impl.workspace = true
 
 [dev-dependencies]
 assert_matches.workspace = true
-hanzo-evm-chainspec.workspace = true
-hanzo-evm-db = { workspace = true, features = ["test-utils"] }
-hanzo-evm-db-api.workspace = true
-hanzo-evm-provider = { workspace = true, features = ["test-utils"] }
+reth-chainspec.workspace = true
+reth-db = { workspace = true, features = ["test-utils"] }
+reth-db-api.workspace = true
+reth-provider = { workspace = true, features = ["test-utils"] }
+reth-tasks.workspace = true
 tokio = { workspace = true, features = ["sync", "rt-multi-thread"] }
 tokio-stream.workspace = true
 hanzo-evm-testing-utils.workspace = true
 
 [features]
 test-utils = [
-    "hanzo-evm-chainspec/test-utils",
-    "hanzo-evm-consensus/test-utils",
-    "hanzo-evm-db-api/test-utils",
-    "hanzo-evm-db/test-utils",
-    "hanzo-evm-network-p2p/test-utils",
-    "hanzo-evm-primitives-traits/test-utils",
-    "hanzo-evm-provider/test-utils",
-    "hanzo-evm-stages-types/test-utils",
+    "reth-chainspec/test-utils",
+    "reth-consensus/test-utils",
+    "reth-db-api/test-utils",
+    "reth-db/test-utils",
+    "reth-network-p2p/test-utils",
+    "reth-primitives-traits/test-utils",
+    "reth-provider/test-utils",
+    "reth-stages-types/test-utils",
+    "reth-tasks/test-utils",
 ]

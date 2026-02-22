@@ -40,7 +40,8 @@ macro_rules! delegate_provider_impls {
                 fn canonical_hashes_range(&self, start: alloy_primitives::BlockNumber, end: alloy_primitives::BlockNumber) -> hanzo_evm_storage_api::errors::provider::ProviderResult<Vec<alloy_primitives::B256>>;
             }
             StateProvider $(where [$($generics)*])? {
-                fn storage(&self, account: alloy_primitives::Address, storage_key: alloy_primitives::StorageKey) -> hanzo_evm_storage_api::errors::provider::ProviderResult<Option<alloy_primitives::StorageValue>>;
+                fn storage(&self, account: alloy_primitives::Address, storage_key: alloy_primitives::StorageKey) -> reth_storage_api::errors::provider::ProviderResult<Option<alloy_primitives::StorageValue>>;
+                fn storage_by_hashed_key(&self, address: alloy_primitives::Address, hashed_storage_key: alloy_primitives::StorageKey) -> reth_storage_api::errors::provider::ProviderResult<Option<alloy_primitives::StorageValue>>;
             }
             BytecodeReader $(where [$($generics)*])? {
                 fn bytecode_by_hash(&self, code_hash: &alloy_primitives::B256) -> hanzo_evm_storage_api::errors::provider::ProviderResult<Option<hanzo_evm_primitives_traits::Bytecode>>;

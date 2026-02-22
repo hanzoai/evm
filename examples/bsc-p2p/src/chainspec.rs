@@ -5,8 +5,8 @@ use hanzo_evm_chainspec::{
     hardfork, make_genesis_header, BaseFeeParams, BaseFeeParamsKind, Chain, ChainHardforks,
     ChainSpec, EthereumHardfork, ForkCondition, Hardfork, Head, NamedChain,
 };
-use hanzo_evm_network_peers::NodeRecord;
-use hanzo_evm_primitives::SealedHeader;
+use reth_network_peers::NodeRecord;
+use reth_primitives_traits::SealedHeader;
 use std::{str::FromStr, sync::Arc};
 
 hardfork!(

@@ -5,13 +5,13 @@ use hanzo_evm_chainspec::{ChainSpecBuilder, MAINNET};
 use hanzo_evm_e2e_test_utils::{
     node::NodeTestContext, transaction::TransactionTestContext, wallet::Wallet,
 };
-use hanzo_evm_ethereum_engine_primitives::BlobSidecars;
-use hanzo_evm_ethereum_primitives::PooledTransactionVariant;
-use hanzo_evm_node_builder::{NodeBuilder, NodeHandle};
-use hanzo_evm_node_core::{args::RpcServerArgs, node_config::NodeConfig};
-use hanzo_evm_node_ethereum::EthereumNode;
-use hanzo_evm_tasks::TaskManager;
-use hanzo_evm_transaction_pool::TransactionPool;
+use reth_ethereum_engine_primitives::BlobSidecars;
+use reth_ethereum_primitives::PooledTransactionVariant;
+use reth_node_builder::{NodeBuilder, NodeHandle};
+use reth_node_core::{args::RpcServerArgs, node_config::NodeConfig};
+use reth_node_ethereum::EthereumNode;
+use reth_tasks::Runtime;
+use reth_transaction_pool::TransactionPool;
 use std::{
     sync::Arc,
     time::{Duration, SystemTime, UNIX_EPOCH},
@@ -19,9 +19,8 @@ use std::{
 
 #[tokio::test]
 async fn can_handle_blobs() -> eyre::Result<()> {
-    hanzo_evm_tracing::init_test_tracing();
-    let tasks = TaskManager::current();
-    let exec = tasks.executor();
+    reth_tracing::init_test_tracing();
+    let runtime = Runtime::test();
 
     let genesis: Genesis = serde_json::from_str(include_str!("../assets/genesis.json")).unwrap();
     let chain_spec = Arc::new(
@@ -37,7 +36,7 @@ async fn can_handle_blobs() -> eyre::Result<()> {
         .with_unused_ports()
         .with_rpc(RpcServerArgs::default().with_unused_ports().with_http());
     let NodeHandle { node, node_exit_future: _ } = NodeBuilder::new(node_config.clone())
-        .testing_node(exec.clone())
+        .testing_node(runtime.clone())
         .node(EthereumNode::default())
         .launch()
         .await?;
@@ -91,9 +90,8 @@ async fn can_handle_blobs() -> eyre::Result<()> {
 
 #[tokio::test]
 async fn can_send_legacy_sidecar_post_activation() -> eyre::Result<()> {
-    hanzo_evm_tracing::init_test_tracing();
-    let tasks = TaskManager::current();
-    let exec = tasks.executor();
+    reth_tracing::init_test_tracing();
+    let runtime = Runtime::test();
 
     let genesis: Genesis = serde_json::from_str(include_str!("../assets/genesis.json")).unwrap();
     let chain_spec = Arc::new(
@@ -107,7 +105,7 @@ async fn can_send_legacy_sidecar_post_activation() -> eyre::Result<()> {
             .with_force_blob_sidecar_upcasting(),
     );
     let NodeHandle { node, node_exit_future: _ } = NodeBuilder::new(node_config.clone())
-        .testing_node(exec.clone())
+        .testing_node(runtime.clone())
         .node(EthereumNode::default())
         .launch()
         .await?;
@@ -145,9 +143,8 @@ async fn can_send_legacy_sidecar_post_activation() -> eyre::Result<()> {
 
 #[tokio::test]
 async fn blob_conversion_at_osaka() -> eyre::Result<()> {
-    hanzo_evm_tracing::init_test_tracing();
-    let tasks = TaskManager::current();
-    let exec = tasks.executor();
+    reth_tracing::init_test_tracing();
+    let runtime = Runtime::test();
 
     let current_timestamp = SystemTime::now().duration_since(UNIX_EPOCH).unwrap().as_secs();
     // Osaka activates in 2 slots
@@ -170,7 +167,7 @@ async fn blob_conversion_at_osaka() -> eyre::Result<()> {
             .with_force_blob_sidecar_upcasting(),
     );
     let NodeHandle { node, node_exit_future: _ } = NodeBuilder::new(node_config.clone())
-        .testing_node(exec.clone())
+        .testing_node(runtime.clone())
         .node(EthereumNode::default())
         .launch()
         .await?;
@@ -217,7 +214,7 @@ async fn blob_conversion_at_osaka() -> eyre::Result<()> {
     TransactionTestContext::validate_sidecar(envelope);
 
     // build last Prague payload
-    node.payload.timestamp = current_timestamp + 11;
+    node.payload.timestamp = current_timestamp + 1;
     let prague_payload = node.new_payload().await?;
     assert!(matches!(prague_payload.sidecars(), BlobSidecars::Eip4844(_)));
 
@@ -230,7 +227,7 @@ async fn blob_conversion_at_osaka() -> eyre::Result<()> {
     // validate sidecar
     TransactionTestContext::validate_sidecar(envelope);
 
-    tokio::time::sleep(Duration::from_secs(11)).await;
+    tokio::time::sleep(Duration::from_secs(6)).await;
 
     // fetch second blob tx from rpc again
     let envelope = node.rpc.envelope_by_hash(blob_tx_hash).await?;

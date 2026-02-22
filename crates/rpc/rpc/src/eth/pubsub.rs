@@ -17,11 +17,11 @@ use hanzo_evm_rpc_convert::RpcHeader;
 use hanzo_evm_rpc_eth_api::{
     pubsub::EthPubSubApiServer, EthApiTypes, RpcConvert, RpcNodeCore, RpcTransaction,
 };
-use hanzo_evm_rpc_eth_types::logs_utils;
-use hanzo_evm_rpc_server_types::result::{internal_rpc_err, invalid_params_rpc_err};
-use hanzo_evm_storage_api::BlockNumReader;
-use hanzo_evm_tasks::{TaskSpawner, TokioTaskExecutor};
-use hanzo_evm_transaction_pool::{NewTransactionEvent, TransactionPool};
+use reth_rpc_eth_types::logs_utils;
+use reth_rpc_server_types::result::{internal_rpc_err, invalid_params_rpc_err};
+use reth_storage_api::BlockNumReader;
+use reth_tasks::Runtime;
+use reth_transaction_pool::{NewTransactionEvent, TransactionPool};
 use serde::Serialize;
 use tokio_stream::{
     wrappers::{BroadcastStream, ReceiverStream},
@@ -42,14 +42,7 @@ pub struct EthPubSub<Eth> {
 
 impl<Eth> EthPubSub<Eth> {
     /// Creates a new, shareable instance.
-    ///
-    /// Subscription tasks are spawned via [`tokio::task::spawn`]
-    pub fn new(eth_api: Eth) -> Self {
-        Self::with_spawner(eth_api, Box::<TokioTaskExecutor>::default())
-    }
-
-    /// Creates a new, shareable instance.
-    pub fn with_spawner(eth_api: Eth, subscription_task_spawner: Box<dyn TaskSpawner>) -> Self {
+    pub fn new(eth_api: Eth, subscription_task_spawner: Runtime) -> Self {
         let inner = EthPubSubInner { eth_api, subscription_task_spawner };
         Self { inner: Arc::new(inner) }
     }
@@ -214,9 +207,9 @@ where
     ) -> jsonrpsee::core::SubscriptionResult {
         let sink = pending.accept().await?;
         let pubsub = self.clone();
-        self.inner.subscription_task_spawner.spawn(Box::pin(async move {
+        self.inner.subscription_task_spawner.spawn_task(async move {
             let _ = pubsub.handle_accepted(sink, kind, params).await;
-        }));
+        });
 
         Ok(())
     }
@@ -288,7 +281,7 @@ struct EthPubSubInner<EthApi> {
     /// The `eth` API.
     eth_api: EthApi,
     /// The type that's used to spawn subscription tasks.
-    subscription_task_spawner: Box<dyn TaskSpawner>,
+    subscription_task_spawner: Runtime,
 }
 
 // == impl EthPubSubInner ===

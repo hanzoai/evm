@@ -22,7 +22,7 @@ use hanzo_evm_execution_errors::{
 use hanzo_evm_trie_common::{MultiProofTargets, Nibbles};
 use hanzo_evm_trie_sparse::{
     provider::{RevealedNode, TrieNodeProvider, TrieNodeProviderFactory},
-    SerialSparseTrie, SparseStateTrie,
+    SparseStateTrie,
 };
 use std::sync::mpsc;
 
@@ -151,7 +151,7 @@ where
             ProofTrieNodeProviderFactory::new(self.trie_cursor_factory, self.hashed_cursor_factory),
             tx,
         );
-        let mut sparse_trie = SparseStateTrie::<SerialSparseTrie>::new();
+        let mut sparse_trie = SparseStateTrie::new();
         sparse_trie.reveal_multiproof(multiproof)?;
 
         // Attempt to update state trie to gather additional information for the witness.

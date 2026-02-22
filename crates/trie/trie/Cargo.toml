@@ -12,13 +12,13 @@ description = "Merkle trie implementation"
 workspace = true
 
 [dependencies]
-# evm
-hanzo-evm-execution-errors.workspace = true
-hanzo-evm-primitives-traits.workspace = true
-hanzo-evm-stages-types.workspace = true
-hanzo-evm-storage-errors.workspace = true
-hanzo-evm-trie-sparse.workspace = true
-hanzo-evm-trie-common = { workspace = true, features = ["rayon"] }
+# reth
+reth-execution-errors.workspace = true
+reth-primitives-traits = { workspace = true, features = ["std"] }
+reth-stages-types.workspace = true
+reth-storage-errors.workspace = true
+reth-trie-sparse.workspace = true
+reth-trie-common = { workspace = true, features = ["rayon"] }
 
 revm-database.workspace = true
 

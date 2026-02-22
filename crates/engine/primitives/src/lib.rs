@@ -23,8 +23,8 @@ use serde::{de::DeserializeOwned, Serialize};
 
 // Re-export [`ExecutionPayload`] moved to `hanzo_evm_payload_primitives`
 #[cfg(feature = "std")]
-pub use hanzo_evm_execution::{ConfigureEngineEvm, ExecutableTxIterator, ExecutableTxTuple};
-pub use hanzo_evm_payload_primitives::ExecutionPayload;
+pub use reth_evm::{ConfigureEngineEvm, ConvertTx, ExecutableTxIterator, ExecutableTxTuple};
+pub use reth_payload_primitives::ExecutionPayload;
 
 mod error;
 pub use error::*;

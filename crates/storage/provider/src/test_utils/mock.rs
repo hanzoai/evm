@@ -22,20 +22,20 @@ use hanzo_evm_chainspec::{ChainInfo, EthChainSpec};
 use hanzo_evm_db::transaction::DbTx;
 use hanzo_evm_db_api::{
     mock::{DatabaseMock, TxMock},
-    models::{AccountBeforeTx, StoredBlockBodyIndices},
+    models::{AccountBeforeTx, StorageSettings, StoredBlockBodyIndices},
 };
 use hanzo_evm_ethereum_primitives::EthPrimitives;
 use hanzo_evm_execution_types::ExecutionOutcome;
 use hanzo_evm_primitives_traits::{
     Account, Block, BlockBody, Bytecode, GotExpected, NodePrimitives, RecoveredBlock, SealedHeader,
-    SignerRecoverable, StorageEntry,
+    SignerRecoverable,
 };
-use hanzo_evm_prune_types::{PruneCheckpoint, PruneModes, PruneSegment};
-use hanzo_evm_stages_types::{StageCheckpoint, StageId};
-use hanzo_evm_storage_api::{
-    BlockBodyIndicesProvider, BytecodeReader, DBProvider, DatabaseProviderFactory,
+use reth_prune_types::{PruneCheckpoint, PruneModes, PruneSegment};
+use reth_stages_types::{StageCheckpoint, StageId};
+use reth_storage_api::{
+    BlockBodyIndicesProvider, BytecodeReader, ChangesetEntry, DBProvider, DatabaseProviderFactory,
     HashedPostStateProvider, NodePrimitivesProvider, StageCheckpointReader, StateProofProvider,
-    StorageChangeSetReader, StorageRootProvider,
+    StorageChangeSetReader, StorageRootProvider, StorageSettingsCache,
 };
 use hanzo_evm_storage_errors::provider::{ConsistentViewError, ProviderError, ProviderResult};
 use hanzo_evm_trie::{
@@ -883,6 +883,14 @@ where
         let lock = self.accounts.lock();
         Ok(lock.get(&account).and_then(|account| account.storage.get(&storage_key)).copied())
     }
+
+    fn storage_by_hashed_key(
+        &self,
+        _address: Address,
+        _hashed_storage_key: StorageKey,
+    ) -> ProviderResult<Option<StorageValue>> {
+        Ok(None)
+    }
 }
 
 impl<T, ChainSpec> BytecodeReader for MockEthProvider<T, ChainSpec>
@@ -901,6 +909,16 @@ where
             }
         }))
     }
+}
+
+impl<T: NodePrimitives, ChainSpec: Send + Sync> StorageSettingsCache
+    for MockEthProvider<T, ChainSpec>
+{
+    fn cached_storage_settings(&self) -> StorageSettings {
+        StorageSettings::default()
+    }
+
+    fn set_storage_settings_cache(&self, _settings: StorageSettings) {}
 }
 
 impl<T: NodePrimitives, ChainSpec: EthChainSpec + Send + Sync + 'static> StateProviderFactory
@@ -1011,7 +1029,7 @@ impl<T: NodePrimitives, ChainSpec: Send + Sync> StorageChangeSetReader
     fn storage_changeset(
         &self,
         _block_number: BlockNumber,
-    ) -> ProviderResult<Vec<(hanzo_evm_db_api::models::BlockNumberAddress, StorageEntry)>> {
+    ) -> ProviderResult<Vec<(reth_db_api::models::BlockNumberAddress, ChangesetEntry)>> {
         Ok(Vec::default())
     }
 
@@ -1020,14 +1038,14 @@ impl<T: NodePrimitives, ChainSpec: Send + Sync> StorageChangeSetReader
         _block_number: BlockNumber,
         _address: Address,
         _storage_key: B256,
-    ) -> ProviderResult<Option<StorageEntry>> {
+    ) -> ProviderResult<Option<ChangesetEntry>> {
         Ok(None)
     }
 
     fn storage_changesets_range(
         &self,
         _range: impl RangeBounds<BlockNumber>,
-    ) -> ProviderResult<Vec<(hanzo_evm_db_api::models::BlockNumberAddress, StorageEntry)>> {
+    ) -> ProviderResult<Vec<(reth_db_api::models::BlockNumberAddress, ChangesetEntry)>> {
         Ok(Vec::default())
     }
 
